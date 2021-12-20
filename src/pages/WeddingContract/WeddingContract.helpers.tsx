@@ -3,28 +3,18 @@ import { ReactElement } from 'react';
 import * as Yup from 'yup';
 
 const latinAndNumbers = /^[A-Za-z][A-Za-z0-9][0-9A-Za-z]*$/;
-const yesterday = new Date(Date.now() - 86400000);
 
 export const validationSchema = Yup.object().shape({
-  tokenName: Yup.string().matches(latinAndNumbers).min(5).required(),
-  tokenOwner: Yup.string().length(42).required(),
-  tokenSymbol: Yup.string().matches(latinAndNumbers).min(3).max(4).required(),
-  decimals: Yup.number().max(18).required(),
-  futureMinting: Yup.boolean().required(),
-  burnable: Yup.boolean().required(),
-  freezable: Yup.boolean().required(),
-  tokens: Yup.array().of(
-    Yup.object().shape({
-      address: Yup.string().length(42).required(),
-      name: Yup.string().matches(latinAndNumbers).min(5).required(),
-      amount: Yup.number().required(),
-      isFrozen: Yup.boolean().required(),
-      frozenUntilDate: Yup.date().min(yesterday).required(),
-    }),
-  ),
+  contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
+  partnerOneAddress: Yup.string().length(42).required(),
+  partnerTwoAddress: Yup.string().length(42).required(),
+  partnerOneEmail: Yup.string().email().max(255).required(),
+  partnerTwoEmail: Yup.string().email().max(255).required(),
+  daysForDivorceApproval: Yup.number().max(18).min(1).required(),
+  daysForWithdrawalApproval: Yup.number().max(18).min(1).required(),
 });
 
-type TokenContractFieldType = {
+type WeddingContractFieldType = {
   id: string,
   name: string,
   icon?: ReactElement,
@@ -36,7 +26,7 @@ type TokenContractFieldType = {
   isShort?: boolean,
 };
 
-type TokenContractFormConfig = TokenContractFieldType[][];
+type TokenContractFormConfig = WeddingContractFieldType[][];
 
 export const weddingContractFormConfigStart: TokenContractFormConfig = [
   [
