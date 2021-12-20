@@ -20,7 +20,6 @@ import weddingFormsSelector from 'store/weddingForms/selectors';
 import { State, WeddingContract as WeddingContractType, WeddingFormsState } from 'types';
 import { useShallowSelector } from 'hooks';
 import { useDispatch } from 'react-redux';
-import { navigate } from '@storybook/addon-links';
 import {
   validationSchema,
   weddingContractFormConfigEnd, weddingContractFormConfigStart,
@@ -29,22 +28,26 @@ import { useStyles } from './WeddingContract.styles';
 import { WeddingBlockSlider } from './components';
 import { routes } from '../../appConstants';
 import { setWeddingContractForm } from '../../store/weddingForms/reducer';
+import { useNavigate } from 'react-router-dom';
+
 
 const WeddingContract = () => {
   const classes = useStyles();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [partnerOneSliderValue, setPartnerOneSliderValue] = useState(50);
-  // const [partnerTwoSliderValue, setPartnerTwoSliderValue] = useState(50);
+  const navigate = useNavigate();
+  const { weddingContract } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
 
-  // const onFirstSliderHandler = (value: number): void => {
-  //   setPartnerOneSliderValue(value);
-  //   setPartnerTwoSliderValue(100 - value);
-  // };
-  //
-  // const onSecondSliderHandler = (value: number): void => {
-  //   setPartnerTwoSliderValue(value);
-  //   setPartnerOneSliderValue(100 - value);
-  // };
+  const [partnerOneSliderValue, setPartnerOneSliderValue] = useState(weddingContract.partnerOneSliderValue);
+  const [partnerTwoSliderValue, setPartnerTwoSliderValue] = useState(weddingContract.partnerTwoSliderValue);
+
+  const onFirstSliderHandler = (_, value: number): void => {
+    setPartnerOneSliderValue(value);
+    setPartnerTwoSliderValue(100 - value);
+  };
+  
+  const onSecondSliderHandler = (_, value: number): void => {
+    setPartnerTwoSliderValue(value);
+    setPartnerOneSliderValue(100 - value);
+  };
 
   const ValueLabelComponent = (props) => {
     const { children, open, value } = props;
@@ -56,9 +59,6 @@ const WeddingContract = () => {
     );
   };
   const dispatch = useDispatch();
-  // eslint-disable-next-line max-len
-  const { weddingContract } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
-  console.log('weddingContract: ', weddingContract);
 
   return (
     <Container>
@@ -66,13 +66,13 @@ const WeddingContract = () => {
         enableReinitialize
         initialValues={weddingContract}
         validationSchema={validationSchema}
-        // @ts-ignore
         onSubmit={(
           values: WeddingContractType,
         ) => {
-          console.log(values, 'VALUES');
-          dispatch(setWeddingContractForm(values));
-          // @ts-ignore
+          dispatch(setWeddingContractForm({...values,
+            partnerOneSliderValue,
+            partnerTwoSliderValue,
+          }));
           navigate(routes['wedding-contract']['preview-contract'].root);
         }}
       >
@@ -132,23 +132,15 @@ const WeddingContract = () => {
                   <Typography className={clsx(classes.title)}>Partner who
                     initialized the divorce
                   </Typography>
-                  <Field
-                      id="partnerOneSliderValue"
-                      name="partnerOneSliderValue"
-                  >
-                    {({ form: { isSubmitting } }: FieldProps) => (
-                      <Slider
-                        name="partnerOneSliderValue"
-                        ValueLabelComponent={ValueLabelComponent}
-                        valueLabelDisplay="on"
-                        aria-label="pretto slider"
-                        value={values.partnerOneSliderValue}
-                        // onBlur={handleBlur}
-                        onChange={(e, value) => handleChange(e)}
-                      />
-                      )
-                    }
-                  </Field>
+                  <Slider
+                    name="partnerOneSliderValue"
+                    ValueLabelComponent={ValueLabelComponent}
+                    valueLabelDisplay="on"
+                    aria-label="pretto slider"
+                    value={partnerOneSliderValue}
+                    onBlur={handleBlur}
+                    onChange={onFirstSliderHandler}
+                  />
                   <Typography className={clsx(classes.desc)}>If second partner approves
                     the divorce the funds will be
                     divided equally between ex-spouses.
@@ -159,25 +151,15 @@ const WeddingContract = () => {
                   <Typography className={clsx(classes.title)}>Partner who hasn`t approved
                     the divorce
                   </Typography>
-                  <Field
-                      id="partnerTwoSliderValue"
-                      name="partnerTwoSliderValue"
-                  >
-                    {({ form }: FieldProps) => {
-                      console.log(form.values)
-                      return(
-                        <Slider
-                            name="partnerTwoSliderValue"
-                            ValueLabelComponent={ValueLabelComponent}
-                            valueLabelDisplay="on"
-                            aria-label="pretto slider"
-                            value={values.partnerTwoSliderValue}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                        />
-                    )}
-                    }
-                  </Field>
+                  <Slider
+                    name="partnerTwoSliderValue"
+                    ValueLabelComponent={ValueLabelComponent}
+                    valueLabelDisplay="on"
+                    aria-label="pretto slider"
+                    value={partnerTwoSliderValue}
+                    onBlur={handleBlur}
+                    onChange={onSecondSliderHandler}
+                  />
                   <Typography className={clsx(classes.desc)}>If second partner approves
                     the divorce the funds will be
                     divided equally between ex-spouses.
