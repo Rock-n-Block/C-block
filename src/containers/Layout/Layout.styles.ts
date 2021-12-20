@@ -19,16 +19,20 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       flexBasis: '25%',
       transition: '300ms',
       [theme.breakpoints.down(768)]: {
-        position: 'absolute',
+        position: 'fixed',
         left: ({ isSidebarOpen }) => (isSidebarOpen ? '0%' : '-150%'),
         maxWidth: 'unset',
         width: '100%',
       },
     },
     content: {
+      flex: 1,
+      minWidth: 0,
       flexBasis: '75%',
+      paddingBottom: theme.spacing(10),
       [theme.breakpoints.down(768)]: {
         flexBasis: '100%',
+        height: ({ isSidebarOpen }) => (isSidebarOpen ? '100vh' : 'unset'),
       },
     },
     greenBlob: {

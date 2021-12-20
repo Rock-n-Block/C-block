@@ -26,7 +26,9 @@ export const Breadcrumbs: VFC<BreadcrumbsProps> = ({ className, paths }) => {
         {paths.length > 1 && paths.map(({ label, path }, index) => (
           <li key={path} className={classes.breadcrumb}>
             <NavLink
-              className={index === 0 ? classes.breadcrumbLabelFirst : classes.breadcrumbLabel}
+              className={index === paths.length - 1 ?
+                classes.breadcrumbLabel :
+                classes.breadcrumbLabelFirst}
               to={path}
             >
               {label}

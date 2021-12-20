@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import {
   Box, Dialog, Typography, IconButton,
@@ -9,7 +9,7 @@ import { CloseIcon } from 'theme/icons';
 import { useStyles } from './Modal.styles';
 
 export interface ModalProps {
-  title?: string;
+  title?: string | ReactNode;
   open: boolean;
   onClose: () => void,
   className?: string;
@@ -30,7 +30,7 @@ export const Modal: FC<ModalProps> = ({
       onClose={onClose}
     >
       <Box className={classes.modalTitle}>
-        {title && <Typography variant="h3">{title}</Typography>}
+        {title && (typeof title === 'string' ? <Typography variant="h3">{title}</Typography> : title)}
         <IconButton color="secondary" onClick={onClose}>
           <CloseIcon />
         </IconButton>

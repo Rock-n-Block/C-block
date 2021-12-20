@@ -9,6 +9,10 @@ export const routes = {
     root: '/create-contract/token-contract',
     title: 'Token Contract',
     icon: <ContractToken />,
+    'preview-contract': {
+      root: '/create-contract/token-contract/preview-contract',
+      title: 'Preview contract',
+    },
   },
   'wedding-contract': {
     root: '/create-contract/wedding-contract',

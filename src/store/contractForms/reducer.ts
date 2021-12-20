@@ -26,18 +26,22 @@ const initialState: ContractFormsState = {
 };
 
 export const contractFormReducer = createSlice({
-  name: 'contractForm',
+  name: 'contractForms',
   initialState,
   reducers: {
     setTokenContractForm: (state, action: PayloadAction<TokenContract>) => ({
       ...state,
       tokenContract: action.payload,
     }),
+    deleteTokenContractForm: (state) => ({
+      ...state,
+      tokenContract: initialState.tokenContract,
+    }),
   },
 });
 
 export const {
-  setTokenContractForm,
+  setTokenContractForm, deleteTokenContractForm,
 } = contractFormReducer.actions;
 
 export default contractFormReducer.reducer;

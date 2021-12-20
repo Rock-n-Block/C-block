@@ -24,3 +24,4 @@ export { InfoIcon } from './components/InfoIcon';
 export { CircleCloseIcon } from './components/CircleCloseIcon';
 export { Snowflake } from './components/Snowflake';
 export { Calendar } from './components/Calendar';
+export { Edit } from './components/Edit';
