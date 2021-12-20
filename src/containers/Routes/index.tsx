@@ -7,7 +7,6 @@ import TokenContract from 'pages/TokenContract/TokenContract';
 import WeddingContract from 'pages/WeddingContract/WeddingContract';
 import TokenContractPreview from 'pages/TokenContractPreview/TokenContractPreview';
 
-
 const RoutesContainer = () => (
   <Routes>
     <Route path={routes.root} element={<CreateContract />} />
