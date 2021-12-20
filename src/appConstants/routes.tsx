@@ -18,6 +18,10 @@ export const routes = {
     root: '/create-contract/wedding-contract',
     title: 'Wedding Contract',
     icon: <WeddingRingIcon />,
+    'preview-contract': {
+      root: '/create-contract/token-contract/preview-contract',
+      title: 'Preview contract',
+    },
   },
   'my-contracts': {
     root: '/my-contracts',

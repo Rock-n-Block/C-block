@@ -15,6 +15,7 @@ const RoutesContainer = () => (
     <Route path={routes['my-contracts'].root} element={<div>myContracts</div>} />
     <Route path={routes['custom-development'].root} element={<CustomDevelopment />} />
     <Route path={routes['token-contract']['preview-contract'].root} element={<TokenContractPreview />} />
+    <Route path={routes['wedding-contract']['preview-contract'].root} element={<TokenContractPreview />} />
     <Route path="/" element={<Navigate replace to={routes.root} />} />
   </Routes>
 );

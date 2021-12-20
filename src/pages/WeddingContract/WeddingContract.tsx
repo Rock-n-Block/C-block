@@ -1,4 +1,4 @@
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable */
 import React, { useState } from 'react';
 import {
   Container,
@@ -16,32 +16,35 @@ import {
 } from 'formik';
 import clsx from 'clsx';
 import { CircleCloseIcon } from 'theme/icons';
-import contractFormsSelector from 'store/contractForms/selectors';
-import { ContractFormsState, State, TokenContract as TokenContractType } from 'types';
+import weddingFormsSelector from 'store/weddingForms/selectors';
+import { State, WeddingContract as WeddingContractType, WeddingFormsState } from 'types';
 import { useShallowSelector } from 'hooks';
-import { setTokenContractForm } from 'store/contractForms/reducer';
 import { useDispatch } from 'react-redux';
+import { navigate } from '@storybook/addon-links';
 import {
   validationSchema,
   weddingContractFormConfigEnd, weddingContractFormConfigStart,
 } from './WeddingContract.helpers';
 import { useStyles } from './WeddingContract.styles';
 import { WeddingBlockSlider } from './components';
+import { routes } from '../../appConstants';
+import { setWeddingContractForm } from '../../store/weddingForms/reducer';
 
 const WeddingContract = () => {
   const classes = useStyles();
-  const [firstSliderValue, setFirstSliderValue] = useState(50);
-  const [secondSliderValue, setSecondSliderValue] = useState(50);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const [partnerOneSliderValue, setPartnerOneSliderValue] = useState(50);
+  // const [partnerTwoSliderValue, setPartnerTwoSliderValue] = useState(50);
 
-  const onFirstSliderHandler = (value: number): void => {
-    setFirstSliderValue(value);
-    setSecondSliderValue(100 - value);
-  };
-
-  const onSecondSliderHandler = (value: number): void => {
-    setSecondSliderValue(value);
-    setFirstSliderValue(100 - value);
-  };
+  // const onFirstSliderHandler = (value: number): void => {
+  //   setPartnerOneSliderValue(value);
+  //   setPartnerTwoSliderValue(100 - value);
+  // };
+  //
+  // const onSecondSliderHandler = (value: number): void => {
+  //   setPartnerTwoSliderValue(value);
+  //   setPartnerOneSliderValue(100 - value);
+  // };
 
   const ValueLabelComponent = (props) => {
     const { children, open, value } = props;
@@ -53,20 +56,24 @@ const WeddingContract = () => {
     );
   };
   const dispatch = useDispatch();
-  const {
-    tokenContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  // eslint-disable-next-line max-len
+  const { weddingContract } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
+  console.log('weddingContract: ', weddingContract);
 
   return (
     <Container>
       <Formik
         enableReinitialize
-        initialValues={tokenContract}
+        initialValues={weddingContract}
         validationSchema={validationSchema}
+        // @ts-ignore
         onSubmit={(
-          values: TokenContractType,
+          values: WeddingContractType,
         ) => {
-          dispatch(setTokenContractForm(values));
+          console.log(values, 'VALUES');
+          dispatch(setWeddingContractForm(values));
+          // @ts-ignore
+          navigate(routes['wedding-contract']['preview-contract'].root);
         }}
       >
         {({
@@ -125,13 +132,23 @@ const WeddingContract = () => {
                   <Typography className={clsx(classes.title)}>Partner who
                     initialized the divorce
                   </Typography>
-                  <Slider
-                    ValueLabelComponent={ValueLabelComponent}
-                    valueLabelDisplay="on"
-                    aria-label="pretto slider"
-                    value={firstSliderValue}
-                    onChange={(_, value: number) => onFirstSliderHandler(value)}
-                  />
+                  <Field
+                      id="partnerOneSliderValue"
+                      name="partnerOneSliderValue"
+                  >
+                    {({ form: { isSubmitting } }: FieldProps) => (
+                      <Slider
+                        name="partnerOneSliderValue"
+                        ValueLabelComponent={ValueLabelComponent}
+                        valueLabelDisplay="on"
+                        aria-label="pretto slider"
+                        value={values.partnerOneSliderValue}
+                        // onBlur={handleBlur}
+                        onChange={(e, value) => handleChange(e)}
+                      />
+                      )
+                    }
+                  </Field>
                   <Typography className={clsx(classes.desc)}>If second partner approves
                     the divorce the funds will be
                     divided equally between ex-spouses.
@@ -142,13 +159,25 @@ const WeddingContract = () => {
                   <Typography className={clsx(classes.title)}>Partner who hasn`t approved
                     the divorce
                   </Typography>
-                  <Slider
-                    ValueLabelComponent={ValueLabelComponent}
-                    valueLabelDisplay="on"
-                    aria-label="pretto slider"
-                    value={secondSliderValue}
-                    onChange={(_, value: number) => onSecondSliderHandler(value)}
-                  />
+                  <Field
+                      id="partnerTwoSliderValue"
+                      name="partnerTwoSliderValue"
+                  >
+                    {({ form }: FieldProps) => {
+                      console.log(form.values)
+                      return(
+                        <Slider
+                            name="partnerTwoSliderValue"
+                            ValueLabelComponent={ValueLabelComponent}
+                            valueLabelDisplay="on"
+                            aria-label="pretto slider"
+                            value={values.partnerTwoSliderValue}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                        />
+                    )}
+                    }
+                  </Field>
                   <Typography className={clsx(classes.desc)}>If second partner approves
                     the divorce the funds will be
                     divided equally between ex-spouses.
