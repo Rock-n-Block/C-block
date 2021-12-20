@@ -68,7 +68,7 @@ export const CustomDevelopment = () => {
                   }
                   />
                 ))}
-                <Box>
+                <Box className={classes.customDevelopmentControlsContainer}>
                   <Button
                     size="large"
                     type="submit"

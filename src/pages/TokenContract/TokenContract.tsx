@@ -23,6 +23,8 @@ import { ContractFormsState, State, TokenContract as TokenContractType } from 't
 import { useShallowSelector } from 'hooks';
 import { dynamicFormDataTemplate, setTokenContractForm } from 'store/contractForms/reducer';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { routes } from 'appConstants';
 import {
   tokenContractFormConfigStart,
   validationSchema,
@@ -35,6 +37,7 @@ import { TokenBlockForm } from './components';
 const TokenContract = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     tokenContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
@@ -48,6 +51,7 @@ const TokenContract = () => {
           values: TokenContractType,
         ) => {
           dispatch(setTokenContractForm(values));
+          navigate(routes['token-contract']['preview-contract'].root);
         }}
       >
         {({
@@ -241,7 +245,7 @@ const TokenContract = () => {
                 variant="outlined"
                 className={classes.submitButton}
               >
-                Send
+                Create
               </Button>
               <Button
                 size="large"

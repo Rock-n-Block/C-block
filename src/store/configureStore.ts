@@ -21,9 +21,16 @@ const userPersistConfig = {
   whitelist: ['address', 'wallet', 'isLight', 'isMainnet'],
 };
 
+const contractFormsPersistConfig = {
+  key: 'contractForms',
+  storage,
+  whitelist: ['tokenContract'],
+};
+
 const reducers = {
   ...reducer,
   user: persistReducer(userPersistConfig, reducer.user),
+  contractForms: persistReducer(contractFormsPersistConfig, reducer.contractForms),
 };
 
 const store = configureStore({
