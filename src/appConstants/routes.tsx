@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContractToken } from 'theme/icons';
+import { ContractToken, WeddingRingIcon } from 'theme/icons';
 
 export const routes = {
   root: '/create-contract',
@@ -13,7 +13,7 @@ export const routes = {
   'wedding-contract': {
     root: '/create-contract/wedding-contract',
     title: 'Wedding Contract',
-    icon: <ContractToken />,
+    icon: <WeddingRingIcon />,
   },
   'my-contracts': {
     root: '/my-contracts',

@@ -1,68 +1,64 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import {
-  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_1, COLOR_GREY_5,
+  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_1, COLOR_GREY_2, COLOR_GREY_5,
 } from 'theme/colors';
+import { flexHelper } from '../../utils';
 
-export const useStyles = makeStyles((theme: Theme) => {
-  const unsetOrder = {
+export const useStyles = makeStyles((theme: Theme) => createStyles({
+  form: {
+    width: '90%',
     [theme.breakpoints.down('sm')]: {
-      order: 'unset',
+      width: '100%',
     },
-  };
-  return createStyles({
-    form: {
-      width: '90%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%',
-      },
-    },
-    tokenContractFormSection: {
-      borderTop: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_5}`,
-      padding: `${theme.spacing(5)}px 0px`,
-    },
-    shortInput: {
-      minWidth: theme.palette.type === 'dark' ? '190px' : '190px',
-      width: `${theme.palette.type === 'dark' ? '40%' : '40%'} !important`,
-    },
-    submitButton: {
-      width: '150px !important',
-      marginRight: theme.spacing(2.5),
-    },
-    resetButton: {
-      width: '150px !important',
-    },
+  },
+  tokenContractFormSection: {
+    borderTop: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_5}`,
+    padding: `${theme.spacing(5)}px 0px`,
+  },
+  shortInput: {
+    minWidth: theme.palette.type === 'dark' ? '190px' : '190px',
+    width: `${theme.palette.type === 'dark' ? '40%' : '40%'} !important`,
+  },
+  submitButton: {
+    width: '150px !important',
+    marginRight: theme.spacing(2.5),
+  },
+  resetButton: {
+    width: '150px !important',
+  },
 
-    helperText: {
-      marginTop: theme.spacing(4),
+  helperText: {
+    marginTop: theme.spacing(4),
+  },
+  newCount: {
+    color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_BLACK_1,
+  },
+  container: {
+    ...flexHelper('space-between', 'center'),
+    flexWrap: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
     },
-
-    address: {
-      order: 1,
-      ...unsetOrder,
+  },
+  slider: {
+    padding: '23px 19px',
+    margin: '10px',
+    background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
+    borderRadius: theme.spacing(2.5),
+    marginBottom: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing(5)}px ${theme.spacing(2)}px`,
     },
-
-    name: {
-      order: 3,
-      ...unsetOrder,
-    },
-
-    amount: {
-      order: 5,
-      ...unsetOrder,
-    },
-
-    isFrozen: {
-      order: 2,
-      ...unsetOrder,
-    },
-
-    frozenUntilDate: {
-      order: 4,
-      ...unsetOrder,
-    },
-    newCount: {
-      color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_BLACK_1,
-    },
-  });
-});
+    width: '100%',
+  },
+  title: {
+    ...flexHelper('space-between', 'flex-start'),
+    marginBottom: theme.spacing(9),
+    height: 40,
+  },
+  desc: {
+    marginTop: theme.spacing(4),
+    color: '#64656A',
+  },
+}));

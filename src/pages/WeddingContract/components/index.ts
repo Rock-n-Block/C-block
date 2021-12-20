@@ -1,1 +1,1 @@
-export * from './WeddingBlockForm/WeddingBlockForm';
+export * from './WeddingBlockSlider/WeddingBlockSlider';

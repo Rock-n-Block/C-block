@@ -32,6 +32,7 @@ import {
   getMuiTextFieldDefaultProps,
 } from './TextField';
 import { getTypographyOptions } from './Typography';
+import { getMuiSlider, getMuiSliderDefaultProps } from './Slider/Slider.theme';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let theme = createTheme({
@@ -75,6 +76,7 @@ theme = createTheme(theme, {
     MuiDialog: getMuiDialogDefaultProps(),
     MuiInputLabel: getMuiInputLabelDefaultProps(),
     MuiTextField: getMuiTextFieldDefaultProps(),
+    MuiSlider: getMuiSliderDefaultProps(),
   },
   overrides: {
     MuiCssBaseline: getMuiCssBaseline(theme),
@@ -90,6 +92,7 @@ theme = createTheme(theme, {
     MuiInputLabel: getMuiInputLabel(theme),
     MuiTextField: getMuiTextField(),
     MuiFormHelperText: getMuiFormHelperText(),
+    MuiSlider: getMuiSlider(),
   },
 });
 // eslint-disable-next-line import/no-mutable-exports
@@ -133,6 +136,7 @@ lightTheme = createTheme(lightTheme, {
     MuiDialog: getMuiDialogDefaultProps(),
     MuiInputLabel: getMuiInputLabelDefaultProps(),
     MuiTextField: getMuiTextFieldDefaultProps(),
+    MuiSlider: getMuiSliderDefaultProps(),
   },
   overrides: {
     MuiCssBaseline: getMuiCssBaseline(lightTheme),
@@ -148,5 +152,6 @@ lightTheme = createTheme(lightTheme, {
     MuiInputLabel: getMuiInputLabel(lightTheme),
     MuiTextField: getMuiTextField(),
     MuiFormHelperText: getMuiFormHelperText(),
+    MuiSlider: getMuiSlider(),
   },
 });
