@@ -414,7 +414,7 @@ export const CrowdsaleContract: FC = () => {
                 disabled={!isValid}
                 variant="outlined"
               >
-                Send
+                Create
               </Button>
               <Button
                 className={classes.resetButton}
