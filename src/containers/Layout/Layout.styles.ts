@@ -21,6 +21,7 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       [theme.breakpoints.down(768)]: {
         position: 'fixed',
         left: ({ isSidebarOpen }) => (isSidebarOpen ? '0%' : '-150%'),
+        height: '100vh',
         maxWidth: 'unset',
         width: '100%',
       },
