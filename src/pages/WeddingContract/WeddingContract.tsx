@@ -133,13 +133,13 @@ const WeddingContract = () => {
                     initialized the divorce
                   </Typography>
                   <Slider
-                    // ValueLabelComponent={ValueLabelComponent}
-                    // valueLabelDisplay="on"
-                    // aria-label="pretto slider"
+                    ValueLabelComponent={ValueLabelComponent}
+                    valueLabelDisplay="on"
+                    aria-label="pretto slider"
                     value={partnerOneSliderValue}
-                    // onBlur={handleBlur}
+                    onBlur={handleBlur}
                     onChange={onFirstSliderHandler}
-                    // step={1}
+                    step={1}
                   />
                   <Typography className={clsx(classes.desc)}>If second partner approves
                     the divorce the funds will be
