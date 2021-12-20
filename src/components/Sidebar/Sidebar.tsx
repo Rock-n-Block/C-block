@@ -38,7 +38,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
           <SidebarTab
             Icon={Icon}
             label={label}
-            isSelected={location.pathname === link}
+            isSelected={location.pathname.includes(link)}
             link={link}
             key={link}
           />

@@ -13,6 +13,7 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       overflow: 'hidden',
     },
     sidebar: {
+      position: 'fixed',
       zIndex: 999,
       minWidth: 250,
       maxWidth: 350,
@@ -29,9 +30,12 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
     content: {
       flex: 1,
       minWidth: 0,
+      paddingLeft: '25%',
       flexBasis: '75%',
       paddingBottom: theme.spacing(10),
+      minHeight: '100vh',
       [theme.breakpoints.down(768)]: {
+        paddingLeft: '0',
         flexBasis: '100%',
         height: ({ isSidebarOpen }) => (isSidebarOpen ? '100vh' : 'unset'),
       },
