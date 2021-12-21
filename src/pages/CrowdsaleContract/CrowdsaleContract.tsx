@@ -1,4 +1,6 @@
 import React, { FC, Fragment } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -12,6 +14,7 @@ import {
   Formik, Form, Field, FieldProps, FieldArray,
 } from 'formik';
 import clsx from 'clsx';
+
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import {
@@ -24,7 +27,7 @@ import {
   crowdsaleContractDynamicFormInitialData,
   setCrowdsaleContractForm,
 } from 'store/contractForms/reducer';
-import { useDispatch } from 'react-redux';
+import { routes } from 'appConstants';
 import {
   validationSchema,
   crowdsaleContractFormConfigStart,
@@ -41,6 +44,7 @@ import { SwitchableBlockForm } from './components/SwitchableBlockForm';
 export const CrowdsaleContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
     contractFormsSelector.getContractForms,
   );
@@ -52,6 +56,7 @@ export const CrowdsaleContract: FC = () => {
         validationSchema={validationSchema}
         onSubmit={(values: ICrowdsaleContract) => {
           dispatch(setCrowdsaleContractForm(values));
+          navigate(routes['crowdsale-contract']['preview-contract'].root);
         }}
       >
         {({

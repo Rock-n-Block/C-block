@@ -27,3 +27,4 @@ export * from './Snowflake';
 export * from './Calendar';
 export * from './DescendingSortOrderIcon';
 export * from './Edit';
+export * from './WalletIcon';

@@ -12,12 +12,12 @@ import { useStyles } from './Preview.styles';
 import { iconHelper } from './Preview.helpers';
 
 export interface PreviewProps {
+  className?: string;
   launchAction: () => void,
   editAction: () => void,
   deleteAction: () => void,
-  type: 'token';
+  type: 'token' | 'crowdsale';
   name: string;
-  className?: string;
 }
 
 export const Preview: FC<PreviewProps> = ({
@@ -49,6 +49,7 @@ export const Preview: FC<PreviewProps> = ({
   const closePaymentModal = useCallback(() => {
     setPaymentOpen(false);
   }, []);
+
   return (
     <Container className={classes.root}>
       <Box className={clsx(classes.content, className)}>

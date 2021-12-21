@@ -42,7 +42,7 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       lineHeight: '24px',
       letterSpacing: '0px',
       textTransform: 'capitalize',
-      minHeight: '30px',
+      // minHeight: '30px',
 
       '&.acidGreen': {
         background: COLOR_AKZ,
@@ -82,7 +82,8 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       fontWeight: FontWeights.fontWeightMedium,
       lineHeight: '24px',
       letterSpacing: '-0.5px',
-      textTransform: 'uppercase',
+      textTransform: 'unset',
+      // textTransform: 'uppercase',
     },
     body1: {
       fontSize: '16px',

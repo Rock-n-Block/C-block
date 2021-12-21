@@ -1,17 +1,15 @@
-/* eslint-disable max-len */
-/* eslint-disable react/no-array-index-key */
 import React, { useCallback } from 'react';
-import { Preview } from 'components/Preview';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Grid, Typography, Box } from '@material-ui/core';
+
+import { Preview, YesNoBlock, Copyable } from 'components';
 import { useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State } from 'types';
-import { Grid, Typography, Box } from '@material-ui/core';
-import { YesNoBlock } from 'components/YesNoBlock';
 import clsx from 'clsx';
-import { Copyable } from 'components/Copyable';
 import { routes } from 'appConstants';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
 import { useStyles } from './TokenContractPreview.styles';
 import { dynamicTokenContractPreviewHelpers, staticTokenContractPreviewHelpers } from './TokenContractPreview.helpers';
@@ -43,7 +41,7 @@ export const TokenContractPreview = () => {
         deleteAction={handleDelete}
       >
         {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
-          <Grid container className={classes.tokenContractInfoBlock} key={index}>
+          <Grid container className={classes.tokenContractInfoBlock} key={index.toString()}>
             {previewBlock.map(({
               key, label, value, shouldSkipObjectValue,
             }) => (

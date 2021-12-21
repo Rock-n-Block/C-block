@@ -14,7 +14,7 @@ const tokenContractRoute = {
   icon: <ContractToken />,
   [PREVIEW_CONTRACT]: {
     root: `/${CREATE_CONTRACT}/${TOKEN_CONTRACT}/${PREVIEW_CONTRACT}`,
-    title: 'Preview contract',
+    title: 'Preview Contract',
   },
 };
 
@@ -24,7 +24,7 @@ const crowdsaleContractRoute = {
   icon: <CrowdsaleIcon />,
   [PREVIEW_CONTRACT]: {
     root: `/${CREATE_CONTRACT}/${CROWDSALE_CONTRACT}/${PREVIEW_CONTRACT}`,
-    title: 'Preview contract',
+    title: 'Preview Contract',
   },
 };
 
