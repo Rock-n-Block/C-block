@@ -5,3 +5,4 @@ export * from './CrowdsaleContract';
 export * from './TokenContractPreview';
 export * from './WeddingContract';
 export * from './WeddingContractPreview';
+export * from './MyContracts';
