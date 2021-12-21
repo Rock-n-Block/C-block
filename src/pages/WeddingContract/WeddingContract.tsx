@@ -30,7 +30,7 @@ import ValueLabelComponent from './components/ValueLabel/ValueLabelComponent';
 import contractFormsSelector from '../../store/contractForms/selectors';
 import { setWeddingContractForm } from '../../store/contractForms/reducer';
 
-const WeddingContract = () => {
+export const WeddingContract = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const {

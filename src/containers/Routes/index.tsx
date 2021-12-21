@@ -7,8 +7,8 @@ import {
   TokenContract,
   TokenContractPreview,
   CrowdsaleContract,
+  WeddingContract,
 } from 'pages';
-import WeddingContract from '../../pages/WeddingContract/WeddingContract';
 import WeddingContractPreview from '../../pages/WeddingContractPreview/WeddingContractPreview';
 
 const RoutesContainer = () => (

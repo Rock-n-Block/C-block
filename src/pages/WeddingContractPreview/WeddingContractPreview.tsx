@@ -8,12 +8,12 @@ import { Copyable } from 'components/Copyable';
 import { routes } from 'appConstants';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { deleteTokenContractForm } from 'store/contractForms/reducer';
 import { useStyles } from './WeddingContractPreview.styles';
 import {
   staticWeddingContractPreviewHelpers,
 } from './WeddingContractPreview.helpers';
 import contractFormsSelector from '../../store/contractForms/selectors';
+import { deleteWeddingContractForm } from '../../store/contractForms/reducer';
 
 const WeddingContractPreview = () => {
   const {
@@ -23,11 +23,11 @@ const WeddingContractPreview = () => {
   const dispatch = useDispatch();
 
   const handleEdit = useCallback(() => {
-    navigate(routes['token-contract'].root);
+    navigate(routes['wedding-contract'].root);
   }, []);
 
   const handleDelete = useCallback(() => {
-    dispatch(deleteTokenContractForm());
+    dispatch(deleteWeddingContractForm());
     navigate(routes.root);
   }, []);
 
@@ -66,7 +66,7 @@ const WeddingContractPreview = () => {
                   <Typography>{weddingContract[partnerEmailKey]}</Typography>
                 </Box>
                 {bottomInfo && (
-                <Grid item xl={6} lg={8} md={8} xs={12} sm={12} className={classes.approvalInfo}>
+                <Grid item xs={12} sm={12} md={8} lg={8} xl={6} className={classes.approvalInfo}>
                   {bottomInfo.map(({ title, daysKey }) => (
                     <Box>
                       <Typography color="textSecondary">{title}</Typography>

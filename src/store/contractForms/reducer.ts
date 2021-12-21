@@ -89,6 +89,7 @@ export const {
   setCrowdsaleContractForm,
   deleteTokenContractForm,
   setWeddingContractForm,
+  deleteWeddingContractForm,
 } = contractFormReducer.actions;
 
 export default contractFormReducer.reducer;

@@ -1,6 +1,6 @@
 import { Overrides } from '@material-ui/core/styles/overrides';
 import { ComponentsProps } from '@material-ui/core/styles/props';
-import { COLOR_ACID_GREEN, COLOR_ACID_GREEN_GRADIENT, COLOR_BLACK_3 } from '../colors';
+import { COLOR_ACID_GREEN, COLOR_AKZ, COLOR_BLACK_3 } from '../colors';
 
 export const getMuiSlider = (): Overrides['MuiSlider'] => ({
   root: {
@@ -11,7 +11,7 @@ export const getMuiSlider = (): Overrides['MuiSlider'] => ({
     height: 40,
     width: 40,
     top: 3,
-    background: COLOR_ACID_GREEN_GRADIENT,
+    background: COLOR_AKZ,
     border: `3px solid ${COLOR_BLACK_3}`,
   },
   active: {},
