@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import {
-  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_1, COLOR_GREY_2, COLOR_GREY_5,
+  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_BLACK_4, COLOR_GREY_1, COLOR_GREY_2, COLOR_GREY_5,
 } from 'theme/colors';
 import { flexHelper } from '../../utils';
 
@@ -59,6 +59,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   desc: {
     marginTop: theme.spacing(4),
-    color: '#64656A',
+    color: COLOR_BLACK_4,
   },
 }));

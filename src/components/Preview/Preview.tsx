@@ -15,10 +15,12 @@ export interface PreviewProps {
   launchAction: () => void,
   editAction: () => void,
   deleteAction: () => void,
-  type: 'token';
+  type: IconType;
   name: string;
   className?: string;
 }
+
+type IconType = 'token' | 'weddingRing';
 
 export const Preview: FC<PreviewProps> = ({
   launchAction,

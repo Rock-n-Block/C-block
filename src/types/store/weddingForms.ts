@@ -6,7 +6,7 @@ export type WeddingContract = {
   partnerTwoEmail: string;
   daysForDivorceApproval: string;
   partnerOneSliderValue: number;
-  partnerTwoSliderValue: number
+  partnerTwoSliderValue: number;
   daysForWithdrawalApproval: string;
 };
 

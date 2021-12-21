@@ -10,7 +10,7 @@ const initialState: WeddingFormsState = {
     partnerOneEmail: '',
     partnerTwoEmail: '',
     daysForDivorceApproval: '',
-    partnerOneSliderValue: 20,
+    partnerOneSliderValue: 50,
     partnerTwoSliderValue: 50,
     daysForWithdrawalApproval: '',
   },
@@ -24,6 +24,14 @@ export const weddingFormReducer = createSlice({
       ...state,
       weddingContract: action.payload,
     }),
+    setWeddingFirstSliderValueForm: (state, action) => ({
+      ...state,
+      weddingContract: {
+        ...state.weddingContract,
+        partnerOneSliderValue: action.payload,
+        partnerTwoSliderValue: 100 - action.payload,
+      },
+    }),
     deleteWeddingContractForm: (state) => ({
       ...state,
       weddingContract: initialState.weddingContract,
@@ -32,7 +40,7 @@ export const weddingFormReducer = createSlice({
 });
 
 export const {
-  setWeddingContractForm, deleteWeddingContractForm,
+  setWeddingContractForm, deleteWeddingContractForm, setWeddingFirstSliderValueForm,
 } = weddingFormReducer.actions;
 
 export default weddingFormReducer.reducer;

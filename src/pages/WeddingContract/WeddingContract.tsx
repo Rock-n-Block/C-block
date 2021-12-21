@@ -1,5 +1,5 @@
-/* eslint-disable */
-import React, { useState } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { useMemo, useState } from 'react';
 import {
   Container,
   Typography,
@@ -20,6 +20,7 @@ import weddingFormsSelector from 'store/weddingForms/selectors';
 import { State, WeddingContract as WeddingContractType, WeddingFormsState } from 'types';
 import { useShallowSelector } from 'hooks';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   validationSchema,
   weddingContractFormConfigEnd, weddingContractFormConfigStart,
@@ -28,22 +29,26 @@ import { useStyles } from './WeddingContract.styles';
 import { WeddingBlockSlider } from './components';
 import { routes } from '../../appConstants';
 import { setWeddingContractForm } from '../../store/weddingForms/reducer';
-import { useNavigate } from 'react-router-dom';
-
 
 const WeddingContract = () => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { weddingContract } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
+  const {
+    weddingContract,
+  } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
 
-  const [partnerOneSliderValue, setPartnerOneSliderValue] = useState(weddingContract.partnerOneSliderValue);
-  const [partnerTwoSliderValue, setPartnerTwoSliderValue] = useState(weddingContract.partnerTwoSliderValue);
+  const [
+    partnerOneSliderValue, setPartnerOneSliderValue,
+  ] = useState(weddingContract.partnerOneSliderValue);
+  const [
+    partnerTwoSliderValue, setPartnerTwoSliderValue,
+  ] = useState(weddingContract.partnerTwoSliderValue);
 
-  const onFirstSliderHandler = (_, value: number): void => {
+  const onFirstSliderHandler = useMemo(() => (_, value: number) => {
     setPartnerOneSliderValue(value);
     setPartnerTwoSliderValue(100 - value);
-  };
-  
+  }, []);
+
   const onSecondSliderHandler = (_, value: number): void => {
     setPartnerTwoSliderValue(value);
     setPartnerOneSliderValue(100 - value);
@@ -69,7 +74,8 @@ const WeddingContract = () => {
         onSubmit={(
           values: WeddingContractType,
         ) => {
-          dispatch(setWeddingContractForm({...values,
+          dispatch(setWeddingContractForm({
+            ...values,
             partnerOneSliderValue,
             partnerTwoSliderValue,
           }));
@@ -83,8 +89,6 @@ const WeddingContract = () => {
           handleChange,
           handleBlur,
           isValid,
-          // setFieldValue,
-          // setFieldTouched,
         }) => (
           <Form translate={undefined} className={classes.form}>
             {weddingContractFormConfigStart.map((formSection, index) => (
