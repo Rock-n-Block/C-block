@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { Fragment } from 'react';
 import {
   Container,
@@ -16,7 +15,7 @@ import {
   FieldArray,
 } from 'formik';
 import clsx from 'clsx';
-import { CircleCloseIcon, PlusIcon } from 'theme/icons';
+import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State, TokenContract as TokenContractType } from 'types';
@@ -34,7 +33,7 @@ import {
 import { useStyles } from './TokenContract.styles';
 import { TokenBlockForm } from './components';
 
-const TokenContract = () => {
+export const TokenContract = React.memo(() => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -66,7 +65,7 @@ const TokenContract = () => {
         }) => (
           <Form translate={undefined} className={classes.form}>
             {tokenContractFormConfigStart.map((formSection, index) => (
-              <Grid container className={classes.tokenContractFormSection} key={`start_${index}`}>
+              <Grid container className={classes.tokenContractFormSection} key={`start_${index.toString()}`}>
                 {formSection.map(({
                   id, name, renderProps, helperText, isShort,
                 }) => (
@@ -96,7 +95,7 @@ const TokenContract = () => {
                       }
                     />
                     {helperText.map((text, i) => (
-                      <Typography key={i} variant="body1" className={clsx({ [classes.helperText]: i === 0 }, 's')} color="textSecondary">
+                      <Typography key={i.toString()} variant="body1" className={clsx({ [classes.helperText]: i === 0 }, 's')} color="textSecondary">
                         {text}
                       </Typography>
                     ))}
@@ -115,7 +114,7 @@ const TokenContract = () => {
                     return acc;
                   }, 0);
                   return (
-                    <Fragment key={`dynamic_${i}`}>
+                    <Fragment key={`dynamic_${i.toString()}`}>
                       <TokenBlockForm isFirst={i === 0} deleteForm={() => remove(i)}>
                         {dynamicFormDataConfig.map(({
                           id, name, renderProps, icon, isShort,
@@ -127,7 +126,7 @@ const TokenContract = () => {
                             md={isShort ? 3 : 6}
                             lg={isShort ? 3 : 6}
                             xl={isShort ? 3 : 6}
-                            key={`${name}_${index}`}
+                            key={`${name}_${index.toString()}`}
                             className={clsx(classes[name])}
                           >
                             <Field
@@ -225,7 +224,7 @@ const TokenContract = () => {
                   />
                   {helperText.map((text, i) => (
                     <Typography
-                      key={i}
+                      key={i.toString()}
                       variant="body1"
                       className={clsx({ [classes.helperText]: i === 0 }, 's')}
                       color="textSecondary"
@@ -252,7 +251,7 @@ const TokenContract = () => {
                 type="reset"
                 color="secondary"
                 variant="outlined"
-                endIcon={<CircleCloseIcon />}
+                endIcon={<CloseCircleIcon />}
                 className={classes.resetButton}
                 disabled={!Object.keys(touched).length}
               >
@@ -264,6 +263,4 @@ const TokenContract = () => {
       </Formik>
     </Container>
   );
-};
-
-export default React.memo(TokenContract);
+});

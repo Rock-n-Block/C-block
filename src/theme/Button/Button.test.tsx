@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import { Button } from "@material-ui/core";
-import { render } from "@testing-library/react";
+import { Button } from '@material-ui/core';
+import { render } from '@testing-library/react';
 
-import { ThemeProvider } from "~/theme/testUtils";
+import { ThemeProvider } from 'theme/testUtils';
 
-describe("Button", () => {
-  it("should render", () => {
+describe('Button', () => {
+  it('should render', () => {
     const { container } = render(
       <ThemeProvider>
         <Button>Text</Button>
-      </ThemeProvider>
+      </ThemeProvider>,
     );
     expect(container).toMatchSnapshot();
   });

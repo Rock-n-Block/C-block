@@ -32,7 +32,6 @@ const Control: React.FC<TextFieldProps> = ({ value: initialValue, ...props }) =>
     },
     [],
   );
-  // eslint-disable-next-line max-len
   return <TextField value={value} {...props} onChange={handleChange} />;
 };
 

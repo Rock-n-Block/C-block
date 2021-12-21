@@ -24,7 +24,19 @@ export const useStyles = makeStyles((theme: Theme) => {
       background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_3,
       borderRadius: theme.spacing(1.5),
       padding: `${theme.spacing(1)}px ${theme.spacing(2.5)}px`,
-      minWidth: 200,
+      margin: `${theme.spacing(2)}px 0px ${theme.spacing(4)}px 0px`,
+      minWidth: 500,
+      [theme.breakpoints.down('xs')]: {
+        minWidth: 'unset',
+      },
+    },
+    paymentInfoHelper: {
+      ...flexHelper('space-between'),
+      minWidth: 500,
+      padding: `0px ${theme.spacing(8)}px 0px ${theme.spacing(3)}px`,
+      [theme.breakpoints.down('xs')]: {
+        minWidth: 'unset',
+      },
     },
     paymentInfoIcon: {
       ...flexHelper(),
@@ -38,7 +50,7 @@ export const useStyles = makeStyles((theme: Theme) => {
       ...flexHelper('flex-end', 'center'),
     },
     payButton: {
-
+      marginRight: theme.spacing(3),
     },
     cancelButton: {
 

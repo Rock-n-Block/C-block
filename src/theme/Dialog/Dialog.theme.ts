@@ -14,6 +14,11 @@ export const getMuiDialogProps = (theme: Theme): Overrides['MuiDialog'] => ({
     paddingLeft: theme.spacing(3),
     background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
     borderRadius: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+    },
   },
 });
 

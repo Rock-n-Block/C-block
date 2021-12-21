@@ -10,14 +10,12 @@ export default {
   component: PaymentModal,
 };
 
-export const Default: React.FC = () => {
-  return (
-    <>
-      <Box>
-        <PaymentModal
-          {...paymentModalPropsMocked}
-        />
-      </Box>
-    </>
-  );
-};
+export const Default: React.FC = () => (
+  <>
+    <Box>
+      <PaymentModal
+        {...paymentModalPropsMocked}
+      />
+    </Box>
+  </>
+);

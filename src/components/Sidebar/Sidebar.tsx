@@ -1,9 +1,9 @@
 import React, { VFC } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Box, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { useLocation } from 'react-router-dom';
 import { AtIcon, CloseIcon } from 'theme/icons';
 import { State, UserState } from 'types';
 import { useShallowSelector } from 'hooks';

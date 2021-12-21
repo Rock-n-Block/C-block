@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "EXTEND_ESLINT=true react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "storybook": "start-storybook ./public -p 6006",
     "eject": "react-scripts eject",
     "new": "plop --plopfile generators/index.js",
-    "lint": "eslint --cache",
+    "format": "prettier --write \"{src,types,scripts}/**/*.{json,{j,t}s{,x},scss,}\"",
+    "lint": "eslint \"{src,types}/**/*.ts{,x}\" --cache",
+    "lint-fix": "npm run format && npm run lint-fix:ts",
+    "lint-fix:ts": "eslint \"{src,types}/**/*.ts{,x}\" --fix",
     "test:update": "jest --updateSnapshot ./src",
     "test:watch": "jest ./src",
     "test:coverage": "jest --coverage --watchAll=false ./src"

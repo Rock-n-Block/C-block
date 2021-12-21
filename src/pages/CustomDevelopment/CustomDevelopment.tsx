@@ -13,7 +13,7 @@ import {
   Field,
   FieldProps,
 } from 'formik';
-import { CircleCloseIcon } from 'theme/icons';
+import { CloseCircleIcon } from 'theme/icons';
 import { customDevelopmentFormConfig, initFormValues, validationSchema } from './CustomDevelopment.helpers';
 import { useStyles } from './CustomDevelopment.styles';
 
@@ -84,7 +84,7 @@ export const CustomDevelopment = () => {
                     type="reset"
                     color="secondary"
                     variant="outlined"
-                    endIcon={<CircleCloseIcon />}
+                    endIcon={<CloseCircleIcon />}
                     className={classes.resetButton}
                     disabled={!Object.keys(touched).length}
                   >

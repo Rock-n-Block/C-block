@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ContractFormsState } from 'types';
-import { TokenContract } from 'types/store/contractForms';
+import { ICrowdsaleContract, TokenContract } from 'types/store/contractForms';
 import { formattedDate } from 'utils';
 
 export const dynamicFormDataTemplate = {
@@ -10,6 +9,11 @@ export const dynamicFormDataTemplate = {
   amount: '',
   isFrozen: false,
   frozenUntilDate: formattedDate(),
+};
+
+export const crowdsaleContractDynamicFormInitialData = {
+  address: '',
+  rate: '',
 };
 
 const initialState: ContractFormsState = {
@@ -23,6 +27,23 @@ const initialState: ContractFormsState = {
     freezable: false,
     tokens: [dynamicFormDataTemplate],
   },
+  crowdsaleContract: {
+    contractName: '',
+    tokenAddress: '',
+    crowdsaleOwner: '',
+    tokens: [crowdsaleContractDynamicFormInitialData],
+    softcapTokens: '',
+    saleDuration: '',
+    changingDates: false,
+
+    minMaxInvestmentsSection: false,
+    minInvestments: '',
+    maxInvestments: '',
+
+    amountBonusSection: false,
+    amountBonus: '',
+    minimumContribution: '',
+  },
 };
 
 export const contractFormReducer = createSlice({
@@ -33,6 +54,10 @@ export const contractFormReducer = createSlice({
       ...state,
       tokenContract: action.payload,
     }),
+    setCrowdsaleContractForm: (state, action: PayloadAction<ICrowdsaleContract>) => ({
+      ...state,
+      crowdsaleContract: action.payload,
+    }),
     deleteTokenContractForm: (state) => ({
       ...state,
       tokenContract: initialState.tokenContract,
@@ -41,7 +66,9 @@ export const contractFormReducer = createSlice({
 });
 
 export const {
-  setTokenContractForm, deleteTokenContractForm,
+  setTokenContractForm,
+  setCrowdsaleContractForm,
+  deleteTokenContractForm,
 } = contractFormReducer.actions;
 
 export default contractFormReducer.reducer;

@@ -1,22 +1,10 @@
-export type TokenContractDynamicForm = {
-  address: string;
-  name: string;
-  amount: string;
-  isFrozen: boolean;
-  frozenUntilDate: string;
-};
+import { ICrowdsaleContract } from './crowdsaleContract';
+import { TokenContract } from './tokenContract';
 
-export type TokenContract = {
-  tokenName: string;
-  tokenOwner: string;
-  tokenSymbol: string;
-  decimals: string;
-  futureMinting: boolean;
-  burnable: boolean;
-  freezable: boolean;
-  tokens: TokenContractDynamicForm[],
-};
+export * from './crowdsaleContract';
+export * from './tokenContract';
 
 export type ContractFormsState = {
-  tokenContract: TokenContract
+  tokenContract: TokenContract;
+  crowdsaleContract: ICrowdsaleContract;
 };

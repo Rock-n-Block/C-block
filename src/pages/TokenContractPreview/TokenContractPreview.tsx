@@ -13,10 +13,11 @@ import { routes } from 'appConstants';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
+import { getTokenAmount } from 'utils';
 import { useStyles } from './TokenContractPreview.styles';
 import { dynamicTokenContractPreviewHelpers, staticTokenContractPreviewHelpers } from './TokenContractPreview.helpers';
 
-const TokenContractPreview = () => {
+export const TokenContractPreview = () => {
   const {
     tokenContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
@@ -34,54 +35,56 @@ const TokenContractPreview = () => {
 
   const classes = useStyles();
   return (
-    <>
-      <Preview
-        type="token"
-        name={tokenContract.tokenName}
-        launchAction={() => alert('launch')}
-        editAction={handleEdit}
-        deleteAction={handleDelete}
-      >
-        {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
-          <Grid container className={classes.tokenContractInfoBlock} key={index}>
-            {previewBlock.map(({
-              key, label, value, shouldSkipObjectValue,
-            }) => (
-              <Grid
-                item
-                xs={6}
-                sm={6}
-                md={3}
-                lg={3}
-                xl={3}
-                key={label}
-                className={classes.previewValueBlock}
+    <Preview
+      type="token"
+      name={tokenContract.tokenName}
+      launchAction={() => alert('launch')}
+      editAction={handleEdit}
+      deleteAction={handleDelete}
+    >
+      {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
+        <Grid container className={classes.tokenContractInfoBlock} key={index}>
+          {previewBlock.map(({
+            key, label, value, shouldSkipObjectValue,
+          }) => (
+            <Grid
+              item
+              xs={6}
+              sm={6}
+              md={3}
+              lg={3}
+              xl={3}
+              key={label}
+              className={classes.previewValueBlock}
+            >
+              <Typography
+                variant="body1"
+                className={clsx(classes.previewLabel, 's')}
+                color="textSecondary"
               >
-                <Typography
-                  variant="body1"
-                  className={clsx(classes.previewLabel, 's')}
-                  color="textSecondary"
-                >
-                  {label}
+                {label}
+              </Typography>
+              {typeof tokenContract[key] !== 'boolean' ? (
+                <Typography variant="body1">
+                  {shouldSkipObjectValue ? value : tokenContract[key]}
                 </Typography>
-                {typeof tokenContract[key] !== 'boolean' ? (
-                  <Typography variant="body1">
-                    {shouldSkipObjectValue ? value : tokenContract[key]}
-                  </Typography>
-                ) : (
-                  <YesNoBlock yes={tokenContract[key]} />
-                )}
-              </Grid>
-            ))}
-          </Grid>
-        ))}
+              ) : (
+                <YesNoBlock yes={tokenContract[key]} />
+              )}
+            </Grid>
+          ))}
+        </Grid>
+      ))}
 
-        <Typography variant="body1" className={clsx(classes.tokenOwnerTitle, 'l')}>Token Owner</Typography>
-        <Copyable onlyIconActive withBorder valueToCopy={tokenContract.tokenOwner} className={classes.copyableContainer}>
-          <Typography className={classes.copyableText}>{tokenContract.tokenOwner}</Typography>
-        </Copyable>
-        <Typography className={classes.dynamicDataHeader} variant="h3">Token distribution</Typography>
-        {tokenContract.tokens.map((tokenContractDynamicData) => (
+      <Typography variant="body1" className={clsx(classes.tokenOwnerTitle, 'l')}>Token Owner</Typography>
+      <Copyable onlyIconActive withBorder valueToCopy={tokenContract.tokenOwner} className={classes.copyableContainer}>
+        <Typography className={classes.copyableText}>{tokenContract.tokenOwner}</Typography>
+      </Copyable>
+      <Typography className={classes.dynamicDataHeader} variant="h3">Token distribution</Typography>
+      {tokenContract.tokens.map((tokenContractDynamicData, index) => {
+        let totalTokenAmount = 0;
+        totalTokenAmount += +tokenContractDynamicData.amount;
+        return (
           <>
             <Typography
               variant="body1"
@@ -127,11 +130,21 @@ const TokenContractPreview = () => {
                 );
               })}
             </Grid>
+            {index === tokenContract.tokens.length - 1 && (
+              <Typography
+                variant="body1"
+                className={clsx(classes.helperText, 'l')}
+                color="textSecondary"
+              >
+                Total supply:{' '}
+                <span className={classes.newCount}>
+                  {`${getTokenAmount(totalTokenAmount, +tokenContract.decimals)} New`}
+                </span>
+              </Typography>
+            )}
           </>
-        ))}
-      </Preview>
-    </>
+        );
+      })}
+    </Preview>
   );
 };
-
-export default TokenContractPreview;

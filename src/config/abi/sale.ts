@@ -7,21 +7,29 @@ export default [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' },
+      {
+        indexed: true, internalType: 'address', name: 'previousOwner', type: 'address',
+      },
+      {
+        indexed: true, internalType: 'address', name: 'newOwner', type: 'address',
+      },
     ],
     name: 'OwnershipTransferred',
     type: 'event',
   },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: 'address', name: 'account', type: 'address' }],
+    inputs: [{
+      indexed: false, internalType: 'address', name: 'account', type: 'address',
+    }],
     name: 'Paused',
     type: 'event',
   },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: 'address', name: 'account', type: 'address' }],
+    inputs: [{
+      indexed: false, internalType: 'address', name: 'account', type: 'address',
+    }],
     name: 'Unpaused',
     type: 'event',
   },
@@ -71,7 +79,9 @@ export default [
     stateMutability: 'view',
     type: 'function',
   },
-  { inputs: [], name: 'pause', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [], name: 'pause', outputs: [], stateMutability: 'nonpayable', type: 'function',
+  },
   {
     inputs: [],
     name: 'paused',
@@ -154,7 +164,9 @@ export default [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  { inputs: [], name: 'unpause', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [], name: 'unpause', outputs: [], stateMutability: 'nonpayable', type: 'function',
+  },
   {
     inputs: [{ internalType: 'address', name: '_token', type: 'address' }],
     name: 'withdraw',

@@ -32,6 +32,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": 2,
     'object-curly-spacing': 2,
     'no-console': 1,
+    'max-len': ['off', { 'code': 100 }],
     "react/jsx-props-no-spreading": 0,
   },
   overrides: [

@@ -10,14 +10,12 @@ export default {
   component: DisclaimerModal,
 };
 
-export const Default: React.FC = () => {
-  return (
-    <>
-      <Box>
-        <DisclaimerModal
-          {...disclaimerModalPropsMocked}
-        />
-      </Box>
-    </>
-  );
-};
+export const Default: React.FC = () => (
+  <>
+    <Box>
+      <DisclaimerModal
+        {...disclaimerModalPropsMocked}
+      />
+    </Box>
+  </>
+);

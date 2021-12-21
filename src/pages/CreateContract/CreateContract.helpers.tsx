@@ -12,10 +12,10 @@ export const createContractHelpers = [
     link: routes['token-contract'].root,
   },
   {
-    title: 'Crowdsale Contract',
+    title: 'Crowdsale contract',
     text: 'Start your ICO/Token sale with a few clicks',
     icon: <CrowdsaleIcon />,
-    link: '/',
+    link: routes['crowdsale-contract'].root,
   },
   {
     title: 'Lost Key',
