@@ -31,14 +31,14 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_BLACK_1,
   },
   container: {
-    ...flexHelper('space-between', 'center'),
+    ...flexHelper('space-between'),
     flexWrap: 'nowrap',
     [theme.breakpoints.down('sm')]: {
       flexWrap: 'wrap',
     },
   },
   slider: {
-    padding: '23px 19px',
+    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
     margin: '10px',
     background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
     borderRadius: theme.spacing(2.5),

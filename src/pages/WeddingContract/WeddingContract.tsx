@@ -20,15 +20,15 @@ import { State, IWeddingContract as WeddingContractType, ContractFormsState } fr
 import { useShallowSelector } from 'hooks';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { routes } from 'appConstants';
+import contractFormsSelector from 'store/contractForms/selectors';
+import { setWeddingContractForm } from 'store/contractForms/reducer';
 import {
   validationSchema,
   weddingContractFormConfigEnd, weddingContractFormConfigStart,
 } from './WeddingContract.helpers';
 import { useStyles } from './WeddingContract.styles';
-import { routes } from '../../appConstants';
 import ValueLabelComponent from './components/ValueLabel/ValueLabelComponent';
-import contractFormsSelector from '../../store/contractForms/selectors';
-import { setWeddingContractForm } from '../../store/contractForms/reducer';
 
 export const WeddingContract = () => {
   const classes = useStyles();
