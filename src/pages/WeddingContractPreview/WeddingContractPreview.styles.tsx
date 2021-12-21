@@ -1,6 +1,8 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-import { COLOR_ACID_GREEN, COLOR_BLACK_3, COLOR_GREY_2 } from 'theme/colors';
+import {
+  COLOR_ACID_GREEN, COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_2,
+} from 'theme/colors';
 import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -20,6 +22,10 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   copyableContainer: {
     minWidth: 240,
     width: '100%',
+    maxWidth: '70%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '100%',
+    },
   },
   copyableText: {
     whiteSpace: 'nowrap',
@@ -41,7 +47,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     '& > *': {
       '&:first-child': {
         marginRight: theme.spacing(2),
-        color: COLOR_ACID_GREEN,
+        color: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_BLACK_1,
       },
     },
   },
