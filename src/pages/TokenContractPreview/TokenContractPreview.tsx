@@ -13,7 +13,6 @@ import { routes } from 'appConstants';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
-import { getTokenAmount } from 'utils';
 import { useStyles } from './TokenContractPreview.styles';
 import { dynamicTokenContractPreviewHelpers, staticTokenContractPreviewHelpers } from './TokenContractPreview.helpers';
 
@@ -34,6 +33,7 @@ export const TokenContractPreview = () => {
   }, []);
 
   const classes = useStyles();
+  let totalTokenAmount = 0;
   return (
     <Preview
       type="token"
@@ -82,7 +82,6 @@ export const TokenContractPreview = () => {
       </Copyable>
       <Typography className={classes.dynamicDataHeader} variant="h3">Token distribution</Typography>
       {tokenContract.tokens.map((tokenContractDynamicData, index) => {
-        let totalTokenAmount = 0;
         totalTokenAmount += +tokenContractDynamicData.amount;
         return (
           <>
@@ -98,7 +97,7 @@ export const TokenContractPreview = () => {
             </Copyable>
             <Grid container className={classes.nameAmountData}>
               {dynamicTokenContractPreviewHelpers.map(({ icon, key, label }) => {
-                if (tokenContractDynamicData[key] === 'frozenUntilDate' && !tokenContractDynamicData.isFrozen) {
+                if (key === 'frozenUntilDate' && !tokenContractDynamicData.isFrozen) {
                   return null;
                 }
 
@@ -138,7 +137,7 @@ export const TokenContractPreview = () => {
               >
                 Total supply:{' '}
                 <span className={classes.newCount}>
-                  {`${getTokenAmount(totalTokenAmount, +tokenContract.decimals)} New`}
+                  {`${totalTokenAmount} New`}
                 </span>
               </Typography>
             )}
