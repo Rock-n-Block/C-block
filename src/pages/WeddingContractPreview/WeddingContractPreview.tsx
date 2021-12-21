@@ -67,7 +67,7 @@ export const WeddingContractPreview = () => {
               {bottomInfo && (
                 <Grid item xs={12} sm={12} md={8} lg={8} xl={6} className={classes.approvalInfo}>
                   {bottomInfo.map(({ title, daysKey }) => (
-                    <Box>
+                    <Box className={classes.approvalInfoBlock}>
                       <Typography color="textSecondary">{title}</Typography>
                       <Typography>{weddingContract[daysKey]} days</Typography>
                     </Box>

@@ -39,7 +39,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   slider: {
     padding: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
-    margin: '10px',
+    margin: theme.spacing(1),
     background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
     borderRadius: theme.spacing(2.5),
     marginBottom: theme.spacing(4),

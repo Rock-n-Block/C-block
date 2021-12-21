@@ -7,7 +7,7 @@ import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
   tokenContractInfoBlock: {
-    padding: `${theme.spacing(4)}px 0`,
+    padding: `${theme.spacing(4)}px 0px`,
     '&:nth-child(2)': {
       borderBottom: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
     },
@@ -56,11 +56,11 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     width: '100%',
     paddingTop: theme.spacing(4),
     ...flexHelper('space-between'),
-    '& > div': {
-      marginRight: theme.spacing(2),
-      '&:first-child': {
-        color: COLOR_GREY_2,
-      },
+  },
+  approvalInfoBlock: {
+    marginRight: theme.spacing(2),
+    '&:first-child': {
+      color: COLOR_GREY_2,
     },
   },
 }));
