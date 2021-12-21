@@ -39,10 +39,9 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     h2: {
       fontSize: '32px',
       fontWeight: FontWeights.fontWeightBold,
-      lineHeight: '24px',
+      lineHeight: '40px',
       letterSpacing: '0px',
       textTransform: 'capitalize',
-      // minHeight: '30px',
 
       '&.acidGreen': {
         background: COLOR_AKZ,
