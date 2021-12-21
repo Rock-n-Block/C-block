@@ -9,6 +9,8 @@ describe('Toastify', () => {
   it('should render', () => {
     const { container } = render(
       <Toastify
+        type="success"
+        message=""
         {...toastifyPropsMocked}
       />,
     );

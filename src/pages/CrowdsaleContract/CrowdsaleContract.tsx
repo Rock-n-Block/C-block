@@ -186,6 +186,8 @@ export const CrowdsaleContract: FC = () => {
                       </TokenBlockForm>
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                        {/* supported only 4 tokens for payment */}
+                        {i < 4 && (
                         <Button
                           variant="outlined"
                           endIcon={<PlusIcon />}
@@ -193,6 +195,7 @@ export const CrowdsaleContract: FC = () => {
                         >
                           Add address
                         </Button>
+                        )}
                       </Grid>
                       )}
                     </Fragment>

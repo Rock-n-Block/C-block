@@ -10,7 +10,7 @@ export const validationSchema = Yup.object().shape({
   tokenName: Yup.string().matches(latinAndNumbers).min(5).max(25).required(),
   tokenOwner: Yup.string().length(42).required(),
   tokenSymbol: Yup.string().matches(latinAndNumbers).min(3).max(4).required(),
-  decimals: Yup.number().min(0).max(18).required(),
+  decimals: Yup.number().positive().min(0).max(18).required(),
   futureMinting: Yup.boolean().required(),
   burnable: Yup.boolean().required(),
   freezable: Yup.boolean().required(),

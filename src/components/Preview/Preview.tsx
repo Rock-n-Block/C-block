@@ -8,15 +8,18 @@ import clsx from 'clsx';
 import { Edit, TrashIcon } from 'theme/icons';
 import { DisclaimerModal } from 'components/DisclaimerModal';
 import { PaymentModal } from 'components/PaymentModal';
+import { useNavigate } from 'react-router-dom';
+import { routes } from 'appConstants';
 import { useStyles } from './Preview.styles';
 import { iconHelper } from './Preview.helpers';
 
+type IconType = 'token' | 'weddingRing' | 'crowdsale';
 export interface PreviewProps {
   className?: string;
   launchAction: () => void,
   editAction: () => void,
   deleteAction: () => void,
-  type: 'token' | 'crowdsale';
+  type: IconType;
   name: string;
 }
 
@@ -30,6 +33,7 @@ export const Preview: FC<PreviewProps> = ({
   className,
 }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
   const [isPaymentOpen, setPaymentOpen] = useState(false);
 
@@ -50,6 +54,11 @@ export const Preview: FC<PreviewProps> = ({
     setPaymentOpen(false);
   }, []);
 
+  const onPay = useCallback(() => {
+    launchAction();
+    closePaymentModal();
+    navigate(routes.root);
+  }, []);
   return (
     <Container className={classes.root}>
       <Box className={clsx(classes.content, className)}>
@@ -99,7 +108,7 @@ export const Preview: FC<PreviewProps> = ({
       <PaymentModal
         open={isPaymentOpen}
         onClose={closePaymentModal}
-        onAccept={launchAction}
+        onAccept={onPay}
         paymentAmount="16,499.05"
       />
     </Container>

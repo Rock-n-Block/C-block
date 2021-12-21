@@ -10,9 +10,10 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       width: '100%',
       display: 'flex',
       background: theme.palette.type === 'dark' ? COLOR_LAYOUT_BACKGROUND_DARK : COLOR_LAYOUT_BACKGROUND_LIGHT,
-      overflow: 'hidden',
     },
     sidebar: {
+      position: 'sticky',
+      top: 0,
       zIndex: 999,
       minWidth: 250,
       maxWidth: 350,
@@ -21,6 +22,7 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       [theme.breakpoints.down(768)]: {
         position: 'fixed',
         left: ({ isSidebarOpen }) => (isSidebarOpen ? '0%' : '-150%'),
+        height: '100vh',
         maxWidth: 'unset',
         width: '100%',
       },
@@ -30,7 +32,11 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       minWidth: 0,
       flexBasis: '75%',
       paddingBottom: theme.spacing(10),
+      minHeight: '100vh',
+      overflow: 'hidden',
+      position: 'relative',
       [theme.breakpoints.down(768)]: {
+        paddingLeft: '0',
         flexBasis: '100%',
         height: ({ isSidebarOpen }) => (isSidebarOpen ? '100vh' : 'unset'),
       },

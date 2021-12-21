@@ -1,10 +1,11 @@
 import React from 'react';
-import { ContractToken, CrowdsaleIcon } from 'theme/icons';
+import { ContractToken, WeddingRingIcon, CrowdsaleIcon } from 'theme/icons';
 
 const CREATE_CONTRACT = 'create-contract';
 const TOKEN_CONTRACT = 'token-contract';
 const CROWDSALE_CONTRACT = 'crowdsale-contract';
 const PREVIEW_CONTRACT = 'preview-contract';
+const WEDDING_CONTRACT = 'wedding-contract';
 const MY_CONTRACTS = 'my-contracts';
 const CUSTOM_DEVELOPMENT = 'custom-development';
 
@@ -28,6 +29,16 @@ const crowdsaleContractRoute = {
   },
 };
 
+const weddingContractRoute = {
+  root: `/${CREATE_CONTRACT}/${WEDDING_CONTRACT}`,
+  title: 'Wedding Contract',
+  icon: <WeddingRingIcon />,
+  [PREVIEW_CONTRACT]: {
+    root: `/${CREATE_CONTRACT}/${WEDDING_CONTRACT}/${PREVIEW_CONTRACT}`,
+    title: 'Preview Contract',
+  },
+};
+
 const myContractsRoute = {
   root: `/${MY_CONTRACTS}`,
   title: 'My contracts',
@@ -46,6 +57,7 @@ export const routes = {
   icon: null,
   [TOKEN_CONTRACT]: tokenContractRoute,
   [CROWDSALE_CONTRACT]: crowdsaleContractRoute,
+  [WEDDING_CONTRACT]: weddingContractRoute,
   [MY_CONTRACTS]: myContractsRoute,
   [CUSTOM_DEVELOPMENT]: customDevelopmentRoute,
 };

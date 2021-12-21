@@ -29,15 +29,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <>
-      <Box className={classes.root}>
-        <Sidebar className={classes.sidebar} closeSidebar={toggleSidebar} />
-        <span className={classes.content}>
-          <Header openSidebar={toggleSidebar} />
-          {children}
-        </span>
-        <Box className={classes.greenBlob} />
-      </Box>
-    </>
+    <Box className={classes.root}>
+      <Sidebar className={classes.sidebar} closeSidebar={toggleSidebar} />
+      <span className={classes.content}>
+        <Header openSidebar={toggleSidebar} />
+        {children}
+      </span>
+      <Box className={classes.greenBlob} />
+    </Box>
   );
 };

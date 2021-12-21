@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ContractFormsState } from 'types';
+import { ContractFormsState, IWeddingContract } from 'types';
 import { ICrowdsaleContract, TokenContract } from 'types/store/contractForms';
 import { formattedDate } from 'utils';
 
@@ -44,6 +44,17 @@ const initialState: ContractFormsState = {
     amountBonus: '',
     minimumContribution: '',
   },
+  weddingContract: {
+    contractName: '',
+    partnerOneAddress: '',
+    partnerTwoAddress: '',
+    partnerOneEmail: '',
+    partnerTwoEmail: '',
+    daysForDivorceApproval: '',
+    partnerOneSliderValue: 50,
+    partnerTwoSliderValue: 50,
+    daysForWithdrawalApproval: '',
+  },
 };
 
 export const contractFormReducer = createSlice({
@@ -66,6 +77,14 @@ export const contractFormReducer = createSlice({
       ...state,
       crowdsaleContract: initialState.crowdsaleContract,
     }),
+    setWeddingContractForm: (state, action: PayloadAction<IWeddingContract>) => ({
+      ...state,
+      weddingContract: action.payload,
+    }),
+    deleteWeddingContractForm: (state) => ({
+      ...state,
+      weddingContract: initialState.weddingContract,
+    }),
   },
 });
 
@@ -73,6 +92,8 @@ export const {
   setTokenContractForm,
   setCrowdsaleContractForm,
   deleteTokenContractForm,
+  setWeddingContractForm,
+  deleteWeddingContractForm,
 } = contractFormReducer.actions;
 
 export default contractFormReducer.reducer;

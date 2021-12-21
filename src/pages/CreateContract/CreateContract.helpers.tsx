@@ -33,6 +33,6 @@ export const createContractHelpers = [
     title: 'Wedding Contract',
     text: 'Wallet with Multisig function distribution of funds between the owners after/during specified period of time.',
     icon: <WeddingRingIcon />,
-    link: '/',
+    link: routes['wedding-contract'].root,
   },
 ];

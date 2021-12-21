@@ -34,75 +34,57 @@ export const TokenContractPreview = () => {
   }, []);
 
   const classes = useStyles();
+  let totalTokenAmount = 0;
   return (
-    <>
-      <Preview
-        type="token"
-        name={tokenContract.tokenName}
-        launchAction={() => alert('launch')}
-        editAction={handleEdit}
-        deleteAction={handleDelete}
-      >
-        {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
-          <Grid
-            container
-            className={classes.tokenContractInfoBlock}
-            key={index.toString()}
-          >
-            {previewBlock.map(
-              ({
-                key, label, value, shouldSkipObjectValue,
-              }) => (
-                <Grid
-                  item
-                  xs={6}
-                  sm={6}
-                  md={3}
-                  lg={3}
-                  xl={3}
-                  key={label}
-                  className={classes.previewValueBlock}
-                >
-                  <Typography
-                    variant="body1"
-                    className={clsx(classes.previewLabel, 's')}
-                    color="textSecondary"
-                  >
-                    {label}
-                  </Typography>
-                  {typeof tokenContract[key] !== 'boolean' ? (
-                    <Typography variant="body1">
-                      {shouldSkipObjectValue ? value : tokenContract[key]}
-                    </Typography>
-                  ) : (
-                    <YesNoBlock yes={tokenContract[key]} />
-                  )}
-                </Grid>
-              ),
-            )}
-          </Grid>
-        ))}
+    <Preview
+      type="token"
+      name={tokenContract.tokenName}
+      launchAction={() => alert('launch')}
+      editAction={handleEdit}
+      deleteAction={handleDelete}
+    >
+      {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
+        <Grid container className={classes.tokenContractInfoBlock} key={index.toString()}>
+          {previewBlock.map(({
+            key, label, value, shouldSkipObjectValue,
+          }) => (
+            <Grid
+              item
+              xs={6}
+              sm={6}
+              md={3}
+              lg={3}
+              xl={3}
+              key={label}
+              className={classes.previewValueBlock}
+            >
+              <Typography
+                variant="body1"
+                className={clsx(classes.previewLabel, 's')}
+                color="textSecondary"
+              >
+                {label}
+              </Typography>
+              {typeof tokenContract[key] !== 'boolean' ? (
+                <Typography variant="body1">
+                  {shouldSkipObjectValue ? value : tokenContract[key]}
+                </Typography>
+              ) : (
+                <YesNoBlock yes={tokenContract[key]} />
+              )}
+            </Grid>
+          ))}
+        </Grid>
+      ))}
 
-        <Typography
-          className={clsx(classes.tokenOwnerTitle, 'l')}
-          variant="body1"
-        >
-          Token Owner
-        </Typography>
-        <Copyable
-          onlyIconActive
-          withBorder
-          valueToCopy={tokenContract.tokenOwner}
-          className={classes.copyableContainer}
-        >
-          <Typography className={classes.copyableText}>
-            {tokenContract.tokenOwner}
-          </Typography>
-        </Copyable>
-        <Typography className={classes.dynamicDataHeader} variant="h3">
-          Token distribution
-        </Typography>
-        {tokenContract.tokens.map((tokenContractDynamicData) => (
+      <Typography variant="body1" className={clsx(classes.tokenOwnerTitle, 'l')}>Token Owner</Typography>
+      <Copyable onlyIconActive withBorder valueToCopy={tokenContract.tokenOwner} className={classes.copyableContainer}>
+        <Typography className={classes.copyableText}>{tokenContract.tokenOwner}</Typography>
+      </Copyable>
+      <Typography className={classes.dynamicDataHeader} variant="h3">Token distribution</Typography>
+      {tokenContract.tokens.map((tokenContractDynamicData, index) => {
+        totalTokenAmount += +tokenContractDynamicData.amount;
+        return (
           <>
             <Typography
               variant="body1"
@@ -122,52 +104,59 @@ export const TokenContractPreview = () => {
               </Typography>
             </Copyable>
             <Grid container className={classes.nameAmountData}>
-              {dynamicTokenContractPreviewHelpers.map(
-                ({ icon, key, label }) => {
-                  if (
-                    tokenContractDynamicData[key] === 'frozenUntilDate' &&
-                    !tokenContractDynamicData.isFrozen
-                  ) {
-                    return null;
-                  }
+              {dynamicTokenContractPreviewHelpers.map(({ icon, key, label }) => {
+                if (key === 'frozenUntilDate' && !tokenContractDynamicData.isFrozen) {
+                  return null;
+                }
 
-                  return (
-                    <Grid
-                      item
-                      xs={6}
-                      sm={6}
-                      md={3}
-                      lg={3}
-                      xl={3}
-                      key={key}
-                      className={classes.previewValueBlock}
+                return (
+                  <Grid
+                    item
+                    xs={6}
+                    sm={6}
+                    md={3}
+                    lg={3}
+                    xl={3}
+                    key={key}
+                    className={classes.previewValueBlock}
+                  >
+                    <Box
+                      className={clsx(
+                        classes.previewLabel,
+                        classes.frozenUntil,
+                      )}
                     >
-                      <Box
-                        className={clsx(
-                          classes.previewLabel,
-                          classes.frozenUntil,
-                        )}
+                      {icon}
+                      <Typography
+                        variant="body1"
+                        className="s"
+                        color="textSecondary"
                       >
-                        {icon}
-                        <Typography
-                          variant="body1"
-                          className="s"
-                          color="textSecondary"
-                        >
-                          {label}
-                        </Typography>
-                      </Box>
-                      <Typography variant="body1">
-                        {tokenContractDynamicData[key]}
+                        {label}
                       </Typography>
-                    </Grid>
-                  );
-                },
-              )}
+                    </Box>
+                    <Typography variant="body1">
+                      {tokenContractDynamicData[key]}
+                    </Typography>
+                  </Grid>
+                );
+              })}
             </Grid>
+            {index === tokenContract.tokens.length - 1 && (
+              <Typography
+                variant="body1"
+                className={clsx(classes.helperText, 'l')}
+                color="textSecondary"
+              >
+                Total supply:{' '}
+                <span className={classes.newCount}>
+                  {`${totalTokenAmount} New`}
+                </span>
+              </Typography>
+            )}
           </>
-        ))}
-      </Preview>
-    </>
+        );
+      })}
+    </Preview>
   );
 };

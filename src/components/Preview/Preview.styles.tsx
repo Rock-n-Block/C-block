@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import {
-  COLOR_BLACK_1, COLOR_BLACK_2, COLOR_BLACK_3, COLOR_GREY_2,
+  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_2,
 } from 'theme/colors';
 
 import { getFormatMedia } from 'theme/utils';
@@ -59,7 +59,7 @@ export const useStyles = makeStyles((theme: Theme) => {
       },
     },
     editDelete: {
-      background: COLOR_BLACK_2,
+      // background: COLOR_BLACK_2,
       borderColor: COLOR_BLACK_3,
       '&:first-of-type': {
         marginRight: theme.spacing(2),
