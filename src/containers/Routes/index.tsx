@@ -1,15 +1,15 @@
 import React from 'react';
 import { routes } from 'appConstants';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { CreateContract } from 'pages/CreateContract';
-import { CustomDevelopment } from 'pages/CustomDevelopment';
-import TokenContract from 'pages/TokenContract/TokenContract';
-import WeddingContract from 'pages/WeddingContract/WeddingContract';
-import TokenContractPreview from 'pages/TokenContractPreview/TokenContractPreview';
-import WeddingContractPreview from '../../pages/WeddingContractPreview/WeddingContractPreview';
 import {
-  CreateContract, CustomDevelopment, TokenContract, TokenContractPreview, CrowdsaleContract,
+  CreateContract,
+  CustomDevelopment,
+  TokenContract,
+  TokenContractPreview,
+  CrowdsaleContract,
 } from 'pages';
+import WeddingContract from '../../pages/WeddingContract/WeddingContract';
+import WeddingContractPreview from '../../pages/WeddingContractPreview/WeddingContractPreview';
 
 const RoutesContainer = () => (
   <Routes>

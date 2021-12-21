@@ -15,7 +15,7 @@ import {
   FieldProps,
 } from 'formik';
 import clsx from 'clsx';
-import { CircleCloseIcon } from 'theme/icons';
+import { CloseIcon } from 'theme/icons';
 import weddingFormsSelector from 'store/weddingForms/selectors';
 import { State, WeddingContract as WeddingContractType, WeddingFormsState } from 'types';
 import { useShallowSelector } from 'hooks';
@@ -227,7 +227,7 @@ const WeddingContract = () => {
                 type="reset"
                 color="secondary"
                 variant="outlined"
-                endIcon={<CircleCloseIcon />}
+                endIcon={<CloseIcon />}
                 className={classes.resetButton}
                 disabled={!Object.keys(touched).length}
               >

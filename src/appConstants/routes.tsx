@@ -1,6 +1,5 @@
 import React from 'react';
-import { ContractToken, WeddingRingIcon } from 'theme/icons';
-import { ContractToken, CrowdsaleIcon } from 'theme/icons';
+import { ContractToken, WeddingRingIcon, CrowdsaleIcon } from 'theme/icons';
 
 const CREATE_CONTRACT = '/create-contract';
 
