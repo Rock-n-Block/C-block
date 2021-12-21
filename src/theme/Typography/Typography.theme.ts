@@ -96,10 +96,11 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       },
 
       '&.l': {
-        fontFamily: 'Arial Black',
+        // fontFamily: 'Arial Black',
         fontSize: '18px',
+        fontWeight: FontWeights.fontWeightMedium,
         lineHeight: '30px',
-        letterSpacing: '0px',
+        letterSpacing: '-0.5px',
         textTransform: 'none',
       },
 
