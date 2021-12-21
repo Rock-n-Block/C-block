@@ -9,8 +9,8 @@ export const validationSchema = Yup.object().shape({
   partnerTwoAddress: Yup.string().length(42).required(),
   partnerOneEmail: Yup.string().email().max(255).required(),
   partnerTwoEmail: Yup.string().email().max(255).required(),
-  daysForDivorceApproval: Yup.number().max(18).min(1).required(),
-  daysForWithdrawalApproval: Yup.number().max(18).min(1).required(),
+  daysForDivorceApproval: Yup.number().min(1).required(),
+  daysForWithdrawalApproval: Yup.number().min(1).required(),
 });
 
 type WeddingContractFieldType = {
