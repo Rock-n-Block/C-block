@@ -2,9 +2,8 @@
 import React, { useCallback } from 'react';
 import { Preview } from 'components/Preview';
 import { useShallowSelector } from 'hooks';
-import { State, WeddingFormsState } from 'types';
+import { ContractFormsState, State } from 'types';
 import { Box, Grid, Typography } from '@material-ui/core';
-import weddingFormsSelector from 'store/weddingForms/selectors';
 import { Copyable } from 'components/Copyable';
 import { routes } from 'appConstants';
 import { useNavigate } from 'react-router-dom';
@@ -14,11 +13,12 @@ import { useStyles } from './WeddingContractPreview.styles';
 import {
   staticWeddingContractPreviewHelpers,
 } from './WeddingContractPreview.helpers';
+import contractFormsSelector from '../../store/contractForms/selectors';
 
 const WeddingContractPreview = () => {
   const {
     weddingContract,
-  } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
+  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

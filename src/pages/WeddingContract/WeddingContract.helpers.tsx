@@ -1,8 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 import { ReactElement } from 'react';
 import * as Yup from 'yup';
-
-const latinAndNumbers = /^[A-Za-z][A-Za-z0-9][0-9A-Za-z]*$/;
+import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
   contractName: Yup.string().matches(latinAndNumbers).min(5).required(),

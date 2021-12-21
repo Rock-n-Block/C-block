@@ -1,12 +1,12 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Container,
   Typography,
   Grid,
   TextField,
   Button,
-  Box, Slider, Tooltip,
+  Box, Slider,
 } from '@material-ui/core';
 import {
   Formik,
@@ -16,8 +16,7 @@ import {
 } from 'formik';
 import clsx from 'clsx';
 import { CloseIcon } from 'theme/icons';
-import weddingFormsSelector from 'store/weddingForms/selectors';
-import { State, WeddingContract as WeddingContractType, WeddingFormsState } from 'types';
+import { State, IWeddingContract as WeddingContractType, ContractFormsState } from 'types';
 import { useShallowSelector } from 'hooks';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -26,16 +25,17 @@ import {
   weddingContractFormConfigEnd, weddingContractFormConfigStart,
 } from './WeddingContract.helpers';
 import { useStyles } from './WeddingContract.styles';
-import { WeddingBlockSlider } from './components';
 import { routes } from '../../appConstants';
-import { setWeddingContractForm } from '../../store/weddingForms/reducer';
+import ValueLabelComponent from './components/ValueLabel/ValueLabelComponent';
+import contractFormsSelector from '../../store/contractForms/selectors';
+import { setWeddingContractForm } from '../../store/contractForms/reducer';
 
 const WeddingContract = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const {
     weddingContract,
-  } = useShallowSelector<State, WeddingFormsState>(weddingFormsSelector.getWeddingForms);
+  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
 
   const [
     partnerOneSliderValue, setPartnerOneSliderValue,
@@ -44,25 +44,16 @@ const WeddingContract = () => {
     partnerTwoSliderValue, setPartnerTwoSliderValue,
   ] = useState(weddingContract.partnerTwoSliderValue);
 
-  const onFirstSliderHandler = useMemo(() => (_, value: number) => {
+  const onFirstSliderHandler = useCallback((_, value: number) => {
     setPartnerOneSliderValue(value);
     setPartnerTwoSliderValue(100 - value);
   }, []);
 
-  const onSecondSliderHandler = (_, value: number): void => {
+  const onSecondSliderHandler = useCallback((_, value: number): void => {
     setPartnerTwoSliderValue(value);
     setPartnerOneSliderValue(100 - value);
-  };
+  }, []);
 
-  const ValueLabelComponent = (props) => {
-    const { children, open, value } = props;
-
-    return (
-      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
-        {children}
-      </Tooltip>
-    );
-  };
   const dispatch = useDispatch();
 
   return (
@@ -130,48 +121,34 @@ const WeddingContract = () => {
                 ))}
               </Grid>
             ))}
-            <WeddingBlockSlider>
-              <Grid container className={clsx(classes.container)}>
-                <Box className={clsx(classes.slider)}>
-                  <Typography className={clsx(classes.title)}>Partner who
-                    initialized the divorce
-                  </Typography>
-                  <Slider
-                    ValueLabelComponent={ValueLabelComponent}
-                    valueLabelDisplay="on"
-                    aria-label="pretto slider"
-                    value={partnerOneSliderValue}
-                    onBlur={handleBlur}
-                    onChange={onFirstSliderHandler}
-                    step={1}
-                  />
-                  <Typography className={clsx(classes.desc)}>If second partner approves
-                    the divorce the funds will be
-                    divided equally between ex-spouses.
-                    Otherwise, you can specify the percentage of how much each spouse gets.
-                  </Typography>
-                </Box>
-                <Box className={clsx(classes.slider)}>
-                  <Typography className={clsx(classes.title)}>Partner who hasn`t approved
-                    the divorce
-                  </Typography>
-                  <Slider
-                    ValueLabelComponent={ValueLabelComponent}
-                    valueLabelDisplay="on"
-                    aria-label="pretto slider"
-                    value={partnerTwoSliderValue}
-                    onBlur={handleBlur}
-                    onChangeCommitted={onSecondSliderHandler}
-                    step={1}
-                  />
-                  <Typography className={clsx(classes.desc)}>If second partner approves
-                    the divorce the funds will be
-                    divided equally between ex-spouses.
-                    Otherwise, you can specify the percentage of how much each spouse gets.
-                  </Typography>
-                </Box>
-              </Grid>
-            </WeddingBlockSlider>
+            <Grid container className={clsx(classes.container)}>
+              <Box className={clsx(classes.slider)}>
+                <Typography className={clsx(classes.title)}>Partner who initialized the divorce</Typography>
+                <Slider
+                  ValueLabelComponent={ValueLabelComponent}
+                  valueLabelDisplay="on"
+                  aria-label="pretto slider"
+                  value={partnerOneSliderValue}
+                  onBlur={handleBlur}
+                  onChange={onFirstSliderHandler}
+                  step={1}
+                />
+                <Typography className={clsx(classes.desc)}>If second partner approves the divorce the funds will be divided equally between ex-spouses. Otherwise, you can specify the percentage of how much each spouse gets.</Typography>
+              </Box>
+              <Box className={clsx(classes.slider)}>
+                <Typography className={clsx(classes.title)}>Partner who hasn`t approved the divorce</Typography>
+                <Slider
+                  ValueLabelComponent={ValueLabelComponent}
+                  valueLabelDisplay="on"
+                  aria-label="pretto slider"
+                  value={partnerTwoSliderValue}
+                  onBlur={handleBlur}
+                  onChangeCommitted={onSecondSliderHandler}
+                  step={1}
+                />
+                <Typography className={clsx(classes.desc)}>If second partner approves the divorce the funds will be divided equally between ex-spouses. Otherwise, you can specify the percentage of how much each spouse gets.</Typography>
+              </Box>
+            </Grid>
             {weddingContractFormConfigEnd.map((formSection, index) => (
               <Grid container className={classes.tokenContractFormSection} key={`start_${index}`}>
                 {formSection.map(({

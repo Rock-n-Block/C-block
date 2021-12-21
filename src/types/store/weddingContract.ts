@@ -1,4 +1,4 @@
-export type WeddingContract = {
+export type IWeddingContract = {
   contractName: string;
   partnerOneAddress: string;
   partnerTwoAddress: string;
@@ -8,8 +8,4 @@ export type WeddingContract = {
   partnerOneSliderValue: number;
   partnerTwoSliderValue: number;
   daysForWithdrawalApproval: string;
-};
-
-export type WeddingFormsState = {
-  weddingContract: WeddingContract
 };

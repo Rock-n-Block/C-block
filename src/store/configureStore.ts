@@ -24,20 +24,13 @@ const userPersistConfig = {
 const contractFormsPersistConfig = {
   key: 'contractForms',
   storage,
-  whitelist: ['tokenContract'],
+  whitelist: ['tokenContract', 'weddingContract'],
 };
-
-// const weddingFormsPersistConfig = {
-//   key: 'weddingForms',
-//   storage,
-//   whitelist: ['weddingContract'],
-// };
 
 const reducers = {
   ...reducer,
   user: persistReducer(userPersistConfig, reducer.user),
   contractForms: persistReducer(contractFormsPersistConfig, reducer.contractForms),
-  // weddingForms: persistReducer(weddingFormsPersistConfig, reducer.weddingForms),
 };
 
 const store = configureStore({

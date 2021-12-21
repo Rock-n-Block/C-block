@@ -17,11 +17,11 @@ export const routes = {
     },
   },
   'wedding-contract': {
-    root: '/create-contract/wedding-contract',
+    root: `${CREATE_CONTRACT}/wedding-contract`,
     title: 'Wedding Contract',
     icon: <WeddingRingIcon />,
     'preview-contract': {
-      root: '/create-contract/wedding-contract/preview-contract',
+      root: `${CREATE_CONTRACT}/wedding-contract/preview-contract`,
       title: 'Preview contract',
     },
   },

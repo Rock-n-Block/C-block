@@ -3,7 +3,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import {
   COLOR_BLACK_1, COLOR_BLACK_3, COLOR_BLACK_4, COLOR_GREY_1, COLOR_GREY_2, COLOR_GREY_5,
 } from 'theme/colors';
-import { flexHelper } from '../../utils';
+import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
   form: {
@@ -15,10 +15,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   tokenContractFormSection: {
     borderTop: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_5}`,
     padding: `${theme.spacing(5)}px 0px`,
-  },
-  shortInput: {
-    minWidth: theme.palette.type === 'dark' ? '190px' : '190px',
-    width: `${theme.palette.type === 'dark' ? '40%' : '40%'} !important`,
   },
   submitButton: {
     width: '150px !important',
