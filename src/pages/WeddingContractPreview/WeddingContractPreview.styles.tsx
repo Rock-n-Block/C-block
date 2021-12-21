@@ -10,10 +10,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
       borderBottom: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
     },
   },
-  previewValueBlock: {
-    ...flexHelper('flex-start', 'flex-start'),
-    flexDirection: 'column',
-  },
   previewValueItem: {
     width: '100%',
     padding: 0,
