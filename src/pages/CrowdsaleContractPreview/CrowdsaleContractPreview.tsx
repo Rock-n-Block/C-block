@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Grid, Typography, Box } from '@material-ui/core';
+import {
+  Grid, Typography, Box, TextField, Link,
+} from '@material-ui/core';
 
 import { Preview, YesNoBlock, Copyable } from 'components';
 import { useShallowSelector } from 'hooks';
@@ -9,12 +11,12 @@ import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State } from 'types';
 import clsx from 'clsx';
 import { routes } from 'appConstants';
-
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
+import { constructExplorerUrl } from 'utils';
 import { useStyles } from './CrowdsaleContractPreview.styles';
 import {
-  dynamicTokenContractPreviewHelpers,
-  staticTokenContractPreviewHelpers,
+  dynamicCrowdsaleContractPreviewHelpers,
+  staticCrowdsaleContractPreviewHelpers,
 } from './CrowdsaleContractPreview.helpers';
 
 export const CrowdsaleContractPreview = () => {
@@ -43,113 +45,39 @@ export const CrowdsaleContractPreview = () => {
         editAction={handleEdit}
         deleteAction={handleDelete}
       >
-        {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
-          <Grid
-            container
-            className={classes.tokenContractInfoBlock}
-            key={index.toString()}
+        <Box className={classes.tokenAddressSection}>
+          <Typography
+            className={clsx(classes.sectionTitle, 'l')}
+            variant="body1"
           >
-            {previewBlock.map(
-              ({
-                key, label, value, shouldSkipObjectValue,
-              }) => (
-                <Grid
-                  item
-                  xs={6}
-                  sm={6}
-                  md={3}
-                  lg={3}
-                  xl={3}
-                  key={label}
-                  className={classes.previewValueBlock}
-                >
-                  <Typography
-                    variant="body1"
-                    className={clsx(classes.previewLabel, 's')}
-                    color="textSecondary"
-                  >
-                    {label}
-                  </Typography>
-                  {typeof crowdsaleContract[key] !== 'boolean' ? (
-                    <Typography variant="body1">
-                      {shouldSkipObjectValue ? value : crowdsaleContract[key]}
-                    </Typography>
-                  ) : (
-                    <YesNoBlock yes={crowdsaleContract[key]} />
-                  )}
-                </Grid>
-              ),
-            )}
-          </Grid>
-        ))}
-
-        <Typography
-          className={clsx(classes.tokenOwnerTitle, 'l')}
-          variant="body1"
-        >
-          Token Owner
-        </Typography>
-        <Copyable
-          className={classes.copyableContainer}
-          onlyIconActive
-          withBorder
-          valueToCopy={crowdsaleContract.crowdsaleOwner}
-        >
-          <Typography className={classes.copyableText}>
-            {crowdsaleContract.crowdsaleOwner}
+            Token address
           </Typography>
-        </Copyable>
-        <Typography className={classes.dynamicDataHeader} variant="h3">
-          Token distribution
-        </Typography>
-        {crowdsaleContract.tokens.map((crowdsaleContractDynamicData) => (
-          <>
-            <Typography
-              className={clsx(classes.previewLabel, 's')}
-              variant="body1"
-              color="textSecondary"
-            >
-              Address:
-            </Typography>
-            <Copyable
-              className={classes.copyableContainer}
-              onlyIconActive
-              withBorder
-              valueToCopy={crowdsaleContractDynamicData.address}
-            >
-              <Typography className={classes.copyableText}>
-                {crowdsaleContractDynamicData.address}
-              </Typography>
-            </Copyable>
-            <Grid container className={classes.nameAmountData}>
-              {dynamicTokenContractPreviewHelpers.map(
-                ({ icon, key, label }) =>
-                // if (
-                //   crowdsaleContractDynamicData[key] === 'frozenUntilDate' &&
-                //   !crowdsaleContractDynamicData.isFrozen
-                // ) {
-                //   return null;
-                // }
+          <TextField className={classes.disabledInput} disabled value={crowdsaleContract.tokenAddress} />
+        </Box>
 
-                  // eslint-disable-next-line implicit-arrow-linebreak
-                  (
+        <Box className={classes.mixedSection}>
+          <Grid className={classes.tokenContractInfoBlock} container>
+            {crowdsaleContract.tokens.map((crowdsaleContractDynamicData) => (
+              <Grid
+                item
+                xs={6}
+                sm={6}
+                md={3}
+                lg={3}
+                xl={3}
+              >
+                {dynamicCrowdsaleContractPreviewHelpers.map(
+                  ({ key, label }) => (
+                    // eslint-disable-next-line implicit-arrow-linebreak
                     <Grid
-                      className={classes.previewValueBlock}
-                      item
-                      xs={6}
-                      sm={6}
-                      md={3}
-                      lg={3}
-                      xl={3}
                       key={key}
+                      className={classes.previewValueBlock}
                     >
                       <Box
                         className={clsx(
                           classes.previewLabel,
-                          classes.frozenUntil,
                         )}
                       >
-                        {icon}
                         <Typography
                           className="s"
                           variant="body1"
@@ -159,15 +87,174 @@ export const CrowdsaleContractPreview = () => {
                         </Typography>
                       </Box>
                       <Typography variant="body1">
-                        {crowdsaleContractDynamicData[key]}
+                        HARDCODE
+                        <Typography
+                          variant="body1"
+                        >
+                          {crowdsaleContractDynamicData[key]} <Link className={classes.tokenAddressLink} href={constructExplorerUrl(crowdsaleContractDynamicData.address)}>token</Link>
+                        </Typography>
                       </Typography>
                     </Grid>
-                  )
-                ,
+                  ),
+                )}
+              </Grid>
+            ))}
+          </Grid>
+          {staticCrowdsaleContractPreviewHelpers.mixedSection.map((previewBlock, index) => (
+            <Grid
+              key={index.toString()}
+              className={classes.tokenContractInfoBlock}
+              container
+            >
+              {previewBlock.map(
+                ({
+                  key, label, valueLabel,
+                }) => (
+                  <Grid
+                    key={label}
+                    className={classes.previewValueBlock}
+                    item
+                    xs={6}
+                    sm={6}
+                    md={3}
+                    lg={3}
+                    xl={3}
+                  >
+                    <Typography
+                      variant="body1"
+                      className={clsx(classes.previewLabel, 's')}
+                      color="textSecondary"
+                    >
+                      {label}
+                    </Typography>
+                    {typeof crowdsaleContract[key] !== 'boolean' ? (
+                      <Typography variant="body1">
+                        {crowdsaleContract[key]} {valueLabel}
+                      </Typography>
+                    ) : (
+                      <YesNoBlock yes={crowdsaleContract[key]} />
+                    )}
+                  </Grid>
+                ),
               )}
             </Grid>
-          </>
-        ))}
+          ))}
+        </Box>
+
+        <Box className={classes.mixMaxInvestmentsLimitationsSection}>
+          <Typography
+            className={clsx(classes.sectionTitle, 'l')}
+            variant="body1"
+          >
+            Min & Max investments limitations
+          </Typography>
+          {staticCrowdsaleContractPreviewHelpers.minMaxInvestmentsSection.map((previewBlock, index) => (
+            <Grid
+              className={classes.tokenContractInfoBlock}
+              key={index.toString()}
+              container
+            >
+              {previewBlock.map(
+                ({
+                  key, label, valueLabel,
+                }) => (
+                  <Grid
+                    key={label}
+                    className={classes.previewValueBlock}
+                    item
+                    xs={6}
+                    sm={6}
+                    md={6}
+                    lg={6}
+                    xl={6}
+                  >
+                    <Typography
+                      variant="body1"
+                      className={clsx(classes.previewLabel, 's')}
+                      color="textSecondary"
+                    >
+                      {label}
+                    </Typography>
+                    {typeof crowdsaleContract[key] !== 'boolean' ? (
+                      <Typography variant="body1">
+                        {crowdsaleContract[key]} {valueLabel}
+                      </Typography>
+                    ) : (
+                      <YesNoBlock yes={crowdsaleContract[key]} />
+                    )}
+                  </Grid>
+                ),
+              )}
+            </Grid>
+          ))}
+        </Box>
+
+        <Box className={classes.amountBonusSection}>
+          <Typography
+            className={clsx(classes.sectionTitle, 'l')}
+            variant="body1"
+          >
+            Amount Bonus
+          </Typography>
+          {staticCrowdsaleContractPreviewHelpers.amountBonusSection.map((previewBlock, index) => (
+            <Grid
+              className={classes.tokenContractInfoBlock}
+              key={index.toString()}
+              container
+            >
+              {previewBlock.map(
+                ({
+                  key, label, valueLabel,
+                }) => (
+                  <Grid
+                    key={label}
+                    className={classes.previewValueBlock}
+                    item
+                    xs={6}
+                    sm={6}
+                    md={6}
+                    lg={6}
+                    xl={6}
+                  >
+                    <Typography
+                      variant="body1"
+                      className={clsx(classes.previewLabel, 's')}
+                      color="textSecondary"
+                    >
+                      {label}
+                    </Typography>
+                    {typeof crowdsaleContract[key] !== 'boolean' ? (
+                      <Typography variant="body1">
+                        {crowdsaleContract[key]} {valueLabel}
+                      </Typography>
+                    ) : (
+                      <YesNoBlock yes={crowdsaleContract[key]} />
+                    )}
+                  </Grid>
+                ),
+              )}
+            </Grid>
+          ))}
+        </Box>
+
+        <Box className={classes.crowdsaleOwnerSection}>
+          <Typography
+            className={clsx(classes.sectionTitle, 'l')}
+            variant="body1"
+          >
+            Crowdsale Owner
+          </Typography>
+          <Copyable
+            className={classes.copyableContainer}
+            onlyIconActive
+            withBorder
+            valueToCopy={crowdsaleContract.crowdsaleOwner}
+          >
+            <Typography className={classes.copyableText}>
+              {crowdsaleContract.crowdsaleOwner}
+            </Typography>
+          </Copyable>
+        </Box>
       </Preview>
     </>
   );

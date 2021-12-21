@@ -1,62 +1,65 @@
-import React, { ReactNode } from 'react';
-import { Snowflake } from 'theme/icons';
+import { ICrowdsaleContract, ICrowdsaleContractDynamicForm } from 'types';
 
-export type TokenContractPreviewHelperType = {
-  key?: string;
+export type CrowdsaleContractPreviewHelperType = {
+  key?: keyof ICrowdsaleContract | keyof ICrowdsaleContractDynamicForm;
   label: string;
-  shouldSkipObjectValue?: boolean;
-  value?: string;
-  icon?: ReactNode;
+  valueLabel?: string;
 };
 
-export const staticTokenContractPreviewHelpers: TokenContractPreviewHelperType[][] = [
-  [
-    {
-      key: 'tokenName',
-      label: 'Token name:',
-    },
-    {
-      key: 'decimals',
-      label: 'Decimals:',
-    },
-    {
-      key: 'tokenSymbol',
-      label: 'Token symbol:',
-    },
-    {
-      shouldSkipObjectValue: true,
-      label: 'Token symbol:',
-      value: 'ERC20',
-    },
-  ],
-  [
-    {
-      key: 'futureMinting',
-      label: 'Future minting',
-    },
-    {
-      key: 'burnable',
-      label: 'Burnable:',
-    },
-    {
-      key: 'freezable',
-      label: 'Freezable:',
-    },
-  ],
+export const dynamicCrowdsaleContractPreviewHelpers: CrowdsaleContractPreviewHelperType[] = [
+  {
+    key: 'rate',
+    label: 'Token rate',
+    valueLabel: '',
+  },
 ];
 
-export const dynamicTokenContractPreviewHelpers: TokenContractPreviewHelperType[] = [
-  {
-    key: 'name',
-    label: 'Name:',
-  },
-  {
-    key: 'amount',
-    label: 'Amount:',
-  },
-  {
-    key: 'frozenUntilDate',
-    label: 'Frozen till:',
-    icon: <Snowflake />,
-  },
-];
+export const staticCrowdsaleContractPreviewHelpers: Record<'mixedSection' | 'minMaxInvestmentsSection' | 'amountBonusSection', CrowdsaleContractPreviewHelperType[][]> = {
+  mixedSection: [
+    [
+      {
+        key: 'saleDuration',
+        label: 'Duration of Sale',
+        valueLabel: 'days',
+      },
+      {
+        key: 'softcapTokens',
+        label: 'Soft cap tokens',
+        valueLabel: 'HARDCODE',
+      },
+    ],
+    [
+      {
+        key: 'changingDates',
+        label: 'Changing dates',
+      },
+    ],
+  ],
+  minMaxInvestmentsSection: [
+    [
+      {
+        key: 'minInvestments',
+        label: 'Minimum',
+        valueLabel: 'HARDCODE',
+      },
+      {
+        key: 'maxInvestments',
+        label: 'Maximum',
+        valueLabel: 'HARDCODE',
+      },
+    ],
+  ],
+  amountBonusSection: [
+    [
+      {
+        key: 'amountBonus',
+        label: 'Bonus',
+        valueLabel: '%',
+      },
+      {
+        key: 'minimumContribution',
+        label: 'Minimum',
+      },
+    ],
+  ],
+};
