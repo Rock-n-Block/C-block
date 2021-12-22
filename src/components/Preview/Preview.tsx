@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FC, useState, useCallback } from 'react';
 
 import {
@@ -12,6 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import { routes } from 'appConstants';
 import { useStyles } from './Preview.styles';
 import { iconHelper } from './Preview.helpers';
+import { CompleteModal } from '../CompleteModal/CompleteModal';
+import { Loader } from '../Loader';
+import { Modal } from '../Modal';
 
 export interface PreviewProps {
   launchAction: () => void,
@@ -36,7 +40,10 @@ export const Preview: FC<PreviewProps> = ({
   const classes = useStyles();
   const navigate = useNavigate();
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
-  const [isPaymentOpen, setPaymentOpen] = useState(false);
+  const [isPaymentOpen, setPaymentOpen] = useState(true);
+  const [isCompleteOpen, setCompleteOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const openDisclaimerModal = useCallback(() => {
     setDisclaimerOpen(true);
@@ -55,10 +62,23 @@ export const Preview: FC<PreviewProps> = ({
     setPaymentOpen(false);
   }, []);
 
+  const openCompleteModal = useCallback(() => {
+    setCompleteOpen(true);
+  }, []);
+
+  const closeCompleteModal = useCallback(() => {
+    setCompleteOpen(false);
+  }, []);
+
   const onPay = useCallback(() => {
-    launchAction();
+    // launchAction();
     closePaymentModal();
-    navigate(routes.root);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      openCompleteModal();
+    }, 1000);
+    // navigate(routes.root);
   }, []);
   return (
     <Container className={classes.root}>
@@ -111,6 +131,13 @@ export const Preview: FC<PreviewProps> = ({
         onClose={closePaymentModal}
         onAccept={onPay}
         paymentAmount="16,499.05"
+      />
+      { isLoading && <Loader /> }
+      <CompleteModal
+        open={isCompleteOpen}
+        onClose={closeCompleteModal}
+        onAccept={onPay}
+        result
       />
     </Container>
   );
