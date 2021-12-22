@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -17,11 +17,7 @@ import clsx from 'clsx';
 
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
-import {
-  ContractFormsState,
-  State,
-  ICrowdsaleContract,
-} from 'types';
+import { ContractFormsState, State, ICrowdsaleContract } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
   crowdsaleContractDynamicFormInitialData,
@@ -48,6 +44,31 @@ export const CrowdsaleContract: FC = () => {
   const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
     contractFormsSelector.getContractForms,
   );
+  const shouldRenderAddMoreTokens = useCallback(
+    (
+      softcapTokens: ICrowdsaleContract['softcapTokens'],
+      currentTokensAmount: number,
+    ) => {
+      const isSoftcapable = Number(softcapTokens) > 0;
+
+      /* supported only 3 tokens for payment if softcapTokens was set more than 0 */
+      if (isSoftcapable && currentTokensAmount < 3) return true;
+      /* supported only 4 tokens for payment if softcapTokens was set equal to 0 */
+      if (!isSoftcapable && currentTokensAmount < 4) return true;
+      return false;
+    },
+    [],
+  );
+
+  const isValidForm = useCallback(
+    (validFormikFields: boolean, formikFieldsValues: ICrowdsaleContract) => validFormikFields &&
+      shouldRenderAddMoreTokens(
+        formikFieldsValues['softcapTokens'],
+        formikFieldsValues.tokens.length - 1,
+      ),
+    [shouldRenderAddMoreTokens],
+  );
+
   return (
     <Container>
       <Formik
@@ -186,8 +207,10 @@ export const CrowdsaleContract: FC = () => {
                       </TokenBlockForm>
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {/* supported only 4 tokens for payment */}
-                        {i < 4 && (
+                        {shouldRenderAddMoreTokens(
+                          values['softcapTokens'],
+                          i + 1,
+                        ) && (
                         <Button
                           variant="outlined"
                           endIcon={<PlusIcon />}
@@ -204,23 +227,13 @@ export const CrowdsaleContract: FC = () => {
               </FieldArray>
             </Box>
 
-            <Grid
-              className={classes.crowdsaleContractFormSection}
-              container
-            >
+            <Grid className={classes.crowdsaleContractFormSection} container>
               {crowdsaleContractFormConfigSoftcap.map(
                 ({
                   id, name, renderProps, helperText, infoText,
                 }) => (
                   <Fragment key={id}>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={12}
-                      md={6}
-                      lg={6}
-                      xl={6}
-                    >
+                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                       <Field
                         id={id}
                         name={name}
@@ -246,18 +259,17 @@ export const CrowdsaleContract: FC = () => {
                         </Typography>
                       ))}
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={12}
-                      md={6}
-                      lg={6}
-                      xl={6}
-                    >
+                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                       <InfoBlock>
-                        {
-                          infoText.map((text) => <Typography key={text} variant="body1" color="textSecondary">{text}</Typography>)
-                        }
+                        {infoText.map((text) => (
+                          <Typography
+                            key={text}
+                            variant="body1"
+                            color="textSecondary"
+                          >
+                            {text}
+                          </Typography>
+                        ))}
                       </InfoBlock>
                     </Grid>
                   </Fragment>
@@ -265,10 +277,7 @@ export const CrowdsaleContract: FC = () => {
               )}
             </Grid>
 
-            <Grid
-              className={classes.crowdsaleContractFormSection}
-              container
-            >
+            <Grid className={classes.crowdsaleContractFormSection} container>
               {crowdsaleContractFormConfigSaleDuration.map(
                 ({
                   id, name, renderProps, helperText, isShort,
@@ -321,7 +330,9 @@ export const CrowdsaleContract: FC = () => {
                       <Box className={classes.changingDatesHeader}>
                         <Box className={classes.changingDatesTitle}>
                           {icon}
-                          <Typography variant="body1" color="inherit">{title}</Typography>
+                          <Typography variant="body1" color="inherit">
+                            {title}
+                          </Typography>
                         </Box>
                         <Field
                           id={id}
@@ -384,10 +395,14 @@ export const CrowdsaleContract: FC = () => {
                           <Field
                             id={id}
                             name={name}
-                            render={({ form: { isSubmitting } }: FieldProps) => (
+                            render={({
+                              form: { isSubmitting },
+                            }: FieldProps) => (
                               <TextField
                                 {...renderProps}
-                                disabled={isSubmitting || !values[formSection.id]}
+                                disabled={
+                                  isSubmitting || !values[formSection.id]
+                                }
                                 onChange={handleChange}
                                 value={values[name]}
                                 onBlur={handleBlur}
@@ -419,7 +434,7 @@ export const CrowdsaleContract: FC = () => {
                 size="large"
                 type="submit"
                 color="secondary"
-                disabled={!isValid}
+                disabled={!isValidForm(isValid, values)}
                 variant="outlined"
               >
                 Create
