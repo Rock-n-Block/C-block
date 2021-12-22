@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
-  Grid, Typography, Box, TextField, Link,
+  Grid, Typography, Box, Link,
 } from '@material-ui/core';
 
 import { Preview, YesNoBlock, Copyable } from 'components';
@@ -18,6 +18,7 @@ import {
   dynamicCrowdsaleContractPreviewHelpers,
   staticCrowdsaleContractPreviewHelpers,
 } from './CrowdsaleContractPreview.helpers';
+import { DELETE_ME_DISABLED_TEXTFIELD } from './DELETE_ME_DISABLED_TEXTFIELD/DELETE_ME_DISABLED_TEXTFIELD';
 
 export const CrowdsaleContractPreview = () => {
   const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
@@ -52,7 +53,10 @@ export const CrowdsaleContractPreview = () => {
           >
             Token address
           </Typography>
-          <TextField className={classes.disabledInput} disabled value={crowdsaleContract.tokenAddress} />
+          <DELETE_ME_DISABLED_TEXTFIELD
+            className={classes.disabledInput}
+            value={crowdsaleContract.tokenAddress}
+          />
         </Box>
 
         <Box className={classes.mixedSection}>

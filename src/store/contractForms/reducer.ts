@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ContractFormsState, IWeddingContract } from 'types';
-import { ICrowdsaleContract, TokenContract } from 'types/store/contractForms';
+import {
+  ICrowdsaleContract, ICrowdsaleContractDynamicForm, ILostKeyContract, ILostKeyContractDynamicForm, TokenContract, TokenContractDynamicForm,
+} from 'types/store/contractForms';
 import { formattedDate } from 'utils';
 
-export const dynamicFormDataTemplate = {
+export const dynamicFormDataTemplate: TokenContractDynamicForm = {
   address: '',
   name: '',
   amount: '',
@@ -11,9 +13,15 @@ export const dynamicFormDataTemplate = {
   frozenUntilDate: formattedDate(),
 };
 
-export const crowdsaleContractDynamicFormInitialData = {
+export const crowdsaleContractDynamicFormInitialData: ICrowdsaleContractDynamicForm = {
   address: '',
   rate: '',
+};
+
+export const lostKeyContractDynamicFormInitialData: ILostKeyContractDynamicForm = {
+  address: '',
+  email: '',
+  percents: '',
 };
 
 const initialState: ContractFormsState = {
@@ -55,6 +63,11 @@ const initialState: ContractFormsState = {
     partnerTwoSliderValue: 50,
     daysForWithdrawalApproval: '',
   },
+  lostKeyContract: {
+    contractName: '',
+    managementAddress: '',
+    reservesConfigs: [lostKeyContractDynamicFormInitialData],
+  },
 };
 
 export const contractFormReducer = createSlice({
@@ -69,6 +82,7 @@ export const contractFormReducer = createSlice({
       ...state,
       tokenContract: initialState.tokenContract,
     }),
+
     setCrowdsaleContractForm: (state, action: PayloadAction<ICrowdsaleContract>) => ({
       ...state,
       crowdsaleContract: action.payload,
@@ -77,6 +91,7 @@ export const contractFormReducer = createSlice({
       ...state,
       crowdsaleContract: initialState.crowdsaleContract,
     }),
+
     setWeddingContractForm: (state, action: PayloadAction<IWeddingContract>) => ({
       ...state,
       weddingContract: action.payload,
@@ -85,15 +100,30 @@ export const contractFormReducer = createSlice({
       ...state,
       weddingContract: initialState.weddingContract,
     }),
+
+    setLostKeyContractForm: (state, action: PayloadAction<ILostKeyContract>) => ({
+      ...state,
+      lostKeyContract: action.payload,
+    }),
+    deleteLostKeyContractForm: (state) => ({
+      ...state,
+      lostKeyContract: initialState.lostKeyContract,
+    }),
   },
 });
 
 export const {
   setTokenContractForm,
-  setCrowdsaleContractForm,
   deleteTokenContractForm,
+
+  setCrowdsaleContractForm,
+  deleteCrowdsaleContractForm,
+
   setWeddingContractForm,
   deleteWeddingContractForm,
+
+  setLostKeyContractForm,
+  deleteLostKeyContractForm,
 } = contractFormReducer.actions;
 
 export default contractFormReducer.reducer;

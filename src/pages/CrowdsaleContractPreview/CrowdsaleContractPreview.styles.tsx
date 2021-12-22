@@ -4,10 +4,8 @@ import {
   COLOR_ACID_GREEN,
   COLOR_BLACK_2,
   COLOR_BLACK_3,
-  COLOR_GREY_1,
   COLOR_GREY_2,
   COLOR_GREY_3,
-  COLOR_GREY_6,
 } from 'theme/colors';
 import { flexHelper } from 'utils';
 
@@ -83,14 +81,5 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   disabledInput: {
     ...baseFieldWidthRestriction(theme),
-    '& input': {
-      padding: '16px 20px 16px 20px !important',
-      color: `${theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_GREY_6} !important`,
-      textOverflow: 'ellipsis',
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      background: 'none !important',
-      borderColor: `${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2} !important`,
-    },
   },
 }));

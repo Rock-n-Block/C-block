@@ -34,8 +34,7 @@ import {
   crowdsaleContractFormConfigEnd,
 } from './CrowdsaleContract.helpers';
 import { useStyles } from './CrowdsaleContract.styles';
-import { InfoBlock, TokenBlockForm } from './components';
-import { SwitchableBlockForm } from './components/SwitchableBlockForm';
+import { InfoBlock, TokenBlockForm, SwitchableBlockForm } from './components';
 
 export const CrowdsaleContract: FC = () => {
   const classes = useStyles();

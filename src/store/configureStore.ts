@@ -24,7 +24,7 @@ const userPersistConfig = {
 const contractFormsPersistConfig = {
   key: 'contractForms',
   storage,
-  whitelist: ['tokenContract', 'crowdsaleContract', 'weddingContract'],
+  whitelist: ['tokenContract', 'crowdsaleContract', 'weddingContract', 'lostKeyContract'],
 };
 
 const reducers = {
