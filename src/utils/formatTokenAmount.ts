@@ -3,7 +3,7 @@ import { formatNumber } from './numberFormatter';
 
 export const getTokenAmount = (
   balance: string | number,
-  decimals: number = 18,
+  decimals = 18,
   shouldForamateNumber = true,
 ): string => {
   if (balance === '') {
@@ -27,7 +27,7 @@ export const getTokenAmount = (
 
 export const getTokenAmountDisplay = (
   balance: string | number,
-  decimals: number = 18,
+  decimals = 18,
 ): string => {
   if (balance === '') {
     return '0';

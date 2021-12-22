@@ -1,7 +1,7 @@
 export default (
   phrase: string | number,
-  startSymbols: number = 10,
-  endSymbols: number = 5,
+  startSymbols = 10,
+  endSymbols = 5,
 ): string => {
   const strPhrase = `${phrase}`;
 
