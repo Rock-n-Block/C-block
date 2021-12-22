@@ -5,10 +5,10 @@ import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
   contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
-  partnerOneAddress: Yup.string().length(42).required(),
-  partnerTwoAddress: Yup.string().length(42).required(),
-  partnerOneEmail: Yup.string().email().max(255).required(),
-  partnerTwoEmail: Yup.string().email().max(255).required(),
+  partnerOneAddress: Yup.string().length(42).notOneOf([Yup.ref('partnerTwoAddress')]).required(),
+  partnerTwoAddress: Yup.string().length(42).notOneOf([Yup.ref('partnerOneAddress')]).required(),
+  partnerOneEmail: Yup.string().email().notOneOf([Yup.ref('partnerTwoEmail')]).max(255).required(),
+  partnerTwoEmail: Yup.string().email().notOneOf([Yup.ref('partnerOneEmail')]).max(255).required(),
   daysForDivorceApproval: Yup.number().min(1).required(),
   daysForWithdrawalApproval: Yup.number().min(1).required(),
 });
