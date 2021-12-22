@@ -33,11 +33,10 @@ export const validationSchema = Yup.object().shape({
   amountBonusSection: Yup.boolean(),
   amountBonus: Yup
     .number()
-    .moreThan(Yup.ref('minimumContribution'))
     .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
   minimumContribution: Yup
     .number()
-    .lessThan(Yup.ref('amountBonus'))
+    .min(Yup.ref('minInvestments'))
     .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
 });
 
