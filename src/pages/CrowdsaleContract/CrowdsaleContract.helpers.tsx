@@ -23,11 +23,11 @@ export const validationSchema = Yup.object().shape({
   minMaxInvestmentsSection: Yup.boolean(),
   minInvestments: Yup
     .number()
-    .lessThan(Yup.ref('maxInvestments'))
+    .max(Yup.ref('maxInvestments'))
     .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
   maxInvestments: Yup
     .number()
-    .moreThan(Yup.ref('minInvestments'))
+    .min(Yup.ref('minInvestments'))
     .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
 
   amountBonusSection: Yup.boolean(),
@@ -60,7 +60,7 @@ interface ICrowdsaleContractFlagOption extends CrowdsaleContractFieldType {
 }
 
 interface ICrowdsaleContractSwitchableSection {
-  id: string;
+  id: 'minMaxInvestmentsSection' | 'amountBonusSection';
   title: string;
   description?: string;
   fields: CrowdsaleContractFieldType[];

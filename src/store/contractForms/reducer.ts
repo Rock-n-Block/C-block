@@ -37,8 +37,8 @@ const initialState: ContractFormsState = {
     changingDates: false,
 
     minMaxInvestmentsSection: false,
-    minInvestments: '',
-    maxInvestments: '',
+    minInvestments: '0',
+    maxInvestments: '0',
 
     amountBonusSection: false,
     amountBonus: '',

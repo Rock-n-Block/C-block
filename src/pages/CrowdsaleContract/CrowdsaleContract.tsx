@@ -183,17 +183,15 @@ export const CrowdsaleContract: FC = () => {
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                         {/* supported only 3 tokens for payment */}
-                        {
-                          i + 1 < 3 && (
-                          <Button
-                            variant="outlined"
-                            endIcon={<PlusIcon />}
-                            onClick={() => push(crowdsaleContractDynamicFormInitialData)}
-                          >
-                            Add address
-                          </Button>
-                          )
-                        }
+                        {i + 1 < 3 && (
+                        <Button
+                          variant="outlined"
+                          endIcon={<PlusIcon />}
+                          onClick={() => push(crowdsaleContractDynamicFormInitialData)}
+                        >
+                          Add address
+                        </Button>
+                        )}
                       </Grid>
                       )}
                     </Fragment>
@@ -351,7 +349,22 @@ export const CrowdsaleContract: FC = () => {
                   description={formSection.description}
                   checkboxName={formSection.id}
                   checked={values[formSection.id]}
-                  onChecked={handleChange}
+                  onChecked={(
+                    e: Parameters<
+                    React.ComponentProps<
+                        typeof SwitchableBlockForm
+                    >['onChecked']
+                    >['0'],
+                  ) => {
+                    handleChange(e);
+                    if (
+                      formSection.id === 'minMaxInvestmentsSection' &&
+                      values[formSection.id]
+                    ) {
+                      handleChange('minInvestments')('0');
+                      handleChange('maxInvestments')('0');
+                    }
+                  }}
                 >
                   <Grid container>
                     {formSection.fields.map(
