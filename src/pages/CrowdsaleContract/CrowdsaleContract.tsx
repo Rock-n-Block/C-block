@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback } from 'react';
+import React, { FC, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -44,31 +44,6 @@ export const CrowdsaleContract: FC = () => {
   const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
     contractFormsSelector.getContractForms,
   );
-  const shouldRenderAddMoreTokens = useCallback(
-    (
-      softcapTokens: ICrowdsaleContract['softcapTokens'],
-      currentTokensAmount: number,
-    ) => {
-      const isSoftcapable = Number(softcapTokens) > 0;
-
-      /* supported only 3 tokens for payment if softcapTokens was set more than 0 */
-      if (isSoftcapable && currentTokensAmount < 3) return true;
-      /* supported only 4 tokens for payment if softcapTokens was set equal to 0 */
-      if (!isSoftcapable && currentTokensAmount < 4) return true;
-      return false;
-    },
-    [],
-  );
-
-  const isValidForm = useCallback(
-    (validFormikFields: boolean, formikFieldsValues: ICrowdsaleContract) => validFormikFields &&
-      shouldRenderAddMoreTokens(
-        formikFieldsValues['softcapTokens'],
-        formikFieldsValues.tokens.length - 1,
-      ),
-    [shouldRenderAddMoreTokens],
-  );
-
   return (
     <Container>
       <Formik
@@ -207,18 +182,18 @@ export const CrowdsaleContract: FC = () => {
                       </TokenBlockForm>
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {shouldRenderAddMoreTokens(
-                          values['softcapTokens'],
-                          i + 1,
-                        ) && (
-                        <Button
-                          variant="outlined"
-                          endIcon={<PlusIcon />}
-                          onClick={() => push(crowdsaleContractDynamicFormInitialData)}
-                        >
-                          Add address
-                        </Button>
-                        )}
+                        {/* supported only 3 tokens for payment */}
+                        {
+                          i + 1 < 3 && (
+                          <Button
+                            variant="outlined"
+                            endIcon={<PlusIcon />}
+                            onClick={() => push(crowdsaleContractDynamicFormInitialData)}
+                          >
+                            Add address
+                          </Button>
+                          )
+                        }
                       </Grid>
                       )}
                     </Fragment>
@@ -434,7 +409,7 @@ export const CrowdsaleContract: FC = () => {
                 size="large"
                 type="submit"
                 color="secondary"
-                disabled={!isValidForm(isValid, values)}
+                disabled={!isValid}
                 variant="outlined"
               >
                 Create
