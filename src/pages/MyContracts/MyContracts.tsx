@@ -10,14 +10,20 @@ import { SearchIcon } from '../../theme/icons/components/SearchIcon';
 import { NetTag } from '../../containers/Header/components/NetTag';
 import { contractsCards } from './MyContracts.helpers';
 import useDebounce from '../../hooks/useDebounce';
+import { SetUpModal } from '../../components/SetUpModal';
 
 export const MyContracts = () => {
   const [cards, setCards] = useState(contractsCards);
   const [filteredCards, setFilteredCards] = useState(contractsCards);
+  const [isSetUpModalOpen, setIsSetUpModalOpen] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const classes = useStyles();
   const isMainnet = true;
   const debouncedSearchValue = useDebounce(searchValue, 500);
+
+  const openSetUpModal = useCallback(() => {
+    setIsSetUpModalOpen(true);
+  }, []);
 
   const buttonClickHandler = useCallback((contractKey, type) => {
     if (type === ('requestDivorce')) {
@@ -28,6 +34,9 @@ export const MyContracts = () => {
         return card;
       });
       setCards(newState);
+    }
+    if (type === ('setUp')) {
+      openSetUpModal();
     }
   }, []);
 
@@ -51,6 +60,7 @@ export const MyContracts = () => {
 
   return (
     <Container>
+      <SetUpModal open={isSetUpModalOpen} setIsSetUpModalOpen={setIsSetUpModalOpen} />
       <Grid container className={classes.root}>
         <Grid
           item
