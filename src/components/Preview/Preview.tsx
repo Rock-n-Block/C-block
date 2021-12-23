@@ -59,6 +59,7 @@ export const Preview: FC<PreviewProps> = ({
     launchAction();
     closePaymentModal();
     navigate(routes.root);
+    deleteAction();
   }, []);
   return (
     <Container className={classes.root}>
