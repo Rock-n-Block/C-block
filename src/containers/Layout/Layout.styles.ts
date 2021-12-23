@@ -5,6 +5,7 @@ import { COLOR_ACID_GREEN, COLOR_LAYOUT_BACKGROUND_DARK, COLOR_LAYOUT_BACKGROUND
 export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
   (theme: Theme) => createStyles({
     root: {
+      overflow: 'hidden',
       position: 'relative',
       zIndex: 2,
       width: '100%',
@@ -50,6 +51,9 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       right: '-12.5vh',
       top: 'calc(100vh - 12.5vh)',
       filter: 'blur(400px)',
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
     },
   }),
 );
