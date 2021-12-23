@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Fragment, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -95,7 +96,7 @@ export const CrowdsaleContractPreview = () => {
         </Grid>
         {staticCrowdsaleContractPreviewHelpers.mixedSection.map((previewBlock, index) => (
           <Grid
-            key={index.toString()}
+            key={index}
             className={classes.tokenContractInfoBlock}
             container
           >
@@ -144,7 +145,7 @@ export const CrowdsaleContractPreview = () => {
         {staticCrowdsaleContractPreviewHelpers.minMaxInvestmentsSection.map((previewBlock, index) => (
           <Grid
             className={classes.tokenContractInfoBlock}
-            key={index.toString()}
+            key={index}
             container
           >
             {previewBlock.map(
@@ -178,7 +179,7 @@ export const CrowdsaleContractPreview = () => {
         ))}
       </Box>
 
-      <Box className={classes.amountBonusSection}>
+      <Box className={classes.bottomSection}>
         <Typography
           className={clsx(classes.sectionTitle, 'l')}
           variant="body1"
@@ -188,7 +189,7 @@ export const CrowdsaleContractPreview = () => {
         {staticCrowdsaleContractPreviewHelpers.amountBonusSection.map((previewBlock, index) => (
           <Grid
             className={classes.tokenContractInfoBlock}
-            key={index.toString()}
+            key={index}
             container
           >
             {previewBlock.map(

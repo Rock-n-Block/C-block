@@ -34,16 +34,21 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     paddingRight: theme.spacing(3),
     background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_3,
   },
+  bottomSection: {
+    ...separator(theme),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(3),
+  },
   mixMaxInvestmentsLimitationsSection: {
     ...separator(theme),
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(5),
   },
-  amountBonusSection: {
-    ...separator(theme),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(3),
-  },
+  // amountBonusSection: {
+  //   ...separator(theme),
+  //   paddingTop: theme.spacing(2),
+  //   paddingBottom: theme.spacing(3),
+  // },
   crowdsaleOwnerSection: {
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),

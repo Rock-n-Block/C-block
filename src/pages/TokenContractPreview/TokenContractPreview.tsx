@@ -44,7 +44,8 @@ export const TokenContractPreview = () => {
       deleteAction={handleDelete}
     >
       {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
-        <Grid container className={classes.tokenContractInfoBlock} key={index.toString()}>
+        // eslint-disable-next-line react/no-array-index-key
+        <Grid key={index} className={classes.tokenContractInfoBlock} container>
           {previewBlock.map(({
             key, label, value, shouldSkipObjectValue,
           }) => (
