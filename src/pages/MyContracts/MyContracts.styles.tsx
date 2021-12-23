@@ -67,6 +67,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   chainTag: {
     margin: '0 auto',
     height: 40,
+    width: 120,
     background: theme.palette.type === 'dark' ? '' : COLOR_BLACK_3,
     [theme.breakpoints.down('sm')]: {
       margin: 'unset',
