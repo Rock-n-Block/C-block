@@ -45,7 +45,7 @@ export const CrowdsaleContractPreview = () => {
       editAction={handleEdit}
       deleteAction={handleDelete}
     >
-      <Box className={classes.tokenAddressSection}>
+      <Box paddingTop={2} paddingBottom={2}>
         <Typography
           className={clsx(classes.sectionTitle, 'l')}
           variant="body1"
@@ -55,7 +55,15 @@ export const CrowdsaleContractPreview = () => {
         <TextField className={classes.disabledInput} disabled value={crowdsaleContract.tokenAddress} />
       </Box>
 
-      <Box className={classes.mixedSection}>
+      <Box
+        className={classes.mixedSection}
+        paddingTop={4}
+        paddingBottom={4}
+        paddingLeft={3}
+        paddingRight={3}
+        marginLeft={-3}
+        marginRight={-3}
+      >
         <Grid className={classes.tokenContractInfoBlock} container>
           {crowdsaleContract.tokens.map((crowdsaleContractDynamicData) => (
             <Grid
@@ -135,7 +143,7 @@ export const CrowdsaleContractPreview = () => {
         ))}
       </Box>
 
-      <Box className={classes.mixMaxInvestmentsLimitationsSection}>
+      <Box className={classes.borderedSection} paddingTop={5} paddingBottom={5}>
         <Typography
           className={clsx(classes.sectionTitle, 'l')}
           variant="body1"
@@ -179,7 +187,7 @@ export const CrowdsaleContractPreview = () => {
         ))}
       </Box>
 
-      <Box className={classes.bottomSection}>
+      <Box className={classes.borderedSection} paddingTop={2} paddingBottom={3}>
         <Typography
           className={clsx(classes.sectionTitle, 'l')}
           variant="body1"
@@ -223,7 +231,7 @@ export const CrowdsaleContractPreview = () => {
         ))}
       </Box>
 
-      <Box className={classes.crowdsaleOwnerSection}>
+      <Box paddingTop={3} paddingBottom={3}>
         <Typography
           className={clsx(classes.sectionTitle, 'l')}
           variant="body1"
