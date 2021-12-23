@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -36,6 +36,8 @@ import {
 import { useStyles } from './CrowdsaleContract.styles';
 import { InfoBlock, TokenBlockForm } from './components';
 import { SwitchableBlockForm } from './components/SwitchableBlockForm';
+
+const tokensSupportedForPayment = 3;
 
 export const CrowdsaleContract: FC = () => {
   const classes = useStyles();
@@ -182,8 +184,7 @@ export const CrowdsaleContract: FC = () => {
                       </TokenBlockForm>
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {/* supported only 3 tokens for payment */}
-                        {i + 1 < 3 && (
+                        {i + 1 < tokensSupportedForPayment && (
                         <Button
                           variant="outlined"
                           endIcon={<PlusIcon />}
@@ -350,11 +351,7 @@ export const CrowdsaleContract: FC = () => {
                   checkboxName={formSection.id}
                   checked={values[formSection.id]}
                   onChecked={(
-                    e: Parameters<
-                    React.ComponentProps<
-                        typeof SwitchableBlockForm
-                    >['onChecked']
-                    >['0'],
+                    e: SyntheticEvent<React.ChangeEvent>,
                   ) => {
                     handleChange(e);
                     if (
