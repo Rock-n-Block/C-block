@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   Box,
-  // Switch,
 } from '@material-ui/core';
 import {
   Formik, Form, Field, FieldProps, FieldArray,
@@ -28,18 +27,15 @@ import {
 } from 'store/contractForms/reducer';
 import { routes } from 'appConstants';
 import { DELETE_ME_DISABLED_TEXTFIELD } from 'pages/CrowdsaleContractPreview/DELETE_ME_DISABLED_TEXTFIELD/DELETE_ME_DISABLED_TEXTFIELD';
-import { InfoBlock, TokenBlockForm } from './components';
-// import { SwitchableBlockForm } from './components/SwitchableBlockForm';
+import { TokenBlockForm } from './components';
 import {
   validationSchema,
-  crowdsaleContractFormConfigStart,
   dynamicFormDataConfig,
-  crowdsaleContractFormConfigSoftcap,
-  crowdsaleContractFormConfigSaleDuration,
+  // crowdsaleContractFormConfigSaleDuration,
   contractNameSectionConfig,
   managementAddressSectionConfig,
-  // crowdsaleContractFormConfigFlagOptions,
-  crowdsaleContractFormConfigEnd,
+  rewardAmountSectionConfig,
+  confirmLiveStatusSectionConfig,
 } from './LostKeyContract.helpers';
 import { useStyles } from './LostKeyContract.styles';
 
@@ -82,7 +78,7 @@ export const LostKeyContract: FC = () => {
           // setFieldTouched,
         }) => (
           <Form className={classes.form} translate={undefined}>
-            <Grid className={classes.contractNameSection} container>
+            <Grid className={clsx(classes.section, classes.contractNameSection)} container>
               {
                 contractNameSectionConfig.map(({
                   key, name, renderProps, helperText,
@@ -126,7 +122,7 @@ export const LostKeyContract: FC = () => {
               }
             </Grid>
 
-            <Grid className={classes.managementAddressSection} container>
+            <Grid className={clsx(classes.section, classes.managementAddressSection)} container>
               {
                 managementAddressSectionConfig.map(({
                   key, title, name, helperText,
@@ -175,210 +171,120 @@ export const LostKeyContract: FC = () => {
                   </Grid>
                 ))
               }
-            </Grid>
-
-            {crowdsaleContractFormConfigStart.map((formSection, index) => (
-              <Grid
-                key={`start_${index.toString()}`}
-                className={classes.crowdsaleContractFormSection}
-                container
-              >
-                {formSection.map(
-                  ({
-                    id, name, renderProps, helperText, isShort,
-                  }) => (
-                    <Grid
-                      key={id}
-                      item
-                      xs={12}
-                      sm={isShort ? 6 : 12}
-                      md={isShort ? 3 : 6}
-                      lg={isShort ? 3 : 6}
-                      xl={isShort ? 3 : 6}
-                    >
-                      <Field
-                        id={id}
-                        name={name}
-                        render={({ form: { isSubmitting } }: FieldProps) => (
-                          <TextField
-                            {...renderProps}
-                            disabled={isSubmitting}
-                            onChange={handleChange}
-                            value={values[name]}
-                            onBlur={handleBlur}
-                            error={errors[name] && touched[name]}
-                          />
-                        )}
-                      />
-                      {helperText.map((text, i) => (
-                        <Typography
-                          key={i.toString()}
-                          className={clsx(classes.helperText)}
-                          variant="body1"
-                          color="textSecondary"
+              <Box className={clsx(classes.section, classes.reservesSection)}>
+                <FieldArray name="reservesConfigs">
+                  {({ remove, push }) => values.reservesConfigs.map((reserves, i) => {
+                    const reservesConfigsErrors =
+                        (errors.reservesConfigs?.length && errors.reservesConfigs[i]) || {};
+                    const reservesConfigsTouched =
+                        (touched.reservesConfigs?.length && touched.reservesConfigs[i]) || {};
+                    return (
+                      <Fragment key={`dynamic_${i.toString()}`}>
+                        <TokenBlockForm
+                          isFirst={i === 0}
+                          deleteForm={() => remove(i)}
                         >
-                          {text}
-                        </Typography>
-                      ))}
-                    </Grid>
-                  ),
-                )}
-              </Grid>
-            ))}
-
-            <Box className={classes.crowdsaleContractFormSection}>
-              <FieldArray name="reservesConfigs">
-                {({ remove, push }) => values.reservesConfigs.map((reserves, i) => {
-                  console.log(values.reservesConfigs);
-                  const reservesConfigsErrors =
-                      (errors.reservesConfigs?.length && errors.reservesConfigs[i]) || {};
-                  const reservesConfigsTouched =
-                      (touched.reservesConfigs?.length && touched.reservesConfigs[i]) || {};
-                  return (
-                    <Fragment key={`dynamic_${i.toString()}`}>
-                      <TokenBlockForm
-                        isFirst={i === 0}
-                        deleteForm={() => remove(i)}
-                      >
-                        {dynamicFormDataConfig.map(
-                          (
-                            {
-                              id, name, renderProps, isShort, helperText,
-                            },
-                            index,
-                          ) => (
-                            <Grid
-                              key={`${name}_${index.toString()}`}
-                              className={clsx(classes[name])}
-                              item
-                              xs={12}
-                              sm={6}
-                            >
-                              <Field
-                                id={`reservesConfigs[${i}].${id}`}
-                                name={`reservesConfigs[${i}].${name}`}
-                                render={({
-                                  form: { isSubmitting },
-                                }: FieldProps) => (
-                                  <TextField
-                                    className={clsx({
-                                      [classes.shortTextField]: isShort,
-                                    })}
-                                    {...renderProps}
-                                    name={`reservesConfigs[${i}].${name}`}
-                                    disabled={isSubmitting}
-                                    value={reserves[name]}
-                                    error={
-                                        reservesConfigsErrors[name] &&
-                                        reservesConfigsTouched[name]
-                                      }
-                                    onChange={handleChange(
-                                      `reservesConfigs[${i}].${name}`,
-                                    )}
-                                    onBlur={handleBlur}
-                                  />
-                                )}
-                              />
-                              {helperText.map((text) => (
-                                <Typography
-                                  key={i.toString()}
-                                  className={clsx(classes.helperText)}
-                                  variant="body1"
-                                  color="textSecondary"
-                                >
-                                  {text}
-                                </Typography>
-                              ))}
-                            </Grid>
-                          ),
-                        )}
-                      </TokenBlockForm>
-                      {i === values.reservesConfigs.length - 1 && (
-                      <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {/* supported only 4 tokens as a reserved address */}
-                        {i + 1 < 4 && (
-                        <Button
-                          variant="outlined"
-                          endIcon={<PlusIcon />}
-                          onClick={() => push(crowdsaleContractDynamicFormInitialData)}
-                        >
-                          Add address
-                        </Button>
-                        )}
-                      </Grid>
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </FieldArray>
-            </Box>
-
-            <Grid className={classes.crowdsaleContractFormSection} container>
-              {crowdsaleContractFormConfigSoftcap.map(
-                ({
-                  id, name, renderProps, helperText, infoText,
-                }) => (
-                  <Fragment key={id}>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                      <Field
-                        id={id}
-                        name={name}
-                        render={({ form: { isSubmitting } }: FieldProps) => (
-                          <TextField
-                            {...renderProps}
-                            disabled={isSubmitting}
-                            onChange={handleChange}
-                            value={values[name]}
-                            onBlur={handleBlur}
-                            error={errors[name] && touched[name]}
-                          />
-                        )}
-                      />
-                      {helperText.map((text, i) => (
-                        <Typography
-                          key={i.toString()}
-                          className={clsx(classes.helperText)}
-                          variant="body1"
-                          color="textSecondary"
-                        >
-                          {text}
-                        </Typography>
-                      ))}
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                      <InfoBlock>
-                        {infoText.map((text) => (
-                          <Typography
-                            key={text}
-                            variant="body1"
-                            color="textSecondary"
+                          {dynamicFormDataConfig.map(
+                            (
+                              {
+                                key, name, renderProps, helperText,
+                              },
+                              index,
+                            ) => (
+                              <Grid
+                                key={`${name}_${index.toString()}`}
+                                className={clsx(classes[name])}
+                                item
+                                xs={12}
+                                sm={6}
+                              >
+                                <Field
+                                  id={`reservesConfigs[${i}].${key}`}
+                                  name={`reservesConfigs[${i}].${name}`}
+                                  render={({
+                                    form: { isSubmitting },
+                                  }: FieldProps) => (
+                                    <TextField
+                                      {...renderProps}
+                                      name={`reservesConfigs[${i}].${name}`}
+                                      disabled={isSubmitting}
+                                      value={reserves[name]}
+                                      error={
+                                          reservesConfigsErrors[name] &&
+                                          reservesConfigsTouched[name]
+                                        }
+                                      onChange={handleChange(
+                                        `reservesConfigs[${i}].${name}`,
+                                      )}
+                                      onBlur={handleBlur}
+                                    />
+                                  )}
+                                />
+                                {helperText.map((text) => (
+                                  <Typography
+                                    key={i.toString()}
+                                    className={clsx(classes.helperText)}
+                                    variant="body1"
+                                    color="textSecondary"
+                                  >
+                                    {text}
+                                  </Typography>
+                                ))}
+                              </Grid>
+                            ),
+                          )}
+                        </TokenBlockForm>
+                        {i === values.reservesConfigs.length - 1 && (
+                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                          {/* supported only 4 tokens as a reserved address */}
+                          {i + 1 < 4 && (
+                          <Button
+                            variant="outlined"
+                            endIcon={<PlusIcon />}
+                            onClick={() => push(crowdsaleContractDynamicFormInitialData)}
                           >
-                            {text}
-                          </Typography>
-                        ))}
-                      </InfoBlock>
-                    </Grid>
-                  </Fragment>
-                ),
-              )}
+                            Add address
+                          </Button>
+                          )}
+                        </Grid>
+                        )}
+                      </Fragment>
+                    );
+                  })}
+                </FieldArray>
+              </Box>
             </Grid>
 
-            <Grid className={classes.crowdsaleContractFormSection} container>
-              {crowdsaleContractFormConfigSaleDuration.map(
+            <Grid className={clsx(classes.section, classes.confirmLiveStatusSection)} container>
+              <Typography>
+                {confirmLiveStatusSectionConfig.title}
+              </Typography>
+              {confirmLiveStatusSectionConfig.additionalText.map((text, i) => (
+                <Typography
+                  key={i.toString()}
+                  className={clsx(classes.additionalText)}
+                  variant="body1"
+                  color="textSecondary"
+                >
+                  {text}
+                </Typography>
+              ))}
+              {confirmLiveStatusSectionConfig.fields.map(
                 ({
-                  id, name, renderProps, helperText, isShort,
+                  key, name, renderProps, helperText,
                 }) => (
                   <Grid
-                    key={id}
+                    key={key}
+                    className={classes.gridItem}
                     item
                     xs={12}
-                    sm={isShort ? 6 : 12}
-                    md={isShort ? 3 : 6}
-                    lg={isShort ? 3 : 6}
-                    xl={isShort ? 3 : 6}
+                    sm={12}
+                    md={6}
+                    lg={6}
+                    xl={6}
                   >
                     <Field
-                      id={id}
+                      id={key}
                       name={name}
                       render={({ form: { isSubmitting } }: FieldProps) => (
                         <TextField
@@ -404,132 +310,74 @@ export const LostKeyContract: FC = () => {
                   </Grid>
                 ),
               )}
+              {confirmLiveStatusSectionConfig.helperText.map((text, i) => (
+                <Typography
+                  key={i.toString()}
+                  className={clsx(classes.helperText)}
+                  variant="body1"
+                  color="textSecondary"
+                >
+                  {text}
+                </Typography>
+              ))}
             </Grid>
 
-            {/* <Grid container className={classes.crowdsaleContractFormSection}>
-              {crowdsaleContractFormConfigFlagOptions.map(
-                ({
-                  id, name, title, icon, helperText,
+            <Grid className={clsx(classes.section, classes.rewardAmountSection)} container>
+              {
+                rewardAmountSectionConfig.map(({
+                  key, name, renderProps, helperText,
                 }) => (
-                  <Grid key={id} item xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <Box className={classes.changingDates}>
-                      <Box className={classes.changingDatesHeader}>
-                        <Box className={classes.changingDatesTitle}>
-                          {icon}
-                          <Typography variant="body1" color="inherit">
-                            {title}
-                          </Typography>
-                        </Box>
-                        <Field
-                          id={id}
-                          name={name}
-                          render={() => (
-                            <Switch
-                              name={name}
-                              checked={values[name]}
-                              onClick={handleChange}
-                            />
-                          )}
+                  <Grid
+                    key={key}
+                    className={classes.gridItem}
+                    item
+                    xs={12}
+                    sm={6}
+                  >
+                    <Field
+                      id={key}
+                      name={name}
+                      render={({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          {...renderProps}
+                          disabled={isSubmitting}
+                          onChange={handleChange}
+                          value={values[name]}
+                          onBlur={handleBlur}
+                          error={errors[name] && touched[name]}
                         />
-                      </Box>
-                      <Box>
-                        {helperText.map((text, i) => (
-                          <Typography
-                            key={i.toString()}
-                            variant="body1"
-                            color="textSecondary"
-                          >
-                            {text}
-                          </Typography>
-                        ))}
-                      </Box>
-                    </Box>
+                      )}
+                    />
+                    {/* <Field
+                      id={key}
+                      name={name}
+                      render={({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          {...renderProps}
+                          disabled={isSubmitting}
+                          onChange={handleChange}
+                          value={values[name]}
+                          onBlur={handleBlur}
+                          error={errors[name] && touched[name]}
+                        />
+                      )}
+                    /> */}
+                    {helperText.map((text, i) => (
+                      <Typography
+                        key={i.toString()}
+                        className={clsx(classes.helperText)}
+                        variant="body1"
+                        color="textSecondary"
+                      >
+                        {text}
+                      </Typography>
+                    ))}
                   </Grid>
-                ),
-              )}
-            </Grid> */}
+                ))
+              }
+            </Grid>
 
-            {crowdsaleContractFormConfigEnd.map((formSection, index) => (
-              <Grid
-                key={`end_${index.toString()}`}
-                className={classes.crowdsaleContractFormSection}
-                item
-                xs={12}
-              >
-                {/* <SwitchableBlockForm
-                  key={formSection.id}
-                  title={formSection.title}
-                  description={formSection.description}
-                  checkboxName={formSection.id}
-                  checked={values[formSection.id]}
-                  onChecked={(
-                    e: Parameters<
-                    React.ComponentProps<
-                        typeof SwitchableBlockForm
-                    >['onChecked']
-                    >['0'],
-                  ) => {
-                    handleChange(e);
-                    if (
-                      formSection.id === 'minMaxInvestmentsSection' &&
-                      values[formSection.id]
-                    ) {
-                      handleChange('minInvestments')('0');
-                      handleChange('maxInvestments')('0');
-                    }
-                  }}
-                >
-                  <Grid container>
-                    {formSection.fields.map(
-                      ({
-                        id, name, renderProps, helperText, isShort,
-                      }) => (
-                        <Grid
-                          key={id}
-                          item
-                          xs={12}
-                          sm={isShort ? 6 : 6}
-                          md={isShort ? 3 : 6}
-                          lg={isShort ? 3 : 4}
-                          xl={isShort ? 3 : 4}
-                        >
-                          <Field
-                            id={id}
-                            name={name}
-                            render={({
-                              form: { isSubmitting },
-                            }: FieldProps) => (
-                              <TextField
-                                {...renderProps}
-                                disabled={
-                                  isSubmitting || !values[formSection.id]
-                                }
-                                onChange={handleChange}
-                                value={values[name]}
-                                onBlur={handleBlur}
-                                error={errors[name] && touched[name]}
-                              />
-                            )}
-                          />
-                          {helperText.map((text, i) => (
-                            <Typography
-                              key={i.toString()}
-                              className={clsx(classes.helperText)}
-                              variant="body1"
-                              color="textSecondary"
-                            >
-                              {text}
-                            </Typography>
-                          ))}
-                        </Grid>
-                      ),
-                    )}
-                  </Grid>
-                </SwitchableBlockForm> */}
-              </Grid>
-            ))}
-
-            <Box className={classes.crowdsaleContractFormSection}>
+            <Box className={classes.buttonsGroupSection}>
               <Button
                 className={classes.submitButton}
                 size="large"
@@ -540,6 +388,7 @@ export const LostKeyContract: FC = () => {
               >
                 Create
               </Button>
+
               <Button
                 className={classes.resetButton}
                 size="large"

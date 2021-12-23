@@ -1,7 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { ReactElement } from 'react';
 import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
-import { DescendingSortOrderIcon } from 'theme/icons';
 import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
@@ -50,21 +50,7 @@ type CrowdsaleContractFieldType = {
   } & TextFieldProps;
   helperText: string[];
   infoText?: string[];
-  isShort?: boolean;
 };
-
-type CrowdsaleContractFormConfig = CrowdsaleContractFieldType[][];
-
-// interface ICrowdsaleContractFlagOption extends CrowdsaleContractFieldType {
-//   title: string;
-// }
-
-interface ICrowdsaleContractSwitchableSection {
-  id: 'minMaxInvestmentsSection' | 'amountBonusSection';
-  title: string;
-  description?: string;
-  fields: CrowdsaleContractFieldType[];
-}
 
 interface IFieldsFormConfig {
   key: string;
@@ -72,10 +58,10 @@ interface IFieldsFormConfig {
   title?: string;
   // icon?: ReactElement;
   renderProps?: {
-    label: string;
+    label?: string;
     name: string;
   } & TextFieldProps;
-  helperText: string[];
+  helperText?: string[];
 }
 
 export const contractNameSectionConfig: IFieldsFormConfig[] = [
@@ -107,47 +93,24 @@ export const managementAddressSectionConfig: IFieldsFormConfig[] = [
   },
 ];
 
-export const crowdsaleContractFormConfigStart: CrowdsaleContractFormConfig = [
-  // [
-  //   {
-  //     id: 'contractName',
-  //     name: 'contractName',
-  //     renderProps: {
-  //       label: 'Contract name',
-  //       name: 'contractName',
-  //     },
-  //     helperText: [],
-  //   },
-  // ],
-  [
-    {
-      id: 'tokenAddress',
-      name: 'tokenAddress',
-      renderProps: {
-        label: 'Token address',
-        name: 'tokenAddress',
-      },
-      helperText: [
-        'Please provide the address of your token that you will sell. Kindly note that deflationary tokens are supported but we don`t take responsibility for its commissions.',
-      ],
+export const rewardAmountSectionConfig: IFieldsFormConfig[] = [
+  {
+    key: 'rewardAmount',
+    name: 'rewardAmount',
+    title: 'Management address',
+    renderProps: {
+      label: 'Сelo',
+      name: 'rewardAmount',
     },
-    {
-      id: 'crowdsaleOwner',
-      name: 'crowdsaleOwner',
-      renderProps: {
-        label: 'Crowdsale owner',
-        name: 'crowdsaleOwner',
-      },
-      helperText: [
-        'Celo address (not exchange address). This address will be owner of the crowdsale (after sale end date). Double check the address (and access to it) before submission',
-      ],
-    },
-  ],
+    helperText: [
+      'This amount of СELO will be paid as a reward to the person who will initiate and pay for gas of the transfer from management to reserve addresses after the conditions for such transfer are met.',
+    ],
+  },
 ];
 
-export const dynamicFormDataConfig: CrowdsaleContractFieldType[] = [
+export const dynamicFormDataConfig: IFieldsFormConfig[] = [
   {
-    id: 'reserveAddress',
+    key: 'reserveAddress',
     name: 'reserveAddress',
     renderProps: {
       label: 'Reserve address',
@@ -159,7 +122,7 @@ export const dynamicFormDataConfig: CrowdsaleContractFieldType[] = [
     ],
   },
   {
-    id: 'email',
+    key: 'email',
     name: 'email',
     renderProps: {
       label: 'E-mail for notification',
@@ -168,25 +131,6 @@ export const dynamicFormDataConfig: CrowdsaleContractFieldType[] = [
     },
     helperText: [
       'Enter the e-mail address to which you want to send a message about transferring the crypto currency',
-    ],
-  },
-];
-
-export const crowdsaleContractFormConfigSoftcap: CrowdsaleContractFieldType[] = [
-  {
-    id: 'softcapTokens',
-    name: 'softcapTokens',
-    renderProps: {
-      label: 'Soft cap tokens',
-      name: 'softcapTokens',
-      InputProps: { endAdornment: <DescendingSortOrderIcon /> },
-    },
-    helperText: [
-      'Defines the minimum number of tokens that needs to be sold for the project continuation. If soft cap is not reached - contributors get their investments back, project gets nothing. You can set it to 0 (no soft cap).',
-    ],
-    infoText: [
-      'If softcap > 0 all investments are stored on the vault contract until the end of crowdsale.',
-      'If you need to get investments on your address right away set softcap = 0.',
     ],
   },
 ];
@@ -205,77 +149,100 @@ export const crowdsaleContractFormConfigSaleDuration: CrowdsaleContractFieldType
   },
 ];
 
-// export const crowdsaleContractFormConfigFlagOptions: ICrowdsaleContractFlagOption[] = [
+interface ISectionFieldsConfig {
+  key: string;
+  title?: string;
+  additionalText?: string[];
+  helperText?: string[];
+  fields: IFieldsFormConfig[];
+}
+
+export const confirmLiveStatusSectionConfig: ISectionFieldsConfig = {
+  key: 'confirmLiveStatusSection',
+  title: 'Define how often you want to confirm your “Live” status',
+  additionalText: ['Confirmation transaction every'],
+  helperText: ['You will need to send transaction to the contract from management address every time.'],
+  fields: [
+    {
+      key: 'pingIntervalAsValue',
+      name: 'pingIntervalAsValue',
+      renderProps: {
+        label: '',
+        name: 'pingIntervalAsValue',
+      },
+      helperText: [],
+    },
+    {
+      key: 'pingIntervalAsDateUnits',
+      name: 'pingIntervalAsDateUnits',
+      renderProps: {
+        label: '',
+        name: 'pingIntervalAsDateUnits',
+      },
+      helperText: [],
+    },
+  ],
+};
+
+// export const crowdsaleContractFormConfigEnd: ICrowdsaleContractSwitchableSection[] = [
 //   {
-//     id: 'changingDates',
-//     name: 'changingDates',
-//     title: 'Changing dates',
-//     icon: <Calendar />,
-//     helperText: [
-//       'Finish Dates can be changed manually after Contract Deployment. You can prolong sale or finish it early. Otherwise, dates are hardcoded and can`t be changed.',
+//     id: 'minMaxInvestmentsSection',
+//     title: 'Min & Max investments',
+//     description: 'You can specify minimum/maximum amount of tokens hat user can buy per one transaction.',
+//     fields: [
+//       {
+//         id: 'minInvestments',
+//         name: 'minInvestments',
+//         renderProps: {
+//           label: 'Minimum',
+//           name: 'minInvestments',
+//         },
+//         helperText: [
+//           'Minimum amount accepted. "0" = No minimum limitation.',
+//         ],
+//       },
+//       {
+//         id: 'maxInvestments',
+//         name: 'maxInvestments',
+//         renderProps: {
+//           label: 'Maximum',
+//           name: 'maxInvestments',
+//         },
+//         helperText: [
+//           'Maximum amount accepted. it can not be higher hard cap.',
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 'amountBonusSection',
+//     title: 'Amount Bonus',
+//     fields: [
+//       {
+//         id: 'amountBonus',
+//         name: 'amountBonus',
+//         renderProps: {
+//           label: 'Bonus',
+//           name: 'amountBonus',
+//           InputProps: {
+//             endAdornment: '%',
+//           },
+//         },
+//         helperText: [
+//           'Usually 0.1-100%. How many extra tokens will be sent to contributor.',
+//         ],
+//       },
+//       {
+//         id: 'minimumContribution',
+//         name: 'minimumContribution',
+//         renderProps: {
+//           label: 'Minimum',
+//           name: 'minimumContribution',
+//         },
+//         helperText: [
+//           'Minimum contribution for getting specified bonus',
+//         ],
+//       },
 //     ],
 //   },
 // ];
-
-export const crowdsaleContractFormConfigEnd: ICrowdsaleContractSwitchableSection[] = [
-  {
-    id: 'minMaxInvestmentsSection',
-    title: 'Min & Max investments',
-    description: 'You can specify minimum/maximum amount of tokens hat user can buy per one transaction.',
-    fields: [
-      {
-        id: 'minInvestments',
-        name: 'minInvestments',
-        renderProps: {
-          label: 'Minimum',
-          name: 'minInvestments',
-        },
-        helperText: [
-          'Minimum amount accepted. "0" = No minimum limitation.',
-        ],
-      },
-      {
-        id: 'maxInvestments',
-        name: 'maxInvestments',
-        renderProps: {
-          label: 'Maximum',
-          name: 'maxInvestments',
-        },
-        helperText: [
-          'Maximum amount accepted. it can not be higher hard cap.',
-        ],
-      },
-    ],
-  },
-  {
-    id: 'amountBonusSection',
-    title: 'Amount Bonus',
-    fields: [
-      {
-        id: 'amountBonus',
-        name: 'amountBonus',
-        renderProps: {
-          label: 'Bonus',
-          name: 'amountBonus',
-          InputProps: {
-            endAdornment: '%',
-          },
-        },
-        helperText: [
-          'Usually 0.1-100%. How many extra tokens will be sent to contributor.',
-        ],
-      },
-      {
-        id: 'minimumContribution',
-        name: 'minimumContribution',
-        renderProps: {
-          label: 'Minimum',
-          name: 'minimumContribution',
-        },
-        helperText: [
-          'Minimum contribution for getting specified bonus',
-        ],
-      },
-    ],
-  },
-];

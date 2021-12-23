@@ -14,39 +14,61 @@ const separator = (theme: Theme) => ({
   borderTop: getBorderStyle(theme),
 });
 
-// borderTop: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_5}`,
-
 export const useStyles = makeStyles((theme: Theme) => createStyles({
   form: {
+    ...separator(theme),
     width: '90%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
+  section: {
+    margin: 0,
+    width: 'unset',
+    height: 'unset',
+  },
   gridItem: {
-    margin: -10,
+    margin: 0,
+    padding: 0,
   },
   contractNameSection: {
-    ...separator(theme),
+    // ...separator(theme),
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(5),
+    // margin: 0,
   },
   managementAddressSection: {
     ...separator(theme),
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(5),
+    paddingBottom: theme.spacing(3),
   },
   managementAddressSectionTitle: {
     marginBottom: theme.spacing(2),
   },
-  crowdsaleContractFormSection: {
-    // borderTop: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_5}`,
-    padding: `${theme.spacing(5)}px 0px`,
+  reservesSection: {
+    marginTop: 50,
+  },
+  // crowdsaleContractFormSection: {
+  //   paddingTop: theme.spacing(5),
+  //   paddingBottom: theme.spacing(5),
+  // },
+
+  confirmLiveStatusSection: {
+    ...separator(theme),
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
+  },
+  rewardAmountSection: {
+    ...separator(theme),
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
+  },
+  buttonsGroupSection: {
+    ...separator(theme),
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
   },
 
-  shortTextField: {
-    maxWidth: '50%',
-  },
   submitButton: {
     width: '150px !important',
     marginRight: theme.spacing(2.5),
@@ -58,24 +80,8 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   helperText: {
     marginTop: theme.spacing(4),
   },
-
-  // changingDates: {
-  //   padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
-  //   background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
-  //   borderRadius: theme.spacing(2.5),
-  //   marginBottom: theme.spacing(4),
-  //   [theme.breakpoints.down('sm')]: {
-  //     padding: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
-  //   },
-  // },
-
-  // changingDatesHeader: {
-  //   ...flexHelper('space-between'),
-  //   marginBottom: theme.spacing(3),
-  // },
-
-  // changingDatesTitle: {
-  //   ...flexHelper('flex-start', 'flex-start'),
-  //   color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_BLACK_1,
-  // },
+  additionalText: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+  },
 }));
