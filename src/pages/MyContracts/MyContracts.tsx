@@ -5,11 +5,11 @@ import {
   Container, Grid, IconButton, InputAdornment, TextField, Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
+import { useDebounce } from 'use-debounce';
 import { useStyles } from './MyContracts.styles';
 import { SearchIcon } from '../../theme/icons/components/SearchIcon';
 import { NetTag } from '../../containers/Header/components/NetTag';
 import { contractsCards } from './MyContracts.helpers';
-import useDebounce from '../../hooks/useDebounce';
 
 export const MyContracts = () => {
   const [cards, setCards] = useState(contractsCards);
@@ -17,7 +17,7 @@ export const MyContracts = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const classes = useStyles();
   const isMainnet = true;
-  const debouncedSearchValue = useDebounce(searchValue, 500);
+  const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const buttonClickHandler = useCallback((contractKey, type) => {
     if (type === ('requestDivorce')) {
@@ -103,7 +103,7 @@ export const MyContracts = () => {
             </Box>
             {isRequestBlockActive && (
             <Box className={classes.contractActionBlock}>
-              <Typography>Request divorce</Typography>
+              <Typography className={classes.contractActionText}>Request divorce</Typography>
               <Box>
                 <Button className={clsx(classes.button, classes.actionButton)} variant="outlined">Approve divorce</Button>
                 <Button className={clsx(classes.button, classes.actionButton)} variant="outlined">Reject divorce</Button>

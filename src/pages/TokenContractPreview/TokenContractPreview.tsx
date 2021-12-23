@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable react/no-array-index-key */
 import React, { useCallback } from 'react';
-import { Preview } from 'components/Preview';
+import { Preview } from 'components';
 import { useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State } from 'types';
@@ -38,7 +38,7 @@ export const TokenContractPreview = () => {
     <Preview
       type="token"
       name={tokenContract.tokenName}
-      launchAction={() => alert('launch')}
+      launchAction={() => console.log('launch')}
       editAction={handleEdit}
       deleteAction={handleDelete}
     >

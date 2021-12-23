@@ -17,7 +17,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   contractBlock: {
     ...flexHelper(),
-    padding: theme.spacing(0),
+    padding: 0,
     margin: theme.spacing(1),
     borderRadius: 16,
     flexDirection: 'column',
@@ -30,7 +30,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   contractTitle: {
     ...flexHelper('flex-start'),
-    padding: `${theme.spacing(3)}px`,
+    padding: theme.spacing(3),
     width: '100%',
     '& > :nth-child(1)': {
       marginRight: theme.spacing(2),
@@ -59,9 +59,11 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     background: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_4,
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
-      '& > p': {
-        paddingBottom: theme.spacing(4),
-      },
+    },
+  },
+  contractActionText: {
+    [theme.breakpoints.down('sm')]: {
+      paddingBottom: theme.spacing(4),
     },
   },
   chainTag: {

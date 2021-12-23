@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FC, useState, useCallback } from 'react';
 
 import {
@@ -7,15 +6,13 @@ import {
 import clsx from 'clsx';
 
 import { Edit, TrashIcon } from 'theme/icons';
-import { DisclaimerModal } from 'components/DisclaimerModal';
-import { PaymentModal } from 'components/PaymentModal';
-import { useNavigate } from 'react-router-dom';
+import {
+  PaymentModal, DisclaimerModal, Loader, CompleteModal,
+} from 'components';
 import { routes } from 'appConstants';
+import { useNavigate } from 'react-router-dom';
 import { useStyles } from './Preview.styles';
 import { iconHelper } from './Preview.helpers';
-import { CompleteModal } from '../CompleteModal/CompleteModal';
-import { Loader } from '../Loader';
-import { Modal } from '../Modal';
 
 export interface PreviewProps {
   launchAction: () => void,
@@ -38,12 +35,13 @@ export const Preview: FC<PreviewProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
   const [isPaymentOpen, setPaymentOpen] = useState(true);
   const [isCompleteOpen, setCompleteOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const openDisclaimerModal = useCallback(() => {
     setDisclaimerOpen(true);
@@ -71,14 +69,14 @@ export const Preview: FC<PreviewProps> = ({
   }, []);
 
   const onPay = useCallback(() => {
-    // launchAction();
+    launchAction();
     closePaymentModal();
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       openCompleteModal();
     }, 1000);
-    // navigate(routes.root);
+    navigate(routes.root);
   }, []);
   return (
     <Container className={classes.root}>
@@ -136,7 +134,6 @@ export const Preview: FC<PreviewProps> = ({
       <CompleteModal
         open={isCompleteOpen}
         onClose={closeCompleteModal}
-        onAccept={onPay}
         result
       />
     </Container>

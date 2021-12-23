@@ -17,8 +17,6 @@ export const useStyles = makeStyles((theme: Theme) => {
       flexDirection: 'column',
     },
     desc: {
-      fontSize: 18,
-      lineHeight: '30px',
       maxWidth: '80%',
       textAlign: 'center',
     },

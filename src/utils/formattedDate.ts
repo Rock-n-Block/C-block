@@ -1,4 +1,4 @@
-export function formattedDate(d = new Date()) {
+export function formattedDate(separator = '-', d = new Date()) {
   let month = String(d.getMonth() + 1);
   let day = String(d.getDate());
   const year = String(d.getFullYear());
@@ -6,5 +6,5 @@ export function formattedDate(d = new Date()) {
   if (month.length < 2) month = `0${month}`;
   if (day.length < 2) day = `0${day}`;
 
-  return `${year}-${month}-${day}`;
+  return `${year}${separator}${month}${separator}${day}`;
 }

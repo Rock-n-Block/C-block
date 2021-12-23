@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Fragment, useCallback } from 'react';
-import { Preview } from 'components/Preview';
+import { Preview } from 'components';
 import { useShallowSelector } from 'hooks';
 import { ContractFormsState, State } from 'types';
 import { Box, Grid, Typography } from '@material-ui/core';
@@ -36,7 +36,7 @@ export const WeddingContractPreview = () => {
     <Preview
       type="weddingRing"
       name={weddingContract.contractName}
-      launchAction={() => alert('launch')}
+      launchAction={() => console.log('launch')}
       editAction={handleEdit}
       deleteAction={handleDelete}
     >

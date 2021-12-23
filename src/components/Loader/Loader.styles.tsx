@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { makeStyles } from '@material-ui/core';
+import {COLOR_BLACK_SCALE_5} from "theme/colors";
+import {flexHelper} from "../../utils";
 
 export const useStyles = makeStyles({
   loaderModal: {
@@ -7,13 +9,10 @@ export const useStyles = makeStyles({
   },
   root: {
     position: 'fixed',
-    background: 'rgba(0, 0, 0, .5)',
+    background: COLOR_BLACK_SCALE_5,
     top: 0,
     left: 0,
     zIndex: 9999999999999999999,
-    display: 'inline-block',
-    alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
     height: '100%',
   },
@@ -23,7 +22,7 @@ export const useStyles = makeStyles({
     width: '100%',
     height: '100%',
     backgroundColor: 'transparent',
-    display: 'flex',
+    ...flexHelper(),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -41,17 +40,8 @@ export const useStyles = makeStyles({
     width: '100px',
     height: 'auto',
     zIndex: 9999999999999999999,
-    // animation: 'imageFloating 1s linear infinite',
     position: 'relative',
     top: '-5px',
-    // '@keyframes rotating': {
-    //   from: {
-    //     transform: 'rotate(0deg)',
-    //   },
-    //   to: {
-    //     transform: 'rotate(360deg)',
-    //   },
-    // },
     animation: '$rotating 2s linear infinite',
   },
 });

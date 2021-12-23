@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   ContractToken, CrowdsaleIcon, WeddingRingIcon, WillContract,
-} from '../../theme/icons';
+} from 'theme/icons';
+import { formattedDate } from 'utils';
 
 interface ContractsCardsI {
   contractKey: string;
@@ -21,10 +22,12 @@ interface ContractButtonsI {
 type ContractButtonsT = ContractButtonsI[];
 type ContractCardsT = ContractsCardsI[];
 
+const currentDate = formattedDate('.');
+
 export const contractsCards: ContractCardsT = [
   {
     contractKey: '0',
-    contractDate: '22.01.2022',
+    contractDate: currentDate,
     contractType: 'Token contract',
     contractLogo: <WeddingRingIcon />,
     contractName: 'Name contract',
@@ -38,7 +41,7 @@ export const contractsCards: ContractCardsT = [
   },
   {
     contractKey: '1',
-    contractDate: '22.01.2022',
+    contractDate: currentDate,
     contractType: 'Wedding contract',
     contractLogo: <ContractToken />,
     contractName: 'Wedding contract',
@@ -60,7 +63,7 @@ export const contractsCards: ContractCardsT = [
   },
   {
     contractKey: '2',
-    contractDate: '22.01.2022',
+    contractDate: currentDate,
     contractType: 'Crowdsale contract',
     contractLogo: <CrowdsaleIcon />,
     contractName: 'Crowdsale contract',
@@ -82,7 +85,7 @@ export const contractsCards: ContractCardsT = [
   },
   {
     contractKey: '3',
-    contractDate: '22.01.2022',
+    contractDate: currentDate,
     contractType: 'Will Contract',
     contractLogo: <WillContract />,
     contractName: 'Will contract',
