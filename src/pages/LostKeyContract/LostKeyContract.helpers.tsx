@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
-import { Calendar, DescendingSortOrderIcon } from 'theme/icons';
+import { DescendingSortOrderIcon } from 'theme/icons';
 import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
@@ -55,9 +55,9 @@ type CrowdsaleContractFieldType = {
 
 type CrowdsaleContractFormConfig = CrowdsaleContractFieldType[][];
 
-interface ICrowdsaleContractFlagOption extends CrowdsaleContractFieldType {
-  title: string;
-}
+// interface ICrowdsaleContractFlagOption extends CrowdsaleContractFieldType {
+//   title: string;
+// }
 
 interface ICrowdsaleContractSwitchableSection {
   id: 'minMaxInvestmentsSection' | 'amountBonusSection';
@@ -66,18 +66,59 @@ interface ICrowdsaleContractSwitchableSection {
   fields: CrowdsaleContractFieldType[];
 }
 
-export const crowdsaleContractFormConfigStart: CrowdsaleContractFormConfig = [
-  [
-    {
-      id: 'contractName',
+interface IFieldsFormConfig {
+  key: string;
+  name: string;
+  title?: string;
+  // icon?: ReactElement;
+  renderProps?: {
+    label: string;
+    name: string;
+  } & TextFieldProps;
+  helperText: string[];
+}
+
+export const contractNameSectionConfig: IFieldsFormConfig[] = [
+  {
+    key: 'contractName',
+    name: 'contractName',
+    renderProps: {
+      label: 'Contract name',
       name: 'contractName',
-      renderProps: {
-        label: 'Contract name',
-        name: 'contractName',
-      },
-      helperText: [],
     },
-  ],
+    helperText: [
+      'Enter name of the project without spaces, usually 5-25 symbols. Lower and uppercase can be used',
+    ],
+  },
+];
+
+export const managementAddressSectionConfig: IFieldsFormConfig[] = [
+  {
+    key: 'managementAddress',
+    name: 'managementAddress',
+    title: 'Management address',
+    // renderProps: {
+    //   label: 'Contract name',
+    //   name: 'managementAddress',
+    // },
+    helperText: [
+      'This is the wallet address that will be traced for activity. If you want to use different wallet, please connect it for contract creation.',
+    ],
+  },
+];
+
+export const crowdsaleContractFormConfigStart: CrowdsaleContractFormConfig = [
+  // [
+  //   {
+  //     id: 'contractName',
+  //     name: 'contractName',
+  //     renderProps: {
+  //       label: 'Contract name',
+  //       name: 'contractName',
+  //     },
+  //     helperText: [],
+  //   },
+  // ],
   [
     {
       id: 'tokenAddress',
@@ -106,28 +147,27 @@ export const crowdsaleContractFormConfigStart: CrowdsaleContractFormConfig = [
 
 export const dynamicFormDataConfig: CrowdsaleContractFieldType[] = [
   {
-    id: 'address',
-    name: 'address',
+    id: 'reserveAddress',
+    name: 'reserveAddress',
     renderProps: {
-      label: 'Token address',
-      name: 'tokenAddress',
+      label: 'Reserve address',
+      name: 'reserveAddress',
       type: 'input',
     },
     helperText: [
-      'Please provide the address of the token that will be accepted from users as payment method.',
+      'Specify the backup address to which you want to send funds in the event that a private key is lost from the management address',
     ],
   },
   {
-    id: 'rate',
-    name: 'rate',
-    isShort: true,
+    id: 'email',
+    name: 'email',
     renderProps: {
-      label: 'Token rate',
-      name: 'tokenRate',
+      label: 'E-mail for notification',
+      name: 'email',
       type: 'input',
     },
     helperText: [
-      'Defines the rate of your token. 1-100000 numerals are accepted.',
+      'Enter the e-mail address to which you want to send a message about transferring the crypto currency',
     ],
   },
 ];
@@ -165,17 +205,17 @@ export const crowdsaleContractFormConfigSaleDuration: CrowdsaleContractFieldType
   },
 ];
 
-export const crowdsaleContractFormConfigFlagOptions: ICrowdsaleContractFlagOption[] = [
-  {
-    id: 'changingDates',
-    name: 'changingDates',
-    title: 'Changing dates',
-    icon: <Calendar />,
-    helperText: [
-      'Finish Dates can be changed manually after Contract Deployment. You can prolong sale or finish it early. Otherwise, dates are hardcoded and can`t be changed.',
-    ],
-  },
-];
+// export const crowdsaleContractFormConfigFlagOptions: ICrowdsaleContractFlagOption[] = [
+//   {
+//     id: 'changingDates',
+//     name: 'changingDates',
+//     title: 'Changing dates',
+//     icon: <Calendar />,
+//     helperText: [
+//       'Finish Dates can be changed manually after Contract Deployment. You can prolong sale or finish it early. Otherwise, dates are hardcoded and can`t be changed.',
+//     ],
+//   },
+// ];
 
 export const crowdsaleContractFormConfigEnd: ICrowdsaleContractSwitchableSection[] = [
   {

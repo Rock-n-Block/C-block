@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -8,7 +8,7 @@ import {
   TextField,
   Button,
   Box,
-  Switch,
+  // Switch,
 } from '@material-ui/core';
 import {
   Formik, Form, Field, FieldProps, FieldArray,
@@ -17,7 +17,10 @@ import clsx from 'clsx';
 
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { ContractFormsState, State, ILostKeyContract } from 'types';
+import userSelector from 'store/user/selectors';
+import {
+  ContractFormsState, State, ILostKeyContract, UserState,
+} from 'types';
 import { useShallowSelector } from 'hooks';
 import {
   crowdsaleContractDynamicFormInitialData,
@@ -33,7 +36,9 @@ import {
   dynamicFormDataConfig,
   crowdsaleContractFormConfigSoftcap,
   crowdsaleContractFormConfigSaleDuration,
-  crowdsaleContractFormConfigFlagOptions,
+  contractNameSectionConfig,
+  managementAddressSectionConfig,
+  // crowdsaleContractFormConfigFlagOptions,
   crowdsaleContractFormConfigEnd,
 } from './LostKeyContract.helpers';
 import { useStyles } from './LostKeyContract.styles';
@@ -45,6 +50,16 @@ export const LostKeyContract: FC = () => {
   const {
     lostKeyContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
+
+  useEffect(() => {
+    dispatch(setLostKeyContractForm({
+      ...lostKeyContract,
+      managementAddress: userAddress,
+    }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, userAddress]);
+
   return (
     <Container>
       <Formik
@@ -67,6 +82,101 @@ export const LostKeyContract: FC = () => {
           // setFieldTouched,
         }) => (
           <Form className={classes.form} translate={undefined}>
+            <Grid className={classes.contractNameSection} container>
+              {
+                contractNameSectionConfig.map(({
+                  key, name, renderProps, helperText,
+                }) => (
+                  <Grid
+                    key={key}
+                    className={classes.gridItem}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={6}
+                    lg={6}
+                    xl={6}
+                  >
+                    <Field
+                      id={key}
+                      name={name}
+                      render={({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          {...renderProps}
+                          disabled={isSubmitting}
+                          onChange={handleChange}
+                          value={values[name]}
+                          onBlur={handleBlur}
+                          error={errors[name] && touched[name]}
+                        />
+                      )}
+                    />
+                    {helperText.map((text, i) => (
+                      <Typography
+                        key={i.toString()}
+                        className={clsx(classes.helperText)}
+                        variant="body1"
+                        color="textSecondary"
+                      >
+                        {text}
+                      </Typography>
+                    ))}
+                  </Grid>
+                ))
+              }
+            </Grid>
+
+            <Grid className={classes.managementAddressSection} container>
+              {
+                managementAddressSectionConfig.map(({
+                  key, title, name, helperText,
+                }) => (
+                  <Grid
+                    key={key}
+                    className={classes.gridItem}
+                    item
+                    xs={12}
+                    sm={6}
+                  >
+                    <Typography
+                      className={clsx(classes.managementAddressSectionTitle)}
+                      variant="body1"
+                      color="textSecondary"
+                    >
+                      {title}
+                    </Typography>
+                    <DELETE_ME_DISABLED_TEXTFIELD
+                      value={values[name]}
+                    />
+                    {/* <Field
+                      id={key}
+                      name={name}
+                      render={({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          {...renderProps}
+                          disabled={isSubmitting}
+                          onChange={handleChange}
+                          value={values[name]}
+                          onBlur={handleBlur}
+                          error={errors[name] && touched[name]}
+                        />
+                      )}
+                    /> */}
+                    {helperText.map((text, i) => (
+                      <Typography
+                        key={i.toString()}
+                        className={clsx(classes.helperText)}
+                        variant="body1"
+                        color="textSecondary"
+                      >
+                        {text}
+                      </Typography>
+                    ))}
+                  </Grid>
+                ))
+              }
+            </Grid>
+
             {crowdsaleContractFormConfigStart.map((formSection, index) => (
               <Grid
                 key={`start_${index.toString()}`}
@@ -116,17 +226,10 @@ export const LostKeyContract: FC = () => {
               </Grid>
             ))}
 
-            <Grid container>
-              <Grid item xs={12} sm={6}>
-                <DELETE_ME_DISABLED_TEXTFIELD
-                  value={lostKeyContract.managementAddress}
-                />
-              </Grid>
-            </Grid>
-
             <Box className={classes.crowdsaleContractFormSection}>
               <FieldArray name="reservesConfigs">
-                {({ remove, push }) => values.reservesConfigs.map((token, i) => {
+                {({ remove, push }) => values.reservesConfigs.map((reserves, i) => {
+                  console.log(values.reservesConfigs);
                   const reservesConfigsErrors =
                       (errors.reservesConfigs?.length && errors.reservesConfigs[i]) || {};
                   const reservesConfigsTouched =
@@ -152,8 +255,8 @@ export const LostKeyContract: FC = () => {
                               sm={6}
                             >
                               <Field
-                                id={`tokens[${i}].${id}`}
-                                name={`tokens[${i}].${name}`}
+                                id={`reservesConfigs[${i}].${id}`}
+                                name={`reservesConfigs[${i}].${name}`}
                                 render={({
                                   form: { isSubmitting },
                                 }: FieldProps) => (
@@ -162,15 +265,15 @@ export const LostKeyContract: FC = () => {
                                       [classes.shortTextField]: isShort,
                                     })}
                                     {...renderProps}
-                                    name={`tokens[${i}].${name}`}
+                                    name={`reservesConfigs[${i}].${name}`}
                                     disabled={isSubmitting}
-                                    value={token[name]}
+                                    value={reserves[name]}
                                     error={
                                         reservesConfigsErrors[name] &&
                                         reservesConfigsTouched[name]
                                       }
                                     onChange={handleChange(
-                                      `tokens[${i}].${name}`,
+                                      `reservesConfigs[${i}].${name}`,
                                     )}
                                     onBlur={handleBlur}
                                   />
@@ -303,7 +406,7 @@ export const LostKeyContract: FC = () => {
               )}
             </Grid>
 
-            <Grid container className={classes.crowdsaleContractFormSection}>
+            {/* <Grid container className={classes.crowdsaleContractFormSection}>
               {crowdsaleContractFormConfigFlagOptions.map(
                 ({
                   id, name, title, icon, helperText,
@@ -344,7 +447,7 @@ export const LostKeyContract: FC = () => {
                   </Grid>
                 ),
               )}
-            </Grid>
+            </Grid> */}
 
             {crowdsaleContractFormConfigEnd.map((formSection, index) => (
               <Grid
