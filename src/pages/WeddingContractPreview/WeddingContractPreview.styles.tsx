@@ -3,7 +3,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import {
   COLOR_ACID_GREEN, COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_2,
 } from 'theme/colors';
-import { flexHelper } from 'utils';
+import { baseFieldWidthRestriction, flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
   tokenContractInfoBlock: {
@@ -20,17 +20,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     marginBottom: theme.spacing(2),
   },
   copyableContainer: {
-    minWidth: 240,
-    width: '100%',
-    maxWidth: '70%',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%',
-    },
-  },
-  copyableText: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    ...baseFieldWidthRestriction(theme),
   },
   dynamicDataHeader: {
     padding: `${theme.spacing(4)}px 0px ${theme.spacing(3)}px 0px`,

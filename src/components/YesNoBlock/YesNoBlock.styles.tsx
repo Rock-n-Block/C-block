@@ -3,10 +3,19 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import { COLOR_ACID_GREEN, COLOR_ERROR } from 'theme/colors';
 
 import { flexHelper } from 'utils';
+import { AlignHorizontally } from '.';
 
-export const useStyles = makeStyles<Theme, { yes: boolean }>((theme: Theme) => createStyles({
-  root: {
-    ...flexHelper(),
+export const useStyles = makeStyles<
+Theme,
+{ yes: boolean; justify: AlignHorizontally }
+>((theme: Theme) => createStyles({
+  root: ({ justify }) => {
+    switch (justify) {
+      case 'center':
+        return flexHelper();
+      default:
+        return flexHelper('normal', 'center');
+    }
   },
   dot: {
     width: 8,

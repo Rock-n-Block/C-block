@@ -9,15 +9,7 @@ import {
   COLOR_GREY_3,
   COLOR_GREY_6,
 } from 'theme/colors';
-import { flexHelper } from 'utils';
-
-const baseFieldWidthRestriction = (theme: Theme) => ({
-  minWidth: 240,
-  maxWidth: '70%',
-  [theme.breakpoints.down('sm')]: {
-    maxWidth: '100%',
-  },
-});
+import { baseFieldWidthRestriction } from 'utils';
 
 const getBorderStyle = (theme: Theme) => `1px solid ${
   theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2
@@ -57,11 +49,9 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     paddingBottom: theme.spacing(3),
   },
   tokenContractInfoBlock: {
-    padding: '12px 10px',
+    padding: `${theme.spacing(1.5)}px ${theme.spacing(1.25)}px`,
   },
   previewValueBlock: {
-    ...flexHelper('flex-start', 'flex-start'),
-    flexDirection: 'column',
     padding: 0,
   },
   previewLabel: {
@@ -69,11 +59,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   copyableContainer: {
     ...baseFieldWidthRestriction(theme),
-  },
-  copyableText: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
   sectionTitle: {
     paddingBottom: theme.spacing(2),
@@ -84,7 +69,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   disabledInput: {
     ...baseFieldWidthRestriction(theme),
     '& input': {
-      padding: '16px 20px 16px 20px !important',
+      padding: `${theme.spacing(2)}px ${theme.spacing(2.5)}px !important`,
       color: `${theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_GREY_6} !important`,
       textOverflow: 'ellipsis',
     },
