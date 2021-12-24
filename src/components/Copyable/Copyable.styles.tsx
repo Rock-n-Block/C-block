@@ -13,8 +13,7 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
 
   return createStyles({
     root: {
-      [formatMedia.BREAKPOINT_TABLET]: {
-      },
+      [formatMedia.BREAKPOINT_TABLET]: {},
     },
     copy: {
     },
@@ -22,7 +21,8 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
     icon: {
       position: 'absolute',
       right: theme.spacing(2),
-      top: '15%',
+      top: '50%',
+      transform: 'translateY(-50%)',
       cursor: 'pointer',
       '&:hover': {
         '& > *': {
@@ -39,11 +39,12 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
+      background: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3,
       border: ({ withBorder }) => (withBorder
         ? `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3}`
         : 'unset'),
-      borderRadius: theme.spacing(2),
-      padding: `${theme.spacing(1.5)}px ${theme.spacing(6.5)}px ${theme.spacing(1.5)}px ${theme.spacing(2.5)}px`,
+      borderRadius: theme.spacing(1),
+      padding: `${theme.spacing(2)}px ${theme.spacing(6.5)}px ${theme.spacing(2)}px ${theme.spacing(2.5)}px`,
     },
   });
 });

@@ -37,8 +37,8 @@ const initialState: ContractFormsState = {
     changingDates: false,
 
     minMaxInvestmentsSection: false,
-    minInvestments: '',
-    maxInvestments: '',
+    minInvestments: '0',
+    maxInvestments: '0',
 
     amountBonusSection: false,
     amountBonus: '',
@@ -65,13 +65,17 @@ export const contractFormReducer = createSlice({
       ...state,
       tokenContract: action.payload,
     }),
+    deleteTokenContractForm: (state) => ({
+      ...state,
+      tokenContract: initialState.tokenContract,
+    }),
     setCrowdsaleContractForm: (state, action: PayloadAction<ICrowdsaleContract>) => ({
       ...state,
       crowdsaleContract: action.payload,
     }),
-    deleteTokenContractForm: (state) => ({
+    deleteCrowdsaleContractForm: (state) => ({
       ...state,
-      tokenContract: initialState.tokenContract,
+      crowdsaleContract: initialState.crowdsaleContract,
     }),
     setWeddingContractForm: (state, action: PayloadAction<IWeddingContract>) => ({
       ...state,

@@ -5,6 +5,7 @@ export * from './CompleteModal/CompleteModal';
 export * from './ContractCard/ContractCard';
 export * from './Copyable/Copyable';
 export * from './DisclaimerModal/DisclaimerModal';
+export * from './Logo/Logo';
 export * from './Loader/Loader';
 export * from './Modal/Modal';
 export * from './PaymentModal/PaymentModal';

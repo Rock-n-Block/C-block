@@ -1,7 +1,8 @@
 import React from 'react';
-import { ContractToken, WeddingRingIcon } from 'theme/icons';
+import { ContractToken, CrowdsaleIcon, WeddingRingIcon } from 'theme/icons';
 
 export const iconHelper = {
   token: <ContractToken />,
+  crowdsale: <CrowdsaleIcon />,
   weddingRing: <WeddingRingIcon />,
 };

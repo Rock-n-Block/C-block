@@ -5,13 +5,15 @@ import clsx from 'clsx';
 
 import { useStyles } from './YesNoBlock.styles';
 
+export type AlignHorizontally = 'center' | 'normal';
 export interface YesNoBlockProps {
-  yes: boolean;
   className?: string;
+  yes: boolean;
+  justify?: AlignHorizontally;
 }
 
-export const YesNoBlock: VFC<YesNoBlockProps> = ({ yes, className }) => {
-  const classes = useStyles({ yes });
+export const YesNoBlock: VFC<YesNoBlockProps> = ({ className, yes, justify = 'center' }) => {
+  const classes = useStyles({ yes, justify });
   return (
     <Box className={clsx(classes.root, className)}>
       <Box className={classes.dot} />

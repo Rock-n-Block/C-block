@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
-import clsx from 'clsx';
-import { CopyIcon } from 'theme/icons';
 import { Box } from '@material-ui/core';
+import clsx from 'clsx';
+
 import { setNotification } from 'utils';
+import { CopyIcon } from 'theme/icons';
 import { useStyles } from './Copyable.styles';
 
 export type CopyableProps = {

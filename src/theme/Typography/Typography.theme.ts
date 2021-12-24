@@ -39,10 +39,9 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     h2: {
       fontSize: '32px',
       fontWeight: FontWeights.fontWeightBold,
-      lineHeight: '24px',
+      lineHeight: '40px',
       letterSpacing: '0px',
       textTransform: 'capitalize',
-      minHeight: '30px',
 
       '&.acidGreen': {
         background: COLOR_AKZ,
@@ -82,7 +81,8 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       fontWeight: FontWeights.fontWeightMedium,
       lineHeight: '24px',
       letterSpacing: '-0.5px',
-      textTransform: 'uppercase',
+      textTransform: 'unset',
+      // textTransform: 'uppercase',
     },
     body1: {
       fontSize: '16px',
@@ -95,10 +95,11 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       },
 
       '&.l': {
-        fontFamily: 'Arial Black',
+        // fontFamily: 'Arial Black',
         fontSize: '18px',
+        fontWeight: FontWeights.fontWeightMedium,
         lineHeight: '30px',
-        letterSpacing: '0px',
+        letterSpacing: '-0.5px',
         textTransform: 'none',
       },
 

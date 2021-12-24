@@ -54,9 +54,7 @@ export const WeddingContractPreview = () => {
                 valueToCopy={weddingContract[name]}
                 className={classes.copyableContainer}
               >
-                <Typography
-                  className={classes.copyableText}
-                >
+                <Typography noWrap>
                   {weddingContract[name]}
                 </Typography>
               </Copyable>

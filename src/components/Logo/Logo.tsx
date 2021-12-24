@@ -1,11 +1,11 @@
 import React, { VFC } from 'react';
-
+import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import { LogoBlackIcon, LogoIcon } from 'assets/img';
-import { Link } from 'react-router-dom';
+
 import { routes } from 'appConstants';
-import { useStyles } from '.';
+import { LogoBlackIcon, LogoIcon } from 'assets/img';
+import { useStyles } from './Logo.styles';
 
 export interface LogoProps {
   isLight?: boolean;

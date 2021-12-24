@@ -8,7 +8,7 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import clsx from 'clsx';
 import { Modal } from 'components/Modal';
-import { FileTextIcon, WeddingRingIcon } from 'theme/icons';
+import { FileTextIcon, WalletIcon } from 'theme/icons';
 import { useStyles } from './PaymentModal.styles';
 
 export interface PaymentModalProps {
@@ -30,7 +30,7 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
 
   const title = useMemo(() => (
     <Box className={classes.paymentInfoIcon}>
-      <IconButton><WeddingRingIcon /></IconButton>
+      <IconButton><WalletIcon /></IconButton>
       <Typography
         align="left"
         className={isLight ? '' : 'acidGreen'}
