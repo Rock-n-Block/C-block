@@ -10,7 +10,8 @@ export const useStyles = makeStyles<Theme, { isTestnet: boolean }>((theme: Theme
     padding: theme.spacing(2),
     borderRadius: theme.spacing(3),
     overflow: 'hidden',
-    width: 'fit-content',
+    width: 165,
+    height: 40,
     '&:before': {
       content: "''",
       position: 'absolute',

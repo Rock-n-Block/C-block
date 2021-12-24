@@ -48,16 +48,15 @@ export const MyContracts = () => {
   return (
     <Container>
       <Grid container className={classes.root}>
-        <Box className={classes.search}>
-          <TextField
-            id="input-with-icon-textfield"
-            placeholder="Search contract"
-            onChange={(e) => searchHandler(e.target.value)}
-            InputProps={{
-              startAdornment: <SearchIcon />,
-            }}
-          />
-        </Box>
+        <TextField
+          id="input-with-icon-textfield"
+          placeholder="Search contract"
+          onChange={(e) => searchHandler(e.target.value)}
+          InputProps={{
+            startAdornment: <SearchIcon />,
+          }}
+          className={classes.search}
+        />
         {filteredCards.map(({
           contractName,
           contractDate,
