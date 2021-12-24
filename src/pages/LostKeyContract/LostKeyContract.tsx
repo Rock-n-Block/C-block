@@ -1,4 +1,7 @@
-import React, { FC, Fragment, useEffect } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, {
+  FC, Fragment, useEffect,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -9,7 +12,6 @@ import {
   Button,
   Box,
   MenuItem,
-  // Slider,
 } from '@material-ui/core';
 import {
   Formik, Form, Field, FieldProps, FieldArray,
@@ -24,21 +26,34 @@ import {
 } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
-  crowdsaleContractDynamicFormInitialData,
+  lostKeyContractDynamicFormInitialData,
   setLostKeyContractForm,
 } from 'store/contractForms/reducer';
 import { routes } from 'appConstants';
 import { DELETE_ME_DISABLED_TEXTFIELD } from 'pages/CrowdsaleContractPreview/DELETE_ME_DISABLED_TEXTFIELD/DELETE_ME_DISABLED_TEXTFIELD';
+import { SliderWithMaxSectionValue } from 'components';
 import { TokenBlockForm } from './components';
 import {
   validationSchema,
-  dynamicFormDataConfig,
+  dynamicSectionFormConfig,
   contractNameSectionConfig,
   managementAddressSectionConfig,
   rewardAmountSectionConfig,
   confirmLiveStatusSectionConfig,
 } from './LostKeyContract.helpers';
 import { useStyles } from './LostKeyContract.styles';
+
+const RESERVED_ADDRESSES = 4; // supported only 4 tokens as a reserved address
+const MAX_RESERVES_PERCENTS = 100;
+
+const getUnallocatedResidue = (
+  allocatedResidues: number[], maxSum = MAX_RESERVES_PERCENTS,
+) => maxSum - allocatedResidues.reduce((sum, value) => sum + value, 0);
+const getMaxSliderValue = (
+  currentValue: number,
+  allocatedResidues: number[],
+  maxSum = MAX_RESERVES_PERCENTS,
+) => currentValue + getUnallocatedResidue(allocatedResidues, maxSum);
 
 export const LostKeyContract: FC = () => {
   const classes = useStyles();
@@ -110,7 +125,7 @@ export const LostKeyContract: FC = () => {
                     />
                     {helperText.map((text, i) => (
                       <Typography
-                        key={i.toString()}
+                        key={i}
                         className={clsx(classes.helperText)}
                         variant="body1"
                         color="textSecondary"
@@ -147,7 +162,7 @@ export const LostKeyContract: FC = () => {
                     />
                     {helperText.map((text, i) => (
                       <Typography
-                        key={i.toString()}
+                        key={i}
                         className={clsx(classes.helperText)}
                         variant="body1"
                         color="textSecondary"
@@ -166,69 +181,117 @@ export const LostKeyContract: FC = () => {
                     const reservesConfigsTouched =
                         (touched.reservesConfigs?.length && touched.reservesConfigs[i]) || {};
                     return (
-                      <Fragment key={`dynamic_${i.toString()}`}>
+                      <Fragment key={`dynamic_${i}`}>
                         <TokenBlockForm
                           isFirst={i === 0}
                           deleteForm={() => remove(i)}
                         >
-                          {dynamicFormDataConfig.map(
-                            (
-                              {
-                                key, name, renderProps, helperText,
-                              },
-                              index,
-                            ) => (
-                              <Grid
-                                key={`${name}_${index.toString()}`}
-                                className={clsx(classes[name])}
-                                item
-                                xs={12}
-                                sm={6}
-                              >
-                                <Field
-                                  id={`reservesConfigs[${i}].${key}`}
-                                  name={`reservesConfigs[${i}].${name}`}
-                                  render={({
-                                    form: { isSubmitting },
-                                  }: FieldProps) => (
-                                    <TextField
-                                      {...renderProps}
-                                      name={`reservesConfigs[${i}].${name}`}
-                                      disabled={isSubmitting}
-                                      value={reserves[name]}
-                                      error={
-                                          reservesConfigsErrors[name] &&
-                                          reservesConfigsTouched[name]
-                                        }
-                                      onChange={handleChange(
-                                        `reservesConfigs[${i}].${name}`,
-                                      )}
-                                      onBlur={handleBlur}
-                                    />
-                                  )}
-                                />
-                                {helperText.map((text) => (
+                          <Fragment key={`dynamic_${i}`}>
+                            {dynamicSectionFormConfig.fields.map(
+                              (
+                                {
+                                  key, name, renderProps, helperText,
+                                },
+                                index,
+                              ) => (
+                                <Grid
+                                  key={`${name}_${index}`}
+                                  className={clsx(classes[name])}
+                                  item
+                                  xs={12}
+                                  sm={6}
+                                >
+                                  <Field
+                                    id={`reservesConfigs[${i}].${key}`}
+                                    name={`reservesConfigs[${i}].${name}`}
+                                    render={({
+                                      form: { isSubmitting },
+                                    }: FieldProps) => (
+                                      <TextField
+                                        {...renderProps}
+                                        name={`reservesConfigs[${i}].${name}`}
+                                        disabled={isSubmitting}
+                                        value={reserves[name]}
+                                        error={
+                                            reservesConfigsErrors[name] &&
+                                            reservesConfigsTouched[name]
+                                          }
+                                        onChange={handleChange(
+                                          `reservesConfigs[${i}].${name}`,
+                                        )}
+                                        onBlur={handleBlur}
+                                      />
+                                    )}
+                                  />
+                                  {helperText.map((text) => (
+                                    <Typography
+                                      key={i}
+                                      className={clsx(classes.helperText)}
+                                      variant="body1"
+                                      color="textSecondary"
+                                    >
+                                      {text}
+                                    </Typography>
+                                  ))}
+                                </Grid>
+                              ),
+                            )}
+                            <Grid item xs={12}>
+                              <Field
+                                id={`reservesConfigs[${i}].percents`}
+                                name={`reservesConfigs[${i}].percents`}
+                                render={({
+                                  form: { isSubmitting },
+                                }: FieldProps) => (
+                                  <SliderWithMaxSectionValue
+                                    disabled={isSubmitting}
+                                    value={+reserves.percents}
+                                    min={0}
+                                    maxSectionValue={getMaxSliderValue(
+                                      +reserves.percents,
+                                      values.reservesConfigs.map((item) => +item.percents),
+                                    )}
+                                    max={100}
+                                    onBlur={handleBlur}
+                                    onChange={(_, newValue) => {
+                                      const parsedValue = Array.isArray(newValue)
+                                        ? newValue[0]
+                                        : newValue;
+                                      const maxValue = getMaxSliderValue(
+                                        +reserves.percents,
+                                        values.reservesConfigs.map((item) => +item.percents),
+                                      );
+                                      handleChange(`reservesConfigs[${i}].percents`)(
+                                        `${parsedValue <= maxValue ? parsedValue : maxValue}`,
+                                      );
+                                    }}
+                                  />
+                                )}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                              {dynamicSectionFormConfig.helperText.map(
+                                (text, dynamicSectionFormConfigHelperTextIndex) => (
                                   <Typography
-                                    key={i.toString()}
+                                    key={dynamicSectionFormConfigHelperTextIndex}
                                     className={clsx(classes.helperText)}
                                     variant="body1"
                                     color="textSecondary"
                                   >
                                     {text}
                                   </Typography>
-                                ))}
-                              </Grid>
-                            ),
-                          )}
+                                ),
+                              )}
+                            </Grid>
+                          </Fragment>
                         </TokenBlockForm>
                         {i === values.reservesConfigs.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                          {/* supported only 4 tokens as a reserved address */}
-                          {i + 1 < 4 && (
+                          {i + 1 < RESERVED_ADDRESSES && (
                           <Button
                             variant="outlined"
                             endIcon={<PlusIcon />}
-                            onClick={() => push(crowdsaleContractDynamicFormInitialData)}
+                            onClick={() => push(lostKeyContractDynamicFormInitialData)}
                           >
                             Add address
                           </Button>
@@ -242,17 +305,17 @@ export const LostKeyContract: FC = () => {
               </Box>
             </Grid>
 
-            <Grid className={clsx(classes.gridContainer, classes.confirmLiveStatusSection)} container>
-              {/* <Grid container>
-                <div>Hello comrade lost key contract</div>
-              </Grid> */}
+            <Grid
+              className={clsx(classes.gridContainer, classes.confirmLiveStatusSection)}
+              container
+            >
               <Grid className={classes.gridItem} item xs={12} sm={6}>
                 <Typography variant="h3" color="textPrimary">
                   {confirmLiveStatusSectionConfig.title}
                 </Typography>
                 {confirmLiveStatusSectionConfig.additionalText.map((text, i) => (
                   <Typography
-                    key={i.toString()}
+                    key={i}
                     className={clsx(classes.additionalText)}
                     variant="body1"
                     color="textSecondary"
@@ -290,7 +353,7 @@ export const LostKeyContract: FC = () => {
                         />
                         {helperText.map((text, i) => (
                           <Typography
-                            key={i.toString()}
+                            key={i}
                             className={clsx(classes.helperText)}
                             variant="body1"
                             color="textSecondary"
@@ -305,7 +368,7 @@ export const LostKeyContract: FC = () => {
 
                 {confirmLiveStatusSectionConfig.helperText.map((text, i) => (
                   <Typography
-                    key={i.toString()}
+                    key={i}
                     className={clsx(classes.helperText)}
                     variant="body1"
                     color="textSecondary"
@@ -344,7 +407,7 @@ export const LostKeyContract: FC = () => {
                     />
                     {helperText.map((text, i) => (
                       <Typography
-                        key={i.toString()}
+                        key={i}
                         className={clsx(classes.helperText)}
                         variant="body1"
                         color="textSecondary"

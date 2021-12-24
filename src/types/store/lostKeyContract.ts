@@ -1,5 +1,5 @@
 export interface ILostKeyContractDynamicForm {
-  address: string;
+  reserveAddress: string;
   email: string;
   percents: string;
 }

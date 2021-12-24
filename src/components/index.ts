@@ -11,3 +11,4 @@ export * from './Preview';
 export * from './Sidebar';
 export * from './Toastify';
 export * from './YesNoBlock';
+export * from './SliderWithMaxSectionValue';

@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { ReactElement } from 'react';
 import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
 import { latinAndNumbers } from 'utils';
@@ -8,11 +6,10 @@ export const validationSchema = Yup.object().shape({
   contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
   managementAddress: Yup.string().length(42).required(),
 
-  tokens: Yup.array().of(
+  reservesConfigs: Yup.array().of(
     Yup.object().shape({
-      address: Yup.string().length(42).required(),
-      rate: Yup.number().min(1).max(100000)
-        .required(),
+      reserveAddress: Yup.string().length(42).required(),
+      email: Yup.string().email().required(),
     }),
   ),
 
@@ -20,28 +17,6 @@ export const validationSchema = Yup.object().shape({
   pingIntervalAsDateUnits: Yup.string().required(),
 
   rewardAmount: Yup.number().positive().required(),
-
-  // softcapTokens: Yup.number().integer().min(0).required(),
-  // saleDuration: Yup.number().integer().min(1).required(),
-
-  // minMaxInvestmentsSection: Yup.boolean(),
-  // minInvestments: Yup
-  //   .number()
-  //   .max(Yup.ref('maxInvestments'))
-  //   .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
-  // maxInvestments: Yup
-  //   .number()
-  //   .min(Yup.ref('minInvestments'))
-  //   .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
-
-  // amountBonusSection: Yup.boolean(),
-  // amountBonus: Yup
-  //   .number()
-  //   .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
-  // minimumContribution: Yup
-  //   .number()
-  //   .min(Yup.ref('minInvestments'))
-  //   .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
 });
 
 interface ISelectOption {
@@ -122,6 +97,12 @@ export const dynamicFormDataConfig: IFieldsFormConfig[] = [
   },
 ];
 
+export const dynamicSectionFormConfig: ISectionFieldsConfig = {
+  key: 'dynamicSectionFormConfig',
+  fields: dynamicFormDataConfig,
+  helperText: ['You can divide the funds between several reserve accounts. Choose percentage for every reserve address.'],
+};
+
 export const confirmLiveStatusSectionConfig: ISectionFieldsConfig = {
   key: 'confirmLiveStatusSection',
   title: 'Define how often you want to confirm your “Live” status',
@@ -177,66 +158,3 @@ export const rewardAmountSectionConfig: IFieldsFormConfig[] = [
     ],
   },
 ];
-
-// export const crowdsaleContractFormConfigEnd: ICrowdsaleContractSwitchableSection[] = [
-//   {
-//     id: 'minMaxInvestmentsSection',
-//     title: 'Min & Max investments',
-//     description: 'You can specify minimum/maximum amount of tokens hat user can buy per one transaction.',
-//     fields: [
-//       {
-//         id: 'minInvestments',
-//         name: 'minInvestments',
-//         renderProps: {
-//           label: 'Minimum',
-//           name: 'minInvestments',
-//         },
-//         helperText: [
-//           'Minimum amount accepted. "0" = No minimum limitation.',
-//         ],
-//       },
-//       {
-//         id: 'maxInvestments',
-//         name: 'maxInvestments',
-//         renderProps: {
-//           label: 'Maximum',
-//           name: 'maxInvestments',
-//         },
-//         helperText: [
-//           'Maximum amount accepted. it can not be higher hard cap.',
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     id: 'amountBonusSection',
-//     title: 'Amount Bonus',
-//     fields: [
-//       {
-//         id: 'amountBonus',
-//         name: 'amountBonus',
-//         renderProps: {
-//           label: 'Bonus',
-//           name: 'amountBonus',
-//           InputProps: {
-//             endAdornment: '%',
-//           },
-//         },
-//         helperText: [
-//           'Usually 0.1-100%. How many extra tokens will be sent to contributor.',
-//         ],
-//       },
-//       {
-//         id: 'minimumContribution',
-//         name: 'minimumContribution',
-//         renderProps: {
-//           label: 'Minimum',
-//           name: 'minimumContribution',
-//         },
-//         helperText: [
-//           'Minimum contribution for getting specified bonus',
-//         ],
-//       },
-//     ],
-//   },
-// ];

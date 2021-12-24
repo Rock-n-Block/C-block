@@ -35,13 +35,10 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     '&:not(:last-child)': {
       paddingRight: theme.spacing(3),
     },
-    // background: 'lightyellow',
   },
   contractNameSection: {
-    // ...separator(theme),
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(5),
-    // margin: 0,
   },
   managementAddressSection: {
     ...separator(theme),
@@ -54,11 +51,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   reservesSection: {
     marginTop: 50,
   },
-  // crowdsaleContractFormSection: {
-  //   paddingTop: theme.spacing(5),
-  //   paddingBottom: theme.spacing(5),
-  // },
-
   confirmLiveStatusSection: {
     ...separator(theme),
     paddingTop: theme.spacing(5),

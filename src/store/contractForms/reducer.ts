@@ -19,9 +19,9 @@ export const crowdsaleContractDynamicFormInitialData: ICrowdsaleContractDynamicF
 };
 
 export const lostKeyContractDynamicFormInitialData: ILostKeyContractDynamicForm = {
-  address: '',
+  reserveAddress: '',
   email: '',
-  percents: '',
+  percents: '0',
 };
 
 const initialState: ContractFormsState = {
