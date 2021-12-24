@@ -1,3 +1,5 @@
+import React from 'react';
+import { Tooltip } from '@material-ui/core';
 import { Overrides } from '@material-ui/core/styles/overrides';
 import { ComponentsProps } from '@material-ui/core/styles/props';
 import { COLOR_ACID_GREEN, COLOR_AKZ, COLOR_BLACK_3 } from '../colors';
@@ -28,4 +30,11 @@ export const getMuiSlider = (): Overrides['MuiSlider'] => ({
   },
 });
 
-export const getMuiSliderDefaultProps = (): ComponentsProps['MuiSlider'] => ({ });
+export const getMuiSliderDefaultProps = (): ComponentsProps['MuiSlider'] => ({
+  ValueLabelComponent: ({ children, open, value }) => (
+    <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>{children}</Tooltip>
+  ),
+  valueLabelDisplay: 'on',
+  'aria-label': 'pretto slider',
+  step: 1,
+});

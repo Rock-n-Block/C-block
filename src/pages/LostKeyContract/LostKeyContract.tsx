@@ -9,6 +9,7 @@ import {
   Button,
   Box,
   MenuItem,
+  // Slider,
 } from '@material-ui/core';
 import {
   Formik, Form, Field, FieldProps, FieldArray,

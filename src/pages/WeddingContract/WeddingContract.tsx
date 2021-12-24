@@ -1,5 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -18,8 +20,6 @@ import clsx from 'clsx';
 import { CloseIcon } from 'theme/icons';
 import { State, IWeddingContract as WeddingContractType, ContractFormsState } from 'types';
 import { useShallowSelector } from 'hooks';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { setWeddingContractForm } from 'store/contractForms/reducer';
@@ -28,7 +28,6 @@ import {
   weddingContractFormConfigEnd, weddingContractFormConfigStart,
 } from './WeddingContract.helpers';
 import { useStyles } from './WeddingContract.styles';
-import ValueLabelComponent from './components/ValueLabel/ValueLabelComponent';
 
 export const WeddingContract = () => {
   const classes = useStyles();
@@ -125,26 +124,18 @@ export const WeddingContract = () => {
               <Box className={clsx(classes.slider)}>
                 <Typography className={clsx(classes.title)}>Partner who initialized the divorce</Typography>
                 <Slider
-                  ValueLabelComponent={ValueLabelComponent}
-                  valueLabelDisplay="on"
-                  aria-label="pretto slider"
                   value={partnerOneSliderValue}
                   onBlur={handleBlur}
                   onChange={onFirstSliderHandler}
-                  step={1}
                 />
                 <Typography className={clsx(classes.desc)}>If second partner approves the divorce the funds will be divided equally between ex-spouses. Otherwise, you can specify the percentage of how much each spouse gets.</Typography>
               </Box>
               <Box className={clsx(classes.slider)}>
                 <Typography className={clsx(classes.title)}>Partner who hasn`t approved the divorce</Typography>
                 <Slider
-                  ValueLabelComponent={ValueLabelComponent}
-                  valueLabelDisplay="on"
-                  aria-label="pretto slider"
                   value={partnerTwoSliderValue}
                   onBlur={handleBlur}
                   onChangeCommitted={onSecondSliderHandler}
-                  step={1}
                 />
                 <Typography className={clsx(classes.desc)}>If second partner approves the divorce the funds will be divided equally between ex-spouses. Otherwise, you can specify the percentage of how much each spouse gets.</Typography>
               </Box>
@@ -167,17 +158,17 @@ export const WeddingContract = () => {
                       id={id}
                       name={name}
                       render={
-                                ({ form: { isSubmitting } }: FieldProps) => (
-                                  <TextField
-                                    {...renderProps}
-                                    disabled={isSubmitting}
-                                    onChange={handleChange}
-                                    value={values[name]}
-                                    onBlur={handleBlur}
-                                    error={errors[name] && touched[name]}
-                                  />
-                                )
-                              }
+                        ({ form: { isSubmitting } }: FieldProps) => (
+                          <TextField
+                            {...renderProps}
+                            disabled={isSubmitting}
+                            onChange={handleChange}
+                            value={values[name]}
+                            onBlur={handleBlur}
+                            error={errors[name] && touched[name]}
+                          />
+                        )
+                      }
                     />
                     {helperText.map((text, i) => (
                       <Typography key={i} variant="body1" className={clsx({ [classes.helperText]: i === 0 }, 's')} color="textSecondary">
