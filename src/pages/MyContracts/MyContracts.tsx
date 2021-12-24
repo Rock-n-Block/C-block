@@ -1,22 +1,25 @@
 /* eslint-disable react/no-array-index-key,no-param-reassign */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Box, Button,
-  Container, Grid, IconButton, InputAdornment, TextField, Typography,
+  Container, Grid, IconButton, TextField, Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
-import { useStyles } from './MyContracts.styles';
-import { SearchIcon } from '../../theme/icons/components/SearchIcon';
-import { NetTag } from '../../containers/Header/components/NetTag';
+import { SearchIcon } from 'theme/icons/components/SearchIcon';
+import { NetTag } from 'containers/Header/components/NetTag';
+import { useShallowSelector } from 'hooks';
+import { State, UserState } from 'types';
+import userSelector from 'store/user/selectors';
 import { contractsCards } from './MyContracts.helpers';
+import { useStyles } from './MyContracts.styles';
 
 export const MyContracts = () => {
   const [cards, setCards] = useState(contractsCards);
   const [filteredCards, setFilteredCards] = useState(contractsCards);
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useState('');
   const classes = useStyles();
-  const isMainnet = true;
+  const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const buttonClickHandler = useCallback((contractKey, type) => {
@@ -31,7 +34,8 @@ export const MyContracts = () => {
     }
   }, []);
 
-  const filterData = useCallback(() => {
+  const searchHandler = useCallback((value) => {
+    setSearchValue(value);
     const newState = cards.filter(({ contractName }) => {
       if (debouncedSearchValue) {
         const isContractNameInSearch = contractName.toLowerCase().includes(debouncedSearchValue.toLowerCase());
@@ -41,39 +45,19 @@ export const MyContracts = () => {
     setFilteredCards([...newState]);
   }, [searchValue, debouncedSearchValue]);
 
-  const searchHandler = useCallback((value) => {
-    setSearchValue(value);
-  }, [debouncedSearchValue]);
-
-  useEffect(() => {
-    filterData();
-  }, [debouncedSearchValue]);
-
   return (
     <Container>
       <Grid container className={classes.root}>
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          xl={12}
-          key="123"
-        >
+        <Box className={classes.search}>
           <TextField
             id="input-with-icon-textfield"
             placeholder="Search contract"
             onChange={(e) => searchHandler(e.target.value)}
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
+              startAdornment: <SearchIcon />,
             }}
           />
-        </Grid>
+        </Box>
         {filteredCards.map(({
           contractName,
           contractDate,
@@ -83,14 +67,8 @@ export const MyContracts = () => {
           isRequestBlockActive,
           contractKey,
         }) => (
-          <Grid
-            item
+          <Box
             key={contractKey}
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
             className={classes.contractBlock}
           >
             <Box className={classes.contractHead}>
@@ -125,11 +103,9 @@ export const MyContracts = () => {
                   </Button>
                 ))}
               </Box>
-              <Grid item className={classes.chainTagContainer}>
-                <NetTag className={classes.chainTag} isTestnet={!isMainnet} />
-              </Grid>
+              <NetTag className={classes.chainTag} isTestnet={!isMainnet} />
             </Box>
-          </Grid>
+          </Box>
         ))}
       </Grid>
     </Container>

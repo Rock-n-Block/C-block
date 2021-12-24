@@ -12,13 +12,13 @@ export const useStyles = makeStyles({
     background: COLOR_BLACK_SCALE_5,
     top: 0,
     left: 0,
-    zIndex: 9999999999999999999,
+    zIndex: 999,
     width: '100%',
     height: '100%',
   },
 
   loader: {
-    zIndex: 9999999999999999999,
+    zIndex: 999,
     width: '100%',
     height: '100%',
     backgroundColor: 'transparent',
@@ -39,7 +39,7 @@ export const useStyles = makeStyles({
   icon: {
     width: '100px',
     height: 'auto',
-    zIndex: 9999999999999999999,
+    zIndex: 999,
     position: 'relative',
     top: '-5px',
     animation: '$rotating 2s linear infinite',

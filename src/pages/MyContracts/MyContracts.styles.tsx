@@ -15,9 +15,13 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
       width: '100%',
     },
   },
+  search: {
+    width: '100%',
+    padding: theme.spacing(1.25),
+  },
   contractBlock: {
     ...flexHelper(),
-    padding: 0,
+    width: '100%',
     margin: theme.spacing(1),
     borderRadius: 16,
     flexDirection: 'column',
@@ -39,10 +43,10 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   contractBottom: {
     ...flexHelper('space-between'),
     padding: theme.spacing(3),
-    flexWrap: 'nowrap',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column-reverse',
+      ...flexHelper('flex-start', 'flex-start'),
     },
   },
   contractButtons: {
@@ -69,19 +73,11 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   chainTag: {
     margin: '0 auto',
     height: 40,
-    width: 120,
+    width: 140,
     background: theme.palette.type === 'dark' ? '' : COLOR_BLACK_3,
     [theme.breakpoints.down('sm')]: {
       margin: 'unset',
-    },
-  },
-  chainTagContainer: {
-    [theme.breakpoints.down('sm')]: {
-      margin: 'unset',
-      paddingLeft: '0',
-      paddingBottom: theme.spacing(4),
-      width: '100%',
-      ...flexHelper('flex-start'),
+      marginBottom: theme.spacing(4),
     },
   },
   button: {
@@ -95,7 +91,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      marginRight: 0,
+      marginRight: '0px !important',
       '&:not(:last-child)': {
         marginBottom: theme.spacing(2),
       },

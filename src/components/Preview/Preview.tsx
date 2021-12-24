@@ -76,7 +76,7 @@ export const Preview: FC<PreviewProps> = ({
       setIsLoading(false);
       openCompleteModal();
     }, 1000);
-    navigate(routes.root);
+    setTimeout(() => navigate(routes.root), 6000);
   }, []);
   return (
     <Container className={classes.root}>
