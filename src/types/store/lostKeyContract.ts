@@ -7,18 +7,7 @@ export interface ILostKeyContractDynamicForm {
 export interface ILostKeyContract {
   contractName: string;
   managementAddress: string;
-  // crowdsaleOwner: string;
-  // softcapTokens: string;
-  // saleDuration: string;
-  // changingDates: boolean;
-
-  // minMaxInvestmentsSection: boolean;
-  // minInvestments: string;
-  // maxInvestments: string;
-
-  // amountBonusSection: boolean;
-  // amountBonus: string;
-  // minimumContribution: string;
-
   reservesConfigs: ILostKeyContractDynamicForm[];
+  pingIntervalAsValue: string;
+  pingIntervalAsDateUnits: string;
 }

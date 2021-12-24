@@ -67,6 +67,8 @@ const initialState: ContractFormsState = {
     contractName: '',
     managementAddress: '',
     reservesConfigs: [lostKeyContractDynamicFormInitialData],
+    pingIntervalAsValue: '6',
+    pingIntervalAsDateUnits: 'Month',
   },
 };
 

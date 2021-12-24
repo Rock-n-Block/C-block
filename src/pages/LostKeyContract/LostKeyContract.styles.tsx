@@ -22,14 +22,20 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
       width: '100%',
     },
   },
-  section: {
+  gridContainer: {
     margin: 0,
-    width: 'unset',
     height: 'unset',
+    width: 'unset',
   },
   gridItem: {
     margin: 0,
     padding: 0,
+  },
+  item: {
+    '&:not(:last-child)': {
+      paddingRight: theme.spacing(3),
+    },
+    // background: 'lightyellow',
   },
   contractNameSection: {
     // ...separator(theme),

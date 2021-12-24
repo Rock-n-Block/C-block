@@ -6,8 +6,7 @@ import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
   contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
-  tokenAddress: Yup.string().length(42).required(),
-  crowdsaleOwner: Yup.string().length(42).required(),
+  managementAddress: Yup.string().length(42).required(),
 
   tokens: Yup.array().of(
     Yup.object().shape({
@@ -17,40 +16,38 @@ export const validationSchema = Yup.object().shape({
     }),
   ),
 
-  softcapTokens: Yup.number().integer().min(0).required(),
-  saleDuration: Yup.number().integer().min(1).required(),
+  pingIntervalAsValue: Yup.number().positive().required(),
+  pingIntervalAsDateUnits: Yup.string().required(),
 
-  minMaxInvestmentsSection: Yup.boolean(),
-  minInvestments: Yup
-    .number()
-    .max(Yup.ref('maxInvestments'))
-    .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
-  maxInvestments: Yup
-    .number()
-    .min(Yup.ref('minInvestments'))
-    .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
+  rewardAmount: Yup.number().positive().required(),
 
-  amountBonusSection: Yup.boolean(),
-  amountBonus: Yup
-    .number()
-    .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
-  minimumContribution: Yup
-    .number()
-    .min(Yup.ref('minInvestments'))
-    .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
+  // softcapTokens: Yup.number().integer().min(0).required(),
+  // saleDuration: Yup.number().integer().min(1).required(),
+
+  // minMaxInvestmentsSection: Yup.boolean(),
+  // minInvestments: Yup
+  //   .number()
+  //   .max(Yup.ref('maxInvestments'))
+  //   .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
+  // maxInvestments: Yup
+  //   .number()
+  //   .min(Yup.ref('minInvestments'))
+  //   .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
+
+  // amountBonusSection: Yup.boolean(),
+  // amountBonus: Yup
+  //   .number()
+  //   .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
+  // minimumContribution: Yup
+  //   .number()
+  //   .min(Yup.ref('minInvestments'))
+  //   .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
 });
 
-type CrowdsaleContractFieldType = {
-  id: string;
-  name: string;
-  icon?: ReactElement;
-  renderProps?: {
-    label: string;
-    name: string;
-  } & TextFieldProps;
-  helperText: string[];
-  infoText?: string[];
-};
+interface ISelectOption {
+  key: string;
+  text: string;
+}
 
 interface IFieldsFormConfig {
   key: string;
@@ -62,6 +59,15 @@ interface IFieldsFormConfig {
     name: string;
   } & TextFieldProps;
   helperText?: string[];
+  selectOptions?: ISelectOption[];
+}
+
+interface ISectionFieldsConfig {
+  key: string;
+  title?: string;
+  additionalText?: string[];
+  helperText?: string[];
+  fields: IFieldsFormConfig[];
 }
 
 export const contractNameSectionConfig: IFieldsFormConfig[] = [
@@ -83,27 +89,8 @@ export const managementAddressSectionConfig: IFieldsFormConfig[] = [
     key: 'managementAddress',
     name: 'managementAddress',
     title: 'Management address',
-    // renderProps: {
-    //   label: 'Contract name',
-    //   name: 'managementAddress',
-    // },
     helperText: [
       'This is the wallet address that will be traced for activity. If you want to use different wallet, please connect it for contract creation.',
-    ],
-  },
-];
-
-export const rewardAmountSectionConfig: IFieldsFormConfig[] = [
-  {
-    key: 'rewardAmount',
-    name: 'rewardAmount',
-    title: 'Management address',
-    renderProps: {
-      label: 'Сelo',
-      name: 'rewardAmount',
-    },
-    helperText: [
-      'This amount of СELO will be paid as a reward to the person who will initiate and pay for gas of the transfer from management to reserve addresses after the conditions for such transfer are met.',
     ],
   },
 ];
@@ -135,28 +122,6 @@ export const dynamicFormDataConfig: IFieldsFormConfig[] = [
   },
 ];
 
-export const crowdsaleContractFormConfigSaleDuration: CrowdsaleContractFieldType[] = [
-  {
-    id: 'saleDuration',
-    name: 'saleDuration',
-    renderProps: {
-      label: 'Duration of Sale',
-      name: 'saleDuration',
-    },
-    helperText: [
-      'Define the number of days of how long the crowdsale will last.',
-    ],
-  },
-];
-
-interface ISectionFieldsConfig {
-  key: string;
-  title?: string;
-  additionalText?: string[];
-  helperText?: string[];
-  fields: IFieldsFormConfig[];
-}
-
 export const confirmLiveStatusSectionConfig: ISectionFieldsConfig = {
   key: 'confirmLiveStatusSection',
   title: 'Define how often you want to confirm your “Live” status',
@@ -178,11 +143,40 @@ export const confirmLiveStatusSectionConfig: ISectionFieldsConfig = {
       renderProps: {
         label: '',
         name: 'pingIntervalAsDateUnits',
+        select: true,
       },
+      selectOptions: [
+        {
+          key: 'Day',
+          text: 'Day',
+        },
+        {
+          key: 'Month',
+          text: 'Month',
+        },
+        {
+          key: 'Year',
+          text: 'Year',
+        },
+      ],
       helperText: [],
     },
   ],
 };
+
+export const rewardAmountSectionConfig: IFieldsFormConfig[] = [
+  {
+    key: 'rewardAmount',
+    name: 'rewardAmount',
+    renderProps: {
+      label: 'Сelo',
+      name: 'rewardAmount',
+    },
+    helperText: [
+      'This amount of СELO will be paid as a reward to the person who will initiate and pay for gas of the transfer from management to reserve addresses after the conditions for such transfer are met.',
+    ],
+  },
+];
 
 // export const crowdsaleContractFormConfigEnd: ICrowdsaleContractSwitchableSection[] = [
 //   {

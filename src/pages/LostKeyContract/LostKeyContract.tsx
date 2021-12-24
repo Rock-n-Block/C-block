@@ -8,6 +8,7 @@ import {
   TextField,
   Button,
   Box,
+  MenuItem,
 } from '@material-ui/core';
 import {
   Formik, Form, Field, FieldProps, FieldArray,
@@ -31,7 +32,6 @@ import { TokenBlockForm } from './components';
 import {
   validationSchema,
   dynamicFormDataConfig,
-  // crowdsaleContractFormConfigSaleDuration,
   contractNameSectionConfig,
   managementAddressSectionConfig,
   rewardAmountSectionConfig,
@@ -78,7 +78,7 @@ export const LostKeyContract: FC = () => {
           // setFieldTouched,
         }) => (
           <Form className={classes.form} translate={undefined}>
-            <Grid className={clsx(classes.section, classes.contractNameSection)} container>
+            <Grid className={clsx(classes.gridContainer, classes.contractNameSection)} container>
               {
                 contractNameSectionConfig.map(({
                   key, name, renderProps, helperText,
@@ -122,7 +122,7 @@ export const LostKeyContract: FC = () => {
               }
             </Grid>
 
-            <Grid className={clsx(classes.section, classes.managementAddressSection)} container>
+            <Grid className={clsx(classes.gridContainer, classes.managementAddressSection)} container>
               {
                 managementAddressSectionConfig.map(({
                   key, title, name, helperText,
@@ -144,20 +144,6 @@ export const LostKeyContract: FC = () => {
                     <DELETE_ME_DISABLED_TEXTFIELD
                       value={values[name]}
                     />
-                    {/* <Field
-                      id={key}
-                      name={name}
-                      render={({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          {...renderProps}
-                          disabled={isSubmitting}
-                          onChange={handleChange}
-                          value={values[name]}
-                          onBlur={handleBlur}
-                          error={errors[name] && touched[name]}
-                        />
-                      )}
-                    /> */}
                     {helperText.map((text, i) => (
                       <Typography
                         key={i.toString()}
@@ -171,7 +157,7 @@ export const LostKeyContract: FC = () => {
                   </Grid>
                 ))
               }
-              <Box className={clsx(classes.section, classes.reservesSection)}>
+              <Box className={clsx(classes.gridContainer, classes.reservesSection)}>
                 <FieldArray name="reservesConfigs">
                   {({ remove, push }) => values.reservesConfigs.map((reserves, i) => {
                     const reservesConfigsErrors =
@@ -255,74 +241,81 @@ export const LostKeyContract: FC = () => {
               </Box>
             </Grid>
 
-            <Grid className={clsx(classes.section, classes.confirmLiveStatusSection)} container>
-              <Typography>
-                {confirmLiveStatusSectionConfig.title}
-              </Typography>
-              {confirmLiveStatusSectionConfig.additionalText.map((text, i) => (
-                <Typography
-                  key={i.toString()}
-                  className={clsx(classes.additionalText)}
-                  variant="body1"
-                  color="textSecondary"
-                >
-                  {text}
+            <Grid className={clsx(classes.gridContainer, classes.confirmLiveStatusSection)} container>
+              {/* <Grid container>
+                <div>Hello comrade lost key contract</div>
+              </Grid> */}
+              <Grid className={classes.gridItem} item xs={12} sm={6}>
+                <Typography variant="h3" color="textPrimary">
+                  {confirmLiveStatusSectionConfig.title}
                 </Typography>
-              ))}
-              {confirmLiveStatusSectionConfig.fields.map(
-                ({
-                  key, name, renderProps, helperText,
-                }) => (
-                  <Grid
-                    key={key}
-                    className={classes.gridItem}
-                    item
-                    xs={12}
-                    sm={12}
-                    md={6}
-                    lg={6}
-                    xl={6}
+                {confirmLiveStatusSectionConfig.additionalText.map((text, i) => (
+                  <Typography
+                    key={i.toString()}
+                    className={clsx(classes.additionalText)}
+                    variant="body1"
+                    color="textSecondary"
                   >
-                    <Field
-                      id={key}
-                      name={name}
-                      render={({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          {...renderProps}
-                          disabled={isSubmitting}
-                          onChange={handleChange}
-                          value={values[name]}
-                          onBlur={handleBlur}
-                          error={errors[name] && touched[name]}
-                        />
-                      )}
-                    />
-                    {helperText.map((text, i) => (
-                      <Typography
-                        key={i.toString()}
-                        className={clsx(classes.helperText)}
-                        variant="body1"
-                        color="textSecondary"
+                    {text}
+                  </Typography>
+                ))}
+
+                <Grid className={clsx(classes.gridContainer)} container>
+                  {confirmLiveStatusSectionConfig.fields.map(
+                    ({
+                      key, name, renderProps, helperText, selectOptions,
+                    }, index) => (
+                      <Grid
+                        key={key}
+                        className={clsx(classes.gridItem, classes.item)}
+                        item
+                        xs={index ? 7 : 5}
                       >
-                        {text}
-                      </Typography>
-                    ))}
-                  </Grid>
-                ),
-              )}
-              {confirmLiveStatusSectionConfig.helperText.map((text, i) => (
-                <Typography
-                  key={i.toString()}
-                  className={clsx(classes.helperText)}
-                  variant="body1"
-                  color="textSecondary"
-                >
-                  {text}
-                </Typography>
-              ))}
+                        <Field
+                          id={key}
+                          name={name}
+                          render={({ form: { isSubmitting } }: FieldProps) => (
+                            <TextField
+                              {...renderProps}
+                              disabled={isSubmitting}
+                              value={values[name]}
+                              error={errors[name] && touched[name]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            >{index ? selectOptions.map((option) => (
+                              <MenuItem key={option.key} value={option.key}>{option.text}</MenuItem>)) : null}
+                            </TextField>
+                          )}
+                        />
+                        {helperText.map((text, i) => (
+                          <Typography
+                            key={i.toString()}
+                            className={clsx(classes.helperText)}
+                            variant="body1"
+                            color="textSecondary"
+                          >
+                            {text}
+                          </Typography>
+                        ))}
+                      </Grid>
+                    ),
+                  )}
+                </Grid>
+
+                {confirmLiveStatusSectionConfig.helperText.map((text, i) => (
+                  <Typography
+                    key={i.toString()}
+                    className={clsx(classes.helperText)}
+                    variant="body1"
+                    color="textSecondary"
+                  >
+                    {text}
+                  </Typography>
+                ))}
+              </Grid>
             </Grid>
 
-            <Grid className={clsx(classes.section, classes.rewardAmountSection)} container>
+            <Grid className={clsx(classes.gridContainer, classes.rewardAmountSection)} container>
               {
                 rewardAmountSectionConfig.map(({
                   key, name, renderProps, helperText,
@@ -348,20 +341,6 @@ export const LostKeyContract: FC = () => {
                         />
                       )}
                     />
-                    {/* <Field
-                      id={key}
-                      name={name}
-                      render={({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          {...renderProps}
-                          disabled={isSubmitting}
-                          onChange={handleChange}
-                          value={values[name]}
-                          onBlur={handleBlur}
-                          error={errors[name] && touched[name]}
-                        />
-                      )}
-                    /> */}
                     {helperText.map((text, i) => (
                       <Typography
                         key={i.toString()}
