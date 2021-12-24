@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { Preview } from 'components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Grid, Typography, Box } from '@material-ui/core';
@@ -45,6 +44,7 @@ export const TokenContractPreview = () => {
       deleteAction={handleDelete}
     >
       {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
+        // eslint-disable-next-line react/no-array-index-key
         <Grid container className={classes.tokenContractInfoBlock} key={index}>
           {previewBlock.map(({
             key, label, value, shouldSkipObjectValue,
