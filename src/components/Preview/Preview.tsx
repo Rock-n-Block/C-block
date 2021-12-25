@@ -35,10 +35,10 @@ export const Preview: FC<PreviewProps> = ({
 }) => {
   const classes = useStyles();
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
-  const [isPaymentOpen, setPaymentOpen] = useState(true);
+  const [isPaymentOpen, setPaymentOpen] = useState(false);
   const [isCompleteOpen, setCompleteOpen] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -76,7 +76,7 @@ export const Preview: FC<PreviewProps> = ({
       openCompleteModal();
     }, 1000);
     setTimeout(() => navigate(routes.root), 6000);
-  }, []);
+  }, [closePaymentModal, launchAction, navigate, openCompleteModal]);
   return (
     <Container className={classes.root}>
       <Box className={clsx(classes.content, className)}>
