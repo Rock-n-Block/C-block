@@ -30,7 +30,6 @@ import {
   setLostKeyContractForm,
 } from 'store/contractForms/reducer';
 import { routes } from 'appConstants';
-import { DELETE_ME_DISABLED_TEXTFIELD } from 'pages/CrowdsaleContractPreview/DELETE_ME_DISABLED_TEXTFIELD/DELETE_ME_DISABLED_TEXTFIELD';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
 import {
   validationSchema,
@@ -156,7 +155,8 @@ export const LostKeyContract: FC = () => {
                     >
                       {title}
                     </Typography>
-                    <DELETE_ME_DISABLED_TEXTFIELD
+                    <TextField
+                      disabled
                       value={values[name]}
                     />
                     {helperText.map((text, i) => (

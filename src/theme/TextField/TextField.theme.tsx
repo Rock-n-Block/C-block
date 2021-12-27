@@ -69,8 +69,13 @@ export const getMuiOutlinedInput = (
     },
     '&$disabled input': {
       borderWidth: 1,
-      color: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_2,
+      color: `${theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_GREY_6}`,
     },
+    '&$disabled .MuiOutlinedInput-notchedOutline': {
+      background: 'none',
+      borderColor: `${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
+    },
+
     '& fieldset': {
       borderWidth: 1,
       borderColor: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2,
