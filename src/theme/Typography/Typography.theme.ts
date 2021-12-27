@@ -82,7 +82,6 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       lineHeight: '24px',
       letterSpacing: '-0.5px',
       textTransform: 'unset',
-      // textTransform: 'uppercase',
     },
     body1: {
       fontSize: '16px',
@@ -90,12 +89,11 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       letterSpacing: '0.02em',
       ...boldStyles,
 
-      '&.colorSeconadry': {
+      '&.colorSecondary': {
         color: COLOR_BLACK_4,
       },
 
       '&.l': {
-        // fontFamily: 'Arial Black',
         fontSize: '18px',
         fontWeight: FontWeights.fontWeightMedium,
         lineHeight: '30px',

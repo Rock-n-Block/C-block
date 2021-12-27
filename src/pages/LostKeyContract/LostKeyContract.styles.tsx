@@ -2,10 +2,8 @@ import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import {
   COLOR_GREY_2,
-  // COLOR_GREY_5,
   COLOR_BLACK_3,
 } from 'theme/colors';
-// import { flexHelper } from 'utils';
 
 const getBorderStyle = (theme: Theme) => `1px solid ${
   theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2

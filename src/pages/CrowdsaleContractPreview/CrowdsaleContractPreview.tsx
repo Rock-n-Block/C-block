@@ -53,7 +53,10 @@ export const CrowdsaleContractPreview = () => {
         >
           Token address
         </Typography>
-        <DELETE_ME_DISABLED_TEXTFIELD className={classes.disabledInput} value={crowdsaleContract.tokenAddress} />
+        <DELETE_ME_DISABLED_TEXTFIELD
+          className={classes.disabledInput}
+          value={crowdsaleContract.tokenAddress}
+        />
       </Box>
 
       <Box

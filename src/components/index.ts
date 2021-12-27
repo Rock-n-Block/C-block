@@ -14,3 +14,4 @@ export * from './Sidebar';
 export * from './Toastify';
 export * from './YesNoBlock';
 export * from './SliderWithMaxSectionValue';
+export * from './RemovableContractsFormBlock';

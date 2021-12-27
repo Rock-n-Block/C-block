@@ -15,7 +15,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   crowdsaleContractFormSection: {
     borderTop: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_5}`,
-    padding: `${theme.spacing(5)}px 0px`,
+    padding: theme.spacing(5, 0),
   },
   shortTextField: {
     maxWidth: '50%',
@@ -33,13 +33,14 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 
   changingDates: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+    padding: theme.spacing(2, 3),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(3, 2),
+    },
     background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
     borderRadius: theme.spacing(2.5),
     marginBottom: theme.spacing(4),
-    [theme.breakpoints.down('sm')]: {
-      padding: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
-    },
+
   },
 
   changingDatesHeader: {

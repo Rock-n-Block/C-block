@@ -42,10 +42,12 @@ const RoutesContainer = () => (
       path={routes['lostkey-contract'].root}
       element={<LostKeyContract />}
     />
-    {/* <Route
+    {/* There will be in CB-87
+    <Route
       path={routes['lostkey-contract']['preview-contract'].root}
       element={<LostKeyContractPreview />}
-    /> */}
+    />
+    */}
     <Route
       path={routes['my-contracts'].root}
       element={<MyContracts />}

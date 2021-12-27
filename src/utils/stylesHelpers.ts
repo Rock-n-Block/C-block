@@ -1,7 +1,7 @@
 import { Theme } from '@material-ui/core';
-import { CSSProperties } from '@material-ui/styles';
+import { CSSProperties, CreateCSSProperties } from '@material-ui/styles';
 
-export const flexHelper = (justifyContent = 'center', alignItems = 'center'): CSSProperties => ({
+export const flexHelper = <T extends object = {}>(justifyContent = 'center', alignItems = 'center'): CSSProperties | CreateCSSProperties<T> => ({
   display: 'flex',
   justifyContent,
   alignItems,

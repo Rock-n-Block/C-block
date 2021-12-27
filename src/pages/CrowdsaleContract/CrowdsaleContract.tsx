@@ -16,6 +16,7 @@ import {
 } from 'formik';
 import clsx from 'clsx';
 
+import { RemovableContractsFormBlock } from 'components';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State, ICrowdsaleContract } from 'types';
@@ -25,6 +26,8 @@ import {
   setCrowdsaleContractForm,
 } from 'store/contractForms/reducer';
 import { routes } from 'appConstants';
+
+import { InfoBlock, SwitchableBlockForm } from './components';
 import {
   validationSchema,
   crowdsaleContractFormConfigStart,
@@ -35,7 +38,6 @@ import {
   crowdsaleContractFormConfigEnd,
 } from './CrowdsaleContract.helpers';
 import { useStyles } from './CrowdsaleContract.styles';
-import { InfoBlock, TokenBlockForm, SwitchableBlockForm } from './components';
 
 const tokensSupportedForPayment = 3;
 
@@ -125,8 +127,9 @@ export const CrowdsaleContract: FC = () => {
                       (touched.tokens?.length && touched.tokens[i]) || {};
                   return (
                     <Fragment key={`dynamic_${i}`}>
-                      <TokenBlockForm
+                      <RemovableContractsFormBlock
                         isFirst={i === 0}
+                        title="Token supported for payment"
                         deleteForm={() => remove(i)}
                       >
                         {dynamicFormDataConfig.map(
@@ -181,7 +184,7 @@ export const CrowdsaleContract: FC = () => {
                             </Grid>
                           ),
                         )}
-                      </TokenBlockForm>
+                      </RemovableContractsFormBlock>
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                         {i + 1 < tokensSupportedForPayment && (

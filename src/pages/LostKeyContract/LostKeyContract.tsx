@@ -31,8 +31,7 @@ import {
 } from 'store/contractForms/reducer';
 import { routes } from 'appConstants';
 import { DELETE_ME_DISABLED_TEXTFIELD } from 'pages/CrowdsaleContractPreview/DELETE_ME_DISABLED_TEXTFIELD/DELETE_ME_DISABLED_TEXTFIELD';
-import { SliderWithMaxSectionValue } from 'components';
-import { TokenBlockForm } from './components';
+import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
 import {
   validationSchema,
   dynamicSectionFormConfig,
@@ -182,7 +181,7 @@ export const LostKeyContract: FC = () => {
                         (touched.reservesConfigs?.length && touched.reservesConfigs[i]) || {};
                     return (
                       <Fragment key={`dynamic_${i}`}>
-                        <TokenBlockForm
+                        <RemovableContractsFormBlock
                           isFirst={i === 0}
                           deleteForm={() => remove(i)}
                         >
@@ -284,7 +283,7 @@ export const LostKeyContract: FC = () => {
                               )}
                             </Grid>
                           </Fragment>
-                        </TokenBlockForm>
+                        </RemovableContractsFormBlock>
                         {i === values.reservesConfigs.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                           {i + 1 < RESERVED_ADDRESSES && (

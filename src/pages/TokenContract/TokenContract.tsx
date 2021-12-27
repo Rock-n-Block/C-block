@@ -1,5 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Fragment } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -16,14 +18,14 @@ import {
   FieldArray,
 } from 'formik';
 import clsx from 'clsx';
+
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State, TokenContract as TokenContractType } from 'types';
 import { useShallowSelector } from 'hooks';
 import { dynamicFormDataTemplate, setTokenContractForm } from 'store/contractForms/reducer';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { RemovableContractsFormBlock } from 'components';
 import { routes } from 'appConstants';
 import {
   tokenContractFormConfigStart,
@@ -32,7 +34,6 @@ import {
   tokenContractFormConfigEnd,
 } from './TokenContract.helpers';
 import { useStyles } from './TokenContract.styles';
-import { TokenBlockForm } from './components';
 
 export const TokenContract = React.memo(() => {
   const classes = useStyles();
@@ -121,7 +122,12 @@ export const TokenContract = React.memo(() => {
                   }, 0);
                   return (
                     <Fragment key={`dynamic_${i}`}>
-                      <TokenBlockForm isFirst={i === 0} deleteForm={() => remove(i)}>
+                      <RemovableContractsFormBlock
+                        isFirst={i === 0}
+                        title="Define address for tokens"
+                        subtitle="(after minting it will be sent to this address)"
+                        deleteForm={() => remove(i)}
+                      >
                         {dynamicFormDataConfig.map(({
                           id, name, renderProps, icon, isShort,
                         }, index) => (
@@ -173,7 +179,7 @@ export const TokenContract = React.memo(() => {
                             />
                           </Grid>
                         ))}
-                      </TokenBlockForm>
+                      </RemovableContractsFormBlock>
                       {i === values.tokens.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                           {i < 4 && (
