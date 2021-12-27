@@ -13,6 +13,8 @@ export const COLOR_BLACK_5 = '#192038';
 export const COLOR_BLACK_6 = '#131417';
 export const COLOR_BLACK_7 = '#111215';
 
+export const COLOR_BLACK_SCALE_5 = 'rgba(0, 0, 0, .5)';
+
 export const COLOR_GREY = '#F2F2F2';
 export const COLOR_GREY_1 = '#C4C4C4';
 export const COLOR_GREY_2 = '#B5BDCE';

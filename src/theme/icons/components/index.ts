@@ -28,3 +28,6 @@ export * from './Calendar';
 export * from './DescendingSortOrderIcon';
 export * from './Edit';
 export * from './WalletIcon';
+export * from './ErrorBigIcon';
+export * from './SearchIcon';
+export * from './SuccessBigIcon';

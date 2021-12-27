@@ -6,10 +6,11 @@ import {
 import clsx from 'clsx';
 
 import { Edit, TrashIcon } from 'theme/icons';
-import { DisclaimerModal } from 'components/DisclaimerModal';
-import { PaymentModal } from 'components/PaymentModal';
-import { useNavigate } from 'react-router-dom';
+import {
+  PaymentModal, DisclaimerModal, Loader, CompleteModal,
+} from 'components';
 import { routes } from 'appConstants';
+import { useNavigate } from 'react-router-dom';
 import { useStyles } from './Preview.styles';
 import { iconHelper } from './Preview.helpers';
 
@@ -33,9 +34,13 @@ export const Preview: FC<PreviewProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
-  const [isPaymentOpen, setPaymentOpen] = useState(false);
+  const [isPaymentOpen, setPaymentOpen] = useState(true);
+  const [isCompleteOpen, setCompleteOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const openDisclaimerModal = useCallback(() => {
     setDisclaimerOpen(true);
@@ -54,10 +59,23 @@ export const Preview: FC<PreviewProps> = ({
     setPaymentOpen(false);
   }, []);
 
+  const openCompleteModal = useCallback(() => {
+    setCompleteOpen(true);
+  }, []);
+
+  const closeCompleteModal = useCallback(() => {
+    setCompleteOpen(false);
+  }, []);
+
   const onPay = useCallback(() => {
     launchAction();
     closePaymentModal();
-    navigate(routes.root);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      openCompleteModal();
+    }, 1000);
+    setTimeout(() => navigate(routes.root), 6000);
   }, []);
   return (
     <Container className={classes.root}>
@@ -110,6 +128,12 @@ export const Preview: FC<PreviewProps> = ({
         onClose={closePaymentModal}
         onAccept={onPay}
         paymentAmount="16,499.05"
+      />
+      { isLoading && <Loader /> }
+      <CompleteModal
+        open={isCompleteOpen}
+        onClose={closeCompleteModal}
+        result
       />
     </Container>
   );

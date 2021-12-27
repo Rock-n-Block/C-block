@@ -39,12 +39,13 @@ export const TokenContractPreview = () => {
     <Preview
       type="token"
       name={tokenContract.tokenName}
-      launchAction={() => alert('launch')}
+      launchAction={() => console.log('launch')}
       editAction={handleEdit}
       deleteAction={handleDelete}
     >
       {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
-        <Grid container className={classes.tokenContractInfoBlock} key={index.toString()}>
+        // eslint-disable-next-line react/no-array-index-key
+        <Grid container className={classes.tokenContractInfoBlock} key={index}>
           {previewBlock.map(({
             key, label, value, shouldSkipObjectValue,
           }) => (
@@ -56,7 +57,6 @@ export const TokenContractPreview = () => {
               lg={3}
               xl={3}
               key={label}
-              className={classes.previewValueBlock}
             >
               <Typography
                 variant="body1"
@@ -70,7 +70,7 @@ export const TokenContractPreview = () => {
                   {shouldSkipObjectValue ? value : tokenContract[key]}
                 </Typography>
               ) : (
-                <YesNoBlock yes={tokenContract[key]} />
+                <YesNoBlock yes={tokenContract[key]} justify="normal" />
               )}
             </Grid>
           ))}
@@ -79,7 +79,7 @@ export const TokenContractPreview = () => {
 
       <Typography variant="body1" className={clsx(classes.tokenOwnerTitle, 'l')}>Token Owner</Typography>
       <Copyable onlyIconActive withBorder valueToCopy={tokenContract.tokenOwner} className={classes.copyableContainer}>
-        <Typography className={classes.copyableText}>{tokenContract.tokenOwner}</Typography>
+        <Typography noWrap>{tokenContract.tokenOwner}</Typography>
       </Copyable>
       <Typography className={classes.dynamicDataHeader} variant="h3">Token distribution</Typography>
       {tokenContract.tokens.map((tokenContractDynamicData, index) => {
@@ -99,7 +99,7 @@ export const TokenContractPreview = () => {
               valueToCopy={tokenContractDynamicData.address}
               className={classes.copyableContainer}
             >
-              <Typography className={classes.copyableText}>
+              <Typography noWrap>
                 {tokenContractDynamicData.address}
               </Typography>
             </Copyable>
@@ -118,7 +118,6 @@ export const TokenContractPreview = () => {
                     lg={3}
                     xl={3}
                     key={key}
-                    className={classes.previewValueBlock}
                   >
                     <Box
                       className={clsx(

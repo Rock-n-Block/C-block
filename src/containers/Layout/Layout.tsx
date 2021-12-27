@@ -31,11 +31,11 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <Box className={classes.root}>
       <Sidebar className={classes.sidebar} closeSidebar={toggleSidebar} />
-      <span className={classes.content}>
+      <Box className={classes.content}>
         <Header openSidebar={toggleSidebar} />
         {children}
-      </span>
-      <Box className={classes.greenBlob} />
+        <Box className={classes.greenBlob} />
+      </Box>
     </Box>
   );
 };

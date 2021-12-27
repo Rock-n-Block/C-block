@@ -3,14 +3,14 @@ import { ICrowdsaleContract, ICrowdsaleContractDynamicForm } from 'types';
 export type CrowdsaleContractPreviewHelperType = {
   key?: keyof ICrowdsaleContract | keyof ICrowdsaleContractDynamicForm;
   label: string;
-  valueLabel?: string;
+  valueSuffix?: string;
 };
 
 export const dynamicCrowdsaleContractPreviewHelpers: CrowdsaleContractPreviewHelperType[] = [
   {
     key: 'rate',
     label: 'Token rate',
-    valueLabel: '',
+    valueSuffix: '',
   },
 ];
 
@@ -20,12 +20,12 @@ export const staticCrowdsaleContractPreviewHelpers: Record<'mixedSection' | 'min
       {
         key: 'saleDuration',
         label: 'Duration of Sale',
-        valueLabel: 'days',
+        valueSuffix: 'days',
       },
       {
         key: 'softcapTokens',
         label: 'Soft cap tokens',
-        valueLabel: 'HARDCODE',
+        valueSuffix: 'HARDCODE',
       },
     ],
     [
@@ -40,12 +40,12 @@ export const staticCrowdsaleContractPreviewHelpers: Record<'mixedSection' | 'min
       {
         key: 'minInvestments',
         label: 'Minimum',
-        valueLabel: 'HARDCODE',
+        valueSuffix: 'HARDCODE',
       },
       {
         key: 'maxInvestments',
         label: 'Maximum',
-        valueLabel: 'HARDCODE',
+        valueSuffix: 'HARDCODE',
       },
     ],
   ],
@@ -54,7 +54,7 @@ export const staticCrowdsaleContractPreviewHelpers: Record<'mixedSection' | 'min
       {
         key: 'amountBonus',
         label: 'Bonus',
-        valueLabel: '%',
+        valueSuffix: '%',
       },
       {
         key: 'minimumContribution',

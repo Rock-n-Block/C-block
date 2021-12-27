@@ -29,28 +29,26 @@ export const CreateContract = () => {
   }, [isMainnet]);
 
   return (
-    <>
-      <Container>
-        <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
-            <Box className={classes.testnetSwitcher}>
-              <Typography>Test net</Typography>
-              <Switch checked={!isMainnet} onClick={handleTestnetChange} />
-            </Box>
+    <Container>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+          <Box className={classes.testnetSwitcher}>
+            <Typography>Test net</Typography>
+            <Switch checked={!isMainnet} onClick={handleTestnetChange} />
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid container>
+        {createContractHelpers.map((contractType) => (
+          <Grid item xs={12} sm={12} md={6} lg={4} xl={4} key={contractType.title}>
+            <NavLink style={{ width: '100%' }} to={contractType.link}>
+              <ContractCard
+                {...contractType}
+              />
+            </NavLink>
           </Grid>
-        </Grid>
-        <Grid container>
-          {createContractHelpers.map((contractType) => (
-            <Grid item xs={12} sm={12} md={6} lg={4} xl={4} key={contractType.title}>
-              <NavLink style={{ width: '100%' }} to={contractType.link}>
-                <ContractCard
-                  {...contractType}
-                />
-              </NavLink>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </>
+        ))}
+      </Grid>
+    </Container>
   );
 };

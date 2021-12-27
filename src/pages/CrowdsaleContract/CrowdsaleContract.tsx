@@ -1,4 +1,5 @@
-import React, { FC, Fragment } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { FC, Fragment, SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -36,6 +37,8 @@ import {
 import { useStyles } from './CrowdsaleContract.styles';
 import { InfoBlock, TokenBlockForm, SwitchableBlockForm } from './components';
 
+const tokensSupportedForPayment = 3;
+
 export const CrowdsaleContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -67,7 +70,7 @@ export const CrowdsaleContract: FC = () => {
           <Form className={classes.form} translate={undefined}>
             {crowdsaleContractFormConfigStart.map((formSection, index) => (
               <Grid
-                key={`start_${index.toString()}`}
+                key={`start_${index}`}
                 className={classes.crowdsaleContractFormSection}
                 container
               >
@@ -100,7 +103,7 @@ export const CrowdsaleContract: FC = () => {
                       />
                       {helperText.map((text, i) => (
                         <Typography
-                          key={i.toString()}
+                          key={i}
                           className={clsx(classes.helperText)}
                           variant="body1"
                           color="textSecondary"
@@ -121,7 +124,7 @@ export const CrowdsaleContract: FC = () => {
                   const tokensTouched =
                       (touched.tokens?.length && touched.tokens[i]) || {};
                   return (
-                    <Fragment key={`dynamic_${i.toString()}`}>
+                    <Fragment key={`dynamic_${i}`}>
                       <TokenBlockForm
                         isFirst={i === 0}
                         deleteForm={() => remove(i)}
@@ -134,7 +137,7 @@ export const CrowdsaleContract: FC = () => {
                             index,
                           ) => (
                             <Grid
-                              key={`${name}_${index.toString()}`}
+                              key={`${name}_${index}`}
                               className={clsx(classes[name])}
                               item
                               xs={12}
@@ -167,7 +170,7 @@ export const CrowdsaleContract: FC = () => {
                               />
                               {helperText.map((text) => (
                                 <Typography
-                                  key={i.toString()}
+                                  key={i}
                                   className={clsx(classes.helperText)}
                                   variant="body1"
                                   color="textSecondary"
@@ -181,8 +184,7 @@ export const CrowdsaleContract: FC = () => {
                       </TokenBlockForm>
                       {i === values.tokens.length - 1 && (
                       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {/* supported only 3 tokens for payment */}
-                        {i + 1 < 3 && (
+                        {i + 1 < tokensSupportedForPayment && (
                         <Button
                           variant="outlined"
                           endIcon={<PlusIcon />}
@@ -222,7 +224,7 @@ export const CrowdsaleContract: FC = () => {
                       />
                       {helperText.map((text, i) => (
                         <Typography
-                          key={i.toString()}
+                          key={i}
                           className={clsx(classes.helperText)}
                           variant="body1"
                           color="textSecondary"
@@ -279,7 +281,7 @@ export const CrowdsaleContract: FC = () => {
                     />
                     {helperText.map((text, i) => (
                       <Typography
-                        key={i.toString()}
+                        key={i}
                         className={clsx(classes.helperText)}
                         variant="body1"
                         color="textSecondary"
@@ -321,7 +323,7 @@ export const CrowdsaleContract: FC = () => {
                       <Box>
                         {helperText.map((text, i) => (
                           <Typography
-                            key={i.toString()}
+                            key={i}
                             variant="body1"
                             color="textSecondary"
                           >
@@ -337,7 +339,7 @@ export const CrowdsaleContract: FC = () => {
 
             {crowdsaleContractFormConfigEnd.map((formSection, index) => (
               <Grid
-                key={`end_${index.toString()}`}
+                key={`end_${index}`}
                 className={classes.crowdsaleContractFormSection}
                 item
                 xs={12}
@@ -349,11 +351,7 @@ export const CrowdsaleContract: FC = () => {
                   checkboxName={formSection.id}
                   checked={values[formSection.id]}
                   onChecked={(
-                    e: Parameters<
-                    React.ComponentProps<
-                        typeof SwitchableBlockForm
-                    >['onChecked']
-                    >['0'],
+                    e: SyntheticEvent<React.ChangeEvent>,
                   ) => {
                     handleChange(e);
                     if (
@@ -399,7 +397,7 @@ export const CrowdsaleContract: FC = () => {
                           />
                           {helperText.map((text, i) => (
                             <Typography
-                              key={i.toString()}
+                              key={i}
                               className={clsx(classes.helperText)}
                               variant="body1"
                               color="textSecondary"

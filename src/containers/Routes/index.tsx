@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import {
   CreateContract,
   CustomDevelopment,
+  MyContracts,
   TokenContract,
   TokenContractPreview,
   CrowdsaleContract,
@@ -47,7 +48,7 @@ const RoutesContainer = () => (
     /> */}
     <Route
       path={routes['my-contracts'].root}
-      element={<div>myContracts</div>}
+      element={<MyContracts />}
     />
     <Route
       path={routes['custom-development'].root}

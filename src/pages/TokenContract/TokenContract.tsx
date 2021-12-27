@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Fragment } from 'react';
 import {
   Container,
@@ -65,7 +66,7 @@ export const TokenContract = React.memo(() => {
         }) => (
           <Form translate={undefined} className={classes.form}>
             {tokenContractFormConfigStart.map((formSection, index) => (
-              <Grid container className={classes.tokenContractFormSection} key={`start_${index.toString()}`}>
+              <Grid container className={classes.tokenContractFormSection} key={`start_${index}`}>
                 {formSection.map(({
                   id, name, renderProps, helperText, isShort,
                 }) => (
@@ -95,7 +96,12 @@ export const TokenContract = React.memo(() => {
                       }
                     />
                     {helperText.map((text, i) => (
-                      <Typography key={i.toString()} variant="body1" className={clsx({ [classes.helperText]: i === 0 }, 's')} color="textSecondary">
+                      <Typography
+                        key={i}
+                        className={clsx({ [classes.helperText]: i === 0 }, 's')}
+                        variant="body1"
+                        color="textSecondary"
+                      >
                         {text}
                       </Typography>
                     ))}
@@ -114,7 +120,7 @@ export const TokenContract = React.memo(() => {
                     return acc;
                   }, 0);
                   return (
-                    <Fragment key={`dynamic_${i.toString()}`}>
+                    <Fragment key={`dynamic_${i}`}>
                       <TokenBlockForm isFirst={i === 0} deleteForm={() => remove(i)}>
                         {dynamicFormDataConfig.map(({
                           id, name, renderProps, icon, isShort,
@@ -126,7 +132,7 @@ export const TokenContract = React.memo(() => {
                             md={isShort ? 3 : 6}
                             lg={isShort ? 3 : 6}
                             xl={isShort ? 3 : 6}
-                            key={`${name}_${index.toString()}`}
+                            key={`${name}_${index}`}
                             className={clsx(classes[name])}
                           >
                             <Field
@@ -224,9 +230,9 @@ export const TokenContract = React.memo(() => {
                   />
                   {helperText.map((text, i) => (
                     <Typography
-                      key={i.toString()}
-                      variant="body1"
+                      key={i}
                       className={clsx({ [classes.helperText]: i === 0 }, 's')}
+                      variant="body1"
                       color="textSecondary"
                     >
                       {text}
