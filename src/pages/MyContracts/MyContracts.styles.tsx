@@ -34,7 +34,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   contractTitle: {
     ...flexHelper('flex-start'),
-    padding: theme.spacing(3),
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
     width: '100%',
     '& > :nth-child(1)': {
       marginRight: theme.spacing(2),
@@ -71,12 +71,15 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     },
   },
   chainTag: {
-    margin: '0 auto',
     background: theme.palette.type === 'dark' ? '' : COLOR_BLACK_3,
+    ...flexHelper(),
     [theme.breakpoints.down('sm')]: {
       margin: 'unset',
-      marginBottom: theme.spacing(4),
     },
+  },
+  contractDate: {
+    width: '100%',
+    paddingLeft: theme.spacing(4),
   },
   button: {
     height: 56,

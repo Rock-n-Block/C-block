@@ -1,7 +1,6 @@
-/* eslint-disable */
 import { makeStyles } from '@material-ui/core';
-import {COLOR_BLACK_SCALE_5} from "theme/colors";
-import {flexHelper} from "../../utils";
+import { COLOR_BLACK_SCALE_5 } from 'theme/colors';
+import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles({
   loaderModal: {
@@ -23,8 +22,6 @@ export const useStyles = makeStyles({
     height: '100%',
     backgroundColor: 'transparent',
     ...flexHelper(),
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   '@keyframes rotating': {
