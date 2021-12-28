@@ -37,8 +37,8 @@ export const DisclaimerModal: VFC<DisclaimerModalProps> = ({
 
   return (
     <Modal title={title} open={open} onClose={onClose} className={className}>
-      {disclaimerBullets.map((disclaimer) => (
-        <Box className={classes.disclaimerContainer}>
+      {disclaimerBullets.map((disclaimer, index) => (
+        <Box key={`${disclaimer + index}`} className={classes.disclaimerContainer}>
           <Box className={classes.bullet} />
           <Typography>{disclaimer}</Typography>
         </Box>
