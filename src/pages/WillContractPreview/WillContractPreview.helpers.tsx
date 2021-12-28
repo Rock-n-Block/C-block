@@ -4,7 +4,7 @@ import {
   rewardAmountSectionConfig,
   dynamicSectionFormConfig,
   IFieldsFormConfigKeys,
-} from '../LostKeyContract/LostKeyContract.helpers';
+} from '../WillContract/WillContract.helpers';
 
 const MAIN_TOKEN_DATA = {
   symbol: 'CELO',
@@ -28,7 +28,7 @@ interface ISectionContentReturnType {
   dataFields?: IFieldsFormConfigKeys[],
 }
 
-export const staticLostKeyContractPreviewHelpers: {
+export const staticWillContractPreviewHelpers: {
   key: string;
   title: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,7 +52,7 @@ export const staticLostKeyContractPreviewHelpers: {
   [
     {
       key: dynamicSectionFormConfig.key,
-      title: 'Reserve address',
+      title: 'Beneficiary address',
       content: (items) => items.reduce((acc: ISectionContentReturnType[], item, reservesConfigIdx, sourceArray) => {
         const elements: ISectionContentReturnType[] = [
           {

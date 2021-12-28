@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ContractToken, WeddingRingIcon, CrowdsaleIcon, KeyIcon,
+  ContractToken, WeddingRingIcon, CrowdsaleIcon, KeyIcon, WillContract,
 } from 'theme/icons';
 
 const CREATE_CONTRACT = 'create-contract';
@@ -9,6 +9,8 @@ const CROWDSALE_CONTRACT = 'crowdsale-contract';
 const PREVIEW_CONTRACT = 'preview-contract';
 const WEDDING_CONTRACT = 'wedding-contract';
 const LOSTKEY_CONTRACT = 'lostkey-contract';
+const WILL_CONTRACT = 'will-contract';
+
 const MY_CONTRACTS = 'my-contracts';
 const CUSTOM_DEVELOPMENT = 'custom-development';
 
@@ -52,6 +54,16 @@ const lostKeyContractRoute = {
   },
 };
 
+const willContractRoute = {
+  root: `/${CREATE_CONTRACT}/${WILL_CONTRACT}`,
+  title: 'Will Contract',
+  icon: <WillContract />,
+  [PREVIEW_CONTRACT]: {
+    root: `/${CREATE_CONTRACT}/${WILL_CONTRACT}/${PREVIEW_CONTRACT}`,
+    title: 'Preview Contract',
+  },
+};
+
 const myContractsRoute = {
   root: `/${MY_CONTRACTS}`,
   title: 'My contracts',
@@ -72,6 +84,7 @@ export const routes = {
   [CROWDSALE_CONTRACT]: crowdsaleContractRoute,
   [WEDDING_CONTRACT]: weddingContractRoute,
   [LOSTKEY_CONTRACT]: lostKeyContractRoute,
+  [WILL_CONTRACT]: willContractRoute,
   [MY_CONTRACTS]: myContractsRoute,
   [CUSTOM_DEVELOPMENT]: customDevelopmentRoute,
 };
