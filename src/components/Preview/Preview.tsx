@@ -1,5 +1,5 @@
 import React, { FC, useState, useCallback } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import {
   Box, Button, Container, IconButton, Typography,
 } from '@material-ui/core';
@@ -10,18 +10,17 @@ import {
   PaymentModal, DisclaimerModal, Loader, CompleteModal,
 } from 'components';
 import { routes } from 'appConstants';
-import { useNavigate } from 'react-router-dom';
-import { useStyles } from './Preview.styles';
 import { iconHelper } from './Preview.helpers';
+import { useStyles } from './Preview.styles';
 
-type IconType = 'token' | 'weddingRing' | 'crowdsale';
+type IconType = keyof typeof iconHelper;
 export interface PreviewProps {
   className?: string;
+  type: IconType;
+  name: string;
   launchAction: () => void,
   editAction: () => void,
   deleteAction: () => void,
-  type: IconType;
-  name: string;
 }
 
 export const Preview: FC<PreviewProps> = ({
@@ -80,6 +79,7 @@ export const Preview: FC<PreviewProps> = ({
       deleteAction();
     }, 6000);
   }, []);
+
   return (
     <Container className={classes.root}>
       <Box className={clsx(classes.content, className)}>

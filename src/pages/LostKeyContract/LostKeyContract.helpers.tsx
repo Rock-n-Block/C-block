@@ -1,5 +1,7 @@
 import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
+
+import { ILostKeyContractDynamicForm } from 'types/store/contractForms';
 import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
@@ -24,8 +26,15 @@ interface ISelectOption {
   text: string;
 }
 
+type ContractNameSectionConfigKeys = 'contractName';
+type ManagementAddressSectionConfigKeys = 'managementAddress';
+type DynamicFormDataConfigKeys = keyof ILostKeyContractDynamicForm;
+type ConfirmLiveStatusSectionFieldsConfigKeys = 'pingIntervalAsValue' | 'pingIntervalAsDateUnits';
+type RewardAmountSectionConfigKeys = 'rewardAmount';
+export type IFieldsFormConfigKeys = ContractNameSectionConfigKeys | ManagementAddressSectionConfigKeys | DynamicFormDataConfigKeys | ConfirmLiveStatusSectionFieldsConfigKeys | RewardAmountSectionConfigKeys;
+
 interface IFieldsFormConfig {
-  key: string;
+  key: IFieldsFormConfigKeys;
   name: string;
   title?: string;
   // icon?: ReactElement;
@@ -103,46 +112,48 @@ export const dynamicSectionFormConfig: ISectionFieldsConfig = {
   helperText: ['You can divide the funds between several reserve accounts. Choose percentage for every reserve address.'],
 };
 
+export const confirmLiveStatusSectionFieldsConfig: IFieldsFormConfig[] = [
+  {
+    key: 'pingIntervalAsValue',
+    name: 'pingIntervalAsValue',
+    renderProps: {
+      label: '',
+      name: 'pingIntervalAsValue',
+    },
+    helperText: [],
+  },
+  {
+    key: 'pingIntervalAsDateUnits',
+    name: 'pingIntervalAsDateUnits',
+    renderProps: {
+      label: '',
+      name: 'pingIntervalAsDateUnits',
+      select: true,
+    },
+    selectOptions: [
+      {
+        key: 'Day',
+        text: 'Day',
+      },
+      {
+        key: 'Month',
+        text: 'Month',
+      },
+      {
+        key: 'Year',
+        text: 'Year',
+      },
+    ],
+    helperText: [],
+  },
+];
+
 export const confirmLiveStatusSectionConfig: ISectionFieldsConfig = {
   key: 'confirmLiveStatusSection',
   title: 'Define how often you want to confirm your “Live” status',
   additionalText: ['Confirmation transaction every'],
   helperText: ['You will need to send transaction to the contract from management address every time.'],
-  fields: [
-    {
-      key: 'pingIntervalAsValue',
-      name: 'pingIntervalAsValue',
-      renderProps: {
-        label: '',
-        name: 'pingIntervalAsValue',
-      },
-      helperText: [],
-    },
-    {
-      key: 'pingIntervalAsDateUnits',
-      name: 'pingIntervalAsDateUnits',
-      renderProps: {
-        label: '',
-        name: 'pingIntervalAsDateUnits',
-        select: true,
-      },
-      selectOptions: [
-        {
-          key: 'Day',
-          text: 'Day',
-        },
-        {
-          key: 'Month',
-          text: 'Month',
-        },
-        {
-          key: 'Year',
-          text: 'Year',
-        },
-      ],
-      helperText: [],
-    },
-  ],
+  fields: confirmLiveStatusSectionFieldsConfig,
 };
 
 export const rewardAmountSectionConfig: IFieldsFormConfig[] = [

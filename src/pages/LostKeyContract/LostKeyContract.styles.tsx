@@ -1,20 +1,10 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-import {
-  COLOR_GREY_2,
-  COLOR_BLACK_3,
-} from 'theme/colors';
-
-const getBorderStyle = (theme: Theme) => `1px solid ${
-  theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2
-}`;
-const separator = (theme: Theme) => ({
-  borderTop: getBorderStyle(theme),
-});
+import { separator } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
   form: {
-    ...separator(theme),
+    ...separator(theme, 'top'),
     width: '90%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',

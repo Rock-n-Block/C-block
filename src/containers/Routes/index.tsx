@@ -11,8 +11,9 @@ import {
   CrowdsaleContractPreview,
   WeddingContract,
   WeddingContractPreview,
+  LostKeyContract,
+  LostKeyContractPreview,
 } from 'pages';
-import { LostKeyContract } from 'pages/LostKeyContract';
 
 const RoutesContainer = () => (
   <Routes>
@@ -42,12 +43,10 @@ const RoutesContainer = () => (
       path={routes['lostkey-contract'].root}
       element={<LostKeyContract />}
     />
-    {/* There will be in CB-87
     <Route
       path={routes['lostkey-contract']['preview-contract'].root}
       element={<LostKeyContractPreview />}
     />
-    */}
     <Route
       path={routes['my-contracts'].root}
       element={<MyContracts />}

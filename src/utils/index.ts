@@ -7,3 +7,4 @@ export * from './formatTokenAmount';
 export * from './numberFormatter';
 export * from './regExps';
 export * from './constructExplorerUrls';
+export * from './getDeepValueByPath';

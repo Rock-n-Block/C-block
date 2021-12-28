@@ -1,6 +1,11 @@
 import { Theme } from '@material-ui/core';
 import { CSSProperties, CreateCSSProperties } from '@material-ui/styles';
 
+import {
+  COLOR_BLACK_3,
+  COLOR_GREY_2,
+} from 'theme/colors';
+
 export const flexHelper = <T extends object = {}>(justifyContent = 'center', alignItems = 'center'): CSSProperties | CreateCSSProperties<T> => ({
   display: 'flex',
   justifyContent,
@@ -13,4 +18,11 @@ export const baseFieldWidthRestriction = (theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     maxWidth: '100%',
   },
+});
+
+export const getBorderStyle = (theme: Theme) => `1px solid ${
+  theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2
+}`;
+export const separator = (theme: Theme, position: 'bottom' | 'top' = 'bottom') => ({
+  [`border${position[0].toUpperCase()}${position.slice(1)}`]: getBorderStyle(theme),
 });
