@@ -10,9 +10,9 @@ const PREVIEW_CONTRACT = 'preview-contract';
 const WEDDING_CONTRACT = 'wedding-contract';
 const LOSTKEY_CONTRACT = 'lostkey-contract';
 const WILL_CONTRACT = 'will-contract';
-
 const MY_CONTRACTS = 'my-contracts';
 const CUSTOM_DEVELOPMENT = 'custom-development';
+const EARN_PATH = 'earn';
 
 const tokenContractRoute = {
   root: `/${CREATE_CONTRACT}/${TOKEN_CONTRACT}`,
@@ -70,6 +70,12 @@ const myContractsRoute = {
   icon: null,
 };
 
+const earnRoute = {
+  root: `/${EARN_PATH}`,
+  title: 'Earn',
+  icon: null,
+};
+
 const customDevelopmentRoute = {
   root: `/${CUSTOM_DEVELOPMENT}`,
   title: 'Custom development',
@@ -86,5 +92,6 @@ export const routes = {
   [LOSTKEY_CONTRACT]: lostKeyContractRoute,
   [WILL_CONTRACT]: willContractRoute,
   [MY_CONTRACTS]: myContractsRoute,
+  [EARN_PATH]: earnRoute,
   [CUSTOM_DEVELOPMENT]: customDevelopmentRoute,
 };
