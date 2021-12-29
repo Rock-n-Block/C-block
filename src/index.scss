@@ -55,10 +55,6 @@ p {
   padding: 0;
 }
 
-// a {
-//   width: 100%;
-// }
-
 ul {
   margin: 0;
   padding: 0;
@@ -90,17 +86,22 @@ button {
   transform: translateX(0);
 }
 
-.Toastify__toast-container {
-  padding: 0 !important;
-  width: fit-content !important;
-  height: fit-content !important;
+.Toastify {
+  &__toast-container {
+    padding: 0 !important;
+    width: fit-content !important;
+    height: fit-content !important;
+  }
+
+  &__toast-body {
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 50% !important;
+  }
 }
-.Toastify__toast-body {
-  padding: 0 !important;
-  background: none !important;
-  box-shadow: none !important;
-  border-radius: 50% !important;
-}
+
+.Toastify
 .Toastify__toast {
   padding: 0 !important;
   display: flex;
@@ -112,7 +113,7 @@ button {
   overflow: visible;
   background: transparent !important;
   border-radius: 12px !important;
-  
+
   & > svg {
     position: absolute;
     right: 16px;
@@ -129,26 +130,30 @@ button {
   &--info {
   }
 }
-.Toastify__toast-theme--light {
-  background: none;
-}
 
-.Toastify__close-button {
-  align-self: center;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  color: red;
-  background: blue;
-
-  & > svg {
-    display: none;
+.Toastify {
+  &__toast-theme {
+    &--light {
+      background: none;
+    }
   }
 
-  // custom cross
-  &:after {
-    content: '\e80a';
-    font-family: 'Fontello', Arial, Helvetica, sans-serif;
-  }
+  &__close-button {
+    align-self: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    color: red;
+    background: blue;
 
+    & > svg {
+      display: none;
+    }
+
+    // custom cross
+    &:after {
+      content: '\e80a';
+      font-family: 'Fontello', Arial, Helvetica, sans-serif;
+    }
+  }
 }

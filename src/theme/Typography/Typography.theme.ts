@@ -6,7 +6,8 @@ import { COLOR_AKZ, COLOR_BLACK, COLOR_BLACK_4 } from 'theme/colors';
 export enum FontWeights {
   fontWeightRegular = 400,
   fontWeightMedium = 500,
-  fontWeightBold = 600,
+  fontWeightSemiBold = 600,
+  fontWeightBold = 700,
 }
 
 export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions => {
@@ -20,7 +21,7 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     fontFamily: 'Arial',
     // fontWeightRegular: FontWeights.fontWeightRegular,
     // fontWeightMedium: FontWeights.fontWeightMedium,
-    // fontWeightBold: FontWeights.fontWeightBold,
+    // fontWeightSemiBold: FontWeights.fontWeightSemiBold,
 
     allVariants: {
       color,
@@ -38,7 +39,7 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     },
     h2: {
       fontSize: '32px',
-      fontWeight: FontWeights.fontWeightBold,
+      fontWeight: FontWeights.fontWeightSemiBold,
       lineHeight: '40px',
       letterSpacing: '0px',
       textTransform: 'capitalize',
@@ -51,7 +52,7 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     },
     h3: {
       fontSize: '20px',
-      fontWeight: FontWeights.fontWeightBold,
+      fontWeight: FontWeights.fontWeightSemiBold,
       lineHeight: '30px',
       letterSpacing: '0px',
       textTransform: 'capitalize',

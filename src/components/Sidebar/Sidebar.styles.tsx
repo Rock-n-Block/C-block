@@ -1,21 +1,22 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-// import { COLOR_BLACK_1 } from 'theme/colors';
+
 import { flexHelper } from 'utils';
+import { getStylesConstants } from './SideBar.constants';
 
 export const useStyles = makeStyles((theme: Theme) => {
+  const { SIDEBAR_CONTAINER_PADDING } = getStylesConstants(theme);
+
   const marginBottom = {
     marginBottom: theme.spacing(3),
   };
 
   return createStyles({
     root: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
+      ...flexHelper('space-between', 'flex-start'),
       flexDirection: 'column',
       height: '100vh',
-      padding: theme.spacing(3),
+      padding: SIDEBAR_CONTAINER_PADDING,
       background: theme.palette.primary.main,
     },
     contentWrapper: {

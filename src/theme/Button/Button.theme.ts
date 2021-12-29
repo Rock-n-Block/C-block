@@ -59,7 +59,7 @@ export const getMuiButton = (theme: Theme): Overrides['MuiButton'] => {
       paddingTop: theme.spacing(1),
       fontSize: '12px',
       lineHeight: '14px',
-      fontWeight: FontWeights.fontWeightBold,
+      fontWeight: FontWeights.fontWeightSemiBold,
     },
     '&:hover': {
       color: COLOR_BLACK,

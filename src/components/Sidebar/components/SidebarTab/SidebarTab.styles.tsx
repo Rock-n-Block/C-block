@@ -1,44 +1,48 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-import { COLOR_ACID_GREEN } from 'theme/colors';
 
-export const useStyles = makeStyles<Theme, { isSelected: boolean }>((theme: Theme) => createStyles({
-  tab: {
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    height: 48,
-    marginLeft: -theme.spacing(3),
-    marginRight: -theme.spacing(3),
-    paddingLeft: theme.spacing(3),
-    background: ({ isSelected }) => (isSelected ? theme.palette.secondary.main : 'unset'),
-    borderLeft: ({ isSelected }) => (isSelected ? `2px solid ${COLOR_ACID_GREEN}` : 'unset'),
-    '& > *': {
-      color: ({ isSelected }) => (isSelected ? COLOR_ACID_GREEN : 'unset'),
+import { getStylesConstants } from 'components/Sidebar/SideBar.constants';
+import { COLOR_ACID_GREEN } from 'theme/colors';
+import { flexHelper } from 'utils';
+import { FontWeights } from 'theme/Typography';
+
+export const useStyles = makeStyles<Theme, { isSelected: boolean }>((theme: Theme) => {
+  const { SIDEBAR_CONTAINER_PADDING } = getStylesConstants(theme);
+
+  return createStyles({
+    tab: {
+      ...flexHelper('flex-start'),
+      height: 48,
+      marginLeft: -SIDEBAR_CONTAINER_PADDING,
+      marginRight: -SIDEBAR_CONTAINER_PADDING,
+      paddingLeft: SIDEBAR_CONTAINER_PADDING,
+      cursor: 'pointer',
+      background: ({ isSelected }) => (isSelected ? theme.palette.secondary.main : 'unset'),
+      boxShadow: ({ isSelected }) => (isSelected ? `2px 0px 0px 0px ${COLOR_ACID_GREEN} inset` : 'unset'),
       '& > *': {
-        fill: ({ isSelected }) => (isSelected ? COLOR_ACID_GREEN : theme.palette.primary.dark),
-      },
-    },
-    '&:hover': {
-      borderLeft: `2px solid ${COLOR_ACID_GREEN}`,
-      '& > *': {
-        color: COLOR_ACID_GREEN,
+        color: ({ isSelected }) => (isSelected ? COLOR_ACID_GREEN : 'unset'),
         '& > *': {
-          fill: COLOR_ACID_GREEN,
+          fill: ({ isSelected }) => (isSelected ? COLOR_ACID_GREEN : theme.palette.primary.dark),
+        },
+      },
+      '&:hover': {
+        boxShadow: `2px 0px 0px 0px ${COLOR_ACID_GREEN} inset`,
+        '& > *': {
+          color: COLOR_ACID_GREEN,
+          '& > *': {
+            fill: COLOR_ACID_GREEN,
+          },
         },
       },
     },
-  },
-  iconWrapper: {
-    marginLeft: theme.spacing(1),
-    '& > *': {
+    iconWrapper: {
+      marginRight: theme.spacing(1.5),
       width: 20,
-      height: 20,
-      marginTop: 8,
+      lineHeight: 0,
     },
-  },
-  tabLabel: {
-    fontSize: '14px',
-  },
-}));
+    tabLabel: {
+      fontSize: '14px',
+      fontWeight: FontWeights.fontWeightBold,
+    },
+  });
+});

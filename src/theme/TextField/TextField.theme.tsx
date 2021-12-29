@@ -24,7 +24,9 @@ export const getMuiInputBase = (theme: Theme): Overrides['MuiInputBase'] => ({
   },
   input: {
     borderRadius: theme.spacing(1.5),
-    padding: '24px 18px 12px 18px !important',
+    padding: `${theme.spacing(3, 2.25, 1.5)} !important`,
+    // TODO: add correct paddings for Search TextField
+    // padding: `${theme.spacing(2.25, 1.75)} !important`,
   },
 });
 

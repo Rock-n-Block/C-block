@@ -6,6 +6,10 @@ import {
   COLOR_GREY_2,
 } from 'theme/colors';
 
+/**
+ * @param justifyContent default 'center'
+ * @param alignItems default 'center'
+ */
 export const flexHelper = <T extends object = {}>(justifyContent = 'center', alignItems = 'center'): CSSProperties | CreateCSSProperties<T> => ({
   display: 'flex',
   justifyContent,
