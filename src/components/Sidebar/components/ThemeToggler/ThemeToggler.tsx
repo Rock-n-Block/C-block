@@ -1,16 +1,13 @@
 import React, { useCallback, VFC } from 'react';
-
-import {
-  Box, Switch, Typography,
-} from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { Box, Switch, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { MoonIcon, SunIcon } from 'theme/icons';
-import { useDispatch } from 'react-redux';
 import { toggleTheme } from 'store/user/reducer';
+import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
-import userSelector from 'store/user/selectors';
 import { useStyles } from './ThemeToggler.styles';
 
 export interface ThemeTogglerProps {
@@ -20,7 +17,9 @@ export interface ThemeTogglerProps {
 export const ThemeToggler: VFC<ThemeTogglerProps> = ({ className }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { isLight } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isLight } = useShallowSelector<State, UserState>(
+    userSelector.getUser,
+  );
 
   const changeTheme = useCallback(() => {
     dispatch(toggleTheme());
@@ -28,8 +27,10 @@ export const ThemeToggler: VFC<ThemeTogglerProps> = ({ className }) => {
 
   return (
     <Box className={clsx(className, classes.root)}>
-      {!isLight ? <MoonIcon /> : <SunIcon />}
-      <Typography>{`${isLight ? 'Light' : 'Dark'} Mode`}</Typography>
+      <Box className={classes.leftSide}>
+        {!isLight ? <MoonIcon /> : <SunIcon />}
+        <Typography className={classes.text}>{`${isLight ? 'Light' : 'Dark'} Mode`}</Typography>
+      </Box>
       <Switch size="small" checked={isLight} onClick={changeTheme} />
     </Box>
   );

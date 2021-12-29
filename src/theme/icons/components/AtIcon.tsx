@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { COLOR_BLACK_4 } from 'theme/colors';
+
 import { IconProps } from '../icons.types';
 
 import { BaseSVGIcon } from './BaseSVGIcon';
@@ -11,7 +13,7 @@ export const AtIcon: React.FC<IconProps> = (props) => (
     width={size}
     height={size}
     viewBox={`0 0 ${size} ${size}`}
-    fill="#64656A"
+    fill={COLOR_BLACK_4}
     {...props}
   >
     <path

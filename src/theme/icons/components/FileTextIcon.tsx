@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { COLOR_BLACK_4 } from 'theme/colors';
+
 import { IconProps } from '../icons.types';
 
 import { BaseSVGIcon } from './BaseSVGIcon';
@@ -10,7 +12,7 @@ export const FileTextIcon: React.FC<IconProps> = (props) => (
   <BaseSVGIcon
     width={size}
     height={size}
-    fill="#64656A"
+    fill={COLOR_BLACK_4}
     viewBox={`0 0 ${size} ${size}`}
     {...props}
   >
