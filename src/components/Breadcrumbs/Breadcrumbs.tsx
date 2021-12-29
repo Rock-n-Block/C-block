@@ -23,7 +23,7 @@ export const Breadcrumbs: VFC<BreadcrumbsProps> = ({ className, paths }) => {
       className={clsx(className)}
     >
       <ul className={classes.breadcrumbsContainer}>
-        {paths.length > 1 && paths.map(({ label, path }, index) => (
+        {paths.map(({ label, path }, index) => (
           <li key={path} className={classes.breadcrumb}>
             <NavLink
               className={index === paths.length - 1 ?

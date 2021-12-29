@@ -33,6 +33,7 @@ const RoutesContainer = () => (
       path={routes['crowdsale-contract']['preview-contract'].root}
       element={<CrowdsaleContractPreview />}
     />
+
     <Route
       path={routes['wedding-contract'].root}
       element={<WeddingContract />}
@@ -41,6 +42,7 @@ const RoutesContainer = () => (
       path={routes['wedding-contract']['preview-contract'].root}
       element={<WeddingContractPreview />}
     />
+
     <Route
       path={routes['lostkey-contract'].root}
       element={<LostKeyContract />}
@@ -49,6 +51,7 @@ const RoutesContainer = () => (
       path={routes['lostkey-contract']['preview-contract'].root}
       element={<LostKeyContractPreview />}
     />
+
     <Route
       path={routes['will-contract'].root}
       element={<WillContract />}
@@ -57,6 +60,7 @@ const RoutesContainer = () => (
       path={routes['will-contract']['preview-contract'].root}
       element={<WillContractPreview />}
     />
+
     <Route
       path={routes['my-contracts'].root}
       element={<MyContracts />}
