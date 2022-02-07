@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key,no-param-reassign */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box, Button,
   Container, Grid, IconButton, TextField, Typography,
@@ -12,7 +12,7 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import { SetUpModal } from 'components';
-import { contractsCards } from './MyContracts.helpers';
+import { contractsCards, TContractButtonsTypes } from './MyContracts.helpers';
 import { useStyles } from './MyContracts.styles';
 
 export const MyContracts = () => {
@@ -28,32 +28,43 @@ export const MyContracts = () => {
     setIsSetUpModalOpen(true);
   }, []);
 
-  const buttonClickHandler = useCallback((contractKey, type) => {
-    if (type === ('requestDivorce')) {
-      const newState = cards.map((card, index) => {
-        if (+contractKey === index) {
-          card.isRequestBlockActive = !card.isRequestBlockActive;
-        }
-        return card;
-      });
-      setCards(newState);
+  const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
+    switch (type) {
+      case 'requestDivorce': {
+        const newState = cards.map((card, index) => {
+          if (+contractKey === index) {
+            card.isRequestBlockActive = !card.isRequestBlockActive;
+          }
+          return card;
+        });
+        setCards(newState);
+        return;
+      }
+      case 'setUp': {
+        openSetUpModal();
+        break;
+      }
+      default: {
+        break;
+      }
     }
-    if (type === ('setUp')) {
-      openSetUpModal();
-    }
+  }, [cards, openSetUpModal]);
+
+  const searchHandler = useCallback((value: string) => {
+    setSearchValue(value);
   }, []);
 
-  const searchHandler = useCallback((value) => {
-    setSearchValue(value);
-    const newState = cards.filter(({ contractName }) => {
-      if (debouncedSearchValue) {
+  useEffect(() => {
+    if (!debouncedSearchValue) {
+      setFilteredCards(cards);
+    } else {
+      const newFilteredCards = cards.filter(({ contractName }) => {
         const isContractNameInSearch = contractName.toLowerCase().includes(debouncedSearchValue.toLowerCase());
-        if (!isContractNameInSearch) return false;
-      } return true;
-    });
-    if (!debouncedSearchValue) setFilteredCards(cards);
-    setFilteredCards([...newState]);
-  }, [searchValue, debouncedSearchValue]);
+        return isContractNameInSearch;
+      });
+      setFilteredCards(newFilteredCards);
+    }
+  }, [cards, debouncedSearchValue]);
 
   return (
     <Container>
@@ -106,11 +117,11 @@ export const MyContracts = () => {
                   type, title,
                 }, index) => (
                   <Button
-                    onClick={() => buttonClickHandler(contractKey, type)}
+                    key={`${type}_${index}`}
                     className={classes.button}
                     value={type}
-                    key={`${type}_${index}`}
                     variant="outlined"
+                    onClick={() => buttonClickHandler(contractKey, type)}
                   >{title}
                   </Button>
                 ))}

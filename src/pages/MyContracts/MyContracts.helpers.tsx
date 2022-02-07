@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ContractToken, CrowdsaleIcon, WeddingRingIcon, WillContract,
+  ContractToken as ContractTokenIcon, CrowdsaleIcon, WeddingRingIcon, WillContract,
 } from 'theme/icons';
 import { formattedDate } from 'utils';
 
@@ -14,8 +14,10 @@ interface ContractsCardsI {
   isRequestBlockActive?: boolean;
 }
 
+export type TContractButtonsTypes = 'requestDivorce' | 'setUp' | 'viewContract' | 'confirmLiveStatus' | 'requestWithdrawal';
+
 interface ContractButtonsI {
-  type: string;
+  type: TContractButtonsTypes;
   title: string;
 }
 
@@ -29,7 +31,7 @@ export const contractsCards: ContractCardsT = [
     contractKey: '0',
     contractDate: currentDate,
     contractType: 'Token contract',
-    contractLogo: <WeddingRingIcon />,
+    contractLogo: <ContractTokenIcon />,
     contractName: 'Name contract',
     isRequestBlockActive: false,
     contractButtons: [
@@ -43,7 +45,7 @@ export const contractsCards: ContractCardsT = [
     contractKey: '1',
     contractDate: currentDate,
     contractType: 'Wedding contract',
-    contractLogo: <ContractToken />,
+    contractLogo: <WeddingRingIcon />,
     contractName: 'Wedding contract',
     isRequestBlockActive: false,
     contractButtons: [
