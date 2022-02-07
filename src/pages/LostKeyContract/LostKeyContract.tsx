@@ -29,7 +29,7 @@ import {
   lostKeyContractDynamicFormInitialData,
   setLostKeyContractForm,
 } from 'store/contractForms/reducer';
-import { routes } from 'appConstants';
+import { routes, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
 import {
   validationSchema,
@@ -41,7 +41,6 @@ import {
 } from './LostKeyContract.helpers';
 import { useStyles } from './LostKeyContract.styles';
 
-const RESERVED_ADDRESSES = 4; // supported only 4 tokens as a reserved address
 const MAX_RESERVES_PERCENTS = 100;
 
 const getUnallocatedResidue = (
@@ -286,7 +285,7 @@ export const LostKeyContract: FC = () => {
                         </RemovableContractsFormBlock>
                         {i === values.reservesConfigs.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                          {i + 1 < RESERVED_ADDRESSES && (
+                          {i + 1 < TOKEN_ADDRESSES_MAX_COUNT && (
                           <Button
                             variant="outlined"
                             endIcon={<PlusIcon />}
