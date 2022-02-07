@@ -3,20 +3,21 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 
 import { getFormatMedia } from 'theme/utils';
 
-export const useStyles = makeStyles((theme: Theme) => {
+export const useStyles = makeStyles<Theme, { hasTitle: boolean }>((theme: Theme) => {
   const formatMedia = getFormatMedia(theme);
 
   return createStyles({
     root: {
-      [formatMedia.BREAKPOINT_TABLET]: {
-      },
+      [formatMedia.BREAKPOINT_TABLET]: {},
     },
-    modalTitle: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      minWidth: 300,
-      marginBottom: theme.spacing(4),
+    modalTitle: ({ hasTitle }) => {
+      const baseStyles = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        minWidth: 300,
+      };
+      return hasTitle ? { ...baseStyles, marginBottom: theme.spacing(4) } : baseStyles;
     },
   });
 });
