@@ -256,6 +256,9 @@ export const LostKeyContract: FC = () => {
                                       const parsedValue = Array.isArray(newValue)
                                         ? newValue[0]
                                         : newValue;
+
+                                      if (parsedValue === +reserves.percents) return;
+
                                       const maxValue = getMaxSliderValue(
                                         +reserves.percents,
                                         values.reservesConfigs.map((item) => +item.percents),
