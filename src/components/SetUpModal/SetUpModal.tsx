@@ -40,7 +40,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
   } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   const title = useMemo(() => (
-    <Box className={classes.setUpInfoTitle}>
+    <Box className={classes.modalTitle}>
       <Typography
         align="left"
         className={clsx(isLight ? '' : 'acidGreen gradient')}
@@ -54,8 +54,9 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
   return (
     <Modal open={open} onClose={closeSetUpModal} title={title} className={clsx(classes.root)}>
       <Typography
+        className={clsx(classes.desc, 'l')}
+        variant="body1"
         align="left"
-        className={classes.desc}
       >
         Please determine the addresses of tokens that
         need to be transferred and give approve to the
@@ -63,7 +64,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
       </Typography>
       <Box>
         {addresses.map(({ address, id }) => (
-          <Box key={id} className={classes.setUpInfoInput}>
+          <Box key={id} className={classes.inputContainer}>
             <TextField value={address} label="Token address" />
             <Button className={clsx(classes.button, classes.approveButton)} variant="outlined">Approve</Button>
           </Box>
@@ -76,7 +77,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
           Add address
         </Button>
       </Box>
-      <Box className={classes.setUpControls}>
+      <Box className={classes.modalControls}>
         <Button
           size="large"
           type="submit"

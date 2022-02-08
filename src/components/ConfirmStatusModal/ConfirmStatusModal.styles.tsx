@@ -9,8 +9,7 @@ export const useStyles = makeStyles((theme: Theme) => {
 
   return createStyles({
     root: {
-      [formatMedia.BREAKPOINT_TABLET]: {
-      },
+      [formatMedia.BREAKPOINT_TABLET]: {},
     },
     modalTitle: {
       ...flexHelper('flex-start', 'flex-start'),

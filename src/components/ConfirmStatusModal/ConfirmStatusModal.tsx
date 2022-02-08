@@ -52,9 +52,9 @@ export const ConfirmStatusModal: VFC<Props> = ({
   return (
     <Modal className={clsx(classes.root)} open={open} onClose={closeModal} title={title}>
       <Typography
-        align="left"
         className={clsx(classes.desc, 'l')}
         variant="body1"
+        align="left"
       >
         Confirm {statusType} status before {dateAsString} otherwise your funds will be transferred to reserve address
       </Typography>

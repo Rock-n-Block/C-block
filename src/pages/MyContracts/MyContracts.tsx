@@ -12,7 +12,9 @@ import { NetTag } from 'containers/Header/components/NetTag';
 import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
-import { SetUpModal, ConfirmStatusModal } from 'components';
+import {
+  SetUpModal, ConfirmStatusModal, SendTransactionModal,
+} from 'components';
 import { CloseCircleIcon, CheckmarkCircleIcon, ClockIcon } from 'theme/icons';
 import {
   contractButtons as contractButtonsHelper, contractsCards, IContractsCard, TContractButtonsTypes,
@@ -83,6 +85,7 @@ export const MyContracts: FC = () => {
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState<boolean>(false);
   const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState<boolean>(false);
   const [isConfirmActiveStatusModalOpen, setIsConfirmActiveStatusModalOpen] = useState<boolean>(false);
+  const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const classes = useStyles();
   const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
@@ -93,6 +96,7 @@ export const MyContracts: FC = () => {
   }, []);
   const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
   const openConfirmActiveStatusModal = useCallback(() => setIsConfirmActiveStatusModalOpen(true), []);
+  const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
 
   const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
@@ -114,19 +118,23 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'requestDivorce': {
-        const newState = cards.map((card, index) => {
-          if (+contractKey === index) {
-            return {
-              ...card,
-              additionalContentRenderType: 'weddingRequestDivorce',
-              contractButtons: [
-                contractButtonsHelper.viewContract,
-              ],
-            } as typeof card;
-          }
-          return card;
-        });
-        setCards(newState);
+        // TODO: remove this due to only for development purpose
+        setTimeout(() => {
+          const newState = cards.map((card, index) => {
+            if (+contractKey === index) {
+              return {
+                ...card,
+                additionalContentRenderType: 'weddingRequestDivorce',
+                contractButtons: [
+                  contractButtonsHelper.viewContract,
+                ],
+              } as typeof card;
+            }
+            return card;
+          });
+          setCards(newState);
+        }, 5000);
+        openSendTransactionModal();
         break;
       }
       case 'divorceApprove': {
@@ -178,7 +186,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [cards, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openSetUpModal]);
+  }, [cards, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openSendTransactionModal, openSetUpModal]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
@@ -222,6 +230,10 @@ export const MyContracts: FC = () => {
 
   return (
     <Container>
+      <SendTransactionModal
+        open={isSendTransactionModalOpen}
+        setIsModalOpen={setIsSendTransactionModalOpen}
+      />
       <SetUpModal open={isSetUpModalOpen} setIsSetUpModalOpen={setIsSetUpModalOpen} />
       <ConfirmStatusModal
         open={isConfirmLiveStatusModalOpen}

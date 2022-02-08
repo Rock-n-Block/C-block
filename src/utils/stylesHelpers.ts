@@ -26,3 +26,16 @@ export const getBorderStyle = (theme: Theme) => `1px solid ${
 export const separator = (theme: Theme, position: 'bottom' | 'top' = 'bottom') => ({
   [`border${position[0].toUpperCase()}${position.slice(1)}`]: getBorderStyle(theme),
 });
+
+export const animationsHelper = {
+  rotating: {
+    '@keyframes rotating': {
+      from: {
+        transform: 'rotate(0deg)',
+      },
+      to: {
+        transform: 'rotate(360deg)',
+      },
+    },
+  },
+};
