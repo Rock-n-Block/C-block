@@ -1,5 +1,6 @@
-/* eslint-disable react/no-array-index-key,no-param-reassign */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  FC, useCallback, useEffect, useState,
+} from 'react';
 import {
   Box, Button,
   Container, Grid, IconButton, TextField, Typography,
@@ -12,10 +13,71 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import { SetUpModal } from 'components';
-import { contractsCards, TContractButtonsTypes } from './MyContracts.helpers';
+import { CloseCircleIcon, CheckmarkCircleIcon, ClockIcon } from 'theme/icons';
+import {
+  contractButtons as contractButtonsHelper, contractsCards, IContractsCard, TContractButtonsTypes,
+} from './MyContracts.helpers';
 import { useStyles } from './MyContracts.styles';
 
-export const MyContracts = () => {
+const ConfirmationTimeBlock: FC<{ className?: string }> = ({ className }) => {
+  const classes = useStyles();
+  return (
+    <Box className={className}>
+      <Typography className={classes.contractActionText}>Сonfirmation time</Typography>
+      <Box className={classes.confirmationTimeBlockContent}>
+        <ClockIcon />
+        <Typography className={clsx('acidGreen')} variant="h2" component="div">23d 24h 43m</Typography>
+      </Box>
+    </Box>
+  );
+};
+
+const AdditionalContent: FC = ({ children }) => {
+  const classes = useStyles();
+  return (
+    <Box className={classes.contractActionBlock}>
+      {children}
+    </Box>
+  );
+};
+
+const ApproveRejectBox: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
+  const classes = useStyles();
+  return (
+    <Box>
+      <Button className={clsx(classes.button, classes.actionButton)} variant="outlined" endIcon={<CheckmarkCircleIcon />} onClick={onApprove}>Approve</Button>
+      <Button className={clsx(classes.button, classes.actionButton)} variant="outlined" endIcon={<CloseCircleIcon color="error" />} onClick={onReject}>Reject</Button>
+    </Box>
+  );
+};
+
+const AdditionalContentRequestWithdrawal: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
+  const classes = useStyles();
+  return (
+    <AdditionalContent>
+      <Box className={classes.contractActionBlockInner}>
+        <Typography className={classes.contractActionText}>Request withdrawal</Typography>
+        <ApproveRejectBox onApprove={onApprove} onReject={onReject} />
+      </Box>
+      <ConfirmationTimeBlock className={classes.contractActionBlockInner} />
+    </AdditionalContent>
+  );
+};
+
+const AdditionalContentRequestDivorce: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
+  const classes = useStyles();
+  return (
+    <AdditionalContent>
+      <Box className={classes.contractActionBlockInner}>
+        <Typography className={classes.contractActionText}>Request divorce</Typography>
+        <ApproveRejectBox onApprove={onApprove} onReject={onReject} />
+      </Box>
+      <ConfirmationTimeBlock className={classes.contractActionBlockInner} />
+    </AdditionalContent>
+  );
+};
+
+export const MyContracts: FC = () => {
   const [cards, setCards] = useState(contractsCards);
   const [filteredCards, setFilteredCards] = useState(contractsCards);
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState<boolean>(false);
@@ -30,15 +92,71 @@ export const MyContracts = () => {
 
   const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
-      case 'requestDivorce': {
+      case 'requestWithdrawal': {
         const newState = cards.map((card, index) => {
           if (+contractKey === index) {
-            card.isRequestBlockActive = !card.isRequestBlockActive;
+            return {
+              ...card,
+              additionalContentRenderType: 'weddingRequestWithdrawal',
+              contractButtons: [
+                contractButtonsHelper.viewContract,
+                contractButtonsHelper.requestDivorce,
+              ],
+            } as typeof card;
           }
           return card;
         });
         setCards(newState);
-        return;
+        break;
+      }
+      case 'requestDivorce': {
+        const newState = cards.map((card, index) => {
+          if (+contractKey === index) {
+            return {
+              ...card,
+              additionalContentRenderType: 'weddingRequestDivorce',
+              contractButtons: [
+                contractButtonsHelper.viewContract,
+              ],
+            } as typeof card;
+          }
+          return card;
+        });
+        setCards(newState);
+        break;
+      }
+      case 'divorceApprove': {
+        const newState = cards.map((card, index) => {
+          if (+contractKey === index) {
+            return {
+              ...card,
+              additionalContentRenderType: 'weddingSuccessfulDivorce',
+              contractButtons: [
+                contractButtonsHelper.viewContract,
+                contractButtonsHelper.getFunds,
+              ],
+            } as typeof card;
+          }
+          return card;
+        });
+        setCards(newState);
+        break;
+      }
+      case 'withdrawalApprove': {
+        const newState = cards.map((card, index) => {
+          if (+contractKey === index) {
+            return {
+              ...card,
+              additionalContentRenderType: 'weddingSuccessfulWithdrawal',
+              contractButtons: [
+                contractButtonsHelper.viewContract,
+              ],
+            } as typeof card;
+          }
+          return card;
+        });
+        setCards(newState);
+        break;
       }
       case 'setUp': {
         openSetUpModal();
@@ -49,6 +167,30 @@ export const MyContracts = () => {
       }
     }
   }, [cards, openSetUpModal]);
+
+  const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
+    switch (additionalContentRenderType) {
+      case 'weddingRequestDivorce': return <AdditionalContentRequestDivorce onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')} onReject={() => {}} />;
+      case 'weddingRequestWithdrawal': return <AdditionalContentRequestWithdrawal onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')} onReject={() => {}} />;
+      case 'weddingSuccessfulDivorce': return (
+        <AdditionalContent>
+          <Box className={classes.successfulAdditionalContent}>
+            <CheckmarkCircleIcon />
+            <Typography className={clsx(classes.successfulAdditionalContentText, 'l')} variant="body1">There was a successful divorce</Typography>
+          </Box>
+        </AdditionalContent>
+      );
+      case 'weddingSuccessfulWithdrawal': return (
+        <AdditionalContent>
+          <Box className={classes.successfulAdditionalContent}>
+            <CheckmarkCircleIcon />
+            <Typography className={clsx(classes.successfulAdditionalContentText, 'l')} variant="body1">There was a successful withdrawal</Typography>
+          </Box>
+        </AdditionalContent>
+      );
+      default: return null;
+    }
+  }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText]);
 
   const searchHandler = useCallback((value: string) => {
     setSearchValue(value);
@@ -85,9 +227,8 @@ export const MyContracts = () => {
           contractType,
           contractLogo,
           contractButtons,
-          isRequestBlockActive,
           contractKey,
-        }) => (
+        }, cardIndex) => (
           <Box
             key={contractKey}
             className={classes.contractBlock}
@@ -102,21 +243,16 @@ export const MyContracts = () => {
               <IconButton>{contractLogo}</IconButton>
               <Typography variant="h3">{contractName}</Typography>
             </Box>
-            {isRequestBlockActive && (
-            <Box className={classes.contractActionBlock}>
-              <Typography className={classes.contractActionText}>Request divorce</Typography>
-              <Box>
-                <Button className={clsx(classes.button, classes.actionButton)} variant="outlined">Approve divorce</Button>
-                <Button className={clsx(classes.button, classes.actionButton)} variant="outlined">Reject divorce</Button>
-              </Box>
-            </Box>
-            )}
+            {
+              renderAdditionalContent(filteredCards[cardIndex])
+            }
             <Box className={classes.contractBottom}>
               <Box className={classes.contractButtons}>
                 {contractButtons.map(({
                   type, title,
                 }, index) => (
                   <Button
+                    // eslint-disable-next-line react/no-array-index-key
                     key={`${type}_${index}`}
                     className={classes.button}
                     value={type}

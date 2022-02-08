@@ -31,3 +31,5 @@ export * from './WalletIcon';
 export * from './ErrorBigIcon';
 export * from './SearchIcon';
 export * from './SuccessBigIcon';
+export * from './ClockIcon';
+export * from './CheckmarkCircleIcon';
