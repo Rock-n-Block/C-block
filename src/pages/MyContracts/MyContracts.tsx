@@ -12,7 +12,7 @@ import { NetTag } from 'containers/Header/components/NetTag';
 import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
-import { SetUpModal } from 'components';
+import { SetUpModal, ConfirmStatusModal } from 'components';
 import { CloseCircleIcon, CheckmarkCircleIcon, ClockIcon } from 'theme/icons';
 import {
   contractButtons as contractButtonsHelper, contractsCards, IContractsCard, TContractButtonsTypes,
@@ -81,6 +81,8 @@ export const MyContracts: FC = () => {
   const [cards, setCards] = useState(contractsCards);
   const [filteredCards, setFilteredCards] = useState(contractsCards);
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState<boolean>(false);
+  const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState<boolean>(false);
+  const [isConfirmActiveStatusModalOpen, setIsConfirmActiveStatusModalOpen] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const classes = useStyles();
   const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
@@ -89,6 +91,8 @@ export const MyContracts: FC = () => {
   const openSetUpModal = useCallback(() => {
     setIsSetUpModalOpen(true);
   }, []);
+  const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
+  const openConfirmActiveStatusModal = useCallback(() => setIsConfirmActiveStatusModalOpen(true), []);
 
   const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
@@ -162,11 +166,19 @@ export const MyContracts: FC = () => {
         openSetUpModal();
         break;
       }
+      case 'confirmLiveStatus': {
+        openConfirmLiveStatusModal();
+        break;
+      }
+      case 'confirmActiveStatus': {
+        openConfirmActiveStatusModal();
+        break;
+      }
       default: {
         break;
       }
     }
-  }, [cards, openSetUpModal]);
+  }, [cards, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openSetUpModal]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
@@ -211,6 +223,18 @@ export const MyContracts: FC = () => {
   return (
     <Container>
       <SetUpModal open={isSetUpModalOpen} setIsSetUpModalOpen={setIsSetUpModalOpen} />
+      <ConfirmStatusModal
+        open={isConfirmLiveStatusModalOpen}
+        setIsModalOpen={setIsConfirmLiveStatusModalOpen}
+        date={new Date()}
+        statusType="live"
+      />
+      <ConfirmStatusModal
+        open={isConfirmActiveStatusModalOpen}
+        setIsModalOpen={setIsConfirmActiveStatusModalOpen}
+        date={new Date()}
+        statusType="active"
+      />
       <Grid container className={classes.root}>
         <TextField
           id="input-with-icon-textfield"
