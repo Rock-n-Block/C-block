@@ -43,7 +43,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
     <Box className={classes.setUpInfoTitle}>
       <Typography
         align="left"
-        className={clsx(isLight ? '' : 'acidGreen')}
+        className={clsx(isLight ? '' : 'acidGreen gradient')}
         variant="h2"
       >
         Set up

@@ -1,6 +1,8 @@
 import { TypographyOptions } from '@material-ui/core/styles/createTypography';
 
-import { COLOR_AKZ, COLOR_BLACK, COLOR_BLACK_4 } from 'theme/colors';
+import {
+  COLOR_ACID_GREEN, COLOR_AKZ, COLOR_BLACK, COLOR_BLACK_4,
+} from 'theme/colors';
 
 // eslint-disable-next-line no-shadow
 export enum FontWeights {
@@ -44,9 +46,14 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       textTransform: 'capitalize',
 
       '&.acidGreen': {
-        background: COLOR_AKZ,
+        background: COLOR_ACID_GREEN,
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
+        '&.gradient': {
+          background: COLOR_AKZ,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        },
       },
     },
     h3: {

@@ -28,7 +28,7 @@ export const DisclaimerModal: VFC<DisclaimerModalProps> = ({
   const title = useMemo(() => (
     <Typography
       align="left"
-      className={isLight ? '' : 'acidGreen'}
+      className={isLight ? '' : 'acidGreen gradient'}
       variant="h2"
     >
       Disclaimer
