@@ -1,5 +1,5 @@
 import React, {
-  FC, useCallback, useEffect, useState,
+  FC, useCallback, useEffect, useState, ComponentProps,
 } from 'react';
 import {
   Box, Button,
@@ -13,7 +13,7 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import {
-  SetUpModal, ConfirmStatusModal, SendTransactionModal,
+  SetUpModal, ConfirmStatusModal, SendTransactionModal, RequestWithdrawalModal,
 } from 'components';
 import { CloseCircleIcon, CheckmarkCircleIcon, ClockIcon } from 'theme/icons';
 import {
@@ -82,39 +82,49 @@ const AdditionalContentRequestDivorce: FC<{ onApprove: () => void; onReject: () 
 export const MyContracts: FC = () => {
   const [cards, setCards] = useState(contractsCards);
   const [filteredCards, setFilteredCards] = useState(contractsCards);
+
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState<boolean>(false);
   const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState<boolean>(false);
   const [isConfirmActiveStatusModalOpen, setIsConfirmActiveStatusModalOpen] = useState<boolean>(false);
   const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState<boolean>(false);
+  const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState<boolean>(false);
+
   const [searchValue, setSearchValue] = useState<string>('');
   const classes = useStyles();
   const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
-  const openSetUpModal = useCallback(() => {
-    setIsSetUpModalOpen(true);
-  }, []);
+  const openSetUpModal = useCallback(() => setIsSetUpModalOpen(true), []);
   const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
   const openConfirmActiveStatusModal = useCallback(() => setIsConfirmActiveStatusModalOpen(true), []);
   const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
+  const openRequestWithdrawalModal = useCallback(() => setIsRequestWithdrawalModalOpen(true), []);
+
+  const [withdrawalActions, setWithdrawalActions] = useState<ComponentProps<typeof RequestWithdrawalModal> | {}>({});
 
   const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
       case 'requestWithdrawal': {
-        const newState = cards.map((card, index) => {
-          if (+contractKey === index) {
-            return {
-              ...card,
-              additionalContentRenderType: 'weddingRequestWithdrawal',
-              contractButtons: [
-                contractButtonsHelper.viewContract,
-                contractButtonsHelper.requestDivorce,
-              ],
-            } as typeof card;
-          }
-          return card;
+        openRequestWithdrawalModal();
+        setWithdrawalActions({
+          ...withdrawalActions,
+          onAccept: () => {
+            const newState = cards.map((card, index) => {
+              if (+contractKey === index) {
+                return {
+                  ...card,
+                  additionalContentRenderType: 'weddingRequestWithdrawal',
+                  contractButtons: [
+                    contractButtonsHelper.viewContract,
+                    contractButtonsHelper.requestDivorce,
+                  ],
+                } as typeof card;
+              }
+              return card;
+            });
+            setCards(newState);
+          },
         });
-        setCards(newState);
         break;
       }
       case 'requestDivorce': {
@@ -186,7 +196,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [cards, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openSendTransactionModal, openSetUpModal]);
+  }, [cards, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
@@ -230,11 +240,16 @@ export const MyContracts: FC = () => {
 
   return (
     <Container>
+      <RequestWithdrawalModal
+        open={isRequestWithdrawalModalOpen}
+        setIsModalOpen={setIsRequestWithdrawalModalOpen}
+        {...withdrawalActions}
+      />
       <SendTransactionModal
         open={isSendTransactionModalOpen}
         setIsModalOpen={setIsSendTransactionModalOpen}
       />
-      <SetUpModal open={isSetUpModalOpen} setIsSetUpModalOpen={setIsSetUpModalOpen} />
+      <SetUpModal open={isSetUpModalOpen} setIsModalOpen={setIsSetUpModalOpen} />
       <ConfirmStatusModal
         open={isConfirmLiveStatusModalOpen}
         setIsModalOpen={setIsConfirmLiveStatusModalOpen}

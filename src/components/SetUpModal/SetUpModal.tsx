@@ -14,15 +14,15 @@ import { useStyles } from './SetUpModal.styles';
 import { PlusIcon } from '../../theme/icons';
 import { addressesArr, AddressesT } from './SetUpModal.helpers';
 
-interface PaymentModalProps {
+interface Props {
+  className?: string;
   open?: boolean;
+  setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
   onAccept?: () => void;
-  className?: string;
-  setIsSetUpModalOpen: (bool) => void;
 }
 
-export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }) => {
+export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
   const classes = useStyles();
   const [addresses, setAddresses] = useState<AddressesT>(addressesArr);
 
@@ -30,8 +30,8 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
     setAddresses([...addresses, { address: '', id: addresses[addresses.length - 1].id + 1 }]);
   }, [addresses]);
 
-  const closeSetUpModal = useCallback(() => {
-    setIsSetUpModalOpen(false);
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
     setAddresses([{ address: '', id: 0 }]);
   }, []);
 
@@ -52,7 +52,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
   ), []);
 
   return (
-    <Modal open={open} onClose={closeSetUpModal} title={title} className={clsx(classes.root)}>
+    <Modal className={clsx(classes.root)} open={open} onClose={closeModal} title={title}>
       <Typography
         className={clsx(classes.desc, 'l')}
         variant="body1"
@@ -79,12 +79,12 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
       </Box>
       <Box className={classes.modalControls}>
         <Button
+          className={clsx(classes.saveButton, classes.button)}
           size="large"
           type="submit"
           color="secondary"
           variant="outlined"
-          className={clsx(classes.saveButton, classes.button)}
-          onClick={closeSetUpModal}
+          onClick={closeModal}
         >
           Save
         </Button>

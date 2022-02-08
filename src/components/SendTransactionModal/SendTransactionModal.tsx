@@ -8,7 +8,7 @@ import { useStyles } from './SendTransactionModal.styles';
 interface Props {
   className?: string;
   open?: boolean;
-  setIsModalOpen: (bool: boolean) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
   onAccept?: () => void;
 }

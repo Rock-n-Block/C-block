@@ -17,7 +17,7 @@ interface Props {
   open?: boolean;
   statusType: 'active' | 'live';
   date: number | Date; // unix or Date
-  setIsModalOpen: (bool: boolean) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
   onAccept?: () => void;
 }
