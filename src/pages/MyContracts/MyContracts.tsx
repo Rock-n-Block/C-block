@@ -13,7 +13,7 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import {
-  SetUpModal, ConfirmStatusModal, SendTransactionModal, RequestWithdrawalModal,
+  SetUpModal, ConfirmStatusModal, SendTransactionModal, RequestWithdrawalModal, GetFundsModal,
 } from 'components';
 import { CloseCircleIcon, CheckmarkCircleIcon, ClockIcon } from 'theme/icons';
 import {
@@ -88,6 +88,7 @@ export const MyContracts: FC = () => {
   const [isConfirmActiveStatusModalOpen, setIsConfirmActiveStatusModalOpen] = useState<boolean>(false);
   const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState<boolean>(false);
   const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState<boolean>(false);
+  const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState<boolean>(false);
 
   const [searchValue, setSearchValue] = useState<string>('');
   const classes = useStyles();
@@ -99,8 +100,10 @@ export const MyContracts: FC = () => {
   const openConfirmActiveStatusModal = useCallback(() => setIsConfirmActiveStatusModalOpen(true), []);
   const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
   const openRequestWithdrawalModal = useCallback(() => setIsRequestWithdrawalModalOpen(true), []);
+  const openGetFundsModal = useCallback(() => setIsGetFundsModalOpen(true), []);
 
   const [withdrawalActions, setWithdrawalActions] = useState<ComponentProps<typeof RequestWithdrawalModal> | {}>({});
+  const [getFundsActions, setGetFundsActions] = useState<ComponentProps<typeof GetFundsModal> | {}>({});
 
   const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
@@ -192,11 +195,21 @@ export const MyContracts: FC = () => {
         openConfirmActiveStatusModal();
         break;
       }
+      case 'getFunds': {
+        openGetFundsModal();
+        setGetFundsActions({
+          ...getFundsActions,
+          onAccept: () => {
+            openSendTransactionModal();
+          },
+        });
+        break;
+      }
       default: {
         break;
       }
     }
-  }, [cards, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal]);
+  }, [cards, getFundsActions, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
@@ -240,14 +253,19 @@ export const MyContracts: FC = () => {
 
   return (
     <Container>
+      <SendTransactionModal
+        open={isSendTransactionModalOpen}
+        setIsModalOpen={setIsSendTransactionModalOpen}
+      />
+      <GetFundsModal
+        open={isGetFundsModalOpen}
+        setIsModalOpen={setIsGetFundsModalOpen}
+        {...getFundsActions}
+      />
       <RequestWithdrawalModal
         open={isRequestWithdrawalModalOpen}
         setIsModalOpen={setIsRequestWithdrawalModalOpen}
         {...withdrawalActions}
-      />
-      <SendTransactionModal
-        open={isSendTransactionModalOpen}
-        setIsModalOpen={setIsSendTransactionModalOpen}
       />
       <SetUpModal open={isSetUpModalOpen} setIsModalOpen={setIsSetUpModalOpen} />
       <ConfirmStatusModal

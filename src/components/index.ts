@@ -20,3 +20,4 @@ export * from './RemovableContractsFormBlock';
 export * from './ConfirmStatusModal';
 export * from './SendTransactionModal';
 export * from './RequestWithdrawalModal';
+export * from './GetFundsModal';
