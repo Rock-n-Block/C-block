@@ -252,19 +252,19 @@ export const LostKeyContract: FC = () => {
                                     )}
                                     max={100}
                                     onBlur={handleBlur}
-                                    onChange={(_, newValue) => {
-                                      const parsedValue = Array.isArray(newValue)
-                                        ? newValue[0]
-                                        : newValue;
+                                    onChange={(_, newRawValue) => {
+                                      const newValue = Array.isArray(newRawValue)
+                                        ? newRawValue[0]
+                                        : newRawValue;
 
-                                      if (parsedValue === +reserves.percents) return;
+                                      if (newValue === +reserves.percents) return;
 
                                       const maxValue = getMaxSliderValue(
                                         +reserves.percents,
                                         values.reservesConfigs.map((item) => +item.percents),
                                       );
                                       handleChange(`reservesConfigs[${i}].percents`)(
-                                        `${parsedValue <= maxValue ? parsedValue : maxValue}`,
+                                        `${newValue <= maxValue ? newValue : maxValue}`,
                                       );
                                     }}
                                   />
