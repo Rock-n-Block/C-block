@@ -22,7 +22,7 @@ import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import {
-  ContractFormsState, State, ILostKeyContract, UserState,
+  State, ILostKeyContract, UserState,
 } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
@@ -56,9 +56,7 @@ export const LostKeyContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    lostKeyContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(contractFormsSelector.getLostKeyContract);
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
