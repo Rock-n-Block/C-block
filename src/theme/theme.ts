@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core';
+import { createTheme, Theme } from '@material-ui/core';
 import { getMuiButton, getMuiButtonDefaultProps } from './Button';
 import {
   COLOR_ACID_GREEN,
@@ -33,9 +33,48 @@ import {
 } from './TextField';
 import { getTypographyOptions } from './Typography';
 import { getMuiSlider, getMuiSliderDefaultProps } from './Slider/Slider.theme';
+import { getMuiTablePagination, getMuiTablePaginationDefaultProps } from './TablePagination/TablePagination.theme';
+import { getMuiTableCell, getMuiTableCellDefaultProps } from './TableCell/TableCell.theme';
+
+const getBaseTheme = (theme: Theme) => ({
+  props: {
+    MuiCssBaseline: getMuiCssBaselineDefaultProps(),
+    MuiLink: getMuiLinkDefaultProps(),
+    MuiButtonBase: { disableRipple: true },
+    MuiContainer: getMuiContainerDefaultProps(),
+    MuiGrid: getMuiGridDefaultProps(),
+    MuiTypography: getTypographyOptions({ color: COLOR_GREY_1 }),
+    MuiButton: getMuiButtonDefaultProps(),
+    MuiSwitch: getMuiSwitchDefaultProps(),
+    MuiDialog: getMuiDialogDefaultProps(),
+    MuiInputLabel: getMuiInputLabelDefaultProps(),
+    MuiTextField: getMuiTextFieldDefaultProps(),
+    MuiSlider: getMuiSliderDefaultProps(),
+    MuiTableCell: getMuiTableCellDefaultProps(),
+    MuiTablePagination: getMuiTablePaginationDefaultProps(),
+  },
+  overrides: {
+    MuiCssBaseline: getMuiCssBaseline(theme),
+    MuiLink: getMuiLinkOverride(theme),
+    MuiContainer: getMuiContainer(theme),
+    MuiGrid: getMuiGrid(theme),
+    MuiButton: getMuiButton(theme),
+    MuiIconButton: getMuiIconButton(theme),
+    MuiSwitch: getMuiSwitch(theme),
+    MuiDialog: getMuiDialogProps(theme),
+    MuiInputBase: getMuiInputBase(theme),
+    MuiOutlinedInput: getMuiOutlinedInput(theme),
+    MuiInputLabel: getMuiInputLabel(theme),
+    MuiTextField: getMuiTextField(),
+    MuiFormHelperText: getMuiFormHelperText(),
+    MuiSlider: getMuiSlider(),
+    MuiTableCell: getMuiTableCell(theme),
+    MuiTablePagination: getMuiTablePagination(),
+  },
+});
 
 // eslint-disable-next-line import/no-mutable-exports
-export let theme = createTheme({
+export let darkTheme = createTheme({
   palette: {
     type: 'dark',
     error: {
@@ -60,41 +99,9 @@ export let theme = createTheme({
   typography: getTypographyOptions({ color: COLOR_GREY_1 }),
   breakpoints: breakpointOptions,
   spacing: 8,
-
 });
 
-theme = createTheme(theme, {
-  props: {
-    MuiCssBaseline: getMuiCssBaselineDefaultProps(),
-    MuiLink: getMuiLinkDefaultProps(),
-    MuiButtonBase: { disableRipple: true },
-    MuiContainer: getMuiContainerDefaultProps(),
-    MuiGrid: getMuiGridDefaultProps(),
-    MuiTypography: getTypographyOptions({ color: COLOR_GREY_1 }),
-    MuiButton: getMuiButtonDefaultProps(),
-    MuiSwitch: getMuiSwitchDefaultProps(),
-    MuiDialog: getMuiDialogDefaultProps(),
-    MuiInputLabel: getMuiInputLabelDefaultProps(),
-    MuiTextField: getMuiTextFieldDefaultProps(),
-    MuiSlider: getMuiSliderDefaultProps(),
-  },
-  overrides: {
-    MuiCssBaseline: getMuiCssBaseline(theme),
-    MuiLink: getMuiLinkOverride(theme),
-    MuiContainer: getMuiContainer(theme),
-    MuiGrid: getMuiGrid(theme),
-    MuiButton: getMuiButton(theme),
-    MuiIconButton: getMuiIconButton(theme),
-    MuiSwitch: getMuiSwitch(theme),
-    MuiDialog: getMuiDialogProps(theme),
-    MuiInputBase: getMuiInputBase(theme),
-    MuiOutlinedInput: getMuiOutlinedInput(theme),
-    MuiInputLabel: getMuiInputLabel(theme),
-    MuiTextField: getMuiTextField(),
-    MuiFormHelperText: getMuiFormHelperText(),
-    MuiSlider: getMuiSlider(),
-  },
-});
+darkTheme = createTheme(darkTheme, getBaseTheme(darkTheme));
 // eslint-disable-next-line import/no-mutable-exports
 export let lightTheme = createTheme({
   palette: {
@@ -123,35 +130,4 @@ export let lightTheme = createTheme({
   spacing: 8,
 });
 
-lightTheme = createTheme(lightTheme, {
-  props: {
-    MuiCssBaseline: getMuiCssBaselineDefaultProps(),
-    MuiLink: getMuiLinkDefaultProps(),
-    MuiButtonBase: { disableRipple: true },
-    MuiContainer: getMuiContainerDefaultProps(),
-    MuiGrid: getMuiGridDefaultProps(),
-    MuiTypography: getTypographyOptions({ color: COLOR_GREY_1 }),
-    MuiButton: getMuiButtonDefaultProps(),
-    MuiSwitch: getMuiSwitchDefaultProps(),
-    MuiDialog: getMuiDialogDefaultProps(),
-    MuiInputLabel: getMuiInputLabelDefaultProps(),
-    MuiTextField: getMuiTextFieldDefaultProps(),
-    MuiSlider: getMuiSliderDefaultProps(),
-  },
-  overrides: {
-    MuiCssBaseline: getMuiCssBaseline(lightTheme),
-    MuiLink: getMuiLinkOverride(lightTheme),
-    MuiContainer: getMuiContainer(lightTheme),
-    MuiGrid: getMuiGrid(lightTheme),
-    MuiButton: getMuiButton(lightTheme),
-    MuiIconButton: getMuiIconButton(lightTheme),
-    MuiSwitch: getMuiSwitch(lightTheme),
-    MuiDialog: getMuiDialogProps(lightTheme),
-    MuiInputBase: getMuiInputBase(lightTheme),
-    MuiOutlinedInput: getMuiOutlinedInput(lightTheme),
-    MuiInputLabel: getMuiInputLabel(lightTheme),
-    MuiTextField: getMuiTextField(),
-    MuiFormHelperText: getMuiFormHelperText(),
-    MuiSlider: getMuiSlider(),
-  },
-});
+lightTheme = createTheme(lightTheme, getBaseTheme(lightTheme));

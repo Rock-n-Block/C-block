@@ -1,10 +1,9 @@
 import { makeStyles } from '@material-ui/core';
-import { createStyles } from '@material-ui/core/styles';
-import { theme } from 'theme';
+import { createStyles, Theme } from '@material-ui/core/styles';
 
 import { flexHelper } from 'utils';
 
-export const useStyles = makeStyles(() => createStyles({
+export const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     ...flexHelper('space-between'),
   },

@@ -2,7 +2,7 @@ import React from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import { BreakpointsProvider } from 'hooks/useBreakpoints';
-import { theme, lightTheme } from 'theme';
+import { darkTheme, lightTheme } from 'theme';
 import { Layout, Routes } from 'containers';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const { isLight } = useShallowSelector<State, UserState>(userSelector.getUser);
-  const selectedTheme = isLight ? lightTheme : theme;
+  const selectedTheme = isLight ? lightTheme : darkTheme;
 
   return (
     <ThemeProvider theme={selectedTheme}>
