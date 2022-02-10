@@ -10,6 +10,7 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import clsx from 'clsx';
 import { Modal } from 'components/Modal';
+import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { useStyles } from './SetUpModal.styles';
 import { PlusIcon } from '../../theme/icons';
 import { addressesArr, AddressesT } from './SetUpModal.helpers';
@@ -68,13 +69,18 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
             <Button className={clsx(classes.button, classes.approveButton)} variant="outlined">Approve</Button>
           </Box>
         ))}
-        <Button
-          variant="outlined"
-          onClick={addAddressHandler}
-          endIcon={<PlusIcon />}
-        >
-          Add address
-        </Button>
+        {
+           addresses.length < TOKEN_ADDRESSES_MAX_COUNT && (
+           <Button
+             variant="outlined"
+             onClick={addAddressHandler}
+             endIcon={<PlusIcon />}
+           >
+             Add address
+           </Button>
+           )
+        }
+
       </Box>
       <Box className={classes.setUpControls}>
         <Button

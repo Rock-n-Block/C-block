@@ -63,6 +63,14 @@ const RoutesContainer = () => (
     />
 
     <Route
+      path={routes['will-contract'].root}
+      element={<WillContract />}
+    />
+    <Route
+      path={routes['will-contract']['preview-contract'].root}
+      element={<WillContractPreview />}
+    />
+    <Route
       path={routes['my-contracts'].root}
       element={<MyContracts />}
     />
