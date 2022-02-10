@@ -4,7 +4,7 @@ import {
   COLOR_BLACK_1,
   COLOR_BLACK_3,
   COLOR_BUTTON_PRIMARY_LIGHT_DEFAULT,
-  COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT, COLOR_GREY_4,
+  COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT, COLOR_GREY_3, COLOR_GREY_4,
 } from 'theme/colors';
 import { flexHelper } from 'utils';
 
@@ -23,7 +23,8 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     ...flexHelper(),
     width: '100%',
     margin: theme.spacing(1),
-    borderRadius: 16,
+    borderRadius: theme.spacing(2),
+    border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3}`,
     flexDirection: 'column',
     background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_BUTTON_PRIMARY_LIGHT_DEFAULT,
   },

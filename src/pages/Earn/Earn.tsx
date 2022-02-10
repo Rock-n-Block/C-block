@@ -3,8 +3,6 @@ import React, {
   FC, useCallback, useMemo, useState,
 } from 'react';
 import {
-  // Box,
-  // Button,
   Container,
   Grid,
   TableContainer,
@@ -15,8 +13,6 @@ import {
   TableBody,
   TableFooter,
   TablePagination,
-  // IconButton,
-  // TextField,
   Typography,
   Button,
   Box,
@@ -50,8 +46,6 @@ const MyTable: FC<IMyTableProps> = ({
     onTransfer(item);
   };
 
-  // const hasData = useMemo(() => !!mockPageData.length, []);
-
   return (
     <TableContainer className={className}>
       <Table>
@@ -77,47 +71,49 @@ const MyTable: FC<IMyTableProps> = ({
                 .map((item, rowIndex) => {
                   const rowKey = JSON.stringify(item) + rowIndex;
                   const { userAddress, reward } = item;
-                  const cells = tableConfig.bodyColumns.map(({ text, renderProps, content }, cellIndex) => {
-                    const cellProps = {
-                      ...renderProps,
-                      key: rowKey + text + content + cellIndex,
-                    };
-                    switch (content) {
-                      case 'userAddress': {
-                        return (
-                          <TableCell {...cellProps}>
-                            <Typography className={classes.cell}>{userAddress}</Typography>
-                          </TableCell>
-                        );
+                  const cells = tableConfig.bodyColumns.map(
+                    ({ text, renderProps, content }, cellIndex) => {
+                      const cellProps = {
+                        ...renderProps,
+                        key: rowKey + text + content + cellIndex,
+                      };
+                      switch (content) {
+                        case 'userAddress': {
+                          return (
+                            <TableCell {...cellProps}>
+                              <Typography className={classes.cell}>{userAddress}</Typography>
+                            </TableCell>
+                          );
+                        }
+                        case 'reward': {
+                          return (
+                            <TableCell {...cellProps}>
+                              <Typography className={classes.cell}>{reward}</Typography>
+                            </TableCell>
+                          );
+                        }
+                        case 'transferButton': {
+                          return (
+                            <TableCell {...cellProps}>
+                              <Button
+                                className={clsx(classes.button)}
+                                variant="outlined"
+                                size="medium"
+                                onClick={() => handleTransfer(item)}
+                              >
+                                <Typography className="l" variant="body1" color="inherit">
+                                  Transfer
+                                </Typography>
+                              </Button>
+                            </TableCell>
+                          );
+                        }
+                        default: {
+                          return (null);
+                        }
                       }
-                      case 'reward': {
-                        return (
-                          <TableCell {...cellProps}>
-                            <Typography className={classes.cell}>{reward}</Typography>
-                          </TableCell>
-                        );
-                      }
-                      case 'transferButton': {
-                        return (
-                          <TableCell {...cellProps}>
-                            <Button
-                              className={clsx(classes.button)}
-                              variant="outlined"
-                              size="medium"
-                              onClick={() => handleTransfer(item)}
-                            >
-                              <Typography className="l" variant="body1" color="inherit">
-                                Transfer
-                              </Typography>
-                            </Button>
-                          </TableCell>
-                        );
-                      }
-                      default: {
-                        return (null);
-                      }
-                    }
-                  });
+                    },
+                  );
                   return (
                     <TableRow key={rowKey}>
                       {cells}
@@ -165,7 +161,6 @@ export const Earn: FC = () => {
 
   return (
     <Container className={classes.root}>
-      {/* <SetUpModal open={isSetUpModalOpen} setIsSetUpModalOpen={setIsSetUpModalOpen} /> */}
       <Grid container className={classes.root}>
         <Grid item xs={12} sm={6}>
           <Typography className="l" variant="body1">
@@ -174,71 +169,88 @@ export const Earn: FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <MyTable className={classes.tableContainer} hasData={hasTableData} onTransfer={handleTransfer} />
+          <MyTable
+            className={classes.tableContainer}
+            hasData={hasTableData}
+            onTransfer={handleTransfer}
+          />
 
           <Box className={classes.mobileTableData}>
             {
               hasTableData ? (
-                <Box>
-                  2
-                </Box>
+                mockPageData.map((item, rowIndex) => {
+                  const rowKey = JSON.stringify(item) + rowIndex;
+                  const { userAddress, reward } = item;
+                  return (
+                    <Box key={rowKey} className={classes.mobileListItem}>
+                      {tableConfig.bodyColumns.map(
+                        ({ content }, cellIndex) => {
+                          const { text: fieldLabel } = tableConfig.headColumns[cellIndex];
+                          const cellKey = rowKey + fieldLabel + content + cellIndex;
+                          switch (content) {
+                            case 'userAddress': {
+                              return (
+                                <Box key={cellKey} className={classes.mobileListItemField}>
+                                  <Typography
+                                    className={classes.headCell}
+                                  >
+                                    {fieldLabel}
+                                  </Typography>
+                                  <Typography
+                                    className={classes.cell}
+                                  >
+                                    {userAddress}
+                                  </Typography>
+                                </Box>
+                              );
+                            }
+                            case 'reward': {
+                              return (
+                                <Box key={cellKey} className={classes.mobileListItemField}>
+                                  <Typography
+                                    className={classes.headCell}
+                                  >
+                                    {fieldLabel}
+                                  </Typography>
+                                  <Typography
+                                    className={classes.cell}
+                                  >
+                                    {reward}
+                                  </Typography>
+                                </Box>
+                              );
+                            }
+                            case 'transferButton': {
+                              return (
+                                <Box key={cellKey} className={classes.mobileListItemField}>
+                                  <Button
+                                    className={clsx(classes.button)}
+                                    variant="outlined"
+                                    size="medium"
+                                    onClick={() => handleTransfer(item)}
+                                  >
+                                    <Typography className="l" variant="body1" color="inherit">
+                                      Transfer
+                                    </Typography>
+                                  </Button>
+                                </Box>
+                              );
+                            }
+                            default: {
+                              return (null);
+                            }
+                          }
+                        },
+                      )}
+                    </Box>
+                  );
+                })
               ) : (
                 <EmptyTableBlock />
               )
             }
           </Box>
         </Grid>
-
-        {/* {filteredCards.map(({
-          contractName,
-          contractDate,
-          contractType,
-          contractLogo,
-          contractButtons,
-          isRequestBlockActive,
-          contractKey,
-        }) => (
-          <Box
-            key={contractKey}
-            className={classes.contractBlock}
-          >
-            <Box className={classes.contractHead}>
-              <Typography color="textSecondary">{contractType}</Typography>
-              <NetTag className={classes.chainTag} isTestnet={!isMainnet} />
-            </Box>
-            <Typography className={classes.contractDate} color="textSecondary">{contractDate}</Typography>
-
-            <Box className={classes.contractTitle}>
-              <IconButton>{contractLogo}</IconButton>
-              <Typography variant="h3">{contractName}</Typography>
-            </Box>
-            {isRequestBlockActive && (
-            <Box className={classes.contractActionBlock}>
-              <Typography className={classes.contractActionText}>Request divorce</Typography>
-              <Box>
-                <Button className={clsx(classes.button, classes.actionButton)} variant="outlined">Approve divorce</Button>
-                <Button className={clsx(classes.button, classes.actionButton)} variant="outlined">Reject divorce</Button>
-              </Box>
-            </Box>
-            )}
-            <Box className={classes.contractBottom}>
-              <Box className={classes.contractButtons}>
-                {contractButtons.map(({
-                  type, title,
-                }, index) => (
-                  <Button
-                    onClick={() => buttonClickHandler(contractKey, type)}
-                    className={classes.button}
-                    value={type}
-                    key={`${type}_${index}`}
-                    variant="outlined"
-                  >{title}
-                  </Button>
-                ))}
-              </Box>
-            </Box>
-          </Box>
-        ))} */}
       </Grid>
     </Container>
   );
