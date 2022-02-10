@@ -3,6 +3,9 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    marginTop: -40,
+  },
   form: {
     marginTop: theme.spacing(4),
     '& > *': {

@@ -11,3 +11,4 @@ export * from './LostKeyContract';
 export * from './LostKeyContractPreview';
 export * from './WillContract';
 export * from './WillContractPreview';
+export * from './Earn';

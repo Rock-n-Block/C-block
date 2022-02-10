@@ -27,7 +27,7 @@ type CustomDevelopmentFormValues = {
 export const CustomDevelopment = () => {
   const classes = useStyles();
   return (
-    <Container>
+    <Container className={classes.root}>
       <Grid container>
         <Grid item xs={12} sm={12} md={8} lg={6} xl={4}>
           <Typography variant="body1">

@@ -15,6 +15,7 @@ import {
   LostKeyContractPreview,
   WillContract,
   WillContractPreview,
+  Earn,
 } from 'pages';
 
 const RoutesContainer = () => (
@@ -68,6 +69,10 @@ const RoutesContainer = () => (
     <Route
       path={routes['custom-development'].root}
       element={<CustomDevelopment />}
+    />
+    <Route
+      path={routes['earn'].root}
+      element={<Earn />}
     />
     <Route path="/" element={<Navigate replace to={routes.root} />} />
   </Routes>

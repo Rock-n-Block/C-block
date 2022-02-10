@@ -56,6 +56,12 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       lineHeight: '30px',
       letterSpacing: '0px',
       textTransform: 'capitalize',
+
+      '&.acidGreen': {
+        background: COLOR_AKZ,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      },
     },
     h4: {
       fontSize: '26px',
