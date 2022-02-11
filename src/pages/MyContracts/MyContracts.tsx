@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
-import { SearchIcon } from 'theme/icons/components/SearchIcon';
+
 import { NetTag } from 'containers/Header/components/NetTag';
 import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
@@ -15,82 +15,27 @@ import userSelector from 'store/user/selectors';
 import {
   SetUpModal, ConfirmStatusModal, SendTransactionModal, RequestWithdrawalModal, GetFundsModal,
 } from 'components';
-import { CloseCircleIcon, CheckmarkCircleIcon, ClockIcon } from 'theme/icons';
+import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
+import {
+  AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
+} from './components';
 import {
   contractButtons as contractButtonsHelper, contractsCards, IContractsCard, TContractButtonsTypes,
 } from './MyContracts.helpers';
 import { useStyles } from './MyContracts.styles';
 
-const ConfirmationTimeBlock: FC<{ className?: string }> = ({ className }) => {
-  const classes = useStyles();
-  return (
-    <Box className={className}>
-      <Typography className={classes.contractActionText}>Сonfirmation time</Typography>
-      <Box className={classes.confirmationTimeBlockContent}>
-        <ClockIcon />
-        <Typography className={clsx('acidGreen')} variant="h2" component="div">23d 24h 43m</Typography>
-      </Box>
-    </Box>
-  );
-};
-
-const AdditionalContent: FC = ({ children }) => {
-  const classes = useStyles();
-  return (
-    <Box className={classes.contractActionBlock}>
-      {children}
-    </Box>
-  );
-};
-
-const ApproveRejectBox: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
-  const classes = useStyles();
-  return (
-    <Box>
-      <Button className={clsx(classes.button, classes.actionButton)} variant="outlined" endIcon={<CheckmarkCircleIcon />} onClick={onApprove}>Approve</Button>
-      <Button className={clsx(classes.button, classes.actionButton)} variant="outlined" endIcon={<CloseCircleIcon color="error" />} onClick={onReject}>Reject</Button>
-    </Box>
-  );
-};
-
-const AdditionalContentRequestWithdrawal: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
-  const classes = useStyles();
-  return (
-    <AdditionalContent>
-      <Box className={classes.contractActionBlockInner}>
-        <Typography className={classes.contractActionText}>Request withdrawal</Typography>
-        <ApproveRejectBox onApprove={onApprove} onReject={onReject} />
-      </Box>
-      <ConfirmationTimeBlock className={classes.contractActionBlockInner} />
-    </AdditionalContent>
-  );
-};
-
-const AdditionalContentRequestDivorce: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
-  const classes = useStyles();
-  return (
-    <AdditionalContent>
-      <Box className={classes.contractActionBlockInner}>
-        <Typography className={classes.contractActionText}>Request divorce</Typography>
-        <ApproveRejectBox onApprove={onApprove} onReject={onReject} />
-      </Box>
-      <ConfirmationTimeBlock className={classes.contractActionBlockInner} />
-    </AdditionalContent>
-  );
-};
-
 export const MyContracts: FC = () => {
   const [cards, setCards] = useState(contractsCards);
   const [filteredCards, setFilteredCards] = useState(contractsCards);
 
-  const [isSetUpModalOpen, setIsSetUpModalOpen] = useState<boolean>(false);
-  const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState<boolean>(false);
-  const [isConfirmActiveStatusModalOpen, setIsConfirmActiveStatusModalOpen] = useState<boolean>(false);
-  const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState<boolean>(false);
-  const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState<boolean>(false);
-  const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState<boolean>(false);
+  const [isSetUpModalOpen, setIsSetUpModalOpen] = useState(false);
+  const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState(false);
+  const [isConfirmActiveStatusModalOpen, setIsConfirmActiveStatusModalOpen] = useState(false);
+  const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState(false);
+  const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState(false);
+  const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState(false);
 
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useState('');
   const classes = useStyles();
   const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);

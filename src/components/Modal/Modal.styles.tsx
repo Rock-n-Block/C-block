@@ -10,14 +10,12 @@ export const useStyles = makeStyles<Theme, { hasTitle: boolean }>((theme: Theme)
     root: {
       [formatMedia.BREAKPOINT_TABLET]: {},
     },
-    modalTitle: ({ hasTitle }) => {
-      const baseStyles = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        minWidth: 300,
-      };
-      return hasTitle ? { ...baseStyles, marginBottom: theme.spacing(4) } : baseStyles;
+    modalTitle: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minWidth: 300,
+      marginBottom: ({ hasTitle }) => (hasTitle ? theme.spacing(4) : undefined),
     },
   });
 });

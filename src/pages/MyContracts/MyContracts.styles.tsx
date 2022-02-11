@@ -4,7 +4,7 @@ import {
   COLOR_BLACK_1,
   COLOR_BLACK_3,
   COLOR_BUTTON_PRIMARY_LIGHT_DEFAULT,
-  COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT, COLOR_GREY_4,
+  COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT,
 } from 'theme/colors';
 import { flexHelper } from 'utils';
 
@@ -52,15 +52,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   contractButtons: {
     ...flexHelper('flex-start'),
     width: '100%',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-    },
-  },
-  contractActionBlock: {
-    ...flexHelper('space-between', 'flex-start'),
-    padding: theme.spacing(1.5, 3),
-    width: '100%',
-    background: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_4,
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },
@@ -116,26 +107,10 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
       },
     },
   },
-  actionButton: {
-    borderColor: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT,
-    [theme.breakpoints.down('sm')]: {
-      ...flexHelper('space-between'),
-      '&:not(:last-child)': {
-        marginBottom: theme.spacing(1),
-      },
-    },
-  },
   successfulAdditionalContent: {
     ...flexHelper('flex-start'),
   },
   successfulAdditionalContentText: {
     marginLeft: theme.spacing(2),
-  },
-  confirmationTimeBlockContent: {
-    ...flexHelper('flex-start'),
-    margin: 'auto 0',
-    '& > :nth-child(1)': {
-      marginRight: theme.spacing(1.5),
-    },
   },
 }));

@@ -27,7 +27,7 @@ export const ConfirmStatusModal: VFC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  const dateAsString = useMemo(() => (typeof date === 'number' ? new Date(date * 1e3) : date).toDateString(), [date]);
+  const dateAsString = useMemo(() => (typeof date === 'number' ? new Date(date * 1000) : date).toDateString(), [date]);
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
