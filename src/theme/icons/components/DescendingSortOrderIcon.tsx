@@ -5,12 +5,14 @@ import { IconProps } from '../icons.types';
 
 import { BaseSVGIcon } from './BaseSVGIcon';
 
+const size = '24';
+
 export const DescendingSortOrderIcon: React.FC<IconProps> = (props) => (
   <BaseSVGIcon
-    width="24"
-    height="24"
+    width={size}
+    height={size}
+    viewBox={`0 0 ${size} ${size}`}
     fill={COLOR_BLACK_4}
-    viewBox="0 0 24 24"
     {...props}
   >
     <path

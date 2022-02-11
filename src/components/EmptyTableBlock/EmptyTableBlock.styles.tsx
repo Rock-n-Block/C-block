@@ -6,28 +6,23 @@ import {
 
 import { flexHelper } from 'utils';
 
-// eslint-disable-next-line arrow-body-style
-export const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-    root: {
-      ...flexHelper(),
-      // padding: theme.spacing(),
-      // border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_4}`,
+export const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    ...flexHelper(),
+  },
+  container: {
+    ...flexHelper(),
+    flexDirection: 'column',
+    padding: theme.spacing(9),
+    border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_4}`,
+    borderRadius: theme.spacing(2.5),
+    background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(9, 3),
     },
-    container: {
-      ...flexHelper(),
-      flexDirection: 'column',
-      padding: theme.spacing(9),
-      border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_4}`,
-      borderRadius: theme.spacing(2.5),
-      background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
-      [theme.breakpoints.down('xs')]: {
-        padding: theme.spacing(9, 3),
-      },
-    },
-    title: {
-      marginTop: theme.spacing(3.75),
-      textTransform: 'none',
-    },
-  });
-});
+  },
+  title: {
+    marginTop: theme.spacing(3.75),
+    textTransform: 'none',
+  },
+}));

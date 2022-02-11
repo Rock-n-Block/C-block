@@ -6,12 +6,14 @@ import { IconProps } from '../icons.types';
 
 import { BaseSVGIcon } from './BaseSVGIcon';
 
+const size = '29';
+
 export const ChevronIcon: React.FC<IconProps> = (props) => (
   <BaseSVGIcon
-    width="29"
-    height="29"
+    width={size}
+    height={size}
+    viewBox={`0 0 ${size} ${size}`}
     fill="none"
-    viewBox="0 0 29 29"
     {...props}
   >
     <g id="27) Icon/chevron-left">
