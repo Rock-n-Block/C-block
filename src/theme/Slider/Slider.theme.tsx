@@ -34,7 +34,7 @@ export const getMuiSliderDefaultProps = (): ComponentsProps['MuiSlider'] => ({
   ValueLabelComponent: ({ children, open, value }) => (
     <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>{children}</Tooltip>
   ),
-  valueLabelDisplay: 'on',
+  valueLabelDisplay: 'auto',
   'aria-label': 'pretto slider',
   step: 1,
 });

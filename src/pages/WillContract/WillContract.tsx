@@ -22,14 +22,14 @@ import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import {
-  ContractFormsState, State, ILostKeyContract, UserState,
+  ContractFormsState, State, IWillContract, UserState,
 } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
-  lostKeyContractDynamicFormInitialData,
-  setLostKeyContractForm,
+  willContractDynamicFormInitialData,
+  setWillContractForm,
 } from 'store/contractForms/reducer';
-import { routes, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
+import { routes } from 'appConstants';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
 import {
   validationSchema,
@@ -38,9 +38,10 @@ import {
   managementAddressSectionConfig,
   rewardAmountSectionConfig,
   confirmLiveStatusSectionConfig,
-} from './LostKeyContract.helpers';
-import { useStyles } from './LostKeyContract.styles';
+} from './WillContract.helpers';
+import { useStyles } from './WillContract.styles';
 
+const RESERVED_ADDRESSES = 4; // supported only 4 tokens as a reserved address
 const MAX_RESERVES_PERCENTS = 100;
 
 const getUnallocatedResidue = (
@@ -52,31 +53,32 @@ const getMaxSliderValue = (
   maxSum = MAX_RESERVES_PERCENTS,
 ) => currentValue + getUnallocatedResidue(allocatedResidues, maxSum);
 
-export const LostKeyContract: FC = () => {
+export const WillContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
-    lostKeyContract,
+    willContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
-    dispatch(setLostKeyContractForm({
-      ...lostKeyContract,
+    dispatch(setWillContractForm({
+      ...willContract,
       managementAddress: userAddress,
     }));
-  }, [dispatch, lostKeyContract, userAddress]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, userAddress]);
 
   return (
     <Container>
       <Formik
         enableReinitialize
-        initialValues={lostKeyContract}
+        initialValues={willContract}
         validationSchema={validationSchema}
-        onSubmit={(values: ILostKeyContract) => {
-          dispatch(setLostKeyContractForm(values));
-          navigate(routes['lostkey-contract']['preview-contract'].root);
+        onSubmit={(values: IWillContract) => {
+          dispatch(setWillContractForm(values));
+          navigate(routes['will-contract']['preview-contract'].root);
         }}
       >
         {({
@@ -249,19 +251,16 @@ export const LostKeyContract: FC = () => {
                                     )}
                                     max={100}
                                     onBlur={handleBlur}
-                                    onChange={(_, newRawValue) => {
-                                      const newValue = Array.isArray(newRawValue)
-                                        ? newRawValue[0]
-                                        : newRawValue;
-
-                                      if (newValue === +reserves.percents) return;
-
+                                    onChange={(_, newValue) => {
+                                      const parsedValue = Array.isArray(newValue)
+                                        ? newValue[0]
+                                        : newValue;
                                       const maxValue = getMaxSliderValue(
                                         +reserves.percents,
                                         values.reservesConfigs.map((item) => +item.percents),
                                       );
                                       handleChange(`reservesConfigs[${i}].percents`)(
-                                        `${newValue <= maxValue ? newValue : maxValue}`,
+                                        `${parsedValue <= maxValue ? parsedValue : maxValue}`,
                                       );
                                     }}
                                   />
@@ -286,11 +285,11 @@ export const LostKeyContract: FC = () => {
                         </RemovableContractsFormBlock>
                         {i === values.reservesConfigs.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                          {i + 1 < TOKEN_ADDRESSES_MAX_COUNT && (
+                          {i + 1 < RESERVED_ADDRESSES && (
                           <Button
                             variant="outlined"
                             endIcon={<PlusIcon />}
-                            onClick={() => push(lostKeyContractDynamicFormInitialData)}
+                            onClick={() => push(willContractDynamicFormInitialData)}
                           >
                             Add address
                           </Button>

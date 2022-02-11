@@ -44,7 +44,13 @@ export interface IContracts {
   };
 }
 
-export type WalletProviders = 'WalletConnect' | 'Celo' | 'MetaMask';
+// eslint-disable-next-line no-shadow
+export enum WalletProviders {
+  walletConnect = 'WalletConnect',
+  celo = 'Celo',
+  metamask = 'MetaMask',
+  init = '',
+}
 
 export type TNullable<T> = T | null;
 export type TOptionable<T> = T | undefined;

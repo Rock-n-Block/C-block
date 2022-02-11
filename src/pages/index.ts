@@ -9,3 +9,5 @@ export * from './WeddingContract';
 export * from './WeddingContractPreview';
 export * from './LostKeyContract';
 export * from './LostKeyContractPreview';
+export * from './WillContract';
+export * from './WillContractPreview';

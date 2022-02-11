@@ -11,20 +11,32 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
+
+import { ContractFormsState, UserState } from 'types';
 import reducer from './rootReducer';
+import rootSaga from './rootSaga';
+import actionTypes from './contractForms/actionTypes';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const userPersistConfig = {
+const userPersistConfig: {
+  key: 'user';
+  storage: typeof storage;
+  whitelist: (keyof UserState)[];
+} = {
   key: 'user',
   storage,
   whitelist: ['address', 'wallet', 'isLight', 'isMainnet'],
 };
 
-const contractFormsPersistConfig = {
+const contractFormsPersistConfig: {
+  key: 'contractForms';
+  storage: typeof storage;
+  whitelist: (keyof ContractFormsState)[];
+} = {
   key: 'contractForms',
   storage,
-  whitelist: ['tokenContract', 'crowdsaleContract', 'weddingContract', 'lostKeyContract'],
+  whitelist: ['tokenContract', 'crowdsaleContract', 'weddingContract', 'lostKeyContract', 'willContract'],
 };
 
 const reducers = {
@@ -38,12 +50,22 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(
     {
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER,
+          actionTypes.CREATE_TOKEN_CONTRACT,
+          actionTypes.APPROVE,
+        ],
       },
     },
   ).concat(sagaMiddleware),
 });
 
+sagaMiddleware.run(rootSaga);
 const persistor = persistStore(store);
 
 export default { store, persistor };

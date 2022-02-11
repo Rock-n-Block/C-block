@@ -8,6 +8,8 @@ import Connector from 'services/walletConnect';
 import { App } from './containers';
 import * as serviceWorker from './serviceWorker';
 import store from './store/configureStore';
+
+import '@celo-tools/use-contractkit/lib/styles.css';
 import './index.scss';
 
 const root = document.getElementById('root');

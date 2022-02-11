@@ -1,4 +1,6 @@
 import type { StateWithUIState } from 'types';
 
-export const getProp = (propKey: string) => (state: StateWithUIState) => state.ui[propKey];
-export const getUI = (state: StateWithUIState) => state.ui;
+export default {
+  getUI: (state: StateWithUIState) => state.ui,
+  getProp: (propKey: string) => (state: StateWithUIState) => state.ui[propKey],
+};

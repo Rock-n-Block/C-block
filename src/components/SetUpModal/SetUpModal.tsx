@@ -10,6 +10,7 @@ import { useShallowSelector } from 'hooks';
 import { State, UserState } from 'types';
 import clsx from 'clsx';
 import { Modal } from 'components/Modal';
+import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { useStyles } from './SetUpModal.styles';
 import { PlusIcon } from '../../theme/icons';
 import { addressesArr, AddressesT } from './SetUpModal.helpers';
@@ -33,7 +34,7 @@ export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setAddresses([{ address: '', id: 0 }]);
-  }, []);
+  }, [setIsModalOpen]);
 
   const {
     isLight,
@@ -49,7 +50,7 @@ export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
         Set up
       </Typography>
     </Box>
-  ), []);
+  ), [classes.modalTitle, isLight]);
 
   return (
     <Modal className={clsx(classes.root)} open={open} onClose={closeModal} title={title}>
@@ -69,13 +70,18 @@ export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
             <Button className={clsx(classes.button, classes.approveButton)} variant="outlined">Approve</Button>
           </Box>
         ))}
-        <Button
-          variant="outlined"
-          onClick={addAddressHandler}
-          endIcon={<PlusIcon />}
-        >
-          Add address
-        </Button>
+        {
+           addresses.length < TOKEN_ADDRESSES_MAX_COUNT && (
+           <Button
+             variant="outlined"
+             onClick={addAddressHandler}
+             endIcon={<PlusIcon />}
+           >
+             Add address
+           </Button>
+           )
+        }
+
       </Box>
       <Box className={classes.modalControls}>
         <Button

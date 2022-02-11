@@ -1,7 +1,3 @@
-import {
-  WillContract,
-} from 'theme/icons';
-import React from 'react';
 import { routes } from 'appConstants';
 
 export const createContractHelpers = [
@@ -24,10 +20,10 @@ export const createContractHelpers = [
     link: routes['lostkey-contract'].root,
   },
   {
-    title: 'Will Contract ',
+    title: routes['will-contract'].title,
     text: 'Setup the transfer of funds to family or friends, in case of long inactive period of time (death, accidents & so on).',
-    icon: <WillContract />,
-    link: '/',
+    icon: routes['will-contract'].icon,
+    link: routes['will-contract'].root,
   },
   {
     title: 'Wedding Contract',

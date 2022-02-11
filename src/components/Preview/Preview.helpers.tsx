@@ -5,4 +5,5 @@ export const iconHelper = {
   crowdsale: routes['crowdsale-contract'].icon,
   weddingRing: routes['wedding-contract'].icon,
   lostkey: routes['lostkey-contract'].icon,
+  will: routes['will-contract'].icon,
 };

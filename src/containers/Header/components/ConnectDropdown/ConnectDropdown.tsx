@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   useCallback, useMemo, VFC,
 } from 'react';
@@ -31,8 +30,12 @@ export const ConnectDropdown: VFC<ConnectDropdownProps> = ({
   const disconnect = useCallback(async () => {
     onClose();
     setTimeout(() => dispatch(disconnectWalletState()), 10);
-    // localStorage.removeItem()
   }, [onClose]);
+
+  const handleConnect = useCallback((walletProvider: WalletProviders) => {
+    onClose();
+    connect(walletProvider);
+  }, [connect, onClose]);
 
   return (
     <Modal open={open} onClose={onClose} title={isConnected ? ' ' : 'Connect Wallet'} className={className}>
@@ -49,10 +52,7 @@ export const ConnectDropdown: VFC<ConnectDropdownProps> = ({
             <Box
               key={label}
               className={classes.connectBtn}
-              onClick={() => {
-                onClose();
-                connect(connectorWallet as WalletProviders);
-              }}
+              onClick={() => handleConnect(connectorWallet)}
             >
               <img className={classes.walletIcon} src={walletIcon} alt={walletIcon} />
               <Typography variant="body1">{label}</Typography>

@@ -8,7 +8,6 @@ import {
   COLOR_BLACK_3,
 } from 'theme/colors';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getMuiIconButton = (theme: Theme): Overrides['MuiIconButton'] => ({
   root: {
     width: 48,

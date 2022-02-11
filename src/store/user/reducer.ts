@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserState } from 'types';
+import { UserState, WalletProviders } from 'types';
 
 const initialState: UserState = {
   address: '',
-  wallet: '',
+  wallet: WalletProviders.init,
   isLight: false,
   isMainnet: true,
 };
@@ -21,14 +21,14 @@ export const userReducer = createSlice({
       ...state,
       isLight: !state.isLight,
     }),
-    connectWalletState: (state, action: PayloadAction<UserState>) => ({
+    connectWalletState: (state, action: PayloadAction<Partial<UserState>>) => ({
       ...state, ...action.payload,
     }),
     disconnectWalletState: (state) => {
       localStorage.removeItem('walletconnect');
       return {
         ...state,
-        wallet: '',
+        wallet: WalletProviders.init,
         address: '',
       };
     },
