@@ -21,10 +21,7 @@ import contractFormsSelector from 'store/contractForms/selectors';
 import uiSelector from 'store/ui/selectors';
 import user from 'store/user/selectors';
 import {
-  ContractFormsState,
-  RequestStatus,
-  State,
-  UserState,
+  ContractFormsState, RequestStatus, State, UserState,
 } from 'types';
 import clsx from 'clsx';
 import { routes } from 'appConstants';
@@ -45,7 +42,9 @@ export const TokenContractPreview = () => {
     contractFormsSelector.getContractForms,
   );
 
-  const createTokenRequestStatus = useShallowSelector(uiSelector.getProp(actionTypes.CREATE_TOKEN_CONTRACT));
+  const createTokenRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.CREATE_TOKEN_CONTRACT),
+  );
 
   const [resultModalState, setResultModalState] = useState({
     open: false,
@@ -59,11 +58,12 @@ export const TokenContractPreview = () => {
     });
   }, [resultModalState]);
 
-  const isLoader = useMemo(() => createTokenRequestStatus === RequestStatus.REQUEST, [createTokenRequestStatus]);
-
-  const { wallet } = useShallowSelector<State, UserState>(
-    user.getUser,
+  const isLoader = useMemo(
+    () => createTokenRequestStatus === RequestStatus.REQUEST,
+    [createTokenRequestStatus],
   );
+
+  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -81,24 +81,33 @@ export const TokenContractPreview = () => {
   const handleCreateToken = useCallback(async () => {
     const { celo } = window;
     const web3 = new Web3(celo);
-    dispatch(createTokenContract({
-      // @ts-ignore
-      provider: wallet === 'celo' ? web3 : walletService.Web3(),
-    }));
+    dispatch(
+      createTokenContract({
+        // @ts-ignore
+        provider: wallet === 'celo' ? web3 : walletService.Web3(),
+      }),
+    );
   }, [dispatch, wallet, walletService]);
 
   useEffect(() => {
-    if (createTokenRequestStatus === RequestStatus.SUCCESS) {
-      setResultModalState({
-        open: true,
-        result: true,
-      });
-    }
-    if (createTokenRequestStatus === RequestStatus.ERROR) {
-      setResultModalState({
-        open: true,
-        result: false,
-      });
+    switch (createTokenRequestStatus) {
+      case RequestStatus.SUCCESS: {
+        setResultModalState({
+          open: true,
+          result: true,
+        });
+        break;
+      }
+      case RequestStatus.ERROR: {
+        setResultModalState({
+          open: true,
+          result: false,
+        });
+        break;
+      }
+      default: {
+        break;
+      }
     }
   }, [createTokenRequestStatus]);
 
@@ -118,15 +127,7 @@ export const TokenContractPreview = () => {
           {previewBlock.map(({
             key, label, value, shouldSkipObjectValue,
           }) => (
-            <Grid
-              key={label}
-              item
-              xs={6}
-              sm={6}
-              md={3}
-              lg={3}
-              xl={3}
-            >
+            <Grid key={label} item xs={6} sm={6} md={3} lg={3} xl={3}>
               <Typography
                 variant="body1"
                 className={clsx(classes.previewLabel, 's')}
@@ -146,11 +147,23 @@ export const TokenContractPreview = () => {
         </Grid>
       ))}
 
-      <Typography variant="body1" className={clsx(classes.tokenOwnerTitle, 'l')}>Token Owner</Typography>
-      <Copyable onlyIconActive withBorder valueToCopy={tokenContract.tokenOwner} className={classes.copyableContainer}>
+      <Typography
+        variant="body1"
+        className={clsx(classes.tokenOwnerTitle, 'l')}
+      >
+        Token Owner
+      </Typography>
+      <Copyable
+        onlyIconActive
+        withBorder
+        valueToCopy={tokenContract.tokenOwner}
+        className={classes.copyableContainer}
+      >
         <Typography noWrap>{tokenContract.tokenOwner}</Typography>
       </Copyable>
-      <Typography className={classes.dynamicDataHeader} variant="h3">Token distribution</Typography>
+      <Typography className={classes.dynamicDataHeader} variant="h3">
+        Token distribution
+      </Typography>
       {tokenContract.tokens.map((tokenContractDynamicData, index) => {
         totalTokenAmount += +tokenContractDynamicData.amount;
         return (
@@ -169,47 +182,42 @@ export const TokenContractPreview = () => {
               valueToCopy={tokenContractDynamicData.address}
               className={classes.copyableContainer}
             >
-              <Typography noWrap>
-                {tokenContractDynamicData.address}
-              </Typography>
+              <Typography noWrap>{tokenContractDynamicData.address}</Typography>
             </Copyable>
             <Grid container className={classes.nameAmountData}>
-              {dynamicTokenContractPreviewHelpers.map(({ icon, key, label }) => {
-                if (key === 'frozenUntilDate' && !tokenContractDynamicData.isFrozen) {
-                  return null;
-                }
+              {dynamicTokenContractPreviewHelpers.map(
+                ({ icon, key, label }) => {
+                  if (
+                    key === 'frozenUntilDate' &&
+                    !tokenContractDynamicData.isFrozen
+                  ) {
+                    return null;
+                  }
 
-                return (
-                  <Grid
-                    key={key}
-                    item
-                    xs={6}
-                    sm={6}
-                    md={3}
-                    lg={3}
-                    xl={3}
-                  >
-                    <Box
-                      className={clsx(
-                        classes.previewLabel,
-                        classes.frozenUntil,
-                      )}
-                    >
-                      {icon}
-                      <Typography
-                        variant="body1"
-                        className="s"
-                        color="textSecondary"
+                  return (
+                    <Grid key={key} item xs={6} sm={6} md={3} lg={3} xl={3}>
+                      <Box
+                        className={clsx(
+                          classes.previewLabel,
+                          classes.frozenUntil,
+                        )}
                       >
-                        {label}
+                        {icon}
+                        <Typography
+                          variant="body1"
+                          className="s"
+                          color="textSecondary"
+                        >
+                          {label}
+                        </Typography>
+                      </Box>
+                      <Typography variant="body1">
+                        {tokenContractDynamicData[key]}
                       </Typography>
-                    </Box>
-                    <Typography variant="body1">
-                      {tokenContractDynamicData[key]}
-                    </Typography>
-                  </Grid>
-                );
-              })}
+                    </Grid>
+                  );
+                },
+              )}
             </Grid>
             {index === tokenContract.tokens.length - 1 && (
               <Typography
@@ -226,9 +234,7 @@ export const TokenContractPreview = () => {
           </Fragment>
         );
       })}
-      {isLoader && (
-        <Loader />
-      )}
+      {isLoader && <Loader />}
       <CompleteModal
         open={resultModalState.open}
         result={resultModalState.result}
