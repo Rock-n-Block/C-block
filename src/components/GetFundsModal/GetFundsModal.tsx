@@ -14,7 +14,7 @@ import { PlusIcon } from 'theme/icons';
 import { useStyles } from './GetFundsModal.styles';
 import { fieldsHelper, ITokenAddressField } from './GetFundsModal.helpers';
 
-interface Props {
+export interface Props {
   className?: string;
   open?: boolean;
   setIsModalOpen: (isOpen: boolean) => void;

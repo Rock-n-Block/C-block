@@ -1,9 +1,9 @@
 import React from 'react';
-
+import { NavLink } from 'react-router-dom';
 import { Container, Grid } from '@material-ui/core';
 
+import { createContractHelpers } from 'pages/CreateContract/CreateContract.helpers';
 import { ContractCard } from './ContractCard';
-import { contractCardPropsMocked } from './ContractCard.mock';
 
 export default {
   title: 'components/ContractCard',
@@ -13,26 +13,15 @@ export default {
 export const Default: React.FC = () => (
   <Container>
     <Grid container>
-      <Grid item xs={12} sm={6} lg={4} md={4} xl={4}>
-        <ContractCard
-          {...contractCardPropsMocked}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} lg={4} md={4} xl={4}>
-        <ContractCard
-          {...contractCardPropsMocked}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} lg={4} md={4} xl={4}>
-        <ContractCard
-          {...contractCardPropsMocked}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} lg={4} md={4} xl={4}>
-        <ContractCard
-          {...contractCardPropsMocked}
-        />
-      </Grid>
+      {createContractHelpers.map((contractType) => (
+        <Grid item xs={12} sm={12} md={6} lg={4} xl={4} key={contractType.title}>
+          <NavLink style={{ width: '100%' }} to={contractType.link}>
+            <ContractCard
+              {...contractType}
+            />
+          </NavLink>
+        </Grid>
+      ))}
     </Grid>
   </Container>
 );

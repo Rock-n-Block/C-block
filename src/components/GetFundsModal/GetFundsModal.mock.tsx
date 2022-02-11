@@ -1,6 +1,6 @@
-import { PaymentModalProps } from './PaymentModal';
+import { Props } from './GetFundsModal';
 
-export const paymentModalPropsMocked: PaymentModalProps = {
+export const getFundsModalPropsMocked: Props = {
   open: true,
   onClose(): void {
     throw new Error('Function not implemented.');
@@ -8,5 +8,5 @@ export const paymentModalPropsMocked: PaymentModalProps = {
   onAccept(): void {
     throw new Error('Function not implemented.');
   },
-  paymentAmount: '32423.4354',
+  setIsModalOpen() {},
 };
