@@ -1,4 +1,5 @@
 import React, {
+  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -113,18 +114,18 @@ export const TokenContractPreview = () => {
     >
       {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <Grid container className={classes.tokenContractInfoBlock} key={index}>
+        <Grid key={index} container className={classes.tokenContractInfoBlock}>
           {previewBlock.map(({
             key, label, value, shouldSkipObjectValue,
           }) => (
             <Grid
+              key={label}
               item
               xs={6}
               sm={6}
               md={3}
               lg={3}
               xl={3}
-              key={label}
             >
               <Typography
                 variant="body1"
@@ -153,7 +154,8 @@ export const TokenContractPreview = () => {
       {tokenContract.tokens.map((tokenContractDynamicData, index) => {
         totalTokenAmount += +tokenContractDynamicData.amount;
         return (
-          <>
+          // eslint-disable-next-line react/no-array-index-key
+          <Fragment key={index}>
             <Typography
               variant="body1"
               className={clsx(classes.previewLabel, 's')}
@@ -179,13 +181,13 @@ export const TokenContractPreview = () => {
 
                 return (
                   <Grid
+                    key={key}
                     item
                     xs={6}
                     sm={6}
                     md={3}
                     lg={3}
                     xl={3}
-                    key={key}
                   >
                     <Box
                       className={clsx(
@@ -221,7 +223,7 @@ export const TokenContractPreview = () => {
                 </span>
               </Typography>
             )}
-          </>
+          </Fragment>
         );
       })}
       {isLoader && (
