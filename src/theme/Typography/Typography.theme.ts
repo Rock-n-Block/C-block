@@ -2,7 +2,6 @@ import { TypographyOptions, TypographyStyleOptions } from '@material-ui/core/sty
 
 import { COLOR_AKZ, COLOR_BLACK, COLOR_BLACK_4 } from 'theme/colors';
 
-// eslint-disable-next-line no-shadow
 export enum FontWeights {
   fontWeightRegular = 400,
   fontWeightMedium = 500,

@@ -36,6 +36,7 @@ module.exports = {
     'no-console': 1,
     'max-len': ['off', { 'code': 100 }],
     "react/jsx-props-no-spreading": 0,
+    'no-shadow': 0,
   },
   overrides: [
     {
