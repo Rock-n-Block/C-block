@@ -71,17 +71,24 @@ function* createTokenContractSaga({
 
     const methodName = `deployERC20${burnable ? 'Burnable' : ''}${futureMinting ? 'Mintable' : ''}Pausable${freezable ? 'Freezable' : ''}Token`;
 
-    const { transactionHash } = yield call(tokenFactoryContract.methods[methodName](
+    const contractMethodArgs: (string | string[] | number[])[] = [
       [celoAddress, tokenOwner],
       tokenName,
       tokenSymbol,
       decimals,
       ownerAddresses,
       initSupply,
-      timeStamps,
-    ).send, {
-      from: myAddress,
-    });
+    ];
+    if (freezable) {
+      contractMethodArgs.push(timeStamps);
+    }
+
+    const { transactionHash } = yield call(
+      tokenFactoryContract.methods[methodName](...contractMethodArgs).send,
+      {
+        from: myAddress,
+      },
+    );
 
     yield call(baseApi.createTokenContract, {
       tx_hash: transactionHash,
