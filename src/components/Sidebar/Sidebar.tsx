@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { Box, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { AtIcon, CloseIcon } from 'theme/icons';
+import { CloseIcon } from 'theme/icons';
 import { State, UserState } from 'types';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -34,26 +34,18 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
             <CloseIcon />
           </IconButton>
         </Box>
-        {navigationTabs.map(({ Icon, label, link }) => (
+        {navigationTabs.map(({
+          Icon, label, link, isExternal,
+        }) => (
           <SidebarTab
+            key={link}
             Icon={Icon}
             label={label}
             isSelected={location.pathname.includes(link)}
-            link={link}
-            key={link}
+            to={link}
+            isExternal={isExternal}
           />
         ))}
-        <a
-          href="https://stackoverflow.com/questions/17492888/how-to-place-a-div-over-a-image"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <SidebarTab
-            Icon={AtIcon}
-            label="Support"
-            link=""
-          />
-        </a>
       </Box>
       <Box className={classes.contentWrapper}>
         <Disclaimer className={classes.sidebarDisclaimer} />

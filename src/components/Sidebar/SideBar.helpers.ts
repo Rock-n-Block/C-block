@@ -1,6 +1,6 @@
 import { routes } from 'appConstants';
 import {
-  FileTextIcon, PlusCircleIcon, SettingGearIcon,
+  FileTextIcon, PlusCircleIcon, SettingGearIcon, AtIcon,
 } from 'theme/icons';
 
 export const navigationTabs = [
@@ -18,5 +18,11 @@ export const navigationTabs = [
     Icon: SettingGearIcon,
     label: 'Custom development',
     link: routes['custom-development'].root,
+  },
+  {
+    Icon: AtIcon,
+    label: 'Support',
+    link: 'https://stackoverflow.com/questions/17492888/how-to-place-a-div-over-a-image',
+    isExternal: true,
   },
 ];
