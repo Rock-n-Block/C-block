@@ -1,12 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IConnectWallet, IContracts } from 'types';
+import { ContractsNames, IConnectWallet, IContracts } from 'types';
 import store from 'store/configureStore';
-import tokenMintableFreezableAbi from './abi/tokenMintableFreezable';
-import tokenMintableNonFreezableAbi from './abi/tokenMintableNonFreezable';
-import tokenNonMintableFreezableAbi from './abi/tokenNonMintableFreezable';
-import tokenNonMintableNonFreezableAbi from './abi/tokenNonMintableNonFreezable';
-import { bep20Abi } from './abi';
+import {
+  bep20Abi, tokenMintableFreezableAbi, tokenMintableNonFreezableAbi, tokenNonMintableFreezableAbi, tokenNonMintableNonFreezableAbi,
+} from './abi';
 
 export * from './constants';
 
@@ -67,14 +65,6 @@ export const connectWallet = (newChainName: string): IConnectWallet => {
     settings: { providerType: true },
   };
 };
-
-// eslint-disable-next-line no-shadow
-export enum ContractsNames {
-  tokenMintableFreezable = 'tokenMintableFreezable',
-  tokenMintableNonFreezable = 'tokenMintableNonFreezable',
-  tokenNonMintableFreezable = 'tokenNonMintableFreezable',
-  tokenNonMintableNonFreezable = 'tokenNonMintableNonFreezable',
-}
 
 export const contracts: IContracts = {
   type: 'mainnet',

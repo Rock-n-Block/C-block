@@ -1,3 +1,5 @@
+import { AbiItem } from 'web3-utils';
+
 export default [{
   type: 'event',
   name: 'NewContract',
@@ -32,4 +34,4 @@ export default [{
   type: 'function', stateMutability: 'nonpayable', outputs: [], name: 'setPrice', inputs: [{ type: 'address', name: '_token', internalType: 'address' }, { type: 'uint256[2]', name: '_price', internalType: 'uint256[2]' }],
 }, {
   type: 'function', stateMutability: 'nonpayable', outputs: [], name: 'transferOwnership', inputs: [{ type: 'address', name: 'newOwner', internalType: 'address' }],
-}];
+}] as AbiItem[];
