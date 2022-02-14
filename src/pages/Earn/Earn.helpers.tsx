@@ -9,7 +9,7 @@ export interface IRowData {
 
 type TRowsData = keyof IRowData;
 
-interface IColumn {
+export interface IColumn {
   renderProps: {};
   text?: string;
   content?: TRowsData | 'transferButton';
