@@ -20,7 +20,7 @@ interface PaymentModalProps {
   onClose?: () => void;
   onAccept?: () => void;
   className?: string;
-  setIsSetUpModalOpen: (bool) => void;
+  setIsSetUpModalOpen: (isOpen: boolean) => void;
 }
 
 export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }) => {
@@ -34,7 +34,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
   const closeSetUpModal = useCallback(() => {
     setIsSetUpModalOpen(false);
     setAddresses([{ address: '', id: 0 }]);
-  }, []);
+  }, [setIsSetUpModalOpen]);
 
   const {
     isLight,
@@ -50,7 +50,7 @@ export const SetUpModal: VFC<PaymentModalProps> = ({ open, setIsSetUpModalOpen }
         Set up
       </Typography>
     </Box>
-  ), []);
+  ), [classes.setUpInfoTitle, isLight]);
 
   return (
     <Modal open={open} onClose={closeSetUpModal} title={title} className={clsx(classes.root)}>

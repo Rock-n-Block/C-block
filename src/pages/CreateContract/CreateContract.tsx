@@ -1,7 +1,10 @@
 import React, { useCallback } from 'react';
 import {
   Box,
-  Container, Grid, Switch, Typography,
+  Container,
+  Grid,
+  Switch,
+  Typography,
 } from '@material-ui/core';
 import { ContractCard } from 'components/ContractCard';
 import { useDispatch } from 'react-redux';
@@ -26,7 +29,7 @@ export const CreateContract = () => {
       type: 'info',
       message: `Please change network to ${!isMainnet ? 'Celo Mainnet' : 'Alfahores Testnet'} in your wallet`,
     });
-  }, [isMainnet]);
+  }, [dispatch, isMainnet]);
 
   return (
     <Container>

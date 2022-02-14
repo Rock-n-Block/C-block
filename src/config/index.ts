@@ -1,8 +1,12 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IConnectWallet, IContracts } from 'types';
-
 import store from 'store/configureStore';
+import tokenMintableFreezableAbi from './abi/tokenMintableFreezable';
+import tokenMintableNonFreezableAbi from './abi/tokenMintableNonFreezable';
+import tokenNonMintableFreezableAbi from './abi/tokenNonMintableFreezable';
+import tokenNonMintableNonFreezableAbi from './abi/tokenNonMintableNonFreezable';
+import { bep20Abi } from './abi';
 
 export * from './constants';
 
@@ -65,20 +69,68 @@ export const connectWallet = (newChainName: string): IConnectWallet => {
 };
 
 // eslint-disable-next-line no-shadow
-export enum TokenNames {
-}
-
-// eslint-disable-next-line no-shadow
 export enum ContractsNames {
+  tokenMintableFreezable = 'tokenMintableFreezable',
+  tokenMintableNonFreezable = 'tokenMintableNonFreezable',
+  tokenNonMintableFreezable = 'tokenNonMintableFreezable',
+  tokenNonMintableNonFreezable = 'tokenNonMintableNonFreezable',
 }
-
-export type IContractsNames = keyof typeof ContractsNames;
 
 export const contracts: IContracts = {
   type: 'mainnet',
   names: Object.keys(ContractsNames),
   decimals: 18,
   params: {
+    celo: {
+      mainnet: {
+        address: '',
+        abi: bep20Abi,
+      },
+      testnet: {
+        address: '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+        abi: bep20Abi,
+      },
+    },
+    tokenMintableFreezable: {
+      mainnet: {
+        address: '',
+        abi: tokenMintableFreezableAbi,
+      },
+      testnet: {
+        address: '0x5A3A9c31151A5A125F6baBaDc1e997017cAC1eeC',
+        abi: tokenMintableFreezableAbi,
+      },
+    },
+    tokenMintableNonFreezable: {
+      mainnet: {
+        address: '',
+        abi: tokenMintableNonFreezableAbi,
+      },
+      testnet: {
+        address: '0x9B8797085E0c916E25a860Ad3015F6A8a5ff5f37',
+        abi: tokenMintableNonFreezableAbi,
+      },
+    },
+    tokenNonMintableFreezable: {
+      mainnet: {
+        address: '',
+        abi: tokenNonMintableFreezableAbi,
+      },
+      testnet: {
+        address: '0x9D61A75467BF17ea3947cc52fCdF5285e8A202f3',
+        abi: tokenNonMintableFreezableAbi,
+      },
+    },
+    tokenNonMintableNonFreezable: {
+      mainnet: {
+        address: '',
+        abi: tokenNonMintableNonFreezableAbi,
+      },
+      testnet: {
+        address: '0x568EE75009950B15e9e91a9A99DedF749f3AcBBf',
+        abi: tokenNonMintableNonFreezableAbi,
+      },
+    },
   },
 };
 

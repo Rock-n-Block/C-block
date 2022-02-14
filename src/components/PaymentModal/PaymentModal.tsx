@@ -39,7 +39,7 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
         Payment
       </Typography>
     </Box>
-  ), []);
+  ), [classes.paymentInfoIcon, isLight]);
 
   return (
     <Modal title={title} open={open} onClose={onClose} className={clsx(classes.root, className)}>

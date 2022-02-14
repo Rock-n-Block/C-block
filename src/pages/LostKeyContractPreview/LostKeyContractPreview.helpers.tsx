@@ -31,23 +31,19 @@ interface ISectionContentReturnType {
 export const staticLostKeyContractPreviewHelpers: {
   key: string;
   title: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: ISectionContentReturnType[] | (<T>(items: T[]) => ISectionContentReturnType[]);
 }[][] = [
-  // eslint-disable-next-line arrow-body-style
-  managementAddressSectionConfig.map(({ key, title }) => {
-    return {
-      key,
-      title,
-      content: [
-        {
-          key,
-          componentType: 'copyable',
-          renderProps: {},
-        },
-      ],
-    };
-  }),
+  managementAddressSectionConfig.map(({ key, title }) => ({
+    key,
+    title,
+    content: [
+      {
+        key,
+        componentType: 'copyable',
+        renderProps: {},
+      },
+    ],
+  })),
 
   [
     {

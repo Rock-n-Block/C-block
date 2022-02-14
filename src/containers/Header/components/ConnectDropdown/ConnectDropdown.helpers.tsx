@@ -1,19 +1,20 @@
 import { celoIcon, metamaskIcon, walletConnectIcon } from 'assets/img';
+import { WalletProviders } from 'types';
 
 export const connectDropdownData = [
   {
     label: 'WalletConnect',
-    connectorWallet: 'WalletConnect',
+    connectorWallet: WalletProviders.walletConnect,
     walletIcon: walletConnectIcon,
   },
   {
     label: 'Celo Wallet',
-    connectorWallet: 'Celo',
+    connectorWallet: WalletProviders.celo,
     walletIcon: celoIcon,
   },
   {
     label: 'Metamask',
-    connectorWallet: 'MetaMask',
+    connectorWallet: WalletProviders.metamask,
     walletIcon: metamaskIcon,
   },
 ];

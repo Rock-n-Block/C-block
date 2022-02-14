@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -52,7 +53,7 @@ export const Preview: FC<PreviewProps> = ({
   const openPaymentModal = useCallback(() => {
     closeDisclaimerModal();
     setPaymentOpen(true);
-  }, []);
+  }, [closeDisclaimerModal]);
 
   const closePaymentModal = useCallback(() => {
     setPaymentOpen(false);
@@ -66,19 +67,19 @@ export const Preview: FC<PreviewProps> = ({
     setCompleteOpen(false);
   }, []);
 
-  const onPay = useCallback(() => {
-    launchAction();
+  const onPay = useCallback(async () => {
+    await launchAction();
     closePaymentModal();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      openCompleteModal();
-    }, 1000);
-    setTimeout(() => {
-      navigate(routes.root);
-      deleteAction();
-    }, 6000);
-  }, []);
+    // setIsLoading(true);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   openCompleteModal();
+    // }, 1000);
+    // setTimeout(() => {
+    //   navigate(routes.root);
+    //   deleteAction();
+    // }, 6000);
+  }, [closePaymentModal, launchAction]);
 
   return (
     <Container className={classes.root}>

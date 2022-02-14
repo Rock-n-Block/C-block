@@ -33,7 +33,7 @@ export const DisclaimerModal: VFC<DisclaimerModalProps> = ({
     >
       Disclaimer
     </Typography>
-  ), []);
+  ), [isLight]);
 
   return (
     <Modal title={title} open={open} onClose={onClose} className={className}>

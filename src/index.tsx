@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import App from './containers/App/App';
 import * as serviceWorker from './serviceWorker';
 import store from './store/configureStore';
+import '@celo-tools/use-contractkit/lib/styles.css';
 
 const root = document.getElementById('root');
 

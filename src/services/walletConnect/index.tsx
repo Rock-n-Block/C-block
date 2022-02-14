@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useContext } from 'react';
 
-import { contracts, getProduction } from 'config';
+import { getCeloConfigMetamask, getProduction } from 'config';
 
-import { UserState, WalletProviders } from 'types';
+import { State, UserState, WalletProviders } from 'types';
 import { connectWalletState, disconnectWalletState } from 'store/user/reducer';
 import { connect } from 'react-redux';
 import { WalletService } from '..';
@@ -12,7 +12,6 @@ import { WalletService } from '..';
 declare global {
   interface Window {
     ethereum: any;
-    kardiachain: any;
   }
 }
 
@@ -57,32 +56,20 @@ any,
         ? 'https://forno.celo.org/'
         : 'https://alfajores-forno.celo-testnet.org/',
     );
-    const promises: Array<Promise<any>> = contracts.names.map((contract) => {
-      const { address, abi } = contracts.params[contract][getProduction() ? 'mainnet' : 'testnet'];
-
-      return this.state.provider.connectWallet.addContract({
-        name: contract,
-        address,
-        abi,
-      });
-    });
-
-    Promise.all(promises)
-      .then(() => {
-        this.setState({
-          isContractsExists: true,
-        });
-      })
-      .catch(() => {
-        this.disconnect();
-      });
 
     if (localStorage.walletconnect) {
-      this.connect('WalletConnect');
+      console.log('here');
+      this.connect(WalletProviders.walletConnect);
     }
   }
 
   connect = async (provider: WalletProviders) => {
+    if (provider === 'MetaMask' && window?.ethereum) {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: getCeloConfigMetamask(this.props.isMainnet),
+      });
+    }
     if (provider !== 'Celo') {
       try {
         const isConnected = await this.state.provider.initWalletConnect(
@@ -92,25 +79,17 @@ any,
         if (isConnected) {
           const userAccount = await this.state.provider.getAccount();
           this.props.connectWallet({
-            // @ts-expect-error: wrong types in lib
+            // @ts-expect-error: wrong lib types
             address: userAccount?.address,
             wallet: provider,
           });
-          // if (this.state.address && userAccount.address !== this.state.address) {
-          //   this.disconnect();
-          // } else {
-          //   this.setState({
-          //     address: userAccount.address,
-          //   });
-          //   this.state.provider.setAccountAddress(userAccount.address);
-          // }
         }
       } catch (err) {
-        console.error(err);
+        console.log(err);
         this.disconnect();
       }
     } else if (window.celo) {
-      await window.celo.enable();
+      await window.celo.enable;
       this.props.connectWallet({
         address: window.celo.selectedAddress,
         wallet: 'celo',
@@ -147,7 +126,11 @@ const mapDispatchToProps = (dispatch: any) => ({
   disconnectWallet: () => dispatch(disconnectWalletState()),
 });
 
-export default connect(null, mapDispatchToProps)(Connector);
+const mapStateToProps = (state: State) => ({
+  isMainnet: state.user.isMainnet,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Connector);
 
 export function useWalletConnectorContext() {
   return useContext(walletConnectorContext);

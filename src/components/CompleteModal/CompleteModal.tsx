@@ -22,7 +22,7 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
       <SuccessBigIcon />
       <Typography className={clsx(classes.desc, 'l')} variant="body1">The transaction was successfully completed</Typography>
     </>
-  ), []);
+  ), [classes.desc]);
 
   const showError = useMemo(() => (
     <>
@@ -30,7 +30,7 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
       <Typography className={clsx(classes.desc, 'l')} variant="body1"> Transaction error !</Typography>
       <Typography className={clsx(classes.desc, 'l')} variant="body1"> Please  come back later</Typography>
     </>
-  ), []);
+  ), [classes.desc]);
 
   return (
     <Modal open={open} onClose={onClose} className={clsx(classes.root)}>

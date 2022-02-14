@@ -1,9 +1,6 @@
-// import { fork } from 'redux-saga/effects';
+import { fork } from 'redux-saga/effects';
+import createContractsSaga from 'store/contractForms/sagas';
 
-// import web3Saga from './web3/saga';
-
-// export default function* rootSaga() {
-//   yield fork(web3Saga);
-// }
-
-export {};
+export default function* rootSaga() {
+  yield fork(createContractsSaga);
+}

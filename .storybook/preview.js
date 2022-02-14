@@ -10,7 +10,9 @@ const MUIDecorator = (story) => (
   <ThemeProvider theme={theme}>
     <StylesProvider>
       <CssBaseline />
-      <BreakpointsProvider>{story()}</BreakpointsProvider>
+      <BreakpointsProvider>
+        {story()}
+      </BreakpointsProvider>
     </StylesProvider>
   </ThemeProvider>
 );

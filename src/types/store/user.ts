@@ -1,6 +1,8 @@
+import { WalletProviders } from 'types';
+
 export type UserState = {
   address: string;
-  wallet: string;
+  wallet: WalletProviders;
   isLight: boolean;
   isMainnet: boolean;
 };

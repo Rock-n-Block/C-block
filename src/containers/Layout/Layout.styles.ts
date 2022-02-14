@@ -6,7 +6,6 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
   (theme: Theme) => createStyles({
     root: {
       position: 'relative',
-      zIndex: 2,
       width: '100%',
       display: 'flex',
       background: theme.palette.type === 'dark' ? COLOR_LAYOUT_BACKGROUND_DARK : COLOR_LAYOUT_BACKGROUND_LIGHT,

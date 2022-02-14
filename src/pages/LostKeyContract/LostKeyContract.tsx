@@ -66,8 +66,7 @@ export const LostKeyContract: FC = () => {
       ...lostKeyContract,
       managementAddress: userAddress,
     }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, userAddress]);
+  }, [dispatch, lostKeyContract, userAddress]);
 
   return (
     <Container>

@@ -131,7 +131,6 @@ export const contractFormReducer = createSlice({
       ...state,
       lostKeyContract: initialState.lostKeyContract,
     }),
-
     setWillContractForm: (state, action: PayloadAction<IWillContract>) => ({
       ...state,
       willContract: action.payload,
