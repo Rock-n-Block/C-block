@@ -47,8 +47,6 @@ function* createWillContractSaga({
       celoAddress,
     );
 
-    console.log('bEFORE ALLOWANCE');
-
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
@@ -59,7 +57,6 @@ function* createWillContractSaga({
     const price: string = yield call(
       lostKeyFactoryContract.methods.price(celoAddress).call,
     );
-    console.log(allowance, price);
 
     if (+allowance < +price * 2) {
       yield call(approveSaga, {
@@ -72,8 +69,6 @@ function* createWillContractSaga({
         },
       });
     }
-
-    console.log('HERE');
 
     const {
       reservesConfigs,
