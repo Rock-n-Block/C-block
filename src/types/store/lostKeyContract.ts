@@ -13,4 +13,5 @@ export interface ILostKeyContract {
   pingIntervalAsValue: string;
   pingIntervalAsDateUnits: TPingIntervalUnit;
   rewardAmount: string;
+  ownerEmail: string;
 }

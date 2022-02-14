@@ -161,6 +161,14 @@ export const LostKeyContractPreview = () => {
                           </Grid>
                         );
                       }
+                      case 'singleHelperText': {
+                        const value = getDeepValueByPath(lostKeyContract, key);
+                        return (
+                          <Grid key={key} className={classes.subInfo} item>
+                            <Typography>{value}</Typography>
+                          </Grid>
+                        );
+                      }
                       default: {
                         return (
                           <Grid key={key} className={classes.subInfo} item>

@@ -144,6 +144,14 @@ export const WillContractPreview = () => {
                           </Grid>
                         );
                       }
+                      case 'singleHelperText': {
+                        const value = getDeepValueByPath(willContract, key);
+                        return (
+                          <Grid key={key} className={classes.subInfo} item>
+                            <Typography>{value}</Typography>
+                          </Grid>
+                        );
+                      }
                       case 'tableColumn': {
                         return (
                           <Grid key={key} className={classes.tableColumn} item sm={4}>

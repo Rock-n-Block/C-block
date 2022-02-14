@@ -80,6 +80,7 @@ function* createLostKeyContractSaga({
       pingIntervalAsValue,
       pingIntervalAsDateUnits,
       rewardAmount,
+      ownerEmail,
     } = lostKeyContract;
 
     const reserveAddresses = reservesConfigs.map(({ reserveAddress }) => reserveAddress);
@@ -112,7 +113,7 @@ function* createLostKeyContractSaga({
       tx_hash: transactionHash,
       contract_name: lostKeyContract.contractName,
       mail_list: emailsList,
-      owner_mail: '', // TODO: Email of the contract creator
+      owner_mail: ownerEmail,
     });
 
     yield put(apiActions.success(type));

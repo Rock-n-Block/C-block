@@ -80,6 +80,7 @@ function* createWillContractSaga({
       pingIntervalAsValue,
       pingIntervalAsDateUnits,
       rewardAmount,
+      ownerEmail,
     } = willContract;
 
     const reserveAddresses = reservesConfigs.map(({ reserveAddress }) => reserveAddress);
@@ -112,7 +113,7 @@ function* createWillContractSaga({
       tx_hash: transactionHash,
       contract_name: willContract.contractName,
       mail_list: emailsList,
-      owner_mail: '', // TODO: Email of the contract creator
+      owner_mail: ownerEmail,
     });
 
     yield put(apiActions.success(type));

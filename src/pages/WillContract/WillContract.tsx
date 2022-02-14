@@ -144,14 +144,17 @@ export const WillContract: FC = () => {
               }
             </Grid>
 
-            <Grid className={clsx(classes.gridContainer, classes.managementAddressSection)} container>
+            <Grid
+              className={clsx(classes.gridContainer, classes.managementAddressSection)}
+              container
+            >
               {
                 managementAddressSectionConfig.map(({
-                  key, title, name, helperText,
+                  key, title, name, helperText, renderProps,
                 }) => (
                   <Grid
                     key={key}
-                    className={classes.gridItem}
+                    className={clsx(classes.gridItem, classes.managementAddressSectionField)}
                     item
                     xs={12}
                     sm={6}
@@ -162,9 +165,18 @@ export const WillContract: FC = () => {
                     >
                       {title}
                     </Typography>
-                    <TextField
-                      disabled
-                      value={values[name]}
+                    <Field
+                      id={key}
+                      name={name}
+                      render={() => (
+                        <TextField
+                          {...renderProps}
+                          value={values[name]}
+                          error={errors[name] && touched[name]}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      )}
                     />
                     {helperText.map((text, i) => (
                       <Typography

@@ -13,4 +13,5 @@ export interface IWillContract {
   pingIntervalAsValue: string;
   pingIntervalAsDateUnits: TPingIntervalUnit;
   rewardAmount: string;
+  ownerEmail: string;
 }

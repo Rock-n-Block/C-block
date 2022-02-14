@@ -83,6 +83,7 @@ const initialState: ContractFormsState = {
     pingIntervalAsValue: '6',
     pingIntervalAsDateUnits: 'Month',
     rewardAmount: '',
+    ownerEmail: '',
   },
   willContract: {
     contractName: '',
@@ -91,6 +92,7 @@ const initialState: ContractFormsState = {
     pingIntervalAsValue: '6',
     pingIntervalAsDateUnits: 'Month',
     rewardAmount: '',
+    ownerEmail: '',
   },
 };
 
