@@ -3,7 +3,12 @@
 import { ContractsNames, IConnectWallet, IContracts } from 'types';
 import store from 'store/configureStore';
 import {
-  bep20Abi, tokenMintableFreezableAbi, tokenMintableNonFreezableAbi, tokenNonMintableFreezableAbi, tokenNonMintableNonFreezableAbi,
+  bep20Abi,
+  tokenMintableFreezableAbi,
+  tokenMintableNonFreezableAbi,
+  tokenNonMintableFreezableAbi,
+  tokenNonMintableNonFreezableAbi,
+  lostKeyFactoryAbi,
 } from './abi';
 
 export * from './constants';
@@ -119,6 +124,16 @@ export const contracts: IContracts = {
       testnet: {
         address: '0x568EE75009950B15e9e91a9A99DedF749f3AcBBf',
         abi: tokenNonMintableNonFreezableAbi,
+      },
+    },
+    lostKeyFactory: {
+      mainnet: {
+        address: '',
+        abi: lostKeyFactoryAbi,
+      },
+      testnet: {
+        address: '0xd0fF8b5a7723752309ab2222A40b0485aA53C558',
+        abi: lostKeyFactoryAbi,
       },
     },
   },

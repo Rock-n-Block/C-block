@@ -9,7 +9,7 @@ import userSelector from 'store/user/selectors';
 import { bep20Abi } from 'config/abi';
 import { contractsHelper, getTokenAmount } from 'utils';
 import {
-  ContractFormsState, ContractsNames, TokenContractDynamicForm, UserState,
+  ContractsNames, TokenContract, TokenContractDynamicForm, UserState,
 } from 'types';
 import { baseApi } from 'store/api/apiRequestBuilder';
 import actionTypes from '../actionTypes';
@@ -23,8 +23,8 @@ function* createTokenContractSaga({
   try {
     yield put(apiActions.request(type));
 
-    const { tokenContract }: ContractFormsState = yield select(
-      contractFormsSelector.getContractForms,
+    const tokenContract: TokenContract = yield select(
+      contractFormsSelector.getTokenContract,
     );
     const { isMainnet, address: myAddress }: UserState = yield select(
       userSelector.getUser,
@@ -33,7 +33,6 @@ function* createTokenContractSaga({
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
     const {
-      tokenName,
       tokenOwner,
       tokenSymbol,
       decimals,
@@ -60,15 +59,14 @@ function* createTokenContractSaga({
       celoAddress,
     );
 
-    const price: string = yield call(
-      tokenFactoryContract.methods.price(celoAddress, burnable ? 1 : 0).call,
-    );
-
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
         tokenFactoryContractData.address,
       ).call,
+    );
+    const price: string = yield call(
+      tokenFactoryContract.methods.price(celoAddress, burnable ? 1 : 0).call,
     );
 
     if (+allowance < +price * 2) {
@@ -97,6 +95,7 @@ function* createTokenContractSaga({
       freezable,
     );
 
+    const { tokenName } = tokenContract;
     const contractMethodArgs: (string | string[] | number[])[] = [
       [celoAddress, tokenOwner],
       tokenName,

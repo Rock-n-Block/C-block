@@ -20,5 +20,18 @@ export const baseApi = {
       data,
     });
   },
-
+  createLostKeyContract(data): unknown {
+    return ajax({
+      method: 'post',
+      url: URL.createLostKeyContract,
+      data,
+    });
+  },
+  createWillContract(data): unknown {
+    return ajax({
+      method: 'post',
+      url: URL.createWillContract,
+      data,
+    });
+  },
 };

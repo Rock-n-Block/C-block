@@ -8,6 +8,8 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Grid, Typography, Box } from '@material-ui/core';
+import clsx from 'clsx';
+import Web3 from 'web3';
 
 import {
   Preview,
@@ -21,15 +23,13 @@ import contractFormsSelector from 'store/contractForms/selectors';
 import uiSelector from 'store/ui/selectors';
 import user from 'store/user/selectors';
 import {
-  ContractFormsState, RequestStatus, State, UserState,
+  RequestStatus, State, TokenContract, UserState,
 } from 'types';
-import clsx from 'clsx';
 import { routes } from 'appConstants';
 
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
 import { useWalletConnectorContext } from 'services';
 import { createTokenContract } from 'store/contractForms/actions';
-import Web3 from 'web3';
 import actionTypes from 'store/contractForms/actionTypes';
 import { useStyles } from './TokenContractPreview.styles';
 import {
@@ -38,47 +38,19 @@ import {
 } from './TokenContractPreview.helpers';
 
 export const TokenContractPreview = () => {
-  const { tokenContract } = useShallowSelector<State, ContractFormsState>(
-    contractFormsSelector.getContractForms,
-  );
-
-  const createTokenRequestStatus = useShallowSelector(
-    uiSelector.getProp(actionTypes.CREATE_TOKEN_CONTRACT),
-  );
-
-  const [resultModalState, setResultModalState] = useState({
-    open: false,
-    result: false,
-  });
-
-  const handleCloseResultModal = useCallback(() => {
-    setResultModalState({
-      ...resultModalState,
-      open: false,
-    });
-  }, [resultModalState]);
-
-  const isLoader = useMemo(
-    () => createTokenRequestStatus === RequestStatus.REQUEST,
-    [createTokenRequestStatus],
-  );
-
-  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { walletService } = useWalletConnectorContext();
-
-  const handleEdit = useCallback(() => {
-    navigate(routes['token-contract'].root);
-  }, [navigate]);
-
   const handleDelete = useCallback(() => {
     dispatch(deleteTokenContractForm());
     navigate(routes.root);
   }, [dispatch, navigate]);
+  const handleEdit = useCallback(() => {
+    navigate(routes['token-contract'].root);
+  }, [navigate]);
 
-  const handleCreateToken = useCallback(async () => {
+  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
+  const { walletService } = useWalletConnectorContext();
+  const handleCreateContract = useCallback(async () => {
     const { celo } = window;
     const web3 = new Web3(celo);
     dispatch(
@@ -89,8 +61,30 @@ export const TokenContractPreview = () => {
     );
   }, [dispatch, wallet, walletService]);
 
+  const tokenContract = useShallowSelector<State, TokenContract>(
+    contractFormsSelector.getTokenContract,
+  );
+  const createContractRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.CREATE_TOKEN_CONTRACT),
+  );
+  const isLoader = useMemo(
+    () => createContractRequestStatus === RequestStatus.REQUEST,
+    [createContractRequestStatus],
+  );
+
+  const [resultModalState, setResultModalState] = useState({
+    open: false,
+    result: false,
+  });
+  const handleCloseResultModal = useCallback(() => {
+    setResultModalState({
+      ...resultModalState,
+      open: false,
+    });
+  }, [resultModalState]);
+
   useEffect(() => {
-    switch (createTokenRequestStatus) {
+    switch (createContractRequestStatus) {
       case RequestStatus.SUCCESS: {
         setResultModalState({
           open: true,
@@ -109,7 +103,7 @@ export const TokenContractPreview = () => {
         break;
       }
     }
-  }, [createTokenRequestStatus]);
+  }, [createContractRequestStatus]);
 
   const classes = useStyles();
   let totalTokenAmount = 0;
@@ -117,7 +111,7 @@ export const TokenContractPreview = () => {
     <Preview
       type="token"
       name={tokenContract.tokenName}
-      launchAction={handleCreateToken}
+      launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
     >

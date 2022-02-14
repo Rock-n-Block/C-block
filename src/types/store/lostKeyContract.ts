@@ -1,3 +1,5 @@
+import { TPingIntervalUnit } from '.';
+
 export interface ILostKeyContractDynamicForm {
   reserveAddress: string;
   email: string;
@@ -9,5 +11,6 @@ export interface ILostKeyContract {
   managementAddress: string;
   reservesConfigs: ILostKeyContractDynamicForm[];
   pingIntervalAsValue: string;
-  pingIntervalAsDateUnits: string;
+  pingIntervalAsDateUnits: TPingIntervalUnit;
+  rewardAmount: string;
 }

@@ -15,6 +15,7 @@ export const getMuiSlider = (): Overrides['MuiSlider'] => ({
     top: 3,
     background: COLOR_AKZ,
     border: `3px solid ${COLOR_BLACK_3}`,
+    transform: 'translate(-50%)',
   },
   active: {},
   valueLabel: {

@@ -29,8 +29,9 @@ import {
   willContractDynamicFormInitialData,
   setWillContractForm,
 } from 'store/contractForms/reducer';
-import { routes } from 'appConstants';
+import { routes, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
+import { setNotification } from 'utils';
 import {
   validationSchema,
   dynamicSectionFormConfig,
@@ -41,7 +42,6 @@ import {
 } from './WillContract.helpers';
 import { useStyles } from './WillContract.styles';
 
-const RESERVED_ADDRESSES = 4; // supported only 4 tokens as a reserved address
 const MAX_RESERVES_PERCENTS = 100;
 
 const getUnallocatedResidue = (
@@ -76,7 +76,16 @@ export const WillContract: FC = () => {
         enableReinitialize
         initialValues={willContract}
         validationSchema={validationSchema}
-        onSubmit={(values: IWillContract) => {
+        onSubmit={(values: IWillContract, formikHelpers) => {
+          const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
+          if (sum < MAX_RESERVES_PERCENTS) {
+            formikHelpers.setSubmitting(false);
+            setNotification({
+              message: `Sum of the funds to be transferred to the backup address must be ${MAX_RESERVES_PERCENTS}`,
+              type: 'error',
+            });
+            return;
+          }
           dispatch(setWillContractForm(values));
           navigate(routes['will-contract']['preview-contract'].root);
         }}
@@ -285,7 +294,7 @@ export const WillContract: FC = () => {
                         </RemovableContractsFormBlock>
                         {i === values.reservesConfigs.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                          {i + 1 < RESERVED_ADDRESSES && (
+                          {i + 1 < TOKEN_ADDRESSES_MAX_COUNT && (
                           <Button
                             variant="outlined"
                             endIcon={<PlusIcon />}

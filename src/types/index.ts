@@ -11,6 +11,7 @@ export enum ContractsNames {
   tokenMintableNonFreezable = 'tokenMintableNonFreezable',
   tokenNonMintableFreezable = 'tokenNonMintableFreezable',
   tokenNonMintableNonFreezable = 'tokenNonMintableNonFreezable',
+  lostKeyFactory = 'lostKeyFactory',
 }
 export type TContractsNames = keyof typeof ContractsNames;
 

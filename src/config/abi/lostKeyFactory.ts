@@ -2,6 +2,11 @@ import { AbiItem } from 'web3-utils';
 
 export default [
   {
+    type: 'constructor',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'address', name: '_native', internalType: 'address' }],
+  },
+  {
     type: 'event',
     name: 'NewContract',
     inputs: [
@@ -9,12 +14,6 @@ export default [
         type: 'address',
         name: 'contractAddress',
         internalType: 'address',
-        indexed: false,
-      },
-      {
-        type: 'uint8',
-        name: 'contractType',
-        internalType: 'uint8',
         indexed: false,
       },
     ],
@@ -41,38 +40,26 @@ export default [
   },
   {
     type: 'function',
-    stateMutability: 'nonpayable',
-    outputs: [],
-    name: 'deployERC20BurnablePausableToken',
-    inputs: [
-      {
-        type: 'address[2]',
-        name: 'tokenToPayAndOwner',
-        internalType: 'address[2]',
-      },
-      { type: 'string', name: 'name', internalType: 'string' },
-      { type: 'string', name: 'symbol', internalType: 'string' },
-      { type: 'uint8', name: '_decimals', internalType: 'uint8' },
-      { type: 'address[]', name: 'owner', internalType: 'address[]' },
-      { type: 'uint256[]', name: 'initSupply', internalType: 'uint256[]' },
-    ],
+    stateMutability: 'view',
+    outputs: [{ type: 'address', name: '', internalType: 'contract IERC20' }],
+    name: 'NATIVE',
+    inputs: [],
   },
   {
     type: 'function',
     stateMutability: 'nonpayable',
     outputs: [],
-    name: 'deployERC20PausableToken',
+    name: 'deployLostKey',
     inputs: [
+      { type: 'address', name: 'tokenToPay', internalType: 'address' },
       {
-        type: 'address[2]',
-        name: 'tokenToPayAndOwner',
-        internalType: 'address[2]',
+        type: 'address[]',
+        name: '_backupAddresses',
+        internalType: 'address[]',
       },
-      { type: 'string', name: 'name', internalType: 'string' },
-      { type: 'string', name: 'symbol', internalType: 'string' },
-      { type: 'uint8', name: '_decimals', internalType: 'uint8' },
-      { type: 'address[]', name: 'owner', internalType: 'address[]' },
-      { type: 'uint256[]', name: 'initSupply', internalType: 'uint256[]' },
+      { type: 'uint256[]', name: '_shares', internalType: 'uint256[]' },
+      { type: 'uint256', name: '_confirmationPeriod', internalType: 'uint256' },
+      { type: 'uint256', name: 'distributionReward', internalType: 'uint256' },
     ],
   },
   {
@@ -94,10 +81,7 @@ export default [
     stateMutability: 'view',
     outputs: [{ type: 'uint256', name: '', internalType: 'uint256' }],
     name: 'price',
-    inputs: [
-      { type: 'address', name: '', internalType: 'address' },
-      { type: 'uint256', name: '', internalType: 'uint256' },
-    ],
+    inputs: [{ type: 'address', name: '', internalType: 'address' }],
   },
   {
     type: 'function',
@@ -113,7 +97,7 @@ export default [
     name: 'setPrice',
     inputs: [
       { type: 'address', name: '_token', internalType: 'address' },
-      { type: 'uint256[2]', name: '_price', internalType: 'uint256[2]' },
+      { type: 'uint256', name: '_price', internalType: 'uint256' },
     ],
   },
   {

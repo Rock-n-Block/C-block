@@ -31,6 +31,7 @@ import {
 } from 'store/contractForms/reducer';
 import { routes, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
+import { setNotification } from 'utils';
 import {
   validationSchema,
   dynamicSectionFormConfig,
@@ -56,7 +57,9 @@ export const LostKeyContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(contractFormsSelector.getLostKeyContract);
+  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
+    contractFormsSelector.getLostKeyContract,
+  );
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
@@ -72,7 +75,16 @@ export const LostKeyContract: FC = () => {
         enableReinitialize
         initialValues={lostKeyContract}
         validationSchema={validationSchema}
-        onSubmit={(values: ILostKeyContract) => {
+        onSubmit={(values, formikHelpers) => {
+          const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
+          if (sum < MAX_RESERVES_PERCENTS) {
+            formikHelpers.setSubmitting(false);
+            setNotification({
+              message: `Sum of the funds to be transferred to the backup address must be ${MAX_RESERVES_PERCENTS}`,
+              type: 'error',
+            });
+            return;
+          }
           dispatch(setLostKeyContractForm(values));
           navigate(routes['lostkey-contract']['preview-contract'].root);
         }}
