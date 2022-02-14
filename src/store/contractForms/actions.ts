@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAction } from '@reduxjs/toolkit';
 
-import { TCreateTokenContractAction, TApproveAction, TCreateLostKeyContractAction } from 'types';
+import {
+  TApproveAction,
+  TCreateTokenContractAction,
+  TCreateLostKeyContractAction,
+  TCreateWillContractAction,
+} from 'types';
 
 import actionTypes from './actionTypes';
 
@@ -12,4 +17,7 @@ export const createTokenContract = createAction<TCreateTokenContractAction>(
 );
 export const createLostKeyContract = createAction<TCreateLostKeyContractAction>(
   actionTypes.CREATE_LOSTKEY_CONTRACT,
+);
+export const createWillContract = createAction<TCreateWillContractAction>(
+  actionTypes.CREATE_WILL_CONTRACT,
 );

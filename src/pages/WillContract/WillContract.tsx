@@ -22,7 +22,7 @@ import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import {
-  ContractFormsState, State, IWillContract, UserState,
+  State, IWillContract, UserState,
 } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
@@ -57,9 +57,9 @@ export const WillContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    willContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const willContract = useShallowSelector<State, IWillContract>(
+    contractFormsSelector.getWillContract,
+  );
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
@@ -67,8 +67,7 @@ export const WillContract: FC = () => {
       ...willContract,
       managementAddress: userAddress,
     }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, userAddress]);
+  }, [dispatch, userAddress, willContract]);
 
   return (
     <Container>

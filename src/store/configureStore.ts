@@ -60,6 +60,7 @@ const store = configureStore({
           actionTypes.APPROVE,
           actionTypes.CREATE_TOKEN_CONTRACT,
           actionTypes.CREATE_LOSTKEY_CONTRACT,
+          actionTypes.CREATE_WILL_CONTRACT,
         ],
       },
     },
