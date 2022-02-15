@@ -17,7 +17,7 @@ export const Logo: VFC<LogoProps> = ({ isLight = false, className }) => {
   return (
     <Link to={routes.root} className={clsx(classes.root, className)}>
       <img src={isLight ? LogoBlackIcon : LogoIcon} alt="" />
-      <Typography variant="body1" className={classes.subLogo}>Platform</Typography>
+      <Typography variant="body1" className={classes.subLogo}>PLATFORM</Typography>
     </Link>
   );
 };

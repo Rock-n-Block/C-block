@@ -9,10 +9,11 @@ export const useStyles = makeStyles(() => createStyles({
   },
   subLogo: {
     position: 'absolute',
-    right: '18px',
+    right: '-2px',
     bottom: '-10px',
     fontSize: '14px',
     lineHeight: '24px',
+    letterSpacing: 0,
     color: COLOR_BLACK_4,
   },
 }));
