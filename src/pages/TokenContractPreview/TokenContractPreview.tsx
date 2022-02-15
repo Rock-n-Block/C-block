@@ -141,20 +141,23 @@ export const TokenContractPreview = () => {
         </Grid>
       ))}
 
-      <Typography
-        variant="body1"
-        className={clsx(classes.tokenOwnerTitle, 'l')}
-      >
-        Token Owner
-      </Typography>
-      <Copyable
-        onlyIconActive
-        withBorder
-        valueToCopy={tokenContract.tokenOwner}
-        className={classes.copyableContainer}
-      >
-        <Typography noWrap>{tokenContract.tokenOwner}</Typography>
-      </Copyable>
+      <Box className={classes.tokenContractInfoBlock}>
+        <Typography
+          variant="body1"
+          className={clsx(classes.tokenOwnerTitle, 'l')}
+        >
+          Token Owner
+        </Typography>
+        <Copyable
+          className={classes.copyableContainer}
+          onlyIconActive
+          withBorder
+          valueToCopy={tokenContract.tokenOwner}
+        >
+          <Typography noWrap>{tokenContract.tokenOwner}</Typography>
+        </Copyable>
+      </Box>
+
       <Typography className={classes.dynamicDataHeader} variant="h3">
         Token distribution
       </Typography>
