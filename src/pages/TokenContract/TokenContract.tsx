@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -24,9 +24,15 @@ import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State, TokenContract as TokenContractType } from 'types';
 import { useShallowSelector } from 'hooks';
-import { dynamicFormDataTemplate, setTokenContractForm } from 'store/contractForms/reducer';
+import {
+  deleteTokenContractForm,
+  dynamicFormDataTemplate,
+  initialState,
+  setTokenContractForm,
+} from 'store/contractForms/reducer';
 import { RemovableContractsFormBlock } from 'components';
 import { routes } from 'appConstants';
+import { isEqual } from 'lodash';
 import {
   tokenContractFormConfigStart,
   validationSchema,
@@ -39,6 +45,11 @@ export const TokenContract = React.memo(() => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleClearTokenState = useCallback(() => {
+    dispatch(deleteTokenContractForm());
+  }, [dispatch]);
+
   const {
     tokenContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
@@ -66,8 +77,8 @@ export const TokenContract = React.memo(() => {
           setFieldTouched,
         }) => (
           <Form translate={undefined} className={classes.form}>
-            {tokenContractFormConfigStart.map((formSection, index) => (
-              <Grid container className={classes.tokenContractFormSection} key={`start_${index}`}>
+            {tokenContractFormConfigStart.map((formSection, indexLvl2) => (
+              <Grid container className={classes.tokenContractFormSection} key={`start_${indexLvl2}`}>
                 {formSection.map(({
                   id, name, renderProps, helperText, isShort,
                 }) => (
@@ -96,10 +107,10 @@ export const TokenContract = React.memo(() => {
                         )
                       }
                     />
-                    {helperText.map((text, i) => (
+                    {helperText.map((text, indexLvl1) => (
                       <Typography
-                        key={i}
-                        className={clsx({ [classes.helperText]: i === 0 }, 's')}
+                        key={indexLvl1}
+                        className={clsx({ [classes.helperText]: indexLvl1 === 0 }, 's')}
                         variant="body1"
                         color="textSecondary"
                       >
@@ -112,77 +123,84 @@ export const TokenContract = React.memo(() => {
             ))}
             <Box className={classes.tokenContractFormSection}>
               <FieldArray name="tokens">
-                {({ remove, push }) => (values.tokens.map((token, i) => {
-                  const tokensErrors = (errors.tokens?.length && errors.tokens[i]) || {};
-                  const tokensTouched = (touched.tokens?.length && touched.tokens[i]) || {};
+                {({ remove, push }) => (values.tokens.map((token, indexLvl1) => {
+                  const tokensErrors = (errors.tokens?.length && errors.tokens[indexLvl1]) || {};
+                  const tokensTouched = (touched.tokens?.length && touched.tokens[indexLvl1]) || {};
                   const totalTokenAmount = values.tokens.reduce((acc, tokenForm) => {
                     // eslint-disable-next-line no-param-reassign
                     acc += +tokenForm.amount;
                     return acc;
                   }, 0);
                   return (
-                    <Fragment key={`dynamic_${i}`}>
+                    <Fragment key={`dynamic_${indexLvl1}`}>
                       <RemovableContractsFormBlock
-                        isFirst={i === 0}
+                        isFirst={indexLvl1 === 0}
                         title="Define address for tokens"
                         subtitle="(after minting it will be sent to this address)"
-                        deleteForm={() => remove(i)}
+                        deleteForm={() => remove(indexLvl1)}
                       >
                         {dynamicFormDataConfig.map(({
                           id, name, renderProps, icon, isShort,
-                        }, index) => (
-                          <Grid
-                            item
-                            xs={12}
-                            sm={isShort ? 6 : 12}
-                            md={isShort ? 3 : 6}
-                            lg={isShort ? 3 : 6}
-                            xl={isShort ? 3 : 6}
-                            key={`${name}_${index}`}
-                            className={clsx(classes[name])}
-                          >
-                            <Field
-                              id={`tokens[${i}].${id}`}
-                              name={`tokens[${i}].${name}`}
-                              render={
-                              ({ form: { isSubmitting } }: FieldProps) => {
-                                if (renderProps.type === 'switch') {
-                                  const updatedHandleChange = (e) => {
-                                    handleChange(`tokens[${i}].${name}`)(e);
-                                    if (name === 'isFrozen' && !values.freezable) {
-                                      setFieldValue('freezable', true);
-                                      setFieldTouched('freezable', true);
-                                    }
-                                  };
+                        }, indexLvl2) => {
+                          if (name === 'frozenUntilDate' && !values.tokens[indexLvl1].isFrozen) {
+                            return null;
+                          }
+
+                          return (
+                            <Grid
+                              item
+                              xs={12}
+                              sm={isShort ? 6 : 12}
+                              md={isShort ? 3 : 6}
+                              lg={isShort ? 3 : 6}
+                              xl={isShort ? 3 : 6}
+                              key={`${name}_${indexLvl2}`}
+                              className={clsx(classes[name])}
+                            >
+                              <Field
+                                id={`tokens[${indexLvl1}].${id}`}
+                                name={`tokens[${indexLvl1}].${name}`}
+                                render={
+                                ({ form: { isSubmitting } }: FieldProps) => {
+                                  console.log(name);
+                                  if (renderProps.type === 'switch') {
+                                    const updatedHandleChange = (e) => {
+                                      handleChange(`tokens[${indexLvl1}].${name}`)(e);
+                                      if (name === 'isFrozen' && !values.freezable) {
+                                        setFieldValue('freezable', true);
+                                        setFieldTouched('freezable', true);
+                                      }
+                                    };
+                                    return (
+                                      <CheckBox
+                                        {...renderProps}
+                                        icon={icon}
+                                        value={token[name]}
+                                        onClick={(e) => updatedHandleChange(e)}
+                                      />
+                                    );
+                                  }
                                   return (
-                                    <CheckBox
+                                    <TextField
                                       {...renderProps}
-                                      icon={icon}
+                                      name={`tokens[${indexLvl1}].${name}`}
+                                      disabled={isSubmitting}
+                                      onChange={handleChange(`tokens[${indexLvl1}].${name}`)}
                                       value={token[name]}
-                                      onClick={(e) => updatedHandleChange(e)}
+                                      onBlur={handleBlur}
+                                      error={tokensErrors[name] && tokensTouched[name]}
                                     />
                                   );
                                 }
-                                return (
-                                  <TextField
-                                    {...renderProps}
-                                    name={`tokens[${i}].${name}`}
-                                    disabled={isSubmitting}
-                                    onChange={handleChange(`tokens[${i}].${name}`)}
-                                    value={token[name]}
-                                    onBlur={handleBlur}
-                                    error={tokensErrors[name] && tokensTouched[name]}
-                                  />
-                                );
                               }
-                            }
-                            />
-                          </Grid>
-                        ))}
+                              />
+                            </Grid>
+                          );
+                        })}
                       </RemovableContractsFormBlock>
-                      {i === values.tokens.length - 1 && (
+                      {indexLvl1 === values.tokens.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                          {i < 4 && (
+                          {indexLvl1 < 4 && (
                             <Button
                               variant="outlined"
                               onClick={() => push(dynamicFormDataTemplate)}
@@ -225,19 +243,30 @@ export const TokenContract = React.memo(() => {
                     id={id}
                     name={name}
                     render={
-                        () => (
-                          <CheckBox
-                            {...renderProps}
-                            onClick={handleChange}
-                            value={values[name]}
-                          />
-                        )
+                        () => {
+                          const updatedHandleChange = (e) => {
+                            handleChange(name)(e);
+                            if (name === 'freezable' && values.freezable) {
+                              values.tokens.forEach((_, indexLvl2) => {
+                                setFieldValue(`tokens[${indexLvl2}].isFrozen`, false);
+                                setFieldTouched(`tokens[${indexLvl2}].isFrozen`, false);
+                              });
+                            }
+                          };
+                          return (
+                            <CheckBox
+                              {...renderProps}
+                              onClick={updatedHandleChange}
+                              value={values[name]}
+                            />
+                          );
+                        }
                       }
                   />
-                  {helperText.map((text, i) => (
+                  {helperText.map((text, indexLvl1) => (
                     <Typography
-                      key={i}
-                      className={clsx({ [classes.helperText]: i === 0 }, 's')}
+                      key={indexLvl1}
+                      className={clsx({ [classes.helperText]: indexLvl1 === 0 }, 's')}
                       variant="body1"
                       color="textSecondary"
                     >
@@ -265,7 +294,8 @@ export const TokenContract = React.memo(() => {
                 variant="outlined"
                 endIcon={<CloseCircleIcon />}
                 className={classes.resetButton}
-                disabled={!Object.keys(touched).length}
+                onClick={handleClearTokenState}
+                disabled={isEqual(values, initialState.tokenContract)}
               >
                 Clean
               </Button>

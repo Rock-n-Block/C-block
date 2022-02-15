@@ -21,8 +21,14 @@ export const validationSchema = Yup.object().shape({
       address: Yup.string().length(42).required(),
       name: Yup.string().matches(latinAndNumbers).min(5).required(),
       amount: Yup.number().positive().min(0).required(),
-      isFrozen: Yup.boolean().required(),
-      frozenUntilDate: Yup.date().min(yesterday).max(maxDate).required(),
+      isFrozen: Yup.boolean().when('freezable', {
+        is: true,
+        then: Yup.boolean().required(),
+      }),
+      frozenUntilDate: Yup.date().when('isFrozen', {
+        is: true,
+        then: Yup.date().min(yesterday).max(maxDate).required(),
+      }),
     }),
   ),
 });
