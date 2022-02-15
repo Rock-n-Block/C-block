@@ -222,7 +222,7 @@ export const TokenContractPreview = () => {
               >
                 Total supply:{' '}
                 <span className={classes.newCount}>
-                  {`${totalTokenAmount} New`}
+                  {`${totalTokenAmount} ${tokenContract.tokenSymbol}`}
                 </span>
               </Typography>
             )}

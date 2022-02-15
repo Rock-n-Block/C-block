@@ -207,7 +207,7 @@ export const TokenContract = memo(() => {
                           >
                             Total supply:{' '}
                             <span className={classes.newCount}>
-                              {`${totalTokenAmount} New`}
+                              {`${totalTokenAmount} ${values.tokenSymbol}`}
                             </span>
                           </Typography>
                         </Grid>
