@@ -99,7 +99,7 @@ export const dynamicFormDataConfig: TokenContractFieldType[] = [
     id: 'name',
     name: 'name',
     renderProps: {
-      label: 'Name',
+      label: 'Wallet name',
       name: 'name',
       type: 'input',
     },
