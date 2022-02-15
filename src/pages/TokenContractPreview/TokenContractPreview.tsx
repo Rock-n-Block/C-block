@@ -192,8 +192,9 @@ export const TokenContractPreview = () => {
                     <Grid key={key} item xs={6} sm={6} md={3} lg={3} xl={3}>
                       <Box
                         className={clsx(
-                          classes.previewLabel,
-                          classes.frozenUntil,
+                          classes.previewLabel, {
+                            [classes.previewLabelWithIcon]: !!icon,
+                          },
                         )}
                       >
                         {icon}
@@ -205,7 +206,7 @@ export const TokenContractPreview = () => {
                           {label}
                         </Typography>
                       </Box>
-                      <Typography variant="body1">
+                      <Typography variant="body1" noWrap>
                         {tokenContractDynamicData[key]}
                       </Typography>
                     </Grid>
