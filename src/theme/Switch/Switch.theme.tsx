@@ -24,9 +24,9 @@ export const getMuiSwitch = (theme: Theme): Overrides['MuiSwitch'] => {
   return {
     root: {
       ...trackSize,
+      overflow: 'hidden',
       opacity: '1 !important',
       margin: theme.spacing(1),
-      overflow: 'visible',
 
       '&:focus-within::before': {
         display: 'block',
@@ -95,12 +95,6 @@ export const getMuiSwitch = (theme: Theme): Overrides['MuiSwitch'] => {
 
         transform: `translateX(calc(${trackSize.width} - 100%))`,
       },
-    },
-    input: {
-      top: 0,
-      left: 0,
-      width: '100%',
-      // ...switchBaseSize,
     },
     thumb: {
       backgroundColor: COLOR_BLACK,
