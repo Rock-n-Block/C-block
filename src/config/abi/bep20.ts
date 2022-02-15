@@ -1,3 +1,5 @@
+import { AbiItem } from 'web3-utils';
+
 export default [
   {
     inputs: [{ internalType: 'uint256', name: '_stageOneUnlockTime', type: 'uint256' }],
@@ -310,4 +312,4 @@ export default [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-];
+] as AbiItem[];

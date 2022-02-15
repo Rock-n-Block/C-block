@@ -82,6 +82,8 @@ const initialState: ContractFormsState = {
     reservesConfigs: [lostKeyContractDynamicFormInitialData],
     pingIntervalAsValue: '6',
     pingIntervalAsDateUnits: 'Month',
+    rewardAmount: '',
+    ownerEmail: '',
   },
   willContract: {
     contractName: '',
@@ -89,6 +91,8 @@ const initialState: ContractFormsState = {
     reservesConfigs: [willContractDynamicFormInitialData],
     pingIntervalAsValue: '6',
     pingIntervalAsDateUnits: 'Month',
+    rewardAmount: '',
+    ownerEmail: '',
   },
 };
 

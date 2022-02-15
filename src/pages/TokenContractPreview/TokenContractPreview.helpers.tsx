@@ -25,7 +25,7 @@ export const staticTokenContractPreviewHelpers: TokenContractPreviewHelperType[]
     },
     {
       shouldSkipObjectValue: true,
-      label: 'Token symbol:',
+      label: 'Token type:',
       value: 'ERC20',
     },
   ],

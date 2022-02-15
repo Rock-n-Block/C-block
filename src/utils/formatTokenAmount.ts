@@ -1,6 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { formatNumber } from './numberFormatter';
 
+/**
+ * @example getTokenAmount('1', 18) => '1000000000000000000'
+ */
 export const getTokenAmount = (
   balance: string | number,
   decimals = 18,

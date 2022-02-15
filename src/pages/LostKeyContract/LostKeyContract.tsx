@@ -22,7 +22,7 @@ import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import {
-  ContractFormsState, State, ILostKeyContract, UserState,
+  State, ILostKeyContract, UserState,
 } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
@@ -31,6 +31,7 @@ import {
 } from 'store/contractForms/reducer';
 import { routes, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
+import { setNotification } from 'utils';
 import {
   validationSchema,
   dynamicSectionFormConfig,
@@ -56,9 +57,9 @@ export const LostKeyContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    lostKeyContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
+    contractFormsSelector.getLostKeyContract,
+  );
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
@@ -74,7 +75,16 @@ export const LostKeyContract: FC = () => {
         enableReinitialize
         initialValues={lostKeyContract}
         validationSchema={validationSchema}
-        onSubmit={(values: ILostKeyContract) => {
+        onSubmit={(values, formikHelpers) => {
+          const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
+          if (sum < MAX_RESERVES_PERCENTS) {
+            formikHelpers.setSubmitting(false);
+            setNotification({
+              message: `Sum of the funds to be transferred to the backup address must be ${MAX_RESERVES_PERCENTS}`,
+              type: 'error',
+            });
+            return;
+          }
           dispatch(setLostKeyContractForm(values));
           navigate(routes['lostkey-contract']['preview-contract'].root);
         }}
@@ -134,14 +144,17 @@ export const LostKeyContract: FC = () => {
               }
             </Grid>
 
-            <Grid className={clsx(classes.gridContainer, classes.managementAddressSection)} container>
+            <Grid
+              className={clsx(classes.gridContainer, classes.managementAddressSection)}
+              container
+            >
               {
                 managementAddressSectionConfig.map(({
-                  key, title, name, helperText,
+                  key, title, name, helperText, renderProps,
                 }) => (
                   <Grid
                     key={key}
-                    className={classes.gridItem}
+                    className={clsx(classes.gridItem, classes.managementAddressSectionField)}
                     item
                     xs={12}
                     sm={6}
@@ -152,9 +165,18 @@ export const LostKeyContract: FC = () => {
                     >
                       {title}
                     </Typography>
-                    <TextField
-                      disabled
-                      value={values[name]}
+                    <Field
+                      id={key}
+                      name={name}
+                      render={() => (
+                        <TextField
+                          {...renderProps}
+                          value={values[name]}
+                          error={errors[name] && touched[name]}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      )}
                     />
                     {helperText.map((text, i) => (
                       <Typography

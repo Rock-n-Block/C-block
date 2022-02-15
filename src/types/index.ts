@@ -1,5 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { INetwork, IProvider, ISettings } from '@amfi/connect-wallet/dist/interface';
+import {
+  INetwork, IProvider, ISettings, INoNameContract,
+} from '@amfi/connect-wallet/dist/interface';
+
+export type TChainType = 'mainnet' | 'testnet';
+
+export enum ContractsNames {
+  celo = 'celo',
+  tokenMintableFreezable = 'tokenMintableFreezable',
+  tokenMintableNonFreezable = 'tokenMintableNonFreezable',
+  tokenNonMintableFreezable = 'tokenNonMintableFreezable',
+  tokenNonMintableNonFreezable = 'tokenNonMintableNonFreezable',
+  lostKeyFactory = 'lostKeyFactory',
+}
+export type TContractsNames = keyof typeof ContractsNames;
 
 export interface OptionalClassNameProp {
   className?: string;
@@ -31,20 +45,12 @@ export interface IContracts {
   names: string[];
   type: string;
   params: {
-    [index: string]: {
-      mainnet: {
-        address: string;
-        abi: any[];
-      };
-      testnet: {
-        address: string;
-        abi: any[];
-      };
+    [contractName in ContractsNames]: {
+      [chainType in TChainType]: INoNameContract;
     };
   };
 }
 
-// eslint-disable-next-line no-shadow
 export enum WalletProviders {
   walletConnect = 'WalletConnect',
   celo = 'Celo',

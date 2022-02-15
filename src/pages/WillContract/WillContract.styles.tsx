@@ -32,6 +32,19 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     ...separator(theme, 'top'),
     padding: theme.spacing(2, 0, 3),
   },
+  managementAddressSectionField: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    '&:first-child': {
+      paddingLeft: 0,
+    },
+    '&:nth-child(2)': {
+      paddingRight: 0,
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: 'unset',
+    },
+  },
   managementAddressSectionTitle: {
     marginBottom: theme.spacing(2),
   },

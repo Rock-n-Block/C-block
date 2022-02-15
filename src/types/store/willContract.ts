@@ -1,3 +1,5 @@
+import { TPingIntervalUnit } from '.';
+
 export interface IWillContractDynamicForm {
   reserveAddress: string;
   email: string;
@@ -9,5 +11,7 @@ export interface IWillContract {
   managementAddress: string;
   reservesConfigs: IWillContractDynamicForm[];
   pingIntervalAsValue: string;
-  pingIntervalAsDateUnits: string;
+  pingIntervalAsDateUnits: TPingIntervalUnit;
+  rewardAmount: string;
+  ownerEmail: string;
 }

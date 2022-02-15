@@ -23,7 +23,7 @@ interface ITextRenderProps {
 
 interface ISectionContentReturnType {
   key: string;
-  componentType: 'copyable' | 'tableColumn' | 'helperText';
+  componentType: 'copyable' | 'tableColumn' | 'helperText' | 'singleHelperText';
   renderProps: ITableColumnRenderProps & ITextRenderProps;
   dataFields?: IFieldsFormConfigKeys[],
 }
@@ -34,20 +34,17 @@ export const staticWillContractPreviewHelpers: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: ISectionContentReturnType[] | (<T>(items: T[]) => ISectionContentReturnType[]);
 }[][] = [
-  // eslint-disable-next-line arrow-body-style
-  managementAddressSectionConfig.map(({ key, title }) => {
-    return {
-      key,
-      title,
-      content: [
-        {
-          key,
-          componentType: 'copyable',
-          renderProps: {},
-        },
-      ],
-    };
-  }),
+  managementAddressSectionConfig.slice(0, 1).map(({ key, title }) => ({
+    key,
+    title,
+    content: [
+      ...managementAddressSectionConfig.map(({ key: fieldKey }, index) => ({
+        key: fieldKey,
+        componentType: index === 0 ? 'copyable' : 'singleHelperText',
+        renderProps: {},
+      } as ISectionContentReturnType)),
+    ],
+  })),
 
   [
     {

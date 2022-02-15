@@ -1,6 +1,5 @@
 import { Theme } from '@material-ui/core/styles';
 
-// eslint-disable-next-line no-shadow
 export enum FormatMedia {
   BREAKPOINT_TABLET = 'BREAKPOINT_TABLET',
   BREAKPOINT_DESKTOP = 'BREAKPOINT_DESKTOP',

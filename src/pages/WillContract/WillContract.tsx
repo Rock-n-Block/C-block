@@ -22,15 +22,16 @@ import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import {
-  ContractFormsState, State, IWillContract, UserState,
+  State, IWillContract, UserState,
 } from 'types';
 import { useShallowSelector } from 'hooks';
 import {
   willContractDynamicFormInitialData,
   setWillContractForm,
 } from 'store/contractForms/reducer';
-import { routes } from 'appConstants';
+import { routes, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { SliderWithMaxSectionValue, RemovableContractsFormBlock } from 'components';
+import { setNotification } from 'utils';
 import {
   validationSchema,
   dynamicSectionFormConfig,
@@ -41,7 +42,6 @@ import {
 } from './WillContract.helpers';
 import { useStyles } from './WillContract.styles';
 
-const RESERVED_ADDRESSES = 4; // supported only 4 tokens as a reserved address
 const MAX_RESERVES_PERCENTS = 100;
 
 const getUnallocatedResidue = (
@@ -57,9 +57,9 @@ export const WillContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    willContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const willContract = useShallowSelector<State, IWillContract>(
+    contractFormsSelector.getWillContract,
+  );
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
@@ -67,8 +67,7 @@ export const WillContract: FC = () => {
       ...willContract,
       managementAddress: userAddress,
     }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, userAddress]);
+  }, [dispatch, userAddress, willContract]);
 
   return (
     <Container>
@@ -76,7 +75,16 @@ export const WillContract: FC = () => {
         enableReinitialize
         initialValues={willContract}
         validationSchema={validationSchema}
-        onSubmit={(values: IWillContract) => {
+        onSubmit={(values: IWillContract, formikHelpers) => {
+          const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
+          if (sum < MAX_RESERVES_PERCENTS) {
+            formikHelpers.setSubmitting(false);
+            setNotification({
+              message: `Sum of the funds to be transferred to the backup address must be ${MAX_RESERVES_PERCENTS}`,
+              type: 'error',
+            });
+            return;
+          }
           dispatch(setWillContractForm(values));
           navigate(routes['will-contract']['preview-contract'].root);
         }}
@@ -136,14 +144,17 @@ export const WillContract: FC = () => {
               }
             </Grid>
 
-            <Grid className={clsx(classes.gridContainer, classes.managementAddressSection)} container>
+            <Grid
+              className={clsx(classes.gridContainer, classes.managementAddressSection)}
+              container
+            >
               {
                 managementAddressSectionConfig.map(({
-                  key, title, name, helperText,
+                  key, title, name, helperText, renderProps,
                 }) => (
                   <Grid
                     key={key}
-                    className={classes.gridItem}
+                    className={clsx(classes.gridItem, classes.managementAddressSectionField)}
                     item
                     xs={12}
                     sm={6}
@@ -154,9 +165,18 @@ export const WillContract: FC = () => {
                     >
                       {title}
                     </Typography>
-                    <TextField
-                      disabled
-                      value={values[name]}
+                    <Field
+                      id={key}
+                      name={name}
+                      render={() => (
+                        <TextField
+                          {...renderProps}
+                          value={values[name]}
+                          error={errors[name] && touched[name]}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      )}
                     />
                     {helperText.map((text, i) => (
                       <Typography
@@ -285,7 +305,7 @@ export const WillContract: FC = () => {
                         </RemovableContractsFormBlock>
                         {i === values.reservesConfigs.length - 1 && (
                         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                          {i + 1 < RESERVED_ADDRESSES && (
+                          {i + 1 < TOKEN_ADDRESSES_MAX_COUNT && (
                           <Button
                             variant="outlined"
                             endIcon={<PlusIcon />}

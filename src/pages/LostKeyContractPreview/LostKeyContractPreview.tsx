@@ -1,36 +1,100 @@
-import React, { Fragment, useCallback } from 'react';
+import React, {
+  Fragment, useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
+import Web3 from 'web3';
 
-import { Preview, Copyable } from 'components';
+import {
+  Preview, Copyable, Loader, CompleteModal,
+} from 'components';
 import { useShallowSelector } from 'hooks';
-import { ContractFormsState, ILostKeyContractDynamicForm, State } from 'types';
+import {
+  ILostKeyContract, ILostKeyContractDynamicForm, RequestStatus, State, UserState,
+} from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
+import uiSelector from 'store/ui/selectors';
+import user from 'store/user/selectors';
 import { deleteLostKeyContractForm } from 'store/contractForms/reducer';
 import { getDeepValueByPath } from 'utils';
+import { useWalletConnectorContext } from 'services';
+import { createLostKeyContract } from 'store/contractForms/actions';
+import actionTypes from 'store/contractForms/actionTypes';
 import {
   staticLostKeyContractPreviewHelpers,
 } from './LostKeyContractPreview.helpers';
 import { useStyles } from './LostKeyContractPreview.styles';
 
 export const LostKeyContractPreview = () => {
-  const {
-    lostKeyContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const handleEdit = useCallback(() => {
-    navigate(routes['lostkey-contract'].root);
-  }, [navigate]);
-
   const handleDelete = useCallback(() => {
     dispatch(deleteLostKeyContractForm());
     navigate(routes.root);
   }, [dispatch, navigate]);
+  const handleEdit = useCallback(() => {
+    navigate(routes['lostkey-contract'].root);
+  }, [navigate]);
+
+  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
+  const { walletService } = useWalletConnectorContext();
+  const handleCreateContract = useCallback(async () => {
+    const { celo } = window;
+    const web3 = new Web3(celo);
+    dispatch(
+      createLostKeyContract({
+        // @ts-ignore
+        provider: wallet === 'celo' ? web3 : walletService.Web3(),
+      }),
+    );
+  }, [dispatch, wallet, walletService]);
+
+  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
+    contractFormsSelector.getLostKeyContract,
+  );
+  const createContractRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.CREATE_LOSTKEY_CONTRACT),
+  );
+  const isLoader = useMemo(
+    () => createContractRequestStatus === RequestStatus.REQUEST,
+    [createContractRequestStatus],
+  );
+
+  const [resultModalState, setResultModalState] = useState({
+    open: false,
+    result: false,
+  });
+  const handleCloseResultModal = useCallback(() => {
+    setResultModalState({
+      ...resultModalState,
+      open: false,
+    });
+  }, [resultModalState]);
+
+  useEffect(() => {
+    switch (createContractRequestStatus) {
+      case RequestStatus.SUCCESS: {
+        setResultModalState({
+          open: true,
+          result: true,
+        });
+        break;
+      }
+      case RequestStatus.ERROR: {
+        setResultModalState({
+          open: true,
+          result: false,
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }, [createContractRequestStatus]);
 
   const classes = useStyles();
 
@@ -38,7 +102,7 @@ export const LostKeyContractPreview = () => {
     <Preview
       type="lostkey"
       name={lostKeyContract.contractName}
-      launchAction={() => console.log('launch')}
+      launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
     >
@@ -97,11 +161,32 @@ export const LostKeyContractPreview = () => {
                           </Grid>
                         );
                       }
+                      case 'singleHelperText': {
+                        const value = getDeepValueByPath(lostKeyContract, key);
+                        return (
+                          <Grid key={key} className={classes.subInfo} item>
+                            <Typography>{value}</Typography>
+                          </Grid>
+                        );
+                      }
                       default: {
                         return (
                           <Grid key={key} className={classes.subInfo} item>
-                            <Typography>{renderProps.sourceArray[renderProps.currentIdx][dataFields[0]]}%</Typography>
-                            <Typography>{renderProps.sourceArray[renderProps.currentIdx][dataFields[1]]}</Typography>
+                            <Typography>
+                              {
+                                renderProps.sourceArray[renderProps.currentIdx][
+                                  dataFields[0]
+                                ]
+                              }
+                              %
+                            </Typography>
+                            <Typography>
+                              {
+                                renderProps.sourceArray[renderProps.currentIdx][
+                                  dataFields[1]
+                                ]
+                              }
+                            </Typography>
                           </Grid>
                         );
                       }
@@ -113,6 +198,12 @@ export const LostKeyContractPreview = () => {
           ))}
         </Box>
       ))}
+      {isLoader && <Loader />}
+      <CompleteModal
+        open={resultModalState.open}
+        result={resultModalState.result}
+        onClose={handleCloseResultModal}
+      />
     </Preview>
   );
 };

@@ -8,11 +8,14 @@ export const success = <T = string, P = never>(defaultType: T, payload?: P) => (
   payload,
 });
 
-export const error = <T = string, E = never>(defaultType: T, err?: E) => ({
-  type: `${defaultType}_ERROR`,
-  payload: err,
-  err,
-});
+export const error = <T = never, E = Error>(defaultType: T, err?: E) => {
+  const error = JSON.parse(JSON.stringify(err)); // prevent https://stackoverflow.com/questions/61704805/getting-an-error-a-non-serializable-value-was-detected-in-the-state-when-using
+  return {
+    type: `${defaultType}_ERROR`,
+    payload: error,
+    err: error,
+  };
+};
 
 export const reset = <T = string>(defaultType: T) => ({
   type: `${defaultType}_RESET`,

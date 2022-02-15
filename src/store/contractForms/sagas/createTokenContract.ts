@@ -1,16 +1,16 @@
 import {
-  call,
-  put,
-  select,
-  takeLatest,
+  call, put, select, takeLatest,
 } from 'redux-saga/effects';
+import { ContractWeb3 } from '@amfi/connect-wallet/dist/interface';
+
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { contracts } from 'config';
 import { bep20Abi } from 'config/abi';
-import { getTokenAmount } from 'utils';
-import { TokenContractDynamicForm } from 'types';
+import { contractsHelper, getTokenAmount } from 'utils';
+import {
+  ContractsNames, TokenContract, TokenContractDynamicForm, UserState,
+} from 'types';
 import { baseApi } from 'store/api/apiRequestBuilder';
 import actionTypes from '../actionTypes';
 import { createTokenContract } from '../actions';
@@ -23,13 +23,16 @@ function* createTokenContractSaga({
   try {
     yield put(apiActions.request(type));
 
-    const { tokenContract } = yield select(contractFormsSelector.getContractForms);
-    const { isMainnet, address: myAddress } = yield select(userSelector.getUser);
+    const tokenContract: TokenContract = yield select(
+      contractFormsSelector.getTokenContract,
+    );
+    const { isMainnet, address: myAddress }: UserState = yield select(
+      userSelector.getUser,
+    );
 
-    const celoAddress = contracts.params.celo[isMainnet ? 'mainnet' : 'testnet'].address;
+    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
     const {
-      tokenName,
       tokenOwner,
       tokenSymbol,
       decimals,
@@ -39,49 +42,78 @@ function* createTokenContractSaga({
       tokens,
     } = tokenContract;
 
-    const tokenFactoryContractName = `token${futureMinting ? '' : 'Non'}Mintable${freezable ? '' : 'Non'}Freezable`;
-    const tokenFactoryContractAddress = contracts.params[tokenFactoryContractName][isMainnet ? 'mainnet' : 'testnet'].address;
-    const tokenFactoryContractAbi = contracts.params[tokenFactoryContractName][isMainnet ? 'mainnet' : 'testnet'].abi;
+    const tokenFactoryContractName =
+      contractsHelper.getTokenFactoryContractName(futureMinting, freezable);
+    const tokenFactoryContractData = contractsHelper.getContractData(
+      tokenFactoryContractName as ContractsNames,
+      isMainnet,
+    );
 
-    const celoAbi = bep20Abi;
+    const tokenFactoryContract: ContractWeb3 = new provider.eth.Contract(
+      tokenFactoryContractData.abi,
+      tokenFactoryContractData.address,
+    );
 
-    const tokenFactoryContract = new provider.eth.Contract(tokenFactoryContractAbi, tokenFactoryContractAddress);
+    const celoTokenContract: ContractWeb3 = new provider.eth.Contract(
+      bep20Abi,
+      celoAddress,
+    );
 
-    const celoTokenContract = new provider.eth.Contract(celoAbi, celoAddress);
+    const allowance = yield call(
+      celoTokenContract.methods.allowance(
+        myAddress,
+        tokenFactoryContractData.address,
+      ).call,
+    );
+    const price: string = yield call(
+      tokenFactoryContract.methods.price(celoAddress, burnable ? 1 : 0).call,
+    );
 
-    const price = yield call(tokenFactoryContract.methods.price(celoAddress, burnable ? 1 : 0).call);
-
-    const allowance = yield call(celoTokenContract.methods.allowance(myAddress, tokenFactoryContractAddress).call);
-
-    if (+allowance < price * 2) {
+    if (+allowance < +price * 2) {
       yield call(approveSaga, {
         type: actionTypes.APPROVE,
         payload: {
           provider,
-          spender: tokenFactoryContractAddress,
-          amount: price * 2,
+          spender: tokenFactoryContractData.address,
+          amount: +price * 2,
           tokenAddress: celoAddress,
         },
       });
     }
 
-    const ownerAddresses = tokens.map(({ address: tokenKeyAddress }: TokenContractDynamicForm) => tokenKeyAddress);
+    const ownerAddresses = tokens.map(
+      ({ address: tokenKeyAddress }: TokenContractDynamicForm) => tokenKeyAddress,
+    );
     const initSupply = tokens.map(({ amount }: TokenContractDynamicForm) => getTokenAmount(amount, +decimals, false));
-    const timeStamps = tokens.map(({ frozenUntilDate }: TokenContractDynamicForm) => Date.parse(frozenUntilDate) / 1000);
+    const timeStamps = tokens.map(
+      ({ frozenUntilDate }: TokenContractDynamicForm) => Date.parse(frozenUntilDate) / 1000,
+    );
 
-    const methodName = `deployERC20${burnable ? 'Burnable' : ''}${futureMinting ? 'Mintable' : ''}Pausable${freezable ? 'Freezable' : ''}Token`;
+    const methodName = contractsHelper.getTokenFactoryContractMethodName(
+      burnable,
+      futureMinting,
+      freezable,
+    );
 
-    const { transactionHash } = yield call(tokenFactoryContract.methods[methodName](
+    const { tokenName } = tokenContract;
+    const contractMethodArgs: (string | string[] | number[])[] = [
       [celoAddress, tokenOwner],
       tokenName,
       tokenSymbol,
       decimals,
       ownerAddresses,
       initSupply,
-      timeStamps,
-    ).send, {
-      from: myAddress,
-    });
+    ];
+    if (freezable) {
+      contractMethodArgs.push(timeStamps);
+    }
+
+    const { transactionHash } = yield call(
+      tokenFactoryContract.methods[methodName](...contractMethodArgs).send,
+      {
+        from: myAddress,
+      },
+    );
 
     yield call(baseApi.createTokenContract, {
       tx_hash: transactionHash,

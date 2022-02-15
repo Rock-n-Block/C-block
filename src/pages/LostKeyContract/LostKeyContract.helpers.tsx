@@ -7,6 +7,7 @@ import { latinAndNumbers } from 'utils';
 export const validationSchema = Yup.object().shape({
   contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
   managementAddress: Yup.string().length(42).required(),
+  ownerEmail: Yup.string().email().required(),
 
   reservesConfigs: Yup.array().of(
     Yup.object().shape({
@@ -27,7 +28,7 @@ interface ISelectOption {
 }
 
 type ContractNameSectionConfigKeys = 'contractName';
-type ManagementAddressSectionConfigKeys = 'managementAddress';
+type ManagementAddressSectionConfigKeys = 'managementAddress' | 'ownerEmail';
 type DynamicFormDataConfigKeys = keyof ILostKeyContractDynamicForm;
 type ConfirmLiveStatusSectionFieldsConfigKeys = 'pingIntervalAsValue' | 'pingIntervalAsDateUnits';
 type RewardAmountSectionConfigKeys = 'rewardAmount';
@@ -76,6 +77,23 @@ export const managementAddressSectionConfig: IFieldsFormConfig[] = [
     helperText: [
       'This is the wallet address that will be traced for activity. If you want to use different wallet, please connect it for contract creation.',
     ],
+    renderProps: {
+      name: 'managementAddress',
+      disabled: true,
+    },
+  },
+  {
+    key: 'ownerEmail',
+    name: 'ownerEmail',
+    title: '⁣', // here is used https://unicode-table.com/ru/2063/
+    helperText: [
+      'Enter the e-mail address to which you want to send a message about transferring the crypto currency',
+    ],
+    renderProps: {
+      label: 'E-mail for notification',
+      name: 'ownerEmail',
+      disabled: false,
+    },
   },
 ];
 

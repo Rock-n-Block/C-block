@@ -1,12 +1,15 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IConnectWallet, IContracts } from 'types';
+import { ContractsNames, IConnectWallet, IContracts } from 'types';
 import store from 'store/configureStore';
-import tokenMintableFreezableAbi from './abi/tokenMintableFreezable';
-import tokenMintableNonFreezableAbi from './abi/tokenMintableNonFreezable';
-import tokenNonMintableFreezableAbi from './abi/tokenNonMintableFreezable';
-import tokenNonMintableNonFreezableAbi from './abi/tokenNonMintableNonFreezable';
-import { bep20Abi } from './abi';
+import {
+  bep20Abi,
+  tokenMintableFreezableAbi,
+  tokenMintableNonFreezableAbi,
+  tokenNonMintableFreezableAbi,
+  tokenNonMintableNonFreezableAbi,
+  lostKeyFactoryAbi,
+} from './abi';
 
 export * from './constants';
 
@@ -68,14 +71,6 @@ export const connectWallet = (newChainName: string): IConnectWallet => {
   };
 };
 
-// eslint-disable-next-line no-shadow
-export enum ContractsNames {
-  tokenMintableFreezable = 'tokenMintableFreezable',
-  tokenMintableNonFreezable = 'tokenMintableNonFreezable',
-  tokenNonMintableFreezable = 'tokenNonMintableFreezable',
-  tokenNonMintableNonFreezable = 'tokenNonMintableNonFreezable',
-}
-
 export const contracts: IContracts = {
   type: 'mainnet',
   names: Object.keys(ContractsNames),
@@ -129,6 +124,16 @@ export const contracts: IContracts = {
       testnet: {
         address: '0x568EE75009950B15e9e91a9A99DedF749f3AcBBf',
         abi: tokenNonMintableNonFreezableAbi,
+      },
+    },
+    lostKeyFactory: {
+      mainnet: {
+        address: '',
+        abi: lostKeyFactoryAbi,
+      },
+      testnet: {
+        address: '0xd0fF8b5a7723752309ab2222A40b0485aA53C558',
+        abi: lostKeyFactoryAbi,
       },
     },
   },
