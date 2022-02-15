@@ -1,12 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useContext } from 'react';
+import { connect } from 'react-redux';
 
 import { getCeloConfigMetamask, getProduction } from 'config';
-
-import { State, UserState, WalletProviders } from 'types';
+import {
+  State, UserState, WalletProviders, TNullable,
+} from 'types';
 import { connectWalletState, disconnectWalletState } from 'store/user/reducer';
-import { connect } from 'react-redux';
+
 import { WalletService } from '..';
 
 declare global {
@@ -15,19 +17,15 @@ declare global {
   }
 }
 
-const walletConnectorContext = createContext<{
+type IWalletConnectorContext = TNullable<{
   connect:(provider: WalletProviders) => void;
   disconnect: () => void;
   walletService: WalletService;
   address: string;
   isContractsExists: boolean;
-}>({
-      connect: (): void => {},
-      disconnect: (): void => {},
-      walletService: new WalletService(),
-      address: '',
-      isContractsExists: false,
-    });
+}>;
+
+const walletConnectorContext = createContext<IWalletConnectorContext>(null);
 
 class Connector extends React.Component<
 any,
