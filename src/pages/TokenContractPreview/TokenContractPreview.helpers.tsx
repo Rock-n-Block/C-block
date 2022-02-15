@@ -32,7 +32,7 @@ export const staticTokenContractPreviewHelpers: TokenContractPreviewHelperType[]
   [
     {
       key: 'futureMinting',
-      label: 'Future minting',
+      label: 'Future minting:',
     },
     {
       key: 'burnable',
