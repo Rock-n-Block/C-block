@@ -33,7 +33,7 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
       <IconButton><WalletIcon /></IconButton>
       <Typography
         align="left"
-        className={isLight ? '' : 'acidGreen'}
+        className={isLight ? '' : 'acidGreen gradient'}
         variant="h2"
       >
         Payment

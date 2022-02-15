@@ -13,8 +13,9 @@ export default {
 export const Default: React.FC = () => (
   <>
     <Box>
-      {toastifyPropsMocked.map((toastify) => (
-        <Toastify {...toastify} />
+      {toastifyPropsMocked.map((toastify, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Toastify key={index} {...toastify} />
       ))}
     </Box>
   </>

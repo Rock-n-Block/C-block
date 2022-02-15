@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import { Edit, TrashIcon } from 'theme/icons';
 import {
-  PaymentModal, DisclaimerModal, Loader, CompleteModal,
+  PaymentModal, DisclaimerModal, FullscreenLoader, CompleteModal,
 } from 'components';
 import { routes } from 'appConstants';
 import { iconHelper } from './Preview.helpers';
@@ -133,7 +133,7 @@ export const Preview: FC<PreviewProps> = ({
         onAccept={onPay}
         paymentAmount="16,499.05"
       />
-      { isLoading && <Loader /> }
+      { isLoading && <FullscreenLoader /> }
       <CompleteModal
         open={isCompleteOpen}
         onClose={closeCompleteModal}

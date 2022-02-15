@@ -4,7 +4,7 @@ import {
   COLOR_BLACK_1,
   COLOR_BLACK_3,
   COLOR_BUTTON_PRIMARY_LIGHT_DEFAULT,
-  COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT, COLOR_GREY_3, COLOR_GREY_4,
+  COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT, COLOR_GREY_3,
 } from 'theme/colors';
 import { flexHelper } from 'utils';
 
@@ -31,11 +31,11 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   contractHead: {
     ...flexHelper('space-between'),
     width: '100%',
-    padding: `${theme.spacing(4)}px ${theme.spacing(4)}px 0px ${theme.spacing(4)}px`,
+    padding: theme.spacing(4, 4, 0, 3),
   },
   contractTitle: {
     ...flexHelper('flex-start'),
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    padding: theme.spacing(2, 3),
     width: '100%',
     '& > :nth-child(1)': {
       marginRight: theme.spacing(2),
@@ -57,18 +57,27 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
       flexDirection: 'column',
     },
   },
-  contractActionBlock: {
-    ...flexHelper('space-between'),
-    padding: `${theme.spacing(1.5)}px ${theme.spacing(3)}px`,
-    width: '100%',
-    background: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_4,
+  contractActionBlockInner: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    '&:last-child': {
+      alignItems: 'flex-end',
+    },
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
+      width: '100%',
+      '&:last-child': {
+        alignItems: 'unset',
+      },
+      '&:not(:last-child)': {
+        marginBottom: theme.spacing(3),
+      },
     },
   },
   contractActionText: {
+    paddingBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
-      paddingBottom: theme.spacing(4),
+      paddingBottom: theme.spacing(2),
     },
   },
   chainTag: {
@@ -80,7 +89,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   contractDate: {
     width: '100%',
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(3),
   },
   button: {
     height: 56,
@@ -99,7 +108,10 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
       },
     },
   },
-  actionButton: {
-    borderColor: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_BUTTON_SECONDARY_LIGHT_DEFAULT,
+  successfulAdditionalContent: {
+    ...flexHelper('flex-start'),
+  },
+  successfulAdditionalContentText: {
+    marginLeft: theme.spacing(2),
   },
 }));

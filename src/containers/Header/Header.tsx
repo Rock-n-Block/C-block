@@ -66,7 +66,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
           {icon && <IconButton>{icon}</IconButton>}
           <Typography
             align="left"
-            className={isLight ? '' : 'acidGreen'}
+            className={isLight ? '' : 'acidGreen gradient'}
             variant="h2"
           >
             {title}

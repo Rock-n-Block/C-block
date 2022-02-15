@@ -6,7 +6,7 @@ import { PaymentModal } from './PaymentModal';
 import { paymentModalPropsMocked } from './PaymentModal.mock';
 
 export default {
-  title: 'components/SetUpModal',
+  title: 'components/PaymentModal',
   component: PaymentModal,
 };
 
