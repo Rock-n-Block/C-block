@@ -35,6 +35,7 @@ export const CustomDevelopment = () => {
           </Typography>
           <Formik
             initialValues={initFormValues}
+            validateOnMount
             validationSchema={validationSchema}
             onSubmit={(
               values: CustomDevelopmentFormValues,

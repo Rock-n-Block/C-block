@@ -59,6 +59,7 @@ export const WeddingContract = () => {
     <Container>
       <Formik
         enableReinitialize
+        validateOnMount
         initialValues={weddingContract}
         validationSchema={validationSchema}
         onSubmit={(

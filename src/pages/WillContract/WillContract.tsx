@@ -73,6 +73,7 @@ export const WillContract: FC = () => {
     <Container>
       <Formik
         enableReinitialize
+        validateOnMount
         initialValues={willContract}
         validationSchema={validationSchema}
         onSubmit={(values: IWillContract, formikHelpers) => {

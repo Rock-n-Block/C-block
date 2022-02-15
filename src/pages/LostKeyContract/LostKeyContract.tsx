@@ -73,6 +73,7 @@ export const LostKeyContract: FC = () => {
     <Container>
       <Formik
         enableReinitialize
+        validateOnMount
         initialValues={lostKeyContract}
         validationSchema={validationSchema}
         onSubmit={(values, formikHelpers) => {

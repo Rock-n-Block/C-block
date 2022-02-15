@@ -52,6 +52,7 @@ export const CrowdsaleContract: FC = () => {
     <Container>
       <Formik
         enableReinitialize
+        validateOnMount
         initialValues={crowdsaleContract}
         validationSchema={validationSchema}
         onSubmit={(values: ICrowdsaleContract) => {
