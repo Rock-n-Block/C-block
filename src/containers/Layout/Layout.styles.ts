@@ -14,8 +14,8 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       position: 'sticky',
       top: 0,
       zIndex: 999,
-      minWidth: 250,
-      maxWidth: 350,
+      minWidth: 240,
+      maxWidth: 240,
       flexBasis: '25%',
       transition: '300ms',
       [theme.breakpoints.down(768)]: {
