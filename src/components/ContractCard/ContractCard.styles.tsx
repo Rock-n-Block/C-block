@@ -6,14 +6,17 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     cursor: 'pointer',
     padding: theme.spacing(3),
-    background: theme.palette.primary.light,
+    background: theme.palette.primary.main,
     borderRadius: theme.spacing(2),
-    border: `1px solid ${theme.palette.primary.light}`,
+    border: `1px solid ${theme.palette.secondary.light}`,
     minHeight: 260,
     '&:hover': {
       border: `1px solid ${COLOR_ACID_GREEN}`,
     },
-
+    transition: theme.transitions.create(['border'], {
+      duration: theme.transitions.duration.standard,
+      easing: theme.transitions.easing.easeOut,
+    }),
   },
   cardHead: {
     display: 'flex',

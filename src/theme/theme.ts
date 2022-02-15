@@ -1,4 +1,4 @@
-import { createTheme, Theme } from '@material-ui/core';
+import { createTheme, Theme, ThemeOptions } from '@material-ui/core';
 import { getMuiButton, getMuiButtonDefaultProps } from './Button';
 import {
   COLOR_ACID_GREEN,
@@ -36,13 +36,14 @@ import { getMuiSlider, getMuiSliderDefaultProps } from './Slider/Slider.theme';
 import { getMuiTablePagination, getMuiTablePaginationDefaultProps } from './TablePagination/TablePagination.theme';
 import { getMuiTableCell, getMuiTableCellDefaultProps } from './TableCell/TableCell.theme';
 
-const getBaseTheme = (theme: Theme) => ({
+const getBaseTheme = (theme: Theme): ThemeOptions => ({
   props: {
     MuiCssBaseline: getMuiCssBaselineDefaultProps(),
     MuiLink: getMuiLinkDefaultProps(),
     MuiButtonBase: { disableRipple: true },
     MuiContainer: getMuiContainerDefaultProps(),
     MuiGrid: getMuiGridDefaultProps(),
+    // @ts-expect-error probably incorrect type inferring
     MuiTypography: getTypographyOptions({ color: COLOR_GREY_1 }),
     MuiButton: getMuiButtonDefaultProps(),
     MuiSwitch: getMuiSwitchDefaultProps(),
@@ -99,6 +100,11 @@ export let darkTheme = createTheme({
   typography: getTypographyOptions({ color: COLOR_GREY_1 }),
   breakpoints: breakpointOptions,
   spacing: 8,
+  transitions: {
+    duration: {
+      standard: 300,
+    },
+  },
 });
 
 darkTheme = createTheme(darkTheme, getBaseTheme(darkTheme));
@@ -128,6 +134,11 @@ export let lightTheme = createTheme({
   typography: getTypographyOptions({ color: COLOR_BLACK_1 }),
   breakpoints: breakpointOptions,
   spacing: 8,
+  transitions: {
+    duration: {
+      standard: 300,
+    },
+  },
 });
 
 lightTheme = createTheme(lightTheme, getBaseTheme(lightTheme));

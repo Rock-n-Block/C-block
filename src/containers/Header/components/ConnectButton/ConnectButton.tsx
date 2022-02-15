@@ -3,7 +3,7 @@ import React, { VFC } from 'react';
 import { Box, Button } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { AddressButton } from 'components/AddressButton';
+import { AddressButton } from 'components';
 import { useStyles } from './ConnectButton.styles';
 
 export interface ConnectButtonProps {
