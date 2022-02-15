@@ -95,6 +95,7 @@
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.173",
     "@types/react": "^17.0.21",
+    "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/redux-persist": "^4.3.1",
     "eslint-config-airbnb-typescript": "9.0.0",
     "eslint-config-prettier": "^8.3.0",

@@ -1,10 +1,10 @@
 import React, { VFC } from 'react';
 
-import { Box, IconButton, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { shortenPhrase } from 'utils';
-import { CopyIcon } from 'theme/icons';
+import { Copyable } from 'components';
 import { useStyles } from './AddressButton.styles';
 
 export interface AddressButtonProps {
@@ -18,17 +18,7 @@ export const AddressButton: VFC<AddressButtonProps> = ({ onClick, address, class
   return (
     <Box className={clsx(classes.root, className)} onClick={onClick}>
       <Typography>{shortenPhrase(address)}</Typography>
-      <IconButton
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          return alert('COPY WILL DO LATER');
-        }}
-        className={classes.copyBtn}
-        color="secondary"
-      >
-        <CopyIcon />
-      </IconButton>
+      <Copyable valueToCopy={address} withIcon />
     </Box>
   );
 };

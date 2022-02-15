@@ -24,6 +24,7 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
       top: '50%',
       transform: 'translateY(-50%)',
       cursor: 'pointer',
+      lineHeight: 0, // reset default div's height
       '&:hover': {
         '& > *': {
           '& > *': {
@@ -36,6 +37,7 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
       position: 'relative',
       width: '100%',
       minWidth: 0,
+      padding: theme.spacing(2, 6.5, 2, 2.5),
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -44,7 +46,6 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
         ? `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3}`
         : 'unset'),
       borderRadius: theme.spacing(1),
-      padding: `${theme.spacing(2)}px ${theme.spacing(6.5)}px ${theme.spacing(2)}px ${theme.spacing(2.5)}px`,
     },
   });
 });
