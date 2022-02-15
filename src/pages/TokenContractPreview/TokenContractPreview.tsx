@@ -15,7 +15,7 @@ import {
   Preview,
   YesNoBlock,
   Copyable,
-  Loader,
+  FullscreenLoader,
   CompleteModal,
 } from 'components';
 import { useShallowSelector } from 'hooks';
@@ -228,7 +228,7 @@ export const TokenContractPreview = () => {
           </Fragment>
         );
       })}
-      {isLoader && <Loader />}
+      {isLoader && <FullscreenLoader />}
       <CompleteModal
         open={resultModalState.open}
         result={resultModalState.result}

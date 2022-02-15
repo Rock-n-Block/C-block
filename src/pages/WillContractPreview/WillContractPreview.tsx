@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import Web3 from 'web3';
 
 import {
-  Preview, Copyable, Loader, CompleteModal,
+  Preview, Copyable, FullscreenLoader, CompleteModal,
 } from 'components';
 import { useShallowSelector } from 'hooks';
 import {
@@ -187,7 +187,7 @@ export const WillContractPreview = () => {
           ))}
         </Box>
       ))}
-      {isLoader && <Loader />}
+      {isLoader && <FullscreenLoader />}
       <CompleteModal
         open={resultModalState.open}
         result={resultModalState.result}
