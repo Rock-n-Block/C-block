@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { FC, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {
+  FC, useState, useCallback, useMemo, useEffect,
+} from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Box, Button, Container, IconButton, Typography,
 } from '@material-ui/core';
@@ -8,13 +9,16 @@ import clsx from 'clsx';
 
 import { Edit, TrashIcon } from 'theme/icons';
 import {
-  PaymentModal, DisclaimerModal, FullscreenLoader, CompleteModal,
+  PaymentModal, DisclaimerModal, CompleteModal, FullscreenLoader,
 } from 'components';
-import { routes } from 'appConstants';
-import { iconHelper } from './Preview.helpers';
+import { useShallowSelector } from 'hooks';
+import actionTypes from 'store/contractForms/actionTypes';
+import uiSelector from 'store/ui/selectors';
+import apiActions from 'store/ui/actions';
+import { RequestStatus } from 'types';
+import { iconHelper, IconType } from './Preview.helpers';
 import { useStyles } from './Preview.styles';
 
-type IconType = keyof typeof iconHelper;
 export interface PreviewProps {
   className?: string;
   type: IconType;
@@ -36,16 +40,14 @@ export const Preview: FC<PreviewProps> = ({
   const classes = useStyles();
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
   const [isPaymentOpen, setPaymentOpen] = useState(false);
-  const [isCompleteOpen, setCompleteOpen] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
+  const [resultModalState, setResultModalState] = useState({
+    open: false,
+    result: false,
+  });
 
   const openDisclaimerModal = useCallback(() => {
     setDisclaimerOpen(true);
   }, []);
-
   const closeDisclaimerModal = useCallback(() => {
     setDisclaimerOpen(false);
   }, []);
@@ -54,17 +56,8 @@ export const Preview: FC<PreviewProps> = ({
     closeDisclaimerModal();
     setPaymentOpen(true);
   }, [closeDisclaimerModal]);
-
   const closePaymentModal = useCallback(() => {
     setPaymentOpen(false);
-  }, []);
-
-  const openCompleteModal = useCallback(() => {
-    setCompleteOpen(true);
-  }, []);
-
-  const closeCompleteModal = useCallback(() => {
-    setCompleteOpen(false);
   }, []);
 
   const onPay = useCallback(async () => {
@@ -80,6 +73,53 @@ export const Preview: FC<PreviewProps> = ({
     //   deleteAction();
     // }, 6000);
   }, [closePaymentModal, launchAction]);
+
+  const contractActionType = useMemo(() => {
+    switch (type) {
+      case 'token': return actionTypes.CREATE_TOKEN_CONTRACT;
+      case 'lostkey': return actionTypes.CREATE_LOSTKEY_CONTRACT;
+      case 'will': return actionTypes.CREATE_WILL_CONTRACT;
+      default: return null;
+    }
+  }, [type]);
+  const createContractRequestStatus = useShallowSelector(
+    uiSelector.getProp(contractActionType),
+  );
+  const isLoader = useMemo(
+    () => createContractRequestStatus === RequestStatus.REQUEST,
+    [createContractRequestStatus],
+  );
+
+  const dispatch = useDispatch();
+  const closeResultModal = useCallback(() => {
+    setResultModalState({
+      ...resultModalState,
+      open: false,
+    });
+    dispatch(apiActions.reset(contractActionType));
+  }, [contractActionType, dispatch, resultModalState]);
+
+  useEffect(() => {
+    switch (createContractRequestStatus) {
+      case RequestStatus.SUCCESS: {
+        setResultModalState({
+          open: true,
+          result: true,
+        });
+        break;
+      }
+      case RequestStatus.ERROR: {
+        setResultModalState({
+          open: true,
+          result: false,
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }, [createContractRequestStatus]);
 
   return (
     <Container className={classes.root}>
@@ -133,11 +173,11 @@ export const Preview: FC<PreviewProps> = ({
         onAccept={onPay}
         paymentAmount="16,499.05"
       />
-      { isLoading && <FullscreenLoader /> }
+      {isLoader && <FullscreenLoader />}
       <CompleteModal
-        open={isCompleteOpen}
-        onClose={closeCompleteModal}
-        result
+        open={resultModalState.open}
+        result={resultModalState.result}
+        onClose={closeResultModal}
       />
     </Container>
   );

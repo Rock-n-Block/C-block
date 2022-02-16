@@ -7,3 +7,5 @@ export const iconHelper = {
   lostkey: routes['lostkey-contract'].icon,
   will: routes['will-contract'].icon,
 };
+
+export type IconType = keyof typeof iconHelper;

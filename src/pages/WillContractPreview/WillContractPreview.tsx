@@ -1,5 +1,5 @@
 import React, {
-  Fragment, useCallback, useEffect, useMemo, useState,
+  Fragment, useCallback,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -8,22 +8,20 @@ import clsx from 'clsx';
 import Web3 from 'web3';
 
 import {
-  Preview, Copyable, FullscreenLoader, CompleteModal,
+  Preview, Copyable,
 } from 'components';
 import { useShallowSelector } from 'hooks';
 import {
-  IWillContract, IWillContractDynamicForm, RequestStatus, State, UserState,
+  IWillContract, IWillContractDynamicForm, State, UserState,
 } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
-import uiSelector from 'store/ui/selectors';
 import user from 'store/user/selectors';
 import { deleteWillContractForm } from 'store/contractForms/reducer';
 import { getDeepValueByPath } from 'utils';
 import { useWalletConnectorContext } from 'services';
 
 import { createWillContract } from 'store/contractForms/actions';
-import actionTypes from 'store/contractForms/actionTypes';
 import {
   staticWillContractPreviewHelpers,
 } from './WillContractPreview.helpers';
@@ -56,47 +54,6 @@ export const WillContractPreview = () => {
   const willContract = useShallowSelector<State, IWillContract>(
     contractFormsSelector.getWillContract,
   );
-
-  const createContractRequestStatus = useShallowSelector(
-    uiSelector.getProp(actionTypes.CREATE_WILL_CONTRACT),
-  );
-  const isLoader = useMemo(
-    () => createContractRequestStatus === RequestStatus.REQUEST,
-    [createContractRequestStatus],
-  );
-
-  const [resultModalState, setResultModalState] = useState({
-    open: false,
-    result: false,
-  });
-  const handleCloseResultModal = useCallback(() => {
-    setResultModalState({
-      ...resultModalState,
-      open: false,
-    });
-  }, [resultModalState]);
-
-  useEffect(() => {
-    switch (createContractRequestStatus) {
-      case RequestStatus.SUCCESS: {
-        setResultModalState({
-          open: true,
-          result: true,
-        });
-        break;
-      }
-      case RequestStatus.ERROR: {
-        setResultModalState({
-          open: true,
-          result: false,
-        });
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  }, [createContractRequestStatus]);
 
   const classes = useStyles();
 
@@ -187,12 +144,6 @@ export const WillContractPreview = () => {
           ))}
         </Box>
       ))}
-      {isLoader && <FullscreenLoader />}
-      <CompleteModal
-        open={resultModalState.open}
-        result={resultModalState.result}
-        onClose={handleCloseResultModal}
-      />
     </Preview>
   );
 };
