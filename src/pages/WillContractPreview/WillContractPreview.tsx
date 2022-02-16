@@ -5,21 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import Web3 from 'web3';
 
 import {
   Preview, Copyable,
 } from 'components';
-import { useShallowSelector } from 'hooks';
+import { useProvider, useShallowSelector } from 'hooks';
 import {
-  IWillContract, IWillContractDynamicForm, State, UserState,
+  IWillContract, IWillContractDynamicForm, State,
 } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
-import user from 'store/user/selectors';
 import { deleteWillContractForm } from 'store/contractForms/reducer';
 import { getDeepValueByPath } from 'utils';
-import { useWalletConnectorContext } from 'services';
 
 import { createWillContract } from 'store/contractForms/actions';
 import {
@@ -30,6 +27,7 @@ import { useStyles } from './WillContractPreview.styles';
 export const WillContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { getDefaultProvider } = useProvider();
   const handleDelete = useCallback(() => {
     dispatch(deleteWillContractForm());
     navigate(routes.root);
@@ -38,18 +36,13 @@ export const WillContractPreview = () => {
     navigate(routes['will-contract'].root);
   }, [navigate]);
 
-  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
-  const { walletService } = useWalletConnectorContext();
   const handleCreateContract = useCallback(async () => {
-    const { celo } = window;
-    const web3 = new Web3(celo);
     dispatch(
       createWillContract({
-        // @ts-ignore
-        provider: wallet === 'celo' ? web3 : walletService.Web3(),
+        provider: getDefaultProvider(),
       }),
     );
-  }, [dispatch, wallet, walletService]);
+  }, [dispatch, getDefaultProvider]);
 
   const willContract = useShallowSelector<State, IWillContract>(
     contractFormsSelector.getWillContract,

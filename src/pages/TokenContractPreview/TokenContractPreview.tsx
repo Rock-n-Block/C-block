@@ -6,23 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Grid, Typography, Box } from '@material-ui/core';
 import clsx from 'clsx';
-import Web3 from 'web3';
 
 import {
   Preview,
   YesNoBlock,
   Copyable,
 } from 'components';
-import { useShallowSelector } from 'hooks';
+import { useProvider, useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
-import user from 'store/user/selectors';
 import {
-  State, TokenContract, UserState,
+  State, TokenContract,
 } from 'types';
 import { routes } from 'appConstants';
 
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
-import { useWalletConnectorContext } from 'services';
 import { createTokenContract } from 'store/contractForms/actions';
 import { useStyles } from './TokenContractPreview.styles';
 import {
@@ -33,6 +30,7 @@ import {
 export const TokenContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { getDefaultProvider } = useProvider();
   const handleDelete = useCallback(() => {
     dispatch(deleteTokenContractForm());
     navigate(routes.root);
@@ -41,18 +39,13 @@ export const TokenContractPreview = () => {
     navigate(routes['token-contract'].root);
   }, [navigate]);
 
-  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
-  const { walletService } = useWalletConnectorContext();
   const handleCreateContract = useCallback(async () => {
-    const { celo } = window;
-    const web3 = new Web3(celo);
     dispatch(
       createTokenContract({
-        // @ts-ignore
-        provider: wallet === 'celo' ? web3 : walletService.Web3(),
+        provider: getDefaultProvider(),
       }),
     );
-  }, [dispatch, wallet, walletService]);
+  }, [dispatch, getDefaultProvider]);
 
   const tokenContract = useShallowSelector<State, TokenContract>(
     contractFormsSelector.getTokenContract,

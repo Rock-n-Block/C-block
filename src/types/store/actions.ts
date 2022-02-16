@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TProvider = { provider: any };
+import Web3 from 'web3';
+
+export type TProvider = { provider: Web3 };
 
 export type TApproveAction = TProvider & {
   spender: string;

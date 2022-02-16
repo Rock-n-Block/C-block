@@ -1,7 +1,6 @@
 import {
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
-import { ContractWeb3 } from '@amfi/connect-wallet/dist/interface';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -49,12 +48,12 @@ function* createTokenContractSaga({
       isMainnet,
     );
 
-    const tokenFactoryContract: ContractWeb3 = new provider.eth.Contract(
+    const tokenFactoryContract = new provider.eth.Contract(
       tokenFactoryContractData.abi,
       tokenFactoryContractData.address,
     );
 
-    const celoTokenContract: ContractWeb3 = new provider.eth.Contract(
+    const celoTokenContract = new provider.eth.Contract(
       bep20Abi,
       celoAddress,
     );
@@ -66,7 +65,7 @@ function* createTokenContractSaga({
       ).call,
     );
     const price: string = yield call(
-      tokenFactoryContract.methods.price(celoAddress, burnable ? 1 : 0).call,
+      tokenFactoryContract.methods.price(celoAddress, Number(burnable)).call,
     );
 
     if (+allowance < +price * 2) {

@@ -5,21 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import Web3 from 'web3';
 
 import {
   Preview, Copyable,
 } from 'components';
-import { useShallowSelector } from 'hooks';
+import { useProvider, useShallowSelector } from 'hooks';
 import {
-  ILostKeyContract, ILostKeyContractDynamicForm, State, UserState,
+  ILostKeyContract, ILostKeyContractDynamicForm, State,
 } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
-import user from 'store/user/selectors';
 import { deleteLostKeyContractForm } from 'store/contractForms/reducer';
 import { getDeepValueByPath } from 'utils';
-import { useWalletConnectorContext } from 'services';
 import { createLostKeyContract } from 'store/contractForms/actions';
 import {
   staticLostKeyContractPreviewHelpers,
@@ -29,6 +26,8 @@ import { useStyles } from './LostKeyContractPreview.styles';
 export const LostKeyContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { getDefaultProvider } = useProvider();
+
   const handleDelete = useCallback(() => {
     dispatch(deleteLostKeyContractForm());
     navigate(routes.root);
@@ -37,18 +36,13 @@ export const LostKeyContractPreview = () => {
     navigate(routes['lostkey-contract'].root);
   }, [navigate]);
 
-  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
-  const { walletService } = useWalletConnectorContext();
   const handleCreateContract = useCallback(async () => {
-    const { celo } = window;
-    const web3 = new Web3(celo);
     dispatch(
       createLostKeyContract({
-        // @ts-ignore
-        provider: wallet === 'celo' ? web3 : walletService.Web3(),
+        provider: getDefaultProvider(),
       }),
     );
-  }, [dispatch, wallet, walletService]);
+  }, [dispatch, getDefaultProvider]);
 
   const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
     contractFormsSelector.getLostKeyContract,
