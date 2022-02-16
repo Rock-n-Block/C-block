@@ -57,6 +57,7 @@ export const useStyles = makeStyles((theme: Theme) => {
       order: 4,
       ...unsetOrder,
     },
+
     newCount: {
       color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_BLACK_1,
     },

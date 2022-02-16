@@ -37,7 +37,7 @@ export const willContractDynamicFormInitialData: IWillContractDynamicForm = {
   percents: '0',
 };
 
-const initialState: ContractFormsState = {
+export const initialState: ContractFormsState = {
   tokenContract: {
     tokenName: '',
     tokenOwner: '',
