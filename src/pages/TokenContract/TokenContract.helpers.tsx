@@ -1,8 +1,9 @@
 /* eslint-disable newline-per-chained-call */
 import React, { ReactElement } from 'react';
-import { Snowflake } from 'theme/icons';
-import { latinAndNumbers } from 'utils';
 import * as Yup from 'yup';
+
+import { Snowflake } from 'theme/icons';
+import { latinAndNumbers, latinAndNumbersWithOrNotSeparatedBySpaceRegExp } from 'utils';
 
 const yesterday = new Date(Date.now() - 86400000);
 // because of safari
@@ -19,7 +20,7 @@ export const validationSchema = Yup.object().shape({
   tokens: Yup.array().of(
     Yup.object().shape({
       address: Yup.string().length(42).required(),
-      name: Yup.string().matches(latinAndNumbers).min(5).required(),
+      name: Yup.string().matches(latinAndNumbersWithOrNotSeparatedBySpaceRegExp).max(25).required(),
       amount: Yup.number().positive().required(),
       isFrozen: Yup.boolean().when('freezable', {
         is: true,
