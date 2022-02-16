@@ -3,14 +3,16 @@ import React, { ReactElement } from 'react';
 import * as Yup from 'yup';
 
 import { Snowflake } from 'theme/icons';
-import { ethereumAddressSchema, latinAndNumbers, latinAndNumbersWithOrNotSeparatedBySpaceRegExp } from 'utils';
+import {
+  contractNameSchema, ethereumAddressSchema, latinAndNumbers, latinAndNumbersWithOrNotSeparatedBySpaceRegExp,
+} from 'utils';
 
 const yesterday = new Date(Date.now() - 86400000);
 // because of safari
 const maxDate = new Date('9999-12-12'.replace(/-/g, '/'));
 
 export const validationSchema = Yup.object().shape({
-  tokenName: Yup.string().matches(latinAndNumbers).min(5).max(25).required(),
+  tokenName: contractNameSchema.max(25).required(),
   tokenOwner: ethereumAddressSchema.required(),
   tokenSymbol: Yup.string().matches(latinAndNumbers).min(3).max(4).required(),
   decimals: Yup.number().positive().min(0).max(18).required(),

@@ -3,10 +3,10 @@ import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
 
 import { Calendar, DescendingSortOrderIcon } from 'theme/icons';
-import { ethereumAddressSchema, latinAndNumbers } from 'utils';
+import { contractNameSchema, ethereumAddressSchema } from 'utils';
 
 export const validationSchema = Yup.object().shape({
-  contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
+  contractName: contractNameSchema.required(),
   tokenAddress: ethereumAddressSchema.required(),
   crowdsaleOwner: ethereumAddressSchema.required(),
 

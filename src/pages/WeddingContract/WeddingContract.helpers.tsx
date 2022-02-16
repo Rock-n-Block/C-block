@@ -1,10 +1,10 @@
 /* eslint-disable newline-per-chained-call */
 import { ReactElement } from 'react';
 import * as Yup from 'yup';
-import { ethereumAddressSchema, latinAndNumbers } from 'utils';
+import { contractNameSchema, ethereumAddressSchema } from 'utils';
 
 export const validationSchema = Yup.object().shape({
-  contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
+  contractName: contractNameSchema.required(),
   partnerOneAddress: ethereumAddressSchema.notOneOf([Yup.ref('partnerTwoAddress')]).required(),
   partnerTwoAddress: ethereumAddressSchema.notOneOf([Yup.ref('partnerOneAddress')]).required(),
   partnerOneEmail: Yup.string().email().notOneOf([Yup.ref('partnerTwoEmail')]).max(255).required(),
