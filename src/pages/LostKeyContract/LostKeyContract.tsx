@@ -24,7 +24,7 @@ import userSelector from 'store/user/selectors';
 import {
   State, ILostKeyContract, UserState,
 } from 'types';
-import { useShallowSelector } from 'hooks';
+import { useConnectDropdownModal, useShallowSelector } from 'hooks';
 import {
   lostKeyContractDynamicFormInitialData,
   setLostKeyContractForm,
@@ -60,6 +60,9 @@ export const LostKeyContract: FC = () => {
   const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
     contractFormsSelector.getLostKeyContract,
   );
+  const {
+    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
+  } = useConnectDropdownModal();
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
@@ -77,6 +80,10 @@ export const LostKeyContract: FC = () => {
         initialValues={lostKeyContract}
         validationSchema={validationSchema}
         onSubmit={(values, formikHelpers) => {
+          if (!isWalletConnected) {
+            openConnectDropdownModal();
+            return;
+          }
           const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
           if (sum < MAX_RESERVES_PERCENTS) {
             formikHelpers.setSubmitting(false);
@@ -469,6 +476,7 @@ export const LostKeyContract: FC = () => {
           </Form>
         )}
       </Formik>
+      {connectDropdownModal}
     </Container>
   );
 };

@@ -1,7 +1,7 @@
 import { celoIcon, metamaskIcon, walletConnectIcon } from 'assets/img';
 import { WalletProviders } from 'types';
 
-export const connectDropdownData = [
+export const connectDropdownModalData = [
   {
     label: 'WalletConnect',
     connectorWallet: WalletProviders.walletConnect,

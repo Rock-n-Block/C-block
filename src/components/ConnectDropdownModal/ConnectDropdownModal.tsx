@@ -9,17 +9,17 @@ import { WalletProviders } from 'types';
 import { Modal } from 'components/Modal';
 import { useDispatch } from 'react-redux';
 import { disconnectWalletState } from 'store/user/reducer';
-import { useStyles } from './ConnectDropdown.styles';
-import { connectDropdownData } from './ConnectDropdown.helpers';
+import { useStyles } from './ConnectDropdownModal.styles';
+import { connectDropdownModalData } from './ConnectDropdownModal.helpers';
 
-export interface ConnectDropdownProps {
+export interface ConnectDropdownModalProps {
   address: string;
   open: boolean;
   onClose: () => void;
   className?: string;
 }
 
-export const ConnectDropdown: VFC<ConnectDropdownProps> = ({
+export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
   address, open, onClose, className,
 }) => {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ export const ConnectDropdown: VFC<ConnectDropdownProps> = ({
         </Box>
       ) : (
         <>
-          {connectDropdownData.map(({ label, connectorWallet, walletIcon }) => (
+          {connectDropdownModalData.map(({ label, connectorWallet, walletIcon }) => (
             <Box
               key={label}
               className={classes.connectBtn}
