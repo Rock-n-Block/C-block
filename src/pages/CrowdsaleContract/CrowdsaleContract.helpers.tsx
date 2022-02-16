@@ -1,17 +1,18 @@
 import React, { ReactElement } from 'react';
 import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
+
 import { Calendar, DescendingSortOrderIcon } from 'theme/icons';
-import { latinAndNumbers } from 'utils';
+import { ethereumAddressSchema, latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
   contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
-  tokenAddress: Yup.string().length(42).required(),
-  crowdsaleOwner: Yup.string().length(42).required(),
+  tokenAddress: ethereumAddressSchema.required(),
+  crowdsaleOwner: ethereumAddressSchema.required(),
 
   tokens: Yup.array().of(
     Yup.object().shape({
-      address: Yup.string().length(42).required(),
+      address: Yup.string().required(),
       rate: Yup.number().min(1).max(100000)
         .required(),
     }),
