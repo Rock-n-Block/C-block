@@ -72,7 +72,12 @@ const crowdsaleContractInitialState: ICrowdsaleContract = {
   amountBonusSection: false,
   amountBonus: '', // percents (to be sent on the blockain 100% = 1000)
   minimumContribution: '', // tokenAddress's amount (5.34343 NEW)
-  ...contractAdditionalFieldsInitialData,
+
+  additional: {
+    contractCreationPrice: '',
+    paymentTokensSymbols: [], // to be fetched after user successfully fills contract fields
+    tokenToSaleSymbol: '', // to be fetched after user successfully fills contract fields
+  },
 };
 
 const weddingContractInitialState: IWeddingContract = {

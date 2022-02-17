@@ -63,6 +63,8 @@ const store = configureStore({
           actionTypes.CREATE_LOSTKEY_CONTRACT,
           actionTypes.CREATE_WILL_CONTRACT,
           actionTypes.CREATE_CROWDSALE_CONTRACT,
+          actionTypes.GET_CROWDSALE_CONTRACT_ADDITIONAL_DATA,
+          actionTypes.GET_ERC20_SYMBOL,
         ],
       },
     },

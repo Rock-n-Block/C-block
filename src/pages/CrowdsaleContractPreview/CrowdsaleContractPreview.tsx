@@ -104,10 +104,15 @@ export const CrowdsaleContractPreview = () => {
                       {label}
                     </Typography>
                     <Typography variant="body1">
-                      HARDCODE
-                    </Typography>
-                    <Typography variant="body1">
-                      {crowdsaleContractDynamicData[key]} <Link className={classes.tokenAddressLink} href={constructExplorerUrl(crowdsaleContractDynamicData.address)}>token</Link>
+                      {crowdsaleContractDynamicData.rate}{' '}
+                      <Link
+                        className={classes.tokenAddressLink}
+                        href={constructExplorerUrl(crowdsaleContractDynamicData.address)}
+                      >
+                        {
+                          crowdsaleContract.additional.paymentTokensSymbols[index]
+                        }
+                      </Link>
                     </Typography>
                   </Fragment>
                 ),
@@ -144,7 +149,7 @@ export const CrowdsaleContractPreview = () => {
                   </Typography>
                   {typeof crowdsaleContract[key] !== 'boolean' ? (
                     <Typography variant="body1">
-                      {crowdsaleContract[key]} {valueSuffix}
+                      {crowdsaleContract[key]} {key === 'softcapTokens' ? crowdsaleContract.additional.tokenToSaleSymbol : valueSuffix}
                     </Typography>
                   ) : (
                     <YesNoBlock yes={crowdsaleContract[key]} justify="normal" />
@@ -171,7 +176,7 @@ export const CrowdsaleContractPreview = () => {
           >
             {previewBlock.map(
               ({
-                key, label, valueSuffix,
+                key, label,
               }) => (
                 <Grid
                   key={label}
@@ -191,7 +196,7 @@ export const CrowdsaleContractPreview = () => {
                     {label}
                   </Typography>
                   <Typography variant="body1">
-                    {crowdsaleContract[key]} {valueSuffix}
+                    {crowdsaleContract[key]} {crowdsaleContract.additional.tokenToSaleSymbol}
                   </Typography>
                 </Grid>
               ),
