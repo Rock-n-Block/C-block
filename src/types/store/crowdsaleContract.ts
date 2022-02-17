@@ -5,7 +5,16 @@ export interface ICrowdsaleContractDynamicForm {
   rate: string;
 }
 
-export interface ICrowdsaleContract extends ContractAdditionalField {
+interface ICrowdsaleAdditionalField extends ContractAdditionalField {
+  additional: {
+    contractCreationPrice: string;
+
+    tokenToSaleSymbol: string;
+    paymentTokensSymbols: string[];
+  }
+}
+
+export interface ICrowdsaleContract extends ICrowdsaleAdditionalField {
   contractName: string;
   tokenAddress: string;
   crowdsaleOwner: string;

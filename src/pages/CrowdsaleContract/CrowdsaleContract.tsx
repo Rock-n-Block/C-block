@@ -20,13 +20,14 @@ import { RemovableContractsFormBlock } from 'components';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State, ICrowdsaleContract } from 'types';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useConnectDropdownModal, useProvider, useShallowSelector } from 'hooks';
 import {
   crowdsaleContractDynamicFormInitialData,
   setCrowdsaleContractForm,
 } from 'store/contractForms/reducer';
 import { routes } from 'appConstants';
 
+import { getCrowdsaleContractAdditionalData } from 'store/contractForms/actions';
 import { InfoBlock, SwitchableBlockForm } from './components';
 import {
   validationSchema,
@@ -45,6 +46,7 @@ export const CrowdsaleContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { getDefaultProvider } = useProvider();
   const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
     contractFormsSelector.getContractForms,
   );
@@ -64,6 +66,9 @@ export const CrowdsaleContract: FC = () => {
             return;
           }
           dispatch(setCrowdsaleContractForm(values));
+          dispatch(getCrowdsaleContractAdditionalData({
+            provider: getDefaultProvider(),
+          }));
           navigate(routes['crowdsale-contract']['preview-contract'].root);
         }}
       >

@@ -25,7 +25,6 @@ export const staticCrowdsaleContractPreviewHelpers: Record<'mixedSection' | 'min
       {
         key: 'softcapTokens',
         label: 'Soft cap tokens',
-        valueSuffix: 'HARDCODE',
       },
     ],
     [
@@ -40,12 +39,10 @@ export const staticCrowdsaleContractPreviewHelpers: Record<'mixedSection' | 'min
       {
         key: 'minInvestments',
         label: 'Minimum',
-        valueSuffix: 'HARDCODE',
       },
       {
         key: 'maxInvestments',
         label: 'Maximum',
-        valueSuffix: 'HARDCODE',
       },
     ],
   ],
