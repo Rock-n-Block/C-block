@@ -24,6 +24,7 @@ export const validationSchema = Yup.object().shape({
   minMaxInvestmentsSection: Yup.boolean(),
   minInvestments: Yup
     .number()
+    .min(0)
     .max(Yup.ref('maxInvestments'))
     .when('minMaxInvestmentsSection', (value, schema) => (value ? schema.required() : schema)),
   maxInvestments: Yup
@@ -34,9 +35,11 @@ export const validationSchema = Yup.object().shape({
   amountBonusSection: Yup.boolean(),
   amountBonus: Yup
     .number()
+    .min(0)
     .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
   minimumContribution: Yup
     .number()
+    .min(0)
     .min(Yup.ref('minInvestments'))
     .when('amountBonusSection', (value, schema) => (value ? schema.required() : schema)),
 });
