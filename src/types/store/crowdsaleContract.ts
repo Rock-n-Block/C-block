@@ -1,9 +1,11 @@
+import { ContractAdditionalField } from '.';
+
 export interface ICrowdsaleContractDynamicForm {
   address: string;
   rate: string;
 }
 
-export interface ICrowdsaleContract {
+export interface ICrowdsaleContract extends ContractAdditionalField {
   contractName: string;
   tokenAddress: string;
   crowdsaleOwner: string;

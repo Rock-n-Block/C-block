@@ -1,4 +1,4 @@
-import { TPingIntervalUnit } from '.';
+import { ContractAdditionalField, TPingIntervalUnit } from '.';
 
 export interface ILostKeyContractDynamicForm {
   reserveAddress: string;
@@ -6,7 +6,7 @@ export interface ILostKeyContractDynamicForm {
   percents: string;
 }
 
-export interface ILostKeyContract {
+export interface ILostKeyContract extends ContractAdditionalField {
   contractName: string;
   managementAddress: string;
   reservesConfigs: ILostKeyContractDynamicForm[];

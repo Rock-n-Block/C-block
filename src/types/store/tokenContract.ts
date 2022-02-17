@@ -1,3 +1,5 @@
+import { ContractAdditionalField } from '.';
+
 export type TokenContractDynamicForm = {
   address: string;
   name: string;
@@ -15,4 +17,4 @@ export type TokenContract = {
   burnable: boolean;
   freezable: boolean;
   tokens: TokenContractDynamicForm[];
-};
+} & ContractAdditionalField;

@@ -14,6 +14,7 @@ import { baseApi } from 'store/api/apiRequestBuilder';
 import actionTypes from '../actionTypes';
 import { createTokenContract } from '../actions';
 import { approveSaga } from './approveSaga';
+import { getContractCreationPriceSaga } from './getContractCreationPriceSaga';
 
 function* createTokenContractSaga({
   type,
@@ -64,9 +65,14 @@ function* createTokenContractSaga({
         tokenFactoryContractData.address,
       ).call,
     );
-    const price: string = yield call(
-      tokenFactoryContract.methods.price(celoAddress, Number(burnable)).call,
-    );
+
+    const price: string = yield call(getContractCreationPriceSaga, {
+      type: actionTypes.GET_CONTRACT_CREATION_PRICE,
+      payload: {
+        provider,
+        contractType: 'token',
+      },
+    });
 
     if (+allowance < +price * 2) {
       yield call(approveSaga, {
