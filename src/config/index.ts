@@ -9,6 +9,10 @@ import {
   tokenNonMintableFreezableAbi,
   tokenNonMintableNonFreezableAbi,
   lostKeyFactoryAbi,
+  crowdsaleSoftCappableBonusableAbi,
+  crowdsaleSoftCappableNonBonusableAbi,
+  crowdsaleNonSoftCappableBonusableAbi,
+  crowdsaleNonSoftCappableNonBonusableAbi,
 } from './abi';
 
 export * from './constants';
@@ -134,6 +138,47 @@ export const contracts: IContracts = {
       testnet: {
         address: '0xd0fF8b5a7723752309ab2222A40b0485aA53C558',
         abi: lostKeyFactoryAbi,
+      },
+    },
+
+    crowdsaleSoftCappableBonusable: {
+      mainnet: {
+        address: '',
+        abi: crowdsaleSoftCappableBonusableAbi,
+      },
+      testnet: {
+        address: '0x7C5d7986259354a80bB83c101754587Bfc3bBCAc',
+        abi: crowdsaleSoftCappableBonusableAbi,
+      },
+    },
+    crowdsaleSoftCappableNonBonusable: {
+      mainnet: {
+        address: '',
+        abi: crowdsaleSoftCappableNonBonusableAbi,
+      },
+      testnet: {
+        address: '0x9d1D9c4E4F622708210Ce4C7de7b76d6fC087733',
+        abi: crowdsaleSoftCappableNonBonusableAbi,
+      },
+    },
+    crowdsaleNonSoftCappableBonusable: {
+      mainnet: {
+        address: '',
+        abi: crowdsaleNonSoftCappableBonusableAbi,
+      },
+      testnet: {
+        address: '0x4f96423a3aB01F821c98E9a6D72ca6fB6c9ED49D',
+        abi: crowdsaleNonSoftCappableBonusableAbi,
+      },
+    },
+    crowdsaleNonSoftCappableNonBonusable: {
+      mainnet: {
+        address: '',
+        abi: crowdsaleNonSoftCappableNonBonusableAbi,
+      },
+      testnet: {
+        address: '0x8129A40EA8fA34C342b04BE1a9Ba379148F99D7F',
+        abi: crowdsaleNonSoftCappableNonBonusableAbi,
       },
     },
   },

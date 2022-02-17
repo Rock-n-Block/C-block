@@ -106,6 +106,8 @@ export const Preview: FC<PreviewProps> = ({
         return actionTypes.CREATE_LOSTKEY_CONTRACT;
       case 'will':
         return actionTypes.CREATE_WILL_CONTRACT;
+      case 'crowdsale':
+        return actionTypes.CREATE_CROWDSALE_CONTRACT;
       default:
         return null;
     }
@@ -152,6 +154,10 @@ export const Preview: FC<PreviewProps> = ({
         ret = contractForms.willContract.additional.contractCreationPrice;
         break;
       }
+      case 'crowdsale': {
+        ret = contractForms.crowdsaleContract.additional.contractCreationPrice;
+        break;
+      }
       default:
         break;
     }
@@ -161,6 +167,7 @@ export const Preview: FC<PreviewProps> = ({
     contractForms.lostKeyContract.additional.contractCreationPrice,
     contractForms.tokenContract.additional.contractCreationPrice,
     contractForms.willContract.additional.contractCreationPrice,
+    contractForms.crowdsaleContract.additional.contractCreationPrice,
     type,
   ]);
 

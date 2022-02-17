@@ -5,3 +5,16 @@ export { default as tokenMintableNonFreezableAbi } from './tokenMintableNonFreez
 export { default as tokenNonMintableFreezableAbi } from './tokenNonMintableFreezable';
 export { default as tokenNonMintableNonFreezableAbi } from './tokenNonMintableNonFreezable';
 export { default as lostKeyFactoryAbi } from './lostKeyFactory';
+
+export {
+  default as crowdsaleNonSoftCappableBonusableAbi,
+} from './crowdsaleNonSoftCappableBonusable';
+export {
+  default as crowdsaleNonSoftCappableNonBonusableAbi,
+} from './crowdsaleNonSoftCappableNonBonusable';
+export {
+  default as crowdsaleSoftCappableBonusableAbi,
+} from './crowdsaleSoftCappableBonusable';
+export {
+  default as crowdsaleSoftCappableNonBonusableAbi,
+} from './crowdsaleSoftCappableNonBonusable';

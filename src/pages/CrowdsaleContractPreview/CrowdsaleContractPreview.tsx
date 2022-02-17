@@ -5,15 +5,15 @@ import { useDispatch } from 'react-redux';
 import {
   Grid, Typography, Box, Link, TextField,
 } from '@material-ui/core';
+import clsx from 'clsx';
 
 import { Preview, YesNoBlock, Copyable } from 'components';
-import { useShallowSelector } from 'hooks';
+import { useProvider, useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { ContractFormsState, State } from 'types';
-import clsx from 'clsx';
 import { routes } from 'appConstants';
-import { deleteTokenContractForm } from 'store/contractForms/reducer';
+import { deleteCrowdsaleContractForm } from 'store/contractForms/reducer';
 import { constructExplorerUrl } from 'utils';
+import { createCrowdsaleContract } from 'store/contractForms/actions';
 import { useStyles } from './CrowdsaleContractPreview.styles';
 import {
   dynamicCrowdsaleContractPreviewHelpers,
@@ -21,27 +21,35 @@ import {
 } from './CrowdsaleContractPreview.helpers';
 
 export const CrowdsaleContractPreview = () => {
-  const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
-    contractFormsSelector.getContractForms,
-  );
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const handleEdit = useCallback(() => {
-    navigate(routes['crowdsale-contract'].root);
-  }, []);
+  const { getDefaultProvider } = useProvider();
 
   const handleDelete = useCallback(() => {
-    dispatch(deleteTokenContractForm());
+    dispatch(deleteCrowdsaleContractForm());
     navigate(routes.root);
-  }, []);
+  }, [dispatch, navigate]);
+  const handleEdit = useCallback(() => {
+    navigate(routes['crowdsale-contract'].root);
+  }, [navigate]);
+
+  const handleCreateContract = useCallback(async () => {
+    dispatch(
+      createCrowdsaleContract({
+        provider: getDefaultProvider(),
+      }),
+    );
+  }, [dispatch, getDefaultProvider]);
+
+  const crowdsaleContract = useShallowSelector(contractFormsSelector.getCrowdsaleContract);
 
   const classes = useStyles();
+
   return (
     <Preview
       type="crowdsale"
       name={crowdsaleContract.contractName}
-      launchAction={() => alert('launch')}
+      launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
     >
@@ -69,8 +77,9 @@ export const CrowdsaleContractPreview = () => {
         marginRight={-3}
       >
         <Grid className={classes.tokenContractInfoBlock} container>
-          {crowdsaleContract.tokens.map((crowdsaleContractDynamicData) => (
+          {crowdsaleContract.tokens.map((crowdsaleContractDynamicData, index) => (
             <Grid
+              key={JSON.stringify(crowdsaleContractDynamicData) + index}
               className={classes.previewValueBlock}
               item
               xs={6}
@@ -191,49 +200,53 @@ export const CrowdsaleContractPreview = () => {
         ))}
       </Box>
 
-      <Box className={classes.borderedSection} paddingTop={2} paddingBottom={3}>
-        <Typography
-          className={clsx(classes.sectionTitle, 'l')}
-          variant="body1"
-        >
-          Amount Bonus
-        </Typography>
-        {staticCrowdsaleContractPreviewHelpers.amountBonusSection.map((previewBlock, index) => (
-          <Grid
-            className={classes.tokenContractInfoBlock}
-            key={index}
-            container
-          >
-            {previewBlock.map(
-              ({
-                key, label, valueSuffix,
-              }) => (
+      {
+        crowdsaleContract.amountBonusSection && (
+          <Box className={classes.borderedSection} paddingTop={2} paddingBottom={3}>
+            <Typography
+              className={clsx(classes.sectionTitle, 'l')}
+              variant="body1"
+            >
+              Amount Bonus
+            </Typography>
+              {staticCrowdsaleContractPreviewHelpers.amountBonusSection.map((previewBlock, index) => (
                 <Grid
-                  key={label}
-                  className={classes.previewValueBlock}
-                  item
-                  xs={6}
-                  sm={6}
-                  md={6}
-                  lg={6}
-                  xl={6}
+                  className={classes.tokenContractInfoBlock}
+                  key={index}
+                  container
                 >
-                  <Typography
-                    variant="body1"
-                    className={clsx(classes.previewLabel, 's')}
-                    color="textSecondary"
-                  >
-                    {label}
-                  </Typography>
-                  <Typography variant="body1">
-                    {crowdsaleContract[key]} {valueSuffix}
-                  </Typography>
+                  {previewBlock.map(
+                    ({
+                      key, label, valueSuffix,
+                    }) => (
+                      <Grid
+                        key={label}
+                        className={classes.previewValueBlock}
+                        item
+                        xs={6}
+                        sm={6}
+                        md={6}
+                        lg={6}
+                        xl={6}
+                      >
+                        <Typography
+                          variant="body1"
+                          className={clsx(classes.previewLabel, 's')}
+                          color="textSecondary"
+                        >
+                          {label}
+                        </Typography>
+                        <Typography variant="body1">
+                          {crowdsaleContract[key]} {valueSuffix}
+                        </Typography>
+                      </Grid>
+                    ),
+                  )}
                 </Grid>
-              ),
-            )}
-          </Grid>
-        ))}
-      </Box>
+              ))}
+          </Box>
+        )
+      }
 
       <Box paddingTop={3} paddingBottom={3}>
         <Typography

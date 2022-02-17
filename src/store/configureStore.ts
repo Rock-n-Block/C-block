@@ -62,6 +62,7 @@ const store = configureStore({
           actionTypes.CREATE_TOKEN_CONTRACT,
           actionTypes.CREATE_LOSTKEY_CONTRACT,
           actionTypes.CREATE_WILL_CONTRACT,
+          actionTypes.CREATE_CROWDSALE_CONTRACT,
         ],
       },
     },

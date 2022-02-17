@@ -34,4 +34,11 @@ export const baseApi = {
       data,
     });
   },
+  createCrowdsaleContract(data): unknown {
+    return ajax({
+      method: 'post',
+      url: URL.createCrowdsaleContract,
+      data,
+    });
+  },
 };
