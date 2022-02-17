@@ -9,7 +9,9 @@ import { ContractFormsState, ContractsNames, UserState } from 'types';
 import { contractsHelper } from 'utils';
 import { getContractCreationPrice } from '../actions';
 import actionTypes from '../actionTypes';
-import { setLostKeyContractForm, setTokenContractForm, setWillContractForm } from '../reducer';
+import {
+  setLostKeyContractForm, setTokenContractForm, setWillContractForm, setCrowdsaleContractForm,
+} from '../reducer';
 
 export function* getContractCreationPriceSaga({
   type,
@@ -48,11 +50,22 @@ export function* getContractCreationPriceSaga({
         contractName = ContractsNames.lostKeyFactory;
         break;
       }
+      case 'crowdsale': {
+        const {
+          crowdsaleContract: {
+            softcapTokens,
+            amountBonusSection: isBonusable,
+            changingDates: isDatesChangeable,
+          },
+        } = contractForms;
+        const isSoftcappable = Number(softcapTokens) > 0;
+        contractName = contractsHelper.getCrowdsaleFactoryContractName(
+          isSoftcappable, isBonusable,
+        ) as ContractsNames;
+        priceMethodArgs.push(Number(isDatesChangeable));
+        break;
+      }
       // TODO:  add more contractType handlers
-      // case 'crowdsale': {
-      //   contractName = ContractsNames.crowdsale;
-      //   break;
-      // }
       // case 'weddingRing': {
       //   contractName = ContractsNames.lostKeyFactory;
       //   break;
@@ -60,6 +73,11 @@ export function* getContractCreationPriceSaga({
       default:
         break;
     }
+
+    console.log({
+      contractName,
+      priceMethodArgs,
+    });
 
     const factoryContractData = contractsHelper.getContractData(
       contractName,
@@ -105,11 +123,17 @@ export function* getContractCreationPriceSaga({
         }));
         break;
       }
+      case 'crowdsale': {
+        yield put(setCrowdsaleContractForm({
+          ...contractForms.crowdsaleContract,
+          additional: {
+            ...contractForms.crowdsaleContract.additional,
+            contractCreationPrice,
+          },
+        }));
+        break;
+      }
       // TODO:  add more contractType handlers
-      // case 'crowdsale': {
-      //   contractName = ContractsNames.crowdsale;
-      //   break;
-      // }
       // case 'weddingRing': {
       //   contractName = ContractsNames.lostKeyFactory;
       //   break;

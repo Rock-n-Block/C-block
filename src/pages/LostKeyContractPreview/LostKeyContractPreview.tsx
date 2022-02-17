@@ -11,7 +11,7 @@ import {
 } from 'components';
 import { useProvider, useShallowSelector } from 'hooks';
 import {
-  ILostKeyContract, ILostKeyContractDynamicForm, State,
+  ILostKeyContractDynamicForm,
 } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -44,9 +44,7 @@ export const LostKeyContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
-    contractFormsSelector.getLostKeyContract,
-  );
+  const lostKeyContract = useShallowSelector(contractFormsSelector.getLostKeyContract);
 
   const classes = useStyles();
 
