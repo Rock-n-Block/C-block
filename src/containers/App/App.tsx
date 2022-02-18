@@ -20,7 +20,7 @@ function App() {
   const selectedTheme = isLight ? lightTheme : darkTheme;
 
   useEffect(() => {
-    if (address.length) {
+    if (address?.length) {
       connect(wallet);
     }
   }, [address, connect, wallet]);

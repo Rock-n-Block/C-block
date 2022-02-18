@@ -9,6 +9,7 @@ import {
 } from 'types';
 import { connectWalletState, disconnectWalletState } from 'store/user/reducer';
 
+import { setNotification } from 'utils';
 import { WalletService } from '..';
 
 declare global {
@@ -88,6 +89,14 @@ any,
       }
     } else if (window.celo) {
       await window.celo.enable;
+      if (!window.celo.selectedAddress) {
+        setNotification({
+          type: 'error',
+          message: 'Celo extension wallet is not installed or unlocked',
+        });
+
+        return;
+      }
       this.props.connectWallet({
         address: window.celo.selectedAddress,
         wallet: 'celo',
