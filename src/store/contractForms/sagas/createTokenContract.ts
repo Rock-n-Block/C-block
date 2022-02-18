@@ -117,7 +117,7 @@ function* createTokenContractSaga({
       contractMethodArgs.push(timeStamps);
     }
 
-    const { transactionHash } = yield call(
+    const { transactionHash }: { transactionHash: string } = yield call(
       tokenFactoryContract.methods[methodName](...contractMethodArgs).send,
       {
         from: myAddress,

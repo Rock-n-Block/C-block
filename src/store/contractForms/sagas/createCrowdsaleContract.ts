@@ -195,7 +195,7 @@ function* createCrowdsaleContractSaga({
       contractMethodArgs,
     });
 
-    const { transactionHash } = yield call(
+    const { transactionHash }: { transactionHash: string } = yield call(
       crowdsaleFactoryContract.methods[methodName](...contractMethodArgs).send,
       {
         from: myAddress,

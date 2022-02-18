@@ -102,7 +102,7 @@ function* createWillContractSaga({
       getTokenAmount(rewardAmount, +celoDecimals, false),
     ];
 
-    const { transactionHash } = yield call(
+    const { transactionHash }: { transactionHash: string } = yield call(
       lostKeyFactoryContract.methods.deployLostKey(...contractMethodArgs).send,
       {
         from: myAddress,
