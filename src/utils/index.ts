@@ -10,4 +10,3 @@ export * from './constructExplorerUrls';
 export * from './getDeepValueByPath';
 export * from './contractsHelper';
 export * from './dateTimeConverters';
-export * from './validationSchema.helpers';

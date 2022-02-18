@@ -20,7 +20,7 @@ import { RemovableContractsFormBlock } from 'components';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, State, ICrowdsaleContract } from 'types';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useShallowSelector } from 'hooks';
 import {
   crowdsaleContractDynamicFormInitialData,
   setCrowdsaleContractForm,
@@ -48,9 +48,6 @@ export const CrowdsaleContract: FC = () => {
   const { crowdsaleContract } = useShallowSelector<State, ContractFormsState>(
     contractFormsSelector.getContractForms,
   );
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
   return (
     <Container>
       <Formik
@@ -59,10 +56,6 @@ export const CrowdsaleContract: FC = () => {
         initialValues={crowdsaleContract}
         validationSchema={validationSchema}
         onSubmit={(values: ICrowdsaleContract) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
-            return;
-          }
           dispatch(setCrowdsaleContractForm(values));
           navigate(routes['crowdsale-contract']['preview-contract'].root);
         }}
@@ -450,7 +443,6 @@ export const CrowdsaleContract: FC = () => {
           </Form>
         )}
       </Formik>
-      {connectDropdownModal}
     </Container>
   );
 };

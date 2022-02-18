@@ -1,12 +1,12 @@
 /* eslint-disable newline-per-chained-call */
 import { ReactElement } from 'react';
 import * as Yup from 'yup';
-import { contractNameSchema, ethereumAddressSchema } from 'utils';
+import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
-  contractName: contractNameSchema.required(),
-  partnerOneAddress: ethereumAddressSchema.notOneOf([Yup.ref('partnerTwoAddress')]).required(),
-  partnerTwoAddress: ethereumAddressSchema.notOneOf([Yup.ref('partnerOneAddress')]).required(),
+  contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
+  partnerOneAddress: Yup.string().length(42).notOneOf([Yup.ref('partnerTwoAddress')]).required(),
+  partnerTwoAddress: Yup.string().length(42).notOneOf([Yup.ref('partnerOneAddress')]).required(),
   partnerOneEmail: Yup.string().email().notOneOf([Yup.ref('partnerTwoEmail')]).max(255).required(),
   partnerTwoEmail: Yup.string().email().notOneOf([Yup.ref('partnerOneEmail')]).max(255).required(),
   daysForDivorceApproval: Yup.number().min(1).required(),

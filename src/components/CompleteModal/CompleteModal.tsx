@@ -1,9 +1,8 @@
 import React, { useMemo, VFC } from 'react';
 
-import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-
 import { Modal } from 'components/Modal';
+import { Box, Typography } from '@material-ui/core';
 import { SuccessBigIcon, ErrorBigIcon } from 'theme/icons';
 import { useStyles } from './CompleteModal.styles';
 

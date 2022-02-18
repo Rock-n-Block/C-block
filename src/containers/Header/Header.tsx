@@ -10,9 +10,10 @@ import { Menu } from 'theme/icons';
 import userSelector from 'store/user/selectors';
 import { State, UserState } from 'types';
 import { useShallowSelector, useNavigation } from 'hooks';
-import { Breadcrumbs, ConnectDropdownModal } from 'components';
+import { Breadcrumbs } from 'components/Breadcrumbs';
 import { ConnectButton } from './components/ConnectButton';
 import { useStyles } from './Header.styles';
+import { ConnectDropdown } from './components/ConnectDropdown';
 import { NetTag } from './components/NetTag';
 
 export interface HeaderProps {
@@ -75,7 +76,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
           {isBreadcrumbsVisible && <NetTag className={classes.chainTag} isTestnet={!isMainnet} />}
         </Grid>
       </Grid>
-      <ConnectDropdownModal
+      <ConnectDropdown
         address={address}
         open={isModalOpen}
         onClose={closeModal}

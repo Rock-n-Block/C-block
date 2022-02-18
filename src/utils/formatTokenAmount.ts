@@ -42,5 +42,5 @@ export const getTokenAmountDisplay = (
 
   const displayValue = new BigNumber(balance).dividedBy(new BigNumber(10).pow(decimals));
 
-  return displayValue.toFixed();
+  return displayValue.toString();
 };

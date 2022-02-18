@@ -9,7 +9,6 @@ import {
   ILostKeyContractDynamicForm,
   IWillContract,
   IWillContractDynamicForm,
-  ContractAdditionalField,
 } from 'types/store/contractForms';
 import { formattedDate } from 'utils';
 
@@ -38,84 +37,63 @@ export const willContractDynamicFormInitialData: IWillContractDynamicForm = {
   percents: '0',
 };
 
-const contractAdditionalFieldsInitialData: ContractAdditionalField = {
-  additional: {
-    contractCreationPrice: '',
-  },
-};
-
-const tokenContractInitialState: TokenContract = {
-  tokenName: '',
-  tokenOwner: '',
-  tokenSymbol: '',
-  decimals: '',
-  futureMinting: false,
-  burnable: false,
-  freezable: false,
-  tokens: [dynamicFormDataTemplate],
-  ...contractAdditionalFieldsInitialData,
-};
-
-const crowdsaleContractInitialState: ICrowdsaleContract = {
-  contractName: '',
-  tokenAddress: '',
-  crowdsaleOwner: '',
-  tokens: [crowdsaleContractDynamicFormInitialData],
-  softcapTokens: '',
-  saleDuration: '',
-  changingDates: false,
-
-  minMaxInvestmentsSection: false,
-  minInvestments: '0',
-  maxInvestments: '0',
-
-  amountBonusSection: false,
-  amountBonus: '',
-  minimumContribution: '',
-  ...contractAdditionalFieldsInitialData,
-};
-
-const weddingContractInitialState: IWeddingContract = {
-  contractName: '',
-  partnerOneAddress: '',
-  partnerTwoAddress: '',
-  partnerOneEmail: '',
-  partnerTwoEmail: '',
-  daysForDivorceApproval: '',
-  partnerOneSliderValue: 50,
-  partnerTwoSliderValue: 50,
-  daysForWithdrawalApproval: '',
-  ...contractAdditionalFieldsInitialData,
-};
-
-const lostKeyContractInitialState: ILostKeyContract = {
-  contractName: '',
-  managementAddress: '',
-  reservesConfigs: [lostKeyContractDynamicFormInitialData],
-  pingIntervalAsValue: '6',
-  pingIntervalAsDateUnits: 'Month',
-  rewardAmount: '',
-  ownerEmail: '',
-  ...contractAdditionalFieldsInitialData,
-};
-
-const willContractInitialState: IWillContract = {
-  contractName: '',
-  managementAddress: '',
-  reservesConfigs: [willContractDynamicFormInitialData],
-  pingIntervalAsValue: '6',
-  pingIntervalAsDateUnits: 'Month',
-  rewardAmount: '',
-  ownerEmail: '',
-  ...contractAdditionalFieldsInitialData,
-};
-
 export const initialState: ContractFormsState = {
-  tokenContract: tokenContractInitialState,
-  crowdsaleContract: crowdsaleContractInitialState,
-  weddingContract: weddingContractInitialState,
-  lostKeyContract: lostKeyContractInitialState,
-  willContract: willContractInitialState,
+  tokenContract: {
+    tokenName: '',
+    tokenOwner: '',
+    tokenSymbol: '',
+    decimals: '',
+    futureMinting: false,
+    burnable: false,
+    freezable: false,
+    tokens: [dynamicFormDataTemplate],
+  },
+  crowdsaleContract: {
+    contractName: '',
+    tokenAddress: '',
+    crowdsaleOwner: '',
+    tokens: [crowdsaleContractDynamicFormInitialData],
+    softcapTokens: '',
+    saleDuration: '',
+    changingDates: false,
+
+    minMaxInvestmentsSection: false,
+    minInvestments: '0',
+    maxInvestments: '0',
+
+    amountBonusSection: false,
+    amountBonus: '',
+    minimumContribution: '',
+  },
+  weddingContract: {
+    contractName: '',
+    partnerOneAddress: '',
+    partnerTwoAddress: '',
+    partnerOneEmail: '',
+    partnerTwoEmail: '',
+    daysForDivorceApproval: '',
+    partnerOneSliderValue: 50,
+    partnerTwoSliderValue: 50,
+    daysForWithdrawalApproval: '',
+  },
+  lostKeyContract: {
+    contractName: '',
+    managementAddress: '',
+    reservesConfigs: [lostKeyContractDynamicFormInitialData],
+    pingIntervalAsValue: '6',
+    pingIntervalAsDateUnits: 'Month',
+    rewardAmount: '',
+    ownerEmail: '',
+  },
+  willContract: {
+    contractName: '',
+    managementAddress: '',
+    reservesConfigs: [willContractDynamicFormInitialData],
+    pingIntervalAsValue: '6',
+    pingIntervalAsDateUnits: 'Month',
+    rewardAmount: '',
+    ownerEmail: '',
+  },
 };
 
 export const contractFormReducer = createSlice({

@@ -24,7 +24,7 @@ import userSelector from 'store/user/selectors';
 import {
   State, IWillContract, UserState,
 } from 'types';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useShallowSelector } from 'hooks';
 import {
   willContractDynamicFormInitialData,
   setWillContractForm,
@@ -60,11 +60,6 @@ export const WillContract: FC = () => {
   const willContract = useShallowSelector<State, IWillContract>(
     contractFormsSelector.getWillContract,
   );
-
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
-
   const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
 
   useEffect(() => {
@@ -82,11 +77,6 @@ export const WillContract: FC = () => {
         initialValues={willContract}
         validationSchema={validationSchema}
         onSubmit={(values: IWillContract, formikHelpers) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
-            return;
-          }
-
           const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
           if (sum < MAX_RESERVES_PERCENTS) {
             formikHelpers.setSubmitting(false);
@@ -476,7 +466,6 @@ export const WillContract: FC = () => {
           </Form>
         )}
       </Formik>
-      {connectDropdownModal}
     </Container>
   );
 };

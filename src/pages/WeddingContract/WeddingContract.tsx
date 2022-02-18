@@ -19,7 +19,7 @@ import {
 import clsx from 'clsx';
 import { CloseIcon } from 'theme/icons';
 import { State, IWeddingContract as WeddingContractType, ContractFormsState } from 'types';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useShallowSelector } from 'hooks';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { setWeddingContractForm } from 'store/contractForms/reducer';
@@ -35,10 +35,6 @@ export const WeddingContract = () => {
   const {
     weddingContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
-
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
 
   const [
     partnerOneSliderValue, setPartnerOneSliderValue,
@@ -69,10 +65,6 @@ export const WeddingContract = () => {
         onSubmit={(
           values: WeddingContractType,
         ) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
-            return;
-          }
           dispatch(setWeddingContractForm({
             ...values,
             partnerOneSliderValue,
@@ -214,7 +206,6 @@ export const WeddingContract = () => {
           </Form>
         )}
       </Formik>
-      {connectDropdownModal}
     </Container>
   );
 };

@@ -58,7 +58,6 @@ const store = configureStore({
           PURGE,
           REGISTER,
           actionTypes.APPROVE,
-          actionTypes.GET_CONTRACT_CREATION_PRICE,
           actionTypes.CREATE_TOKEN_CONTRACT,
           actionTypes.CREATE_LOSTKEY_CONTRACT,
           actionTypes.CREATE_WILL_CONTRACT,

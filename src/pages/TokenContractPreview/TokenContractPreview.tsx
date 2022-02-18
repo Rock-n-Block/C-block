@@ -1,26 +1,36 @@
 import React, {
   Fragment,
   useCallback,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Grid, Typography, Box } from '@material-ui/core';
 import clsx from 'clsx';
+import Web3 from 'web3';
 
 import {
   Preview,
   YesNoBlock,
   Copyable,
+  FullscreenLoader,
+  CompleteModal,
 } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
+import uiSelector from 'store/ui/selectors';
+import user from 'store/user/selectors';
 import {
-  State, TokenContract,
+  RequestStatus, State, TokenContract, UserState,
 } from 'types';
 import { routes } from 'appConstants';
 
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
+import { useWalletConnectorContext } from 'services';
 import { createTokenContract } from 'store/contractForms/actions';
+import actionTypes from 'store/contractForms/actionTypes';
 import { useStyles } from './TokenContractPreview.styles';
 import {
   dynamicTokenContractPreviewHelpers,
@@ -30,7 +40,6 @@ import {
 export const TokenContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
   const handleDelete = useCallback(() => {
     dispatch(deleteTokenContractForm());
     navigate(routes.root);
@@ -39,17 +48,62 @@ export const TokenContractPreview = () => {
     navigate(routes['token-contract'].root);
   }, [navigate]);
 
+  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
+  const { walletService } = useWalletConnectorContext();
   const handleCreateContract = useCallback(async () => {
+    const { celo } = window;
+    const web3 = new Web3(celo);
     dispatch(
       createTokenContract({
-        provider: getDefaultProvider(),
+        // @ts-ignore
+        provider: wallet === 'celo' ? web3 : walletService.Web3(),
       }),
     );
-  }, [dispatch, getDefaultProvider]);
+  }, [dispatch, wallet, walletService]);
 
   const tokenContract = useShallowSelector<State, TokenContract>(
     contractFormsSelector.getTokenContract,
   );
+  const createContractRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.CREATE_TOKEN_CONTRACT),
+  );
+  const isLoader = useMemo(
+    () => createContractRequestStatus === RequestStatus.REQUEST,
+    [createContractRequestStatus],
+  );
+
+  const [resultModalState, setResultModalState] = useState({
+    open: false,
+    result: false,
+  });
+  const handleCloseResultModal = useCallback(() => {
+    setResultModalState({
+      ...resultModalState,
+      open: false,
+    });
+  }, [resultModalState]);
+
+  useEffect(() => {
+    switch (createContractRequestStatus) {
+      case RequestStatus.SUCCESS: {
+        setResultModalState({
+          open: true,
+          result: true,
+        });
+        break;
+      }
+      case RequestStatus.ERROR: {
+        setResultModalState({
+          open: true,
+          result: false,
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }, [createContractRequestStatus]);
 
   const classes = useStyles();
   let totalTokenAmount = 0;
@@ -178,6 +232,12 @@ export const TokenContractPreview = () => {
           </Fragment>
         );
       })}
+      {isLoader && <FullscreenLoader />}
+      <CompleteModal
+        open={resultModalState.open}
+        result={resultModalState.result}
+        onClose={handleCloseResultModal}
+      />
     </Preview>
   );
 };

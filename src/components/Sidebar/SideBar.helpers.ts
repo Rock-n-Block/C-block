@@ -1,20 +1,9 @@
-import { FC } from 'react';
 import { routes } from 'appConstants';
 import {
   FileTextIcon, PlusCircleIcon, SettingGearIcon, UsdIcon, AtIcon,
 } from 'theme/icons';
-import { BaseSVGIconProps } from 'theme/icons/components/BaseSVGIcon';
 
-type TNavigationTabsLabels = 'Create Contract' | 'My contracts' | 'Earn' | 'Custom development' | 'Support';
-
-interface INavigationTab {
-  Icon: FC<Partial<BaseSVGIconProps>>;
-  label: TNavigationTabsLabels;
-  link: string;
-  isExternal?: boolean;
-}
-
-export const navigationTabs: INavigationTab[] = [
+export const navigationTabs = [
   {
     Icon: PlusCircleIcon,
     label: 'Create Contract',
@@ -27,7 +16,7 @@ export const navigationTabs: INavigationTab[] = [
   },
   {
     Icon: UsdIcon,
-    label: routes['earn'].title as 'Earn',
+    label: routes['earn'].title,
     link: routes['earn'].root,
   },
   {

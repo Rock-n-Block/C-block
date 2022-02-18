@@ -2,16 +2,16 @@ import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
 
 import { IWillContractDynamicForm } from 'types/store/contractForms';
-import { contractNameSchema, ethereumAddressSchema } from 'utils';
+import { latinAndNumbers } from 'utils';
 
 export const validationSchema = Yup.object().shape({
-  contractName: contractNameSchema.required(),
-  managementAddress: ethereumAddressSchema.required(),
+  contractName: Yup.string().matches(latinAndNumbers).min(5).required(),
+  managementAddress: Yup.string().length(42).required(),
   ownerEmail: Yup.string().email().required(),
 
   reservesConfigs: Yup.array().of(
     Yup.object().shape({
-      reserveAddress: ethereumAddressSchema.required(),
+      reserveAddress: Yup.string().length(42).required(),
       email: Yup.string().email().required(),
     }),
   ),

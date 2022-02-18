@@ -1,6 +1,7 @@
 import {
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
+import { ContractWeb3 } from '@amfi/connect-wallet/dist/interface';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -36,12 +37,12 @@ function* createLostKeyContractSaga({
       isMainnet,
     );
 
-    const lostKeyFactoryContract = new provider.eth.Contract(
+    const lostKeyFactoryContract: ContractWeb3 = new provider.eth.Contract(
       lostKeyFactoryContractData.abi,
       lostKeyFactoryContractData.address,
     );
 
-    const celoTokenContract = new provider.eth.Contract(
+    const celoTokenContract: ContractWeb3 = new provider.eth.Contract(
       bep20Abi,
       celoAddress,
     );

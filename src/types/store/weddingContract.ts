@@ -1,5 +1,3 @@
-import { ContractAdditionalField } from '.';
-
 export type IWeddingContract = {
   contractName: string;
   partnerOneAddress: string;
@@ -10,4 +8,4 @@ export type IWeddingContract = {
   partnerOneSliderValue: number;
   partnerTwoSliderValue: number;
   daysForWithdrawalApproval: string;
-} & ContractAdditionalField;
+};

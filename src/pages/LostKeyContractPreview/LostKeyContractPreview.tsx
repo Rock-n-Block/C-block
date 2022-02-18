@@ -1,23 +1,28 @@
 import React, {
-  Fragment, useCallback,
+  Fragment, useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
+import Web3 from 'web3';
 
 import {
-  Preview, Copyable,
+  Preview, Copyable, FullscreenLoader, CompleteModal,
 } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useShallowSelector } from 'hooks';
 import {
-  ILostKeyContract, ILostKeyContractDynamicForm, State,
+  ILostKeyContract, ILostKeyContractDynamicForm, RequestStatus, State, UserState,
 } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
+import uiSelector from 'store/ui/selectors';
+import user from 'store/user/selectors';
 import { deleteLostKeyContractForm } from 'store/contractForms/reducer';
 import { getDeepValueByPath } from 'utils';
+import { useWalletConnectorContext } from 'services';
 import { createLostKeyContract } from 'store/contractForms/actions';
+import actionTypes from 'store/contractForms/actionTypes';
 import {
   staticLostKeyContractPreviewHelpers,
 } from './LostKeyContractPreview.helpers';
@@ -26,8 +31,6 @@ import { useStyles } from './LostKeyContractPreview.styles';
 export const LostKeyContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
-
   const handleDelete = useCallback(() => {
     dispatch(deleteLostKeyContractForm());
     navigate(routes.root);
@@ -36,17 +39,62 @@ export const LostKeyContractPreview = () => {
     navigate(routes['lostkey-contract'].root);
   }, [navigate]);
 
+  const { wallet } = useShallowSelector<State, UserState>(user.getUser);
+  const { walletService } = useWalletConnectorContext();
   const handleCreateContract = useCallback(async () => {
+    const { celo } = window;
+    const web3 = new Web3(celo);
     dispatch(
       createLostKeyContract({
-        provider: getDefaultProvider(),
+        // @ts-ignore
+        provider: wallet === 'celo' ? web3 : walletService.Web3(),
       }),
     );
-  }, [dispatch, getDefaultProvider]);
+  }, [dispatch, wallet, walletService]);
 
   const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
     contractFormsSelector.getLostKeyContract,
   );
+  const createContractRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.CREATE_LOSTKEY_CONTRACT),
+  );
+  const isLoader = useMemo(
+    () => createContractRequestStatus === RequestStatus.REQUEST,
+    [createContractRequestStatus],
+  );
+
+  const [resultModalState, setResultModalState] = useState({
+    open: false,
+    result: false,
+  });
+  const handleCloseResultModal = useCallback(() => {
+    setResultModalState({
+      ...resultModalState,
+      open: false,
+    });
+  }, [resultModalState]);
+
+  useEffect(() => {
+    switch (createContractRequestStatus) {
+      case RequestStatus.SUCCESS: {
+        setResultModalState({
+          open: true,
+          result: true,
+        });
+        break;
+      }
+      case RequestStatus.ERROR: {
+        setResultModalState({
+          open: true,
+          result: false,
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }, [createContractRequestStatus]);
 
   const classes = useStyles();
 
@@ -150,6 +198,12 @@ export const LostKeyContractPreview = () => {
           ))}
         </Box>
       ))}
+      {isLoader && <FullscreenLoader />}
+      <CompleteModal
+        open={resultModalState.open}
+        result={resultModalState.result}
+        onClose={handleCloseResultModal}
+      />
     </Preview>
   );
 };
