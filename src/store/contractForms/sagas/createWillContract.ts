@@ -105,8 +105,8 @@ function* createWillContractSaga({
 
     yield call(baseApi.createWillContract, {
       tx_hash: transactionHash,
-      contract_name: willContract.contractName,
-      mail_list: emailsList,
+      name: willContract.contractName,
+      mails: emailsList,
       owner_mail: ownerEmail,
     });
 

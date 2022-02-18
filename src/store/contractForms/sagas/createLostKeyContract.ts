@@ -105,8 +105,8 @@ function* createLostKeyContractSaga({
 
     yield call(baseApi.createLostKeyContract, {
       tx_hash: transactionHash,
-      contract_name: lostKeyContract.contractName,
-      mail_list: emailsList,
+      name: lostKeyContract.contractName,
+      mails: emailsList,
       owner_mail: ownerEmail,
     });
 

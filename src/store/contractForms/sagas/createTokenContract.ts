@@ -122,8 +122,8 @@ function* createTokenContractSaga({
 
     yield call(baseApi.createTokenContract, {
       tx_hash: transactionHash,
-      contract_name: tokenName,
-      address_list: ownerAddresses,
+      name: tokenName,
+      addresses: ownerAddresses,
     });
 
     yield put(apiActions.success(type));
