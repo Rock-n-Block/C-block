@@ -190,6 +190,7 @@ function* createCrowdsaleContractSaga({
       ]);
     }
 
+    // TODO: remove before going to production
     console.log({
       crowdsaleFactoryContractAddress: crowdsaleFactoryContractData.address,
       contractMethodArgs,
