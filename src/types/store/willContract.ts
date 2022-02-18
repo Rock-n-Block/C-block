@@ -1,4 +1,4 @@
-import { TPingIntervalUnit } from '.';
+import { ContractAdditionalField, TPingIntervalUnit } from '.';
 
 export interface IWillContractDynamicForm {
   reserveAddress: string;
@@ -6,7 +6,7 @@ export interface IWillContractDynamicForm {
   percents: string;
 }
 
-export interface IWillContract {
+export interface IWillContract extends ContractAdditionalField {
   contractName: string;
   managementAddress: string;
   reservesConfigs: IWillContractDynamicForm[];

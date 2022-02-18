@@ -4,6 +4,11 @@ import { IWeddingContract } from './weddingContract';
 import { ILostKeyContract } from './lostKeyContract';
 import { IWillContract } from './willContract';
 
+export type ContractAdditionalField = {
+  additional: {
+    contractCreationPrice: string;
+  };
+};
 export * from './crowdsaleContract';
 export * from './tokenContract';
 export * from './weddingContract';

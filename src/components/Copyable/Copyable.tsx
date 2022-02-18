@@ -4,6 +4,7 @@ import React, {
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Box } from '@material-ui/core';
 import clsx from 'clsx';
+import { noop } from 'lodash';
 
 import { setNotification } from 'utils';
 import { CopyIcon } from 'theme/icons';
@@ -23,7 +24,7 @@ export type CopyableProps = {
 
 export const Copyable: FC<CopyableProps> = ({
   valueToCopy,
-  onCopy = () => {},
+  onCopy = noop,
   children,
   withIcon,
   className,

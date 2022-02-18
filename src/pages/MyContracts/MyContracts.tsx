@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
+import { noop } from 'lodash';
 
 import { NetTag } from 'containers/Header/components/NetTag';
 import { useShallowSelector } from 'hooks';
@@ -158,8 +159,8 @@ export const MyContracts: FC = () => {
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
-      case 'weddingRequestDivorce': return <AdditionalContentRequestDivorce onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')} onReject={() => {}} />;
-      case 'weddingRequestWithdrawal': return <AdditionalContentRequestWithdrawal onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')} onReject={() => {}} />;
+      case 'weddingRequestDivorce': return <AdditionalContentRequestDivorce onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')} onReject={noop} />;
+      case 'weddingRequestWithdrawal': return <AdditionalContentRequestWithdrawal onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')} onReject={noop} />;
       case 'weddingSuccessfulDivorce': return (
         <AdditionalContent>
           <Box className={classes.successfulAdditionalContent}>

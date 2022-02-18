@@ -1,7 +1,6 @@
 import {
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
-import { ContractWeb3 } from '@amfi/connect-wallet/dist/interface';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -15,6 +14,7 @@ import { baseApi } from 'store/api/apiRequestBuilder';
 import actionTypes from '../actionTypes';
 import { createTokenContract } from '../actions';
 import { approveSaga } from './approveSaga';
+import { getContractCreationPriceSaga } from './getContractCreationPriceSaga';
 
 function* createTokenContractSaga({
   type,
@@ -49,12 +49,12 @@ function* createTokenContractSaga({
       isMainnet,
     );
 
-    const tokenFactoryContract: ContractWeb3 = new provider.eth.Contract(
+    const tokenFactoryContract = new provider.eth.Contract(
       tokenFactoryContractData.abi,
       tokenFactoryContractData.address,
     );
 
-    const celoTokenContract: ContractWeb3 = new provider.eth.Contract(
+    const celoTokenContract = new provider.eth.Contract(
       bep20Abi,
       celoAddress,
     );
@@ -65,9 +65,14 @@ function* createTokenContractSaga({
         tokenFactoryContractData.address,
       ).call,
     );
-    const price: string = yield call(
-      tokenFactoryContract.methods.price(celoAddress, burnable ? 1 : 0).call,
-    );
+
+    const price: string = yield call(getContractCreationPriceSaga, {
+      type: actionTypes.GET_CONTRACT_CREATION_PRICE,
+      payload: {
+        provider,
+        contractType: 'token',
+      },
+    });
 
     if (+allowance < +price * 2) {
       yield call(approveSaga, {

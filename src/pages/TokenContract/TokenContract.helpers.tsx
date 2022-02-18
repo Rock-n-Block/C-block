@@ -1,16 +1,19 @@
 /* eslint-disable newline-per-chained-call */
 import React, { ReactElement } from 'react';
-import { Snowflake } from 'theme/icons';
-import { latinAndNumbers } from 'utils';
 import * as Yup from 'yup';
+
+import { Snowflake } from 'theme/icons';
+import {
+  contractNameSchema, ethereumAddressSchema, latinAndNumbers, latinAndNumbersWithOrNotSeparatedBySpaceRegExp,
+} from 'utils';
 
 const yesterday = new Date(Date.now() - 86400000);
 // because of safari
 const maxDate = new Date('9999-12-12'.replace(/-/g, '/'));
 
 export const validationSchema = Yup.object().shape({
-  tokenName: Yup.string().matches(latinAndNumbers).min(5).max(25).required(),
-  tokenOwner: Yup.string().length(42).required(),
+  tokenName: contractNameSchema.max(25).required(),
+  tokenOwner: ethereumAddressSchema.required(),
   tokenSymbol: Yup.string().matches(latinAndNumbers).min(3).max(4).required(),
   decimals: Yup.number().positive().min(0).max(18).required(),
   futureMinting: Yup.boolean().required(),
@@ -18,8 +21,8 @@ export const validationSchema = Yup.object().shape({
   freezable: Yup.boolean().required(),
   tokens: Yup.array().of(
     Yup.object().shape({
-      address: Yup.string().length(42).required(),
-      name: Yup.string().matches(latinAndNumbers).min(5).required(),
+      address: ethereumAddressSchema.required(),
+      name: Yup.string().matches(latinAndNumbersWithOrNotSeparatedBySpaceRegExp).max(25).required(),
       amount: Yup.number().positive().required(),
       isFrozen: Yup.boolean().when('freezable', {
         is: true,

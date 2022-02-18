@@ -1,5 +1,7 @@
 /* eslint-disable react/no-array-index-key */
-import React, { Fragment, memo, useCallback } from 'react';
+import React, {
+  Fragment, memo, useCallback,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -22,8 +24,10 @@ import clsx from 'clsx';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { ContractFormsState, State, TokenContract as TokenContractType } from 'types';
-import { useShallowSelector } from 'hooks';
+import {
+  ContractFormsState, State, TokenContract as TokenContractType,
+} from 'types';
+import { useConnectDropdownModal, useShallowSelector } from 'hooks';
 import {
   deleteTokenContractForm,
   dynamicFormDataTemplate,
@@ -53,6 +57,11 @@ export const TokenContract = memo(() => {
   const {
     tokenContract,
   } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+
+  const {
+    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
+  } = useConnectDropdownModal();
+
   return (
     <Container>
       <Formik
@@ -63,6 +72,10 @@ export const TokenContract = memo(() => {
         onSubmit={(
           values: TokenContractType,
         ) => {
+          if (!isWalletConnected) {
+            openConnectDropdownModal();
+            return;
+          }
           dispatch(setTokenContractForm(values));
           navigate(routes['token-contract']['preview-contract'].root);
         }}
@@ -304,6 +317,7 @@ export const TokenContract = memo(() => {
           </Form>
         )}
       </Formik>
+      {connectDropdownModal}
     </Container>
   );
 });

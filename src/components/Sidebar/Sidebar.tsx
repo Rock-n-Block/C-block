@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React, { useMemo, VFC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Box, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
@@ -21,9 +21,10 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const { isLight } = useShallowSelector<State, UserState>(
+  const { isLight, address } = useShallowSelector<State, UserState>(
     userSelector.getUser,
   );
+  const isWalletConnected = useMemo(() => !!address, [address]);
   return (
     <Box className={clsx(classes.root, className)}>
       <Box className={classes.contentWrapper}>
@@ -39,16 +40,19 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
         </Box>
         {navigationTabs.map(({
           Icon, label, link, isExternal,
-        }) => (
-          <SidebarTab
-            key={link}
-            Icon={Icon}
-            label={label}
-            isSelected={location.pathname.includes(link)}
-            to={link}
-            isExternal={isExternal}
-          />
-        ))}
+        }) => {
+          if (label === 'My contracts' && !isWalletConnected) return null;
+          return (
+            <SidebarTab
+              key={link}
+              Icon={Icon}
+              label={label}
+              isSelected={location.pathname.includes(link)}
+              to={link}
+              isExternal={isExternal}
+            />
+          );
+        })}
       </Box>
       <Box className={classes.contentWrapper}>
         <Disclaimer className={classes.sidebarDisclaimer} />

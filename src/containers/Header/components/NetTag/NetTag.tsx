@@ -5,12 +5,12 @@ import clsx from 'clsx';
 
 import { useStyles } from './NetTag.styles';
 
-export interface ConnectButtonProps {
+export interface NetTagProps {
   isTestnet: boolean;
   className?: string;
 }
 
-export const NetTag: VFC<ConnectButtonProps> = ({ isTestnet, className }) => {
+export const NetTag: VFC<NetTagProps> = ({ isTestnet, className }) => {
   const classes = useStyles({ isTestnet });
   return (
     <div className={clsx(classes.root, className)}>
