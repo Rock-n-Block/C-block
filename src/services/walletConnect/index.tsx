@@ -86,6 +86,10 @@ any,
       } catch (err) {
         console.log(err);
         this.disconnect();
+        setNotification({
+          type: 'error',
+          message: `${provider} is not installed or unlocked`,
+        });
       }
     } else if (window.celo) {
       await window.celo.enable;
