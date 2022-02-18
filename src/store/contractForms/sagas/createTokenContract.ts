@@ -1,6 +1,7 @@
 import {
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
+import BigNumber from 'bignumber.js';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -33,13 +34,8 @@ function* createTokenContractSaga({
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
     const {
-      tokenOwner,
-      tokenSymbol,
-      decimals,
       futureMinting,
-      burnable,
       freezable,
-      tokens,
     } = tokenContract;
 
     const tokenFactoryContractName =
@@ -73,8 +69,11 @@ function* createTokenContractSaga({
         contractType: 'token',
       },
     });
-
-    if (+allowance < +price * 2) {
+    const totalAmountToBeApproved = new BigNumber(price)
+      .multipliedBy(2)
+      .toFixed();
+    const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(totalAmountToBeApproved);
+    if (!hasAllowance) {
       yield call(approveSaga, {
         type: actionTypes.APPROVE,
         payload: {
@@ -86,6 +85,10 @@ function* createTokenContractSaga({
       });
     }
 
+    const {
+      tokens,
+      decimals,
+    } = tokenContract;
     const ownerAddresses = tokens.map(
       ({ address: tokenKeyAddress }: TokenContractDynamicForm) => tokenKeyAddress,
     );
@@ -94,13 +97,14 @@ function* createTokenContractSaga({
       ({ frozenUntilDate }: TokenContractDynamicForm) => Date.parse(frozenUntilDate) / 1000,
     );
 
+    const { burnable } = tokenContract;
     const methodName = contractsHelper.getTokenFactoryContractMethodName(
       burnable,
       futureMinting,
       freezable,
     );
 
-    const { tokenName } = tokenContract;
+    const { tokenOwner, tokenName, tokenSymbol } = tokenContract;
     const contractMethodArgs: (string | string[] | number[])[] = [
       [celoAddress, tokenOwner],
       tokenName,
@@ -122,8 +126,8 @@ function* createTokenContractSaga({
 
     yield call(baseApi.createTokenContract, {
       tx_hash: transactionHash,
-      contract_name: tokenName,
-      address_list: ownerAddresses,
+      name: tokenName,
+      addresses: ownerAddresses,
     });
 
     yield put(apiActions.success(type));

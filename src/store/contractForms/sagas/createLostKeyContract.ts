@@ -1,6 +1,7 @@
 import {
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
+import BigNumber from 'bignumber.js';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -46,6 +47,10 @@ function* createLostKeyContractSaga({
       celoAddress,
     );
 
+    const celoDecimals: string = yield call(
+      celoTokenContract.methods.decimals().call,
+    );
+
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
@@ -56,14 +61,21 @@ function* createLostKeyContractSaga({
     const price: string = yield call(
       lostKeyFactoryContract.methods.price(celoAddress).call,
     );
+    const { rewardAmount } = lostKeyContract;
+    const rewardAmountSerilialized = getTokenAmount(rewardAmount, +celoDecimals, false);
 
-    if (+allowance < +price * 2) {
+    const totalAmountToBeApproved = new BigNumber(price)
+      .multipliedBy(2)
+      .plus(rewardAmountSerilialized)
+      .toFixed();
+    const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(totalAmountToBeApproved);
+    if (!hasAllowance) {
       yield call(approveSaga, {
         type: actionTypes.APPROVE,
         payload: {
           provider,
           spender: lostKeyFactoryContractData.address,
-          amount: +price * 2,
+          amount: totalAmountToBeApproved,
           tokenAddress: celoAddress,
         },
       });
@@ -73,8 +85,6 @@ function* createLostKeyContractSaga({
       reservesConfigs,
       pingIntervalAsValue,
       pingIntervalAsDateUnits,
-      rewardAmount,
-      ownerEmail,
     } = lostKeyContract;
 
     const reserveAddresses = reservesConfigs.map(({ reserveAddress }) => reserveAddress);
@@ -82,16 +92,13 @@ function* createLostKeyContractSaga({
     const pingIntervalAsSeconds = convertIntervalAsSeconds(
       pingIntervalAsValue, pingIntervalAsDateUnits,
     );
-    const celoDecimals: string = yield call(
-      celoTokenContract.methods.decimals().call,
-    );
 
     const contractMethodArgs: (string | string[] | number[] | number)[] = [
       celoAddress,
       reserveAddresses,
       sharesPercents,
       pingIntervalAsSeconds,
-      getTokenAmount(rewardAmount, +celoDecimals, false),
+      rewardAmountSerilialized,
     ];
 
     const { transactionHash } = yield call(
@@ -103,10 +110,11 @@ function* createLostKeyContractSaga({
 
     const emailsList = reservesConfigs.map(({ email }) => email);
 
+    const { ownerEmail } = lostKeyContract;
     yield call(baseApi.createLostKeyContract, {
       tx_hash: transactionHash,
-      contract_name: lostKeyContract.contractName,
-      mail_list: emailsList,
+      name: lostKeyContract.contractName,
+      mails: emailsList,
       owner_mail: ownerEmail,
     });
 

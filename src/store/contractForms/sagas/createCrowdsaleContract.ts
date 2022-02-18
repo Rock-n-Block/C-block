@@ -73,13 +73,17 @@ function* createCrowdsaleContractSaga({
       },
     });
 
-    if (+allowance < +price * 2) {
+    const totalAmountToBeApproved = new BigNumber(price)
+      .multipliedBy(2)
+      .toFixed();
+    const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(totalAmountToBeApproved);
+    if (hasAllowance) {
       yield call(approveSaga, {
         type: actionTypes.APPROVE,
         payload: {
           provider,
           spender: crowdsaleFactoryContractData.address,
-          amount: +price * 2,
+          amount: totalAmountToBeApproved,
           tokenAddress: celoAddress,
         },
       });
