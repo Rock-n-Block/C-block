@@ -94,7 +94,7 @@ function* createTokenContractSaga({
     );
     const initSupply = tokens.map(({ amount }: TokenContractDynamicForm) => getTokenAmount(amount, +decimals, false));
     const timeStamps = tokens.map(
-      ({ frozenUntilDate }: TokenContractDynamicForm) => Date.parse(frozenUntilDate) / 1000,
+      ({ frozenUntilDate, isFrozen }: TokenContractDynamicForm) => (isFrozen ? Date.parse(frozenUntilDate) / 1000 : 0),
     );
 
     const { burnable } = tokenContract;
