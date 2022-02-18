@@ -3,21 +3,17 @@ import { URL } from 'appConstants';
 
 interface IContractData {
   tx_hash: string;
-  contract_name: string;
+  name: string;
 }
 interface ICreateTokenContractData extends IContractData {
-  address_list: string[];
+  addresses: string[];
 }
 interface ICreateLostKeyContractData extends IContractData {
-  mail_list: string[];
+  mails: string[];
   owner_mail: string;
 }
 interface ICreateWillContractData extends ICreateLostKeyContractData {}
-// TODO: to be updated in the next PR
-interface ICreateCrowdsaleContractData {
-  tx_hash: string;
-  name: string;
-}
+interface ICreateCrowdsaleContractData extends IContractData {}
 
 const client: AxiosInstance = axios.create({
   baseURL: 'https://devcblock.rocknblock.io/api/v1/',

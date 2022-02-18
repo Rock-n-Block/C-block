@@ -99,7 +99,7 @@ function* createWillContractSaga({
       reserveAddresses,
       sharesPercents,
       pingIntervalAsSeconds,
-      getTokenAmount(rewardAmount, +celoDecimals, false),
+      rewardAmountSerilialized,
     ];
 
     const { transactionHash }: { transactionHash: string } = yield call(
