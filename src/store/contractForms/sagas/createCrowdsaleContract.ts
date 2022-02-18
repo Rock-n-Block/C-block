@@ -169,7 +169,7 @@ function* createCrowdsaleContractSaga({
       ),
     ];
     [
-      tokens.map(({ address }) => address),
+      tokensAddresses,
       rates,
       limits,
     ].forEach((item) => {
