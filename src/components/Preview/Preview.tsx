@@ -12,12 +12,6 @@ import {
 import clsx from 'clsx';
 
 import { Edit, TrashIcon } from 'theme/icons';
-import {
-  PaymentModal,
-  DisclaimerModal,
-  CompleteModal,
-  FullscreenLoader,
-} from 'components';
 import { useProvider, useShallowSelector } from 'hooks';
 import actionTypes from 'store/contractForms/actionTypes';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -28,6 +22,10 @@ import { RequestStatus, State, UserState } from 'types';
 import { getContractCreationPrice } from 'store/contractForms/actions';
 import { getTokenAmountDisplay } from 'utils';
 import { getCeloConfigMetamask } from 'config';
+import { FullscreenLoader } from '../FullscreenLoader';
+import { CompleteModal } from '../CompleteModal';
+import { DisclaimerModal } from '../DisclaimerModal';
+import { PaymentModal } from '../PaymentModal';
 import { iconHelper, IconType } from './Preview.helpers';
 import { useStyles } from './Preview.styles';
 

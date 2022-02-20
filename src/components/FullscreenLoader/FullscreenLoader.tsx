@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Loader } from 'components';
+import { Loader } from '../Loader';
 
 import { useStyles } from './FullscreenLoader.styles';
 

@@ -3,9 +3,9 @@ import React, { VFC } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
+import { AlignHorizontally } from './YesNoBlock.types';
 import { useStyles } from './YesNoBlock.styles';
 
-export type AlignHorizontally = 'center' | 'normal';
 export interface YesNoBlockProps {
   className?: string;
   yes: boolean;

@@ -12,7 +12,7 @@ import {
   IWillContract,
   IWillContractDynamicForm,
 } from 'types';
-import { formattedDate } from 'utils';
+import { formattedDate } from 'utils/formattedDate';
 
 export const dynamicFormDataTemplate: TokenContractDynamicForm = {
   address: '',

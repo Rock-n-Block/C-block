@@ -1,5 +1,4 @@
-import { UIState } from 'types';
-import { RequestStatus } from 'types/store';
+import { UIState, RequestStatus } from 'types';
 import contractFormsActionTypes from 'store/contractForms/actionTypes';
 import { getUIReducer } from '.';
 
