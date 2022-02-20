@@ -14,18 +14,15 @@ import {
 } from 'components';
 import { useProvider, useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
-import {
-  State, TokenContract,
-} from 'types';
 import { routes } from 'appConstants';
 
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
 import { createTokenContract } from 'store/contractForms/actions';
-import { useStyles } from './TokenContractPreview.styles';
 import {
   dynamicTokenContractPreviewHelpers,
   staticTokenContractPreviewHelpers,
 } from './TokenContractPreview.helpers';
+import { useStyles } from './TokenContractPreview.styles';
 
 export const TokenContractPreview = () => {
   const navigate = useNavigate();
@@ -47,9 +44,7 @@ export const TokenContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const tokenContract = useShallowSelector<State, TokenContract>(
-    contractFormsSelector.getTokenContract,
-  );
+  const tokenContract = useShallowSelector(contractFormsSelector.getTokenContract);
 
   const classes = useStyles();
   let totalTokenAmount = 0;

@@ -18,7 +18,7 @@ import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import uiSelector from 'store/ui/selectors';
 import apiActions from 'store/ui/actions';
-import { RequestStatus, State, UserState } from 'types';
+import { RequestStatus } from 'types';
 import { getContractCreationPrice } from 'store/contractForms/actions';
 import { getTokenAmountDisplay } from 'utils';
 import { getCeloConfigMetamask } from 'config';
@@ -50,9 +50,7 @@ export const Preview: FC<PreviewProps> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
   const { getDefaultProvider } = useProvider();
-  const { isMainnet } = useShallowSelector<State, UserState>(
-    userSelector.getUser,
-  );
+  const { isMainnet } = useShallowSelector(userSelector.getUser);
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
   const [isPaymentOpen, setPaymentOpen] = useState(false);
   const [resultModalState, setResultModalState] = useState({

@@ -1,17 +1,16 @@
 import React, {
   useCallback, useMemo, VFC,
 } from 'react';
-
 import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
+import clsx from 'clsx';
+
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
-import clsx from 'clsx';
 import { Modal } from 'components/Modal';
-import { useStyles } from './RequestWithdrawalModal.styles';
 import { fieldsHelper } from './RequestWithdrawalModal.helpers';
+import { useStyles } from './RequestWithdrawalModal.styles';
 
 interface Props {
   className?: string;
@@ -39,9 +38,7 @@ export const RequestWithdrawalModal: VFC<Props> = ({
     closeModal();
   }, [closeModal, onAccept]);
 
-  const {
-    isLight,
-  } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const title = useMemo(() => (
     <Box className={classes.modalTitle}>

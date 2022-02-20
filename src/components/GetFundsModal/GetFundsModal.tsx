@@ -1,18 +1,17 @@
 import React, {
   useCallback, useMemo, useState, VFC,
 } from 'react';
-
+import clsx from 'clsx';
 import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
+
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
-import clsx from 'clsx';
 import { Modal } from 'components/Modal';
 import { PlusIcon } from 'theme/icons';
-import { useStyles } from './GetFundsModal.styles';
 import { fieldsHelper, ITokenAddressField } from './GetFundsModal.helpers';
+import { useStyles } from './GetFundsModal.styles';
 
 export interface Props {
   className?: string;
@@ -54,9 +53,7 @@ export const GetFundsModal: VFC<Props> = ({
     closeModal();
   }, [closeModal, onAccept]);
 
-  const { isLight } = useShallowSelector<State, UserState>(
-    userSelector.getUser,
-  );
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const title = useMemo(
     () => (

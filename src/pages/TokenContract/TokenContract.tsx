@@ -24,9 +24,6 @@ import clsx from 'clsx';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
-import {
-  ContractFormsState, State, TokenContract as TokenContractType,
-} from 'types';
 import { useConnectDropdownModal, useShallowSelector } from 'hooks';
 import {
   deleteTokenContractForm,
@@ -54,9 +51,7 @@ export const TokenContract = memo(() => {
     dispatch(deleteTokenContractForm());
   }, [dispatch]);
 
-  const {
-    tokenContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const { tokenContract } = useShallowSelector(contractFormsSelector.getContractForms);
 
   const {
     isWalletConnected, connectDropdownModal, openConnectDropdownModal,
@@ -70,7 +65,7 @@ export const TokenContract = memo(() => {
         initialValues={tokenContract}
         validationSchema={validationSchema}
         onSubmit={(
-          values: TokenContractType,
+          values,
         ) => {
           if (!isWalletConnected) {
             openConnectDropdownModal();

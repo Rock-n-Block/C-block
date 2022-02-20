@@ -11,7 +11,6 @@ import { noop } from 'lodash';
 
 import { NetTag } from 'containers/Header/components/NetTag';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import {
   SetUpModal, ConfirmStatusModal, SendTransactionModal, RequestWithdrawalModal, GetFundsModal,
@@ -38,7 +37,7 @@ export const MyContracts: FC = () => {
 
   const [searchValue, setSearchValue] = useState('');
   const classes = useStyles();
-  const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isMainnet } = useShallowSelector(userSelector.getUser);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const openSetUpModal = useCallback(() => setIsSetUpModalOpen(true), []);

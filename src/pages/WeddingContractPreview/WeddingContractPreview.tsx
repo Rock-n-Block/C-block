@@ -1,24 +1,19 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Fragment, useCallback } from 'react';
-import { Preview } from 'components';
-import { useShallowSelector } from 'hooks';
-import { ContractFormsState, State } from 'types';
-import { Box, Grid, Typography } from '@material-ui/core';
-import { Copyable } from 'components/Copyable';
-import { routes } from 'appConstants';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Box, Grid, Typography } from '@material-ui/core';
+
+import { Preview, Copyable } from 'components';
+import { useShallowSelector } from 'hooks';
+import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteWeddingContractForm } from 'store/contractForms/reducer';
+import { staticWeddingContractPreviewHelpers } from './WeddingContractPreview.helpers';
 import { useStyles } from './WeddingContractPreview.styles';
-import {
-  staticWeddingContractPreviewHelpers,
-} from './WeddingContractPreview.helpers';
 
 export const WeddingContractPreview = () => {
-  const {
-    weddingContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  const { weddingContract } = useShallowSelector(contractFormsSelector.getContractForms);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

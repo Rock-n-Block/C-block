@@ -21,9 +21,7 @@ import clsx from 'clsx';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import {
-  State, IWillContract, UserState,
-} from 'types';
+import { IWillContract } from 'types';
 import { useConnectDropdownModal, useShallowSelector } from 'hooks';
 import {
   willContractDynamicFormInitialData,
@@ -57,15 +55,13 @@ export const WillContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const willContract = useShallowSelector<State, IWillContract>(
-    contractFormsSelector.getWillContract,
-  );
+  const willContract = useShallowSelector(contractFormsSelector.getWillContract);
 
   const {
     isWalletConnected, connectDropdownModal, openConnectDropdownModal,
   } = useConnectDropdownModal();
 
-  const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { address: userAddress } = useShallowSelector(userSelector.getUser);
 
   useEffect(() => {
     dispatch(setWillContractForm({
