@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
 import clsx from 'clsx';
 import { Modal } from 'components/Modal';
 import { useStyles } from './ConfirmStatusModal.styles';
@@ -33,9 +32,7 @@ export const ConfirmStatusModal: VFC<Props> = ({
     setIsModalOpen(false);
   }, [setIsModalOpen]);
 
-  const {
-    isLight,
-  } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const title = useMemo(() => (
     <Box className={classes.modalTitle}>

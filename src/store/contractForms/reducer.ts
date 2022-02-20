@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ContractFormsState, IWeddingContract } from 'types';
 import {
+  ContractAdditionalField,
+  ContractFormsState,
+  IWeddingContract,
   TokenContract,
   TokenContractDynamicForm,
   ICrowdsaleContract,
@@ -9,8 +11,7 @@ import {
   ILostKeyContractDynamicForm,
   IWillContract,
   IWillContractDynamicForm,
-  ContractAdditionalField,
-} from 'types/store/contractForms';
+} from 'types';
 import { formattedDate } from 'utils';
 
 export const dynamicFormDataTemplate: TokenContractDynamicForm = {

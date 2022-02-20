@@ -1,7 +1,7 @@
 import { TextFieldProps } from '@material-ui/core';
 import * as Yup from 'yup';
 
-import { ILostKeyContractDynamicForm } from 'types/store/contractForms';
+import { ILostKeyContractDynamicForm } from 'types';
 import { contractNameSchema, ethereumAddressSchema } from 'utils';
 
 export const validationSchema = Yup.object().shape({

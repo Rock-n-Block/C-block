@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import Web3 from 'web3';
-import { latinAndNumbers } from 'utils';
+import { latinAndNumbers } from './regExps';
 
 export const ethereumAddressSchema = Yup
   .string()

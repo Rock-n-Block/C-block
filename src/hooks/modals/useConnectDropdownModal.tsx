@@ -3,12 +3,11 @@ import React, {
 } from 'react';
 
 import userSelector from 'store/user/selectors';
-import { State, UserState } from 'types';
-import { useShallowSelector } from 'hooks';
-import { ConnectDropdownModal } from 'components';
+import { ConnectDropdownModal } from 'components/ConnectDropdownModal';
+import useShallowSelector from '../useShallowSelector';
 
 export const useConnectDropdownModal = () => {
-  const { address } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { address } = useShallowSelector(userSelector.getUser);
 
   const isWalletConnected = useMemo(() => !!address, [address]);
 

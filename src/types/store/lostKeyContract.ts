@@ -1,4 +1,5 @@
-import { ContractAdditionalField, TPingIntervalUnit } from '.';
+import { ContractAdditionalField } from './contractForms.shared';
+import { TPingIntervalUnit } from './globals';
 
 export interface ILostKeyContractDynamicForm {
   reserveAddress: string;

@@ -10,7 +10,7 @@ import {
 import { connectWalletState, disconnectWalletState } from 'store/user/reducer';
 
 import { setNotification } from 'utils';
-import { WalletService } from '..';
+import { WalletService } from '../walletService';
 
 declare global {
   interface Window {
