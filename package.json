@@ -52,6 +52,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.4",
     "@reduxjs/toolkit": "^1.6.2",
+    "@walletconnect/client": "^1.7.1",
     "axios": "^0.24.0",
     "bignumber.js": "^9.0.2",
     "clsx": "^1.1.1",
