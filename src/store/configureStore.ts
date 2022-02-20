@@ -77,4 +77,8 @@ const persistor = persistStore(store);
 
 initWalletConnectStore(store);
 
+export function getProduction() {
+  return store.getState().user.isMainnet;
+}
+
 export default { store, persistor };
