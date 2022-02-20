@@ -10,7 +10,11 @@ import { contractsHelper } from 'utils';
 import { getContractCreationPrice } from '../actions';
 import actionTypes from '../actionTypes';
 import {
-  setLostKeyContractForm, setTokenContractForm, setWillContractForm, setCrowdsaleContractForm,
+  setLostKeyContractForm,
+  setTokenContractForm,
+  setWillContractForm,
+  setCrowdsaleContractForm,
+  setWeddingContractForm,
 } from '../reducer';
 
 export function* getContractCreationPriceSaga({
@@ -65,11 +69,10 @@ export function* getContractCreationPriceSaga({
         priceMethodArgs.push(Number(isDatesChangeable));
         break;
       }
-      // TODO:  add more contractType handlers
-      // case 'weddingRing': {
-      //   contractName = ContractsNames.lostKeyFactory;
-      //   break;
-      // }
+      case 'weddingRing': {
+        contractName = ContractsNames.weddingFactory;
+        break;
+      }
       default:
         break;
     }
@@ -90,7 +93,9 @@ export function* getContractCreationPriceSaga({
 
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
-    const contractCreationPrice: string = yield call(contract.methods.price(celoAddress, ...priceMethodArgs).call);
+    const contractCreationPrice: string = yield call(
+      contract.methods.price(celoAddress, ...priceMethodArgs).call,
+    );
 
     switch (contractType) {
       case 'token': {
@@ -133,11 +138,16 @@ export function* getContractCreationPriceSaga({
         }));
         break;
       }
-      // TODO:  add more contractType handlers
-      // case 'weddingRing': {
-      //   contractName = ContractsNames.lostKeyFactory;
-      //   break;
-      // }
+      case 'weddingRing': {
+        yield put(setWeddingContractForm({
+          ...contractForms.weddingContract,
+          additional: {
+            ...contractForms.weddingContract.additional,
+            contractCreationPrice,
+          },
+        }));
+        break;
+      }
       default:
         break;
     }

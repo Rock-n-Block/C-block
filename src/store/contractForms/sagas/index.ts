@@ -6,6 +6,7 @@ import createTokenContract from './createTokenContract';
 import createLostKeyContract from './createLostKeyContract';
 import createWillContract from './createWillContract';
 import createCrowdsaleContract from './createCrowdsaleContract';
+import createWeddingContract from './createWeddingContract';
 import getErc20Symbol from './erc20/getSymbol';
 import getCrowdsaleContractAdditionalData from './getCrowdsaleContractAdditionalData';
 
@@ -18,5 +19,7 @@ export default function* createContractsSaga() {
   yield fork(createLostKeyContract);
   yield fork(createWillContract);
   yield fork(createCrowdsaleContract);
+  yield fork(createWeddingContract);
+
   yield fork(getCrowdsaleContractAdditionalData);
 }

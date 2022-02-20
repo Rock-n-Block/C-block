@@ -104,6 +104,8 @@ export const Preview: FC<PreviewProps> = ({
         return actionTypes.CREATE_WILL_CONTRACT;
       case 'crowdsale':
         return actionTypes.CREATE_CROWDSALE_CONTRACT;
+      case 'weddingRing':
+        return actionTypes.CREATE_WEDDING_CONTRACT;
       default:
         return null;
     }
@@ -154,6 +156,10 @@ export const Preview: FC<PreviewProps> = ({
         ret = contractForms.crowdsaleContract.additional.contractCreationPrice;
         break;
       }
+      case 'weddingRing': {
+        ret = contractForms.weddingContract.additional.contractCreationPrice;
+        break;
+      }
       default:
         break;
     }
@@ -164,6 +170,7 @@ export const Preview: FC<PreviewProps> = ({
     contractForms.tokenContract.additional.contractCreationPrice,
     contractForms.willContract.additional.contractCreationPrice,
     contractForms.crowdsaleContract.additional.contractCreationPrice,
+    contractForms.weddingContract.additional.contractCreationPrice,
     type,
   ]);
 
