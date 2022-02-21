@@ -92,7 +92,7 @@ any,
         });
       }
     } else if (window.celo) {
-      await window.celo.enable;
+      await window.celo.enable();
       if (!window.celo.selectedAddress) {
         setNotification({
           type: 'error',
