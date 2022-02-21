@@ -1,5 +1,5 @@
 import type {
-  ContractFormsState, ICrowdsaleContract, ILostKeyContract, IWillContract, State, TokenContract,
+  ContractFormsState, ICrowdsaleContract, ILostKeyContract, IWeddingContract, IWillContract, State, TokenContract,
 } from 'types';
 
 export default {
@@ -9,4 +9,5 @@ export default {
   getLostKeyContract: (state: State): ILostKeyContract => state.contractForms.lostKeyContract,
   getWillContract: (state: State): IWillContract => state.contractForms.willContract,
   getCrowdsaleContract: (state: State): ICrowdsaleContract => state.contractForms.crowdsaleContract,
+  getWeddingContract: (state: State): IWeddingContract => state.contractForms.weddingContract,
 };

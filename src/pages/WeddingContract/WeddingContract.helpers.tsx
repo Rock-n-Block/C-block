@@ -3,12 +3,14 @@ import { ReactElement } from 'react';
 import * as Yup from 'yup';
 import { contractNameSchema, ethereumAddressSchema } from 'utils';
 
+const emailSchema = Yup.string().email();
+
 export const validationSchema = Yup.object().shape({
   contractName: contractNameSchema.required(),
   partnerOneAddress: ethereumAddressSchema.notOneOf([Yup.ref('partnerTwoAddress')]).required(),
   partnerTwoAddress: ethereumAddressSchema.notOneOf([Yup.ref('partnerOneAddress')]).required(),
-  partnerOneEmail: Yup.string().email().notOneOf([Yup.ref('partnerTwoEmail')]).max(255).required(),
-  partnerTwoEmail: Yup.string().email().notOneOf([Yup.ref('partnerOneEmail')]).max(255).required(),
+  partnerOneEmail: emailSchema.notOneOf([Yup.ref('partnerTwoEmail')]).max(255).required(),
+  partnerTwoEmail: emailSchema.notOneOf([Yup.ref('partnerOneEmail')]).max(255).required(),
   daysForDivorceApproval: Yup.number().min(1).required(),
   daysForWithdrawalApproval: Yup.number().min(1).required(),
 });

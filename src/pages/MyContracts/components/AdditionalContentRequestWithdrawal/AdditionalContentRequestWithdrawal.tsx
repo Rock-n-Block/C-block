@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 import { Box, Typography } from '@material-ui/core';
 
+import { AdditionalContent } from '../AdditionalContent';
+import { ApproveRejectBox } from '../ApproveRejectBox';
+import { ConfirmationTimeBlock } from '../ConfirmationTimeBlock';
 import { useStyles as useCommonStyles } from '../../MyContracts.styles';
-import { AdditionalContent, ApproveRejectBox, ConfirmationTimeBlock } from '..';
 
 export const AdditionalContentRequestWithdrawal: FC<{ onApprove: () => void; onReject: () => void }> = ({ onApprove, onReject }) => {
   const commonClasses = useCommonStyles();

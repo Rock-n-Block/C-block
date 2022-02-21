@@ -10,7 +10,6 @@ import { ContractCard } from 'components/ContractCard';
 import { useDispatch } from 'react-redux';
 import { toggleTestnet } from 'store/user/reducer';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import { setNotification } from 'utils';
 import { NavLink } from 'react-router-dom';
@@ -21,7 +20,7 @@ export const CreateContract = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { isMainnet } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isMainnet } = useShallowSelector(userSelector.getUser);
 
   const handleTestnetChange = useCallback(() => {
     dispatch(toggleTestnet());

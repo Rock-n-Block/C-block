@@ -4,13 +4,12 @@ import { Box, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { CloseIcon } from 'theme/icons';
-import { State, UserState } from 'types';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
-import { useStyles } from './Sidebar.styles';
 import { navigationTabs } from './SideBar.helpers';
 import { Logo } from '../Logo';
 import { Disclaimer, SidebarTab, ThemeToggler } from './components';
+import { useStyles } from './Sidebar.styles';
 
 export interface SidebarProps {
   className?: string;
@@ -21,9 +20,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const { isLight, address } = useShallowSelector<State, UserState>(
-    userSelector.getUser,
-  );
+  const { isLight, address } = useShallowSelector(userSelector.getUser);
   const isWalletConnected = useMemo(() => !!address, [address]);
   return (
     <Box className={clsx(classes.root, className)}>

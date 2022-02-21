@@ -18,3 +18,4 @@ export {
 export {
   default as crowdsaleSoftCappableNonBonusableAbi,
 } from './crowdsaleSoftCappableNonBonusable';
+export { default as weddingFactoryAbi } from './weddingFactory';

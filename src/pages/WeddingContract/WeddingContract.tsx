@@ -18,7 +18,6 @@ import {
 } from 'formik';
 import clsx from 'clsx';
 import { CloseIcon } from 'theme/icons';
-import { State, IWeddingContract as WeddingContractType, ContractFormsState } from 'types';
 import { useConnectDropdownModal, useShallowSelector } from 'hooks';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -34,7 +33,7 @@ export const WeddingContract = () => {
   const navigate = useNavigate();
   const {
     weddingContract,
-  } = useShallowSelector<State, ContractFormsState>(contractFormsSelector.getContractForms);
+  } = useShallowSelector(contractFormsSelector.getContractForms);
 
   const {
     isWalletConnected, connectDropdownModal, openConnectDropdownModal,
@@ -67,7 +66,7 @@ export const WeddingContract = () => {
         initialValues={weddingContract}
         validationSchema={validationSchema}
         onSubmit={(
-          values: WeddingContractType,
+          values,
         ) => {
           if (!isWalletConnected) {
             openConnectDropdownModal();

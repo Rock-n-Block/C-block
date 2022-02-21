@@ -1,4 +1,4 @@
-import { WalletProviders } from 'types';
+import { WalletProviders } from '../walletConnect';
 
 export type UserState = {
   address: string;

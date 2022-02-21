@@ -3,7 +3,6 @@ import React, { useMemo, VFC } from 'react';
 import { Typography, Button, Box } from '@material-ui/core';
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
 import clsx from 'clsx';
 import { Modal } from 'components/Modal';
 import { useStyles } from './DisclaimerModal.styles';
@@ -21,9 +20,7 @@ export const DisclaimerModal: VFC<DisclaimerModalProps> = ({
 }) => {
   const classes = useStyles();
 
-  const {
-    isLight,
-  } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const title = useMemo(() => (
     <Typography

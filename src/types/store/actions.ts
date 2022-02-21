@@ -15,6 +15,7 @@ export type TCreateTokenContractAction = TProvider;
 export type TCreateLostKeyContractAction = TProvider;
 export type TCreateWillContractAction = TProvider;
 export type TCreateCrowdsaleContractAction = TProvider;
+export type TCreateWeddingContractAction = TProvider;
 
 export type TGetCrowdsaleContractAdditionalDataAction = TProvider;
 

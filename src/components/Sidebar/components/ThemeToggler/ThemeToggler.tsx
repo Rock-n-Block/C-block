@@ -7,7 +7,6 @@ import { MoonIcon, SunIcon } from 'theme/icons';
 import { toggleTheme } from 'store/user/reducer';
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
 import { useStyles } from './ThemeToggler.styles';
 
 export interface ThemeTogglerProps {
@@ -17,9 +16,7 @@ export interface ThemeTogglerProps {
 export const ThemeToggler: VFC<ThemeTogglerProps> = ({ className }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { isLight } = useShallowSelector<State, UserState>(
-    userSelector.getUser,
-  );
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const changeTheme = useCallback(() => {
     dispatch(toggleTheme());

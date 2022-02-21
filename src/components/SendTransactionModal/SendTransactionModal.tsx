@@ -2,7 +2,8 @@ import React, { useCallback, VFC } from 'react';
 
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import { Modal, Loader } from 'components';
+import { Modal } from '../Modal';
+import { Loader } from '../Loader';
 import { useStyles } from './SendTransactionModal.styles';
 
 interface Props {

@@ -1,12 +1,11 @@
 import React, { useMemo, VFC } from 'react';
-
 import {
   Typography, Button, Box, IconButton,
 } from '@material-ui/core';
+import clsx from 'clsx';
+
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
-import clsx from 'clsx';
 import { Modal } from 'components/Modal';
 import { FileTextIcon, WalletIcon } from 'theme/icons';
 import { useStyles } from './PaymentModal.styles';
@@ -24,9 +23,7 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
 }) => {
   const classes = useStyles();
 
-  const {
-    isLight,
-  } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const title = useMemo(() => (
     <Box className={classes.paymentInfoIcon}>

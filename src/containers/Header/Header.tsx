@@ -5,15 +5,13 @@ import {
   Container, Typography, Box, IconButton, Grid,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { Logo } from 'components/Logo';
+import { Logo, Breadcrumbs, ConnectDropdownModal } from 'components';
 import { Menu } from 'theme/icons';
 import userSelector from 'store/user/selectors';
-import { State, UserState } from 'types';
 import { useShallowSelector, useNavigation } from 'hooks';
-import { Breadcrumbs, ConnectDropdownModal } from 'components';
 import { ConnectButton } from './components/ConnectButton';
-import { useStyles } from './Header.styles';
 import { NetTag } from './components/NetTag';
+import { useStyles } from './Header.styles';
 
 export interface HeaderProps {
   openSidebar: () => void,
@@ -25,7 +23,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
 
   const {
     address, isLight, isMainnet,
-  } = useShallowSelector<State, UserState>(userSelector.getUser);
+  } = useShallowSelector(userSelector.getUser);
 
   const [paths, title, icon] = useNavigation();
 

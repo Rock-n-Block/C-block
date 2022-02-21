@@ -4,7 +4,7 @@ import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { shortenPhrase } from 'utils';
-import { Copyable } from 'components';
+import { Copyable } from '../Copyable';
 import { useStyles } from './AddressButton.styles';
 
 export interface AddressButtonProps {

@@ -21,9 +21,6 @@ import clsx from 'clsx';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import {
-  State, ILostKeyContract, UserState,
-} from 'types';
 import { useConnectDropdownModal, useShallowSelector } from 'hooks';
 import {
   lostKeyContractDynamicFormInitialData,
@@ -57,13 +54,13 @@ export const LostKeyContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const lostKeyContract = useShallowSelector<State, ILostKeyContract>(
+  const lostKeyContract = useShallowSelector(
     contractFormsSelector.getLostKeyContract,
   );
   const {
     isWalletConnected, connectDropdownModal, openConnectDropdownModal,
   } = useConnectDropdownModal();
-  const { address: userAddress } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { address: userAddress } = useShallowSelector(userSelector.getUser);
 
   useEffect(() => {
     dispatch(setLostKeyContractForm({

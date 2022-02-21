@@ -1,19 +1,18 @@
 import React, {
   useCallback, useMemo, useState, VFC,
 } from 'react';
-
 import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
+import clsx from 'clsx';
+
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
-import clsx from 'clsx';
 import { Modal } from 'components/Modal';
 import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
-import { useStyles } from './SetUpModal.styles';
 import { PlusIcon } from '../../theme/icons';
 import { addressesArr, AddressesT } from './SetUpModal.helpers';
+import { useStyles } from './SetUpModal.styles';
 
 interface Props {
   className?: string;
@@ -36,9 +35,7 @@ export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
     setAddresses([{ address: '', id: 0 }]);
   }, [setIsModalOpen]);
 
-  const {
-    isLight,
-  } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { isLight } = useShallowSelector(userSelector.getUser);
 
   const title = useMemo(() => (
     <Box className={classes.modalTitle}>

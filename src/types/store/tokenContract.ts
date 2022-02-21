@@ -1,4 +1,4 @@
-import { ContractAdditionalField } from '.';
+import { ContractAdditionalField } from './contractForms.shared';
 
 export type TokenContractDynamicForm = {
   address: string;

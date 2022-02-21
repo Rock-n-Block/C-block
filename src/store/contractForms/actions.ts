@@ -8,6 +8,7 @@ import {
   TCreateLostKeyContractAction,
   TCreateWillContractAction,
   TCreateCrowdsaleContractAction,
+  TCreateWeddingContractAction,
   TGetErc20SymbolAction,
   TGetCrowdsaleContractAdditionalDataAction,
 } from 'types';
@@ -32,6 +33,9 @@ export const createCrowdsaleContract = createAction<TCreateCrowdsaleContractActi
 );
 export const getCrowdsaleContractAdditionalData = createAction<TGetCrowdsaleContractAdditionalDataAction>(
   actionTypes.GET_CROWDSALE_CONTRACT_ADDITIONAL_DATA,
+);
+export const createWeddingContract = createAction<TCreateWeddingContractAction>(
+  actionTypes.CREATE_WEDDING_CONTRACT,
 );
 
 export const getErc20Symbol = createAction<TGetErc20SymbolAction>(

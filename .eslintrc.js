@@ -23,7 +23,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'react/static-property-placement': 0,
     'import/no-named-as-default-member': 0,
-    'import/no-cycle': 0,
+    'import/no-cycle': 1,
     'import/no-named-as-default': 0,
     'import/export': 0,
     'semi': 2,

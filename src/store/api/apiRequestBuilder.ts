@@ -14,6 +14,9 @@ interface ICreateLostKeyContractData extends IContractData {
 }
 interface ICreateWillContractData extends ICreateLostKeyContractData {}
 interface ICreateCrowdsaleContractData extends IContractData {}
+interface ICreateWeddingContractData extends IContractData {
+  mails: string[];
+}
 
 const client: AxiosInstance = axios.create({
   baseURL: 'https://devcblock.rocknblock.io/api/v1/',
@@ -49,6 +52,13 @@ export const baseApi = {
     });
   },
   createCrowdsaleContract(data: ICreateCrowdsaleContractData): unknown {
+    return ajax({
+      method: 'post',
+      url: URL.createCrowdsaleContract,
+      data,
+    });
+  },
+  createWeddingContract(data: ICreateWeddingContractData): unknown {
     return ajax({
       method: 'post',
       url: URL.createCrowdsaleContract,

@@ -77,7 +77,7 @@ function* createCrowdsaleContractSaga({
       .multipliedBy(2)
       .toFixed();
     const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(totalAmountToBeApproved);
-    if (hasAllowance) {
+    if (!hasAllowance) {
       yield call(approveSaga, {
         type: actionTypes.APPROVE,
         payload: {

@@ -3,7 +3,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import { COLOR_ACID_GREEN, COLOR_ERROR } from 'theme/colors';
 
 import { flexHelper } from 'utils';
-import { AlignHorizontally } from '.';
+import { AlignHorizontally } from './YesNoBlock.types';
 
 export const useStyles = makeStyles<
 Theme,

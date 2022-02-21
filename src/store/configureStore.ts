@@ -16,6 +16,7 @@ import { ContractFormsState, UserState } from 'types';
 import reducer from './rootReducer';
 import rootSaga from './rootSaga';
 import actionTypes from './contractForms/actionTypes';
+import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -63,6 +64,7 @@ const store = configureStore({
           actionTypes.CREATE_LOSTKEY_CONTRACT,
           actionTypes.CREATE_WILL_CONTRACT,
           actionTypes.CREATE_CROWDSALE_CONTRACT,
+          actionTypes.CREATE_WEDDING_CONTRACT,
           actionTypes.GET_CROWDSALE_CONTRACT_ADDITIONAL_DATA,
           actionTypes.GET_ERC20_SYMBOL,
         ],
@@ -73,5 +75,11 @@ const store = configureStore({
 
 sagaMiddleware.run(rootSaga);
 const persistor = persistStore(store);
+
+initWalletConnectStore(store);
+
+export function getProduction() {
+  return store.getState().user.isMainnet;
+}
 
 export default { store, persistor };

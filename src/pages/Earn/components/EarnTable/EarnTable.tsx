@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 
 import { EmptyTableBlock } from 'components';
-import { EarnTableRow } from 'pages/Earn/components';
+import { EarnTableRow } from 'pages/Earn/components/EarnTableRow';
 import {
   IRowData, mockPageData, tableConfig,
 } from 'pages/Earn/Earn.helpers';

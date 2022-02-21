@@ -18,13 +18,12 @@ import {
   Earn,
 } from 'pages';
 import { useShallowSelector } from 'hooks';
-import { State, UserState } from 'types';
 import userSelector from 'store/user/selectors';
 
 const RedirectToHomePage = <Navigate replace to={routes.root} />;
 
 const RoutesContainer: FC = () => {
-  const { address } = useShallowSelector<State, UserState>(userSelector.getUser);
+  const { address } = useShallowSelector(userSelector.getUser);
   const isWalletConnected = useMemo(() => !!address, [address]);
   return (
     <Routes>

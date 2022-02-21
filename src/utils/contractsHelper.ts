@@ -1,5 +1,5 @@
 import { INoNameContract } from '@amfi/connect-wallet/dist/interface';
-import { contracts } from 'config';
+import { contracts } from 'config/config';
 import { ContractsNames } from 'types';
 
 enum ContractFactorySettings {

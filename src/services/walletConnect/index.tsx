@@ -3,14 +3,15 @@
 import React, { createContext, useContext } from 'react';
 import { connect } from 'react-redux';
 
-import { getCeloConfigMetamask, getProduction } from 'config';
+import { getCeloConfigMetamask } from 'config';
 import {
   State, UserState, WalletProviders, TNullable,
 } from 'types';
 import { connectWalletState, disconnectWalletState } from 'store/user/reducer';
 
 import { setNotification } from 'utils';
-import { WalletService } from '..';
+import { getProduction } from 'store/configureStore';
+import { WalletService } from '../walletService';
 
 declare global {
   interface Window {

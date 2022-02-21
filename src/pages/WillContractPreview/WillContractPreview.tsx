@@ -10,9 +10,7 @@ import {
   Preview, Copyable,
 } from 'components';
 import { useProvider, useShallowSelector } from 'hooks';
-import {
-  IWillContract, IWillContractDynamicForm, State,
-} from 'types';
+import { IWillContractDynamicForm } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteWillContractForm } from 'store/contractForms/reducer';
@@ -44,9 +42,7 @@ export const WillContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const willContract = useShallowSelector<State, IWillContract>(
-    contractFormsSelector.getWillContract,
-  );
+  const willContract = useShallowSelector(contractFormsSelector.getWillContract);
 
   const classes = useStyles();
 
