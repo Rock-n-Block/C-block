@@ -70,7 +70,7 @@ any,
         params: getCeloConfigMetamask(this.props.isMainnet),
       });
     }
-    if (provider !== 'Celo') {
+    if (provider !== WalletProviders.celo) {
       try {
         const isConnected = await this.state.provider.initWalletConnect(
           'Celo-Chain',
@@ -101,7 +101,7 @@ any,
 
       this.props.connectWallet({
         address: window.celo.selectedAddress,
-        wallet: 'celo',
+        wallet: WalletProviders.celo,
       });
     } else {
       setNotification({
