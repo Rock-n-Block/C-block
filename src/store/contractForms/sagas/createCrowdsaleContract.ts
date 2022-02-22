@@ -1,6 +1,6 @@
 import {
   all,
-  call, CallEffect, put, select, takeLatest,
+  call, put, select, takeLatest,
 } from 'redux-saga/effects';
 
 import BigNumber from 'bignumber.js';
@@ -135,8 +135,15 @@ function* createCrowdsaleContractSaga({
       );
     }
 
+    const ratesDecimals: string[] = yield all(
+      tokens.map(({ address }) => {
+        const contract = new provider.eth.Contract(bep20Abi, address);
+        const decimalsPromise = call(contract.methods.decimals().call);
+        return decimalsPromise;
+      }),
+    );
     const tokensAddresses: string[] = [];
-    const ratesEffects: CallEffect<unknown>[] = [];
+    const rates: string[] = [];
     const limits: string[] = [
       getTokenAmount(
         new BigNumber(minInvestments).toFixed(+tokenDecimals, 1),
@@ -149,13 +156,17 @@ function* createCrowdsaleContractSaga({
         false,
       ),
     ];
-    tokens.forEach(({ address }) => {
-      const contract = new provider.eth.Contract(bep20Abi, address);
-      const decimals = call(contract.methods.decimals().call);
-      ratesEffects.push(decimals);
+    tokens.forEach(({ address, rate }, index) => {
+      const decimals = ratesDecimals[index];
+      rates.push(
+        getTokenAmount(
+          new BigNumber(rate).toFixed(+decimals, 1),
+          +decimals,
+          false,
+        ),
+      );
       tokensAddresses.push(address);
     });
-    const rates: string[] = yield all(ratesEffects);
 
     [
       tokensAddresses,
