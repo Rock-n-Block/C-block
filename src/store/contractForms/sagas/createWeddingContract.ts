@@ -88,14 +88,11 @@ function* createWeddingContractSaga({
       partnerOneSliderValue,
     } = weddingContract;
 
-    const mails = [
-      partnerOneAddress,
-      partnerTwoAddress,
-    ];
+    const partnersAddresses = [partnerOneAddress, partnerTwoAddress];
 
     const contractMethodArgs: string[] = [
       celoAddress,
-      ...mails,
+      ...partnersAddresses,
       convertIntervalAsSeconds(daysForWithdrawalApproval, 'Day').toString(),
       convertIntervalAsSeconds(daysForDivorceApproval, 'Day').toString(),
       partnerOneSliderValue.toString(),
@@ -110,7 +107,14 @@ function* createWeddingContractSaga({
 
     const {
       contractName,
+      partnerOneEmail,
+      partnerTwoEmail,
     } = weddingContract;
+
+    const mails = [
+      partnerOneEmail,
+      partnerTwoEmail,
+    ];
 
     yield call(baseApi.createWeddingContract, {
       tx_hash: transactionHash,

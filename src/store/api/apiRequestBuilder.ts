@@ -61,7 +61,7 @@ export const baseApi = {
   createWeddingContract(data: ICreateWeddingContractData): unknown {
     return ajax({
       method: 'post',
-      url: URL.createCrowdsaleContract,
+      url: URL.createWeddingContract,
       data,
     });
   },
