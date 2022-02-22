@@ -18,23 +18,37 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
 }) => {
   const classes = useStyles();
 
-  const showSuccess = useMemo(() => (
-    <>
-      <SuccessBigIcon />
-      <Typography className={clsx(classes.desc, 'l')} variant="body1">The transaction was successfully completed</Typography>
-    </>
-  ), [classes.desc]);
+  const showSuccess = useMemo(
+    () => (
+      <>
+        <SuccessBigIcon />
+        <Typography className={clsx(classes.desc, 'l')} variant="body1">
+          The transaction was successfully completed
+        </Typography>
+      </>
+    ),
+    [classes.desc],
+  );
 
-  const showError = useMemo(() => (
-    <>
-      <ErrorBigIcon />
-      <Typography className={clsx(classes.desc, 'l')} variant="body1"> Transaction error !</Typography>
-      <Typography className={clsx(classes.desc, 'l')} variant="body1"> Please  come back later</Typography>
-    </>
-  ), [classes.desc]);
+  const showError = useMemo(
+    () => (
+      <>
+        <ErrorBigIcon />
+        <Typography className={clsx(classes.desc, 'l')} variant="body1">
+          {' '}
+          Transaction error !
+        </Typography>
+        <Typography className={clsx(classes.desc, 'l')} variant="body1">
+          {' '}
+          Please come back later
+        </Typography>
+      </>
+    ),
+    [classes.desc],
+  );
 
   return (
-    <Modal open={open} onClose={onClose} className={clsx(classes.root)}>
+    <Modal open={open} onClose={onClose} title=" " className={clsx(classes.root)}>
       <Box className={classes.icon}>
         {result ? showSuccess : showError}
       </Box>
