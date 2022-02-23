@@ -18,11 +18,13 @@ import {
   SendTransactionModal,
   RequestWithdrawalModal,
   GetFundsModal,
+  CompleteModal,
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
 import { useWalletConnectorContext } from 'services';
 import { baseApi } from 'store/api/apiRequestBuilder';
 import { IContractData, IGetContractsReturnType } from 'store/api/apiRequestBuilder.types';
+import { lostKeyAbi } from 'config/abi';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -30,6 +32,10 @@ import {
   contractButtons as contractButtonsHelper, createContractCards, IContractsCard, IGetContractsWithCreatedAtField, TContractButtonsTypes,
 } from './MyContracts.helpers';
 import { useStyles } from './MyContracts.styles';
+
+// const useMyContracts = () => {
+
+// };
 
 const useSearch = <T extends Array<unknown>>(initList: T, debounceDelay = 500) => {
   const [filteredList, setFilteredList] = useState<T>(initList);
@@ -86,7 +92,63 @@ export const MyContracts: FC = () => {
 
   const [withdrawalActions, setWithdrawalActions] = useState<ComponentProps<typeof RequestWithdrawalModal> | {}>({});
   const [getFundsActions, setGetFundsActions] = useState<ComponentProps<typeof GetFundsModal> | {}>({});
+  const [
+    resultModalState, setResultModalState,
+  ] = useState<ComponentProps<typeof CompleteModal>>({ open: false, result: false });
+
+  const closeSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(false), []);
+  const closeResultModal = useCallback(() => {
+    setResultModalState({
+      ...resultModalState,
+      open: false,
+    });
+    // dispatch(apiActions.reset(contractActionType));
+  }, [resultModalState]);
+
   const { walletService } = useWalletConnectorContext();
+
+  const fetchActiveStatusConfirmData = useCallback((contractAddress: string) => {
+    const web3 = walletService.Web3();
+    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
+    try {
+      return Promise.all(
+        [
+          'CONFIRMATION_PERIOD', 'lastRecordedTime',
+        ].map((methodName) => contract.methods[methodName]().call()),
+      );
+    } catch (err) {
+      console.log(err);
+      return undefined;
+    }
+  }, [walletService]);
+
+  const [
+    activeStatusModalProps, setActiveStatusModalProps,
+  ] = useState<ComponentProps<typeof ConfirmStatusModal> | {}>({});
+  const [
+    liveStatusModalProps, setLiveStatusModalProps,
+  ] = useState<ComponentProps<typeof ConfirmStatusModal> | {}>({});
+  const handleConfirmActiveStatus = useCallback(async (contractAddress: string) => {
+    const web3 = walletService.Web3();
+    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
+    try {
+      await contract.methods.confirm().send({
+        from: userWalletAddress,
+      });
+      setResultModalState({
+        open: true,
+        result: true,
+      });
+    } catch (err) {
+      console.log(err);
+      setResultModalState({
+        open: true,
+        result: false,
+      });
+    } finally {
+      closeSendTransactionModal();
+    }
+  }, [closeSendTransactionModal, userWalletAddress, walletService]);
 
   const buttonClickHandler = useCallback(async (contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
@@ -171,10 +233,38 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'confirmLiveStatus': {
+        const card = cards.find((_, index) => +contractKey === index);
+        const { address } = card;
+        const response = await fetchActiveStatusConfirmData(address);
+        if (!response) return;
+        const [confirmationPeriod, lastRecordedTime] = response;
+        const date = Number(confirmationPeriod) + Number(lastRecordedTime);
+        setLiveStatusModalProps({
+          ...liveStatusModalProps,
+          date,
+          onAccept: () => {
+            handleConfirmActiveStatus(address);
+            openSendTransactionModal();
+          },
+        });
         openConfirmLiveStatusModal();
         break;
       }
       case 'confirmActiveStatus': {
+        const card = cards.find((_, index) => +contractKey === index);
+        const { address } = card;
+        const response = await fetchActiveStatusConfirmData(address);
+        if (!response) return;
+        const [confirmationPeriod, lastRecordedTime] = response;
+        const date = Number(confirmationPeriod) + Number(lastRecordedTime);
+        setActiveStatusModalProps({
+          ...activeStatusModalProps,
+          date,
+          onAccept: () => {
+            handleConfirmActiveStatus(address);
+            openSendTransactionModal();
+          },
+        });
         openConfirmActiveStatusModal();
         break;
       }
@@ -192,7 +282,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [cards, getFundsActions, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
+  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, getFundsActions, handleConfirmActiveStatus, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
@@ -286,6 +376,11 @@ export const MyContracts: FC = () => {
 
   return (
     <Container>
+      <CompleteModal
+        open={resultModalState.open}
+        result={resultModalState.result}
+        onClose={closeResultModal}
+      />
       <SendTransactionModal
         open={isSendTransactionModalOpen}
         setIsModalOpen={setIsSendTransactionModalOpen}
@@ -304,14 +399,16 @@ export const MyContracts: FC = () => {
       <ConfirmStatusModal
         open={isConfirmLiveStatusModalOpen}
         setIsModalOpen={setIsConfirmLiveStatusModalOpen}
-        date={new Date()}
         statusType="live"
+        date={0}
+        {...liveStatusModalProps}
       />
       <ConfirmStatusModal
         open={isConfirmActiveStatusModalOpen}
         setIsModalOpen={setIsConfirmActiveStatusModalOpen}
-        date={new Date()}
         statusType="active"
+        date={0}
+        {...activeStatusModalProps}
       />
       <Grid container className={classes.root}>
         <TextField

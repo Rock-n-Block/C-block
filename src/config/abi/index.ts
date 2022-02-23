@@ -19,3 +19,5 @@ export {
   default as crowdsaleSoftCappableNonBonusableAbi,
 } from './crowdsaleSoftCappableNonBonusable';
 export { default as weddingFactoryAbi } from './weddingFactory';
+
+export { default as lostKeyAbi } from './lostKey';
