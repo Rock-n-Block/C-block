@@ -26,7 +26,7 @@ import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
 import {
-  contractButtonsHelper, IContractsCard, TContractButtonsTypes,
+  contractButtonsHelper, IContractsCard, isFoundContractKey, TContractButtonsTypes,
 } from './MyContracts.helpers';
 import { useSearch, useMyContracts } from './MyContracts.hooks';
 import { useStyles } from './MyContracts.styles';
@@ -119,8 +119,8 @@ export const MyContracts: FC = () => {
         setWithdrawalActions({
           ...withdrawalActions,
           onAccept: () => {
-            const newState = cards.map((card, index) => {
-              if (+contractKey === index) {
+            const newState = cards.map((card) => {
+              if (isFoundContractKey(card, contractKey)) {
                 return {
                   ...card,
                   additionalContentRenderType: 'weddingRequestWithdrawal',
@@ -140,8 +140,8 @@ export const MyContracts: FC = () => {
       case 'requestDivorce': {
         // TODO: remove this due to only for development purpose
         setTimeout(() => {
-          const newState = cards.map((card, index) => {
-            if (+contractKey === index) {
+          const newState = cards.map((card) => {
+            if (isFoundContractKey(card, contractKey)) {
               return {
                 ...card,
                 additionalContentRenderType: 'weddingRequestDivorce',
@@ -158,8 +158,8 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'divorceApprove': {
-        const newState = cards.map((card, index) => {
-          if (+contractKey === index) {
+        const newState = cards.map((card) => {
+          if (isFoundContractKey(card, contractKey)) {
             return {
               ...card,
               additionalContentRenderType: 'weddingSuccessfulDivorce',
@@ -175,8 +175,8 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'withdrawalApprove': {
-        const newState = cards.map((card, index) => {
-          if (+contractKey === index) {
+        const newState = cards.map((card) => {
+          if (isFoundContractKey(card, contractKey)) {
             return {
               ...card,
               additionalContentRenderType: 'weddingSuccessfulWithdrawal',
@@ -195,7 +195,7 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'confirmLiveStatus': {
-        const card = cards.find((_, index) => +contractKey === index);
+        const card = cards.find((item) => isFoundContractKey(item, contractKey));
         const { address } = card;
         const response = await fetchActiveStatusConfirmData(address);
         if (!response) return;
@@ -213,7 +213,7 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'confirmActiveStatus': {
-        const card = cards.find((_, index) => +contractKey === index);
+        const card = cards.find((item) => isFoundContractKey(item, contractKey));
         const { address } = card;
         const response = await fetchActiveStatusConfirmData(address);
         if (!response) return;

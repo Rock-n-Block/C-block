@@ -76,7 +76,8 @@ export const contractButtonsHelper: Partial<Record<TContractButtonsTypes, IContr
   },
 };
 
-// eslint-disable-next-line arrow-body-style
+export const isFoundContractKey = (card: IContractsCard, contractKeyToBeFound: string) => card.contractKey === contractKeyToBeFound;
+
 const createContractCard = (
   contractName: string, address: string, isTestnet: boolean, createdAt: string | number,
 ) => ({
@@ -156,4 +157,8 @@ export const createContractCards = (data: IGetContractsWithCreatedAtField) => [
   ...data.lostkeys.map((lostkey) => createLostkeyCard(lostkey)),
   ...data.lastwills.map((lastwill) => createWillCard(lastwill)),
   ...data.weddings.map((wedding) => createWeddingCard(wedding)),
-].map((item, index) => ({ ...item, contractKey: index.toString() } as IContractsCard));
+].map(({ contractLogo, ...dataForIndexKey }) => ({
+  ...dataForIndexKey,
+  contractLogo,
+  contractKey: JSON.stringify(dataForIndexKey),
+} as IContractsCard));
