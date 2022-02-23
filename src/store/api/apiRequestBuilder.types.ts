@@ -37,3 +37,8 @@ export interface IGetContractsReturnType {
   crowdsales: IGetContractsCrowdsaleContract[];
   weddings: IGetContractsWeddingContract[];
 }
+
+export interface IGetContractsSplittedProbatesReturnType extends Omit<IGetContractsReturnType, 'probates'> {
+  lostkeys: IGetContractsProbateContract[];
+  lastwills: IGetContractsProbateContract[];
+}

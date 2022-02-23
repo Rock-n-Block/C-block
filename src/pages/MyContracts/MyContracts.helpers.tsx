@@ -39,12 +39,13 @@ export interface IGetContractsCrowdsaleContractWithCreatedAtField extends IGetCo
 export interface IGetContractsWeddingContractWithCreatedAtField extends IGetContractsWeddingContract, ICreatedAtField {}
 export interface IGetContractsWithCreatedAtField {
   tokens: IGetContractsTokenContractWithCreatedAtField[];
-  probates: IGetContractsProbateContractWithCreatedAtField[];
+  lostkeys: IGetContractsProbateContractWithCreatedAtField[];
+  lastwills: IGetContractsProbateContractWithCreatedAtField[];
   crowdsales: IGetContractsCrowdsaleContractWithCreatedAtField[];
   weddings: IGetContractsWeddingContractWithCreatedAtField[];
 }
 
-export const contractButtons: Partial<Record<TContractButtonsTypes, IContractButton>> = {
+export const contractButtonsHelper: Partial<Record<TContractButtonsTypes, IContractButton>> = {
   viewContract: {
     type: 'viewContract',
     title: 'View contract',
@@ -92,7 +93,7 @@ const createCrowdsaleCard = ({
   contractType: 'Crowdsale contract',
   contractLogo: <CrowdsaleIcon />,
   contractButtons: [
-    contractButtons.viewContract,
+    contractButtonsHelper.viewContract,
   ],
 } as IContractsCard);
 
@@ -103,7 +104,7 @@ const createTokenCard = ({
   contractType: 'Token contract',
   contractLogo: <ContractTokenIcon />,
   contractButtons: [
-    contractButtons.viewContract,
+    contractButtonsHelper.viewContract,
   ],
 } as IContractsCard);
 
@@ -114,9 +115,9 @@ const createLostkeyCard = ({
   contractType: 'Lostkey Contract',
   contractLogo: <KeyIcon />,
   contractButtons: [
-    contractButtons.viewContract,
-    contractButtons.setUp,
-    contractButtons.confirmActiveStatus,
+    contractButtonsHelper.viewContract,
+    contractButtonsHelper.setUp,
+    contractButtonsHelper.confirmActiveStatus,
   ],
 } as IContractsCard);
 
@@ -127,9 +128,9 @@ const createWillCard = ({
   contractType: 'Will Contract',
   contractLogo: <WillContract />,
   contractButtons: [
-    contractButtons.viewContract,
-    contractButtons.setUp,
-    contractButtons.confirmLiveStatus,
+    contractButtonsHelper.viewContract,
+    contractButtonsHelper.setUp,
+    contractButtonsHelper.confirmLiveStatus,
   ],
 } as IContractsCard);
 
@@ -140,9 +141,9 @@ const createWeddingCard = ({
   contractType: 'Wedding contract',
   contractLogo: <WeddingRingIcon />,
   contractButtons: [
-    contractButtons.viewContract,
-    contractButtons.requestWithdrawal,
-    contractButtons.requestDivorce,
+    contractButtonsHelper.viewContract,
+    contractButtonsHelper.requestWithdrawal,
+    contractButtonsHelper.requestDivorce,
   ],
 } as IContractsCard);
 
@@ -152,16 +153,7 @@ export const createContractCards = (data: IGetContractsWithCreatedAtField) => [
     name: 'MOCK_CROWDSALE', createdAt: Date.now() / 1000, tx_hash: '0x000000', address: '0x11111', test_node: false,
   }),
   ...data.tokens.map((token) => createTokenCard(token)),
-  ...data.probates.map(
-    (probate, index) => ((index % 2 === 0) ? createLostkeyCard(probate) : createWillCard(probate)),
-  ),
+  ...data.lostkeys.map((lostkey) => createLostkeyCard(lostkey)),
+  ...data.lastwills.map((lastwill) => createWillCard(lastwill)),
   ...data.weddings.map((wedding) => createWeddingCard(wedding)),
 ].map((item, index) => ({ ...item, contractKey: index.toString() } as IContractsCard));
-
-// export const contractsCards: IContractsCard[] = [
-//   createCrowdsaleCard(currentDate),
-//   createTokenCard(currentDate),
-//   createLostkeyCard(currentDate),
-//   createWillCard(currentDate),
-//   createWeddingCard(currentDate),
-// ].map((item, index) => ({ ...item, contractKey: index.toString() } as IContractsCard));

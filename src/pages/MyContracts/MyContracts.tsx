@@ -6,7 +6,6 @@ import {
   Container, Grid, IconButton, TextField, Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { useDebounce } from 'use-debounce';
 import { noop } from 'lodash';
 
 import { NetTag } from 'containers/Header/components/NetTag';
@@ -22,52 +21,15 @@ import {
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
 import { useWalletConnectorContext } from 'services';
-import { baseApi } from 'store/api/apiRequestBuilder';
-import { IContractData, IGetContractsReturnType } from 'store/api/apiRequestBuilder.types';
 import { lostKeyAbi } from 'config/abi';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
 import {
-  contractButtons as contractButtonsHelper, createContractCards, IContractsCard, IGetContractsWithCreatedAtField, TContractButtonsTypes,
+  contractButtonsHelper, IContractsCard, TContractButtonsTypes,
 } from './MyContracts.helpers';
+import { useSearch, useMyContracts } from './MyContracts.hooks';
 import { useStyles } from './MyContracts.styles';
-
-// const useMyContracts = () => {
-
-// };
-
-const useSearch = <T extends Array<unknown>>(initList: T, debounceDelay = 500) => {
-  const [filteredList, setFilteredList] = useState<T>(initList);
-  const [searchValue, setSearchValue] = useState('');
-  const [debouncedSearchValue] = useDebounce(searchValue, debounceDelay);
-
-  const searchHandler = useCallback((value: string) => {
-    setSearchValue(value);
-  }, []);
-
-  useEffect(() => {
-    if (!debouncedSearchValue) {
-      setFilteredList(initList);
-    } else {
-      const newFilteredList = initList.filter(({ contractName }) => {
-        const isContractNameInSearch = contractName.toLowerCase().includes(
-          debouncedSearchValue.toLowerCase(),
-        );
-        return isContractNameInSearch;
-      });
-      setFilteredList(newFilteredList as T);
-    }
-  }, [debouncedSearchValue, initList]);
-
-  return {
-    searchValue,
-    searchHandler,
-    setSearchValue,
-    debouncedSearchValue,
-    filteredList,
-  };
-};
 
 export const MyContracts: FC = () => {
   const [cards, setCards] = useState<IContractsCard[]>([]);
@@ -333,46 +295,22 @@ export const MyContracts: FC = () => {
     }
   }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText]);
 
-  const transformCreatedAtField = async (data: IGetContractsReturnType) => {
-    const ret: IGetContractsReturnType = { ...data };
-    const web3 = walletService.Web3();
+  const { fetchAndTransformContracts } = useMyContracts();
 
-    await Promise.all(
-      Object.keys(ret).map(async (key) => {
-        const contractsArr = ret[key] as IContractData[];
-        const txReceipts = await Promise.all(
-          contractsArr.map(({ tx_hash }) => web3.eth.getTransactionReceipt(tx_hash)),
-        );
-        const blocksInformation = await Promise.all(
-          txReceipts.map(({ blockNumber }) => web3.eth.getBlock(blockNumber)),
-        );
-
-        ret[key] = ret[key].map((contractData, index) => ({
-          ...contractData,
-          createdAt: blocksInformation[index].timestamp,
-        }));
-      }),
-    );
-    return ret as IGetContractsWithCreatedAtField;
-  };
-
-  // TODO: move to redux
-  useEffect(() => {
-    if (userWalletAddress) {
-      const getContracts = async () => {
-        const { data } = await baseApi.getContracts({
-          walletAddress: userWalletAddress,
-        });
-        console.log(`Retrieved history for ${userWalletAddress}`, data);
-        const dataWithCreatedAtField = await transformCreatedAtField(data);
-        console.log('Transformed data', dataWithCreatedAtField);
-        const newContracts = createContractCards(dataWithCreatedAtField);
-        console.log('New Conctracts Cards', newContracts);
-        setCards(newContracts);
-      };
-      getContracts();
+  const getContracts = useCallback(async () => {
+    try {
+      const newCards = await fetchAndTransformContracts();
+      if (newCards) {
+        setCards(newCards);
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }, [userWalletAddress]);
+  }, [fetchAndTransformContracts]);
+
+  useEffect(() => {
+    getContracts();
+  }, [getContracts]);
 
   return (
     <Container>
