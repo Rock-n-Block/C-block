@@ -4,4 +4,5 @@ export default {
   createWillContract: 'new_probate/',
   createCrowdsaleContract: 'new_crowdsale/',
   createWeddingContract: 'new_wedding/',
+  getContracts: 'history/',
 };

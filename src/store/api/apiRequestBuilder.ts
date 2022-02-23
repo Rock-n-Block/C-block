@@ -1,68 +1,68 @@
-import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 import { URL } from 'appConstants';
-
-interface IContractData {
-  tx_hash: string;
-  name: string;
-}
-interface ICreateTokenContractData extends IContractData {
-  addresses: string[];
-}
-interface ICreateLostKeyContractData extends IContractData {
-  mails: string[];
-  owner_mail: string;
-}
-interface ICreateWillContractData extends ICreateLostKeyContractData {}
-interface ICreateCrowdsaleContractData extends IContractData {}
-interface ICreateWeddingContractData extends IContractData {
-  mails: string[];
-}
+import {
+  ICreateWillContractData,
+  ICreateCrowdsaleContractData,
+  ICreateLostKeyContractData,
+  ICreateTokenContractData,
+  ICreateWeddingContractData,
+  IGetContractsData,
+  IGetContractsReturnType,
+} from './apiRequestBuilder.types';
 
 const client: AxiosInstance = axios.create({
   baseURL: 'https://devcblock.rocknblock.io/api/v1/',
 });
 
-export default async function ajax(
+export default async function ajax<T>(
   requestConfig: AxiosRequestConfig,
 ) {
-  const apiCall = await client(requestConfig);
+  const apiCall: AxiosResponse<T, typeof requestConfig> = await client(requestConfig);
   return apiCall;
 }
 
 export const baseApi = {
-  createTokenContract(data: ICreateTokenContractData): unknown {
+  createTokenContract(data: ICreateTokenContractData) {
     return ajax({
       method: 'post',
       url: URL.createTokenContract,
       data,
     });
   },
-  createLostKeyContract(data: ICreateLostKeyContractData): unknown {
+  createLostKeyContract(data: ICreateLostKeyContractData) {
     return ajax({
       method: 'post',
       url: URL.createLostKeyContract,
       data,
     });
   },
-  createWillContract(data: ICreateWillContractData): unknown {
+  createWillContract(data: ICreateWillContractData) {
     return ajax({
       method: 'post',
       url: URL.createWillContract,
       data,
     });
   },
-  createCrowdsaleContract(data: ICreateCrowdsaleContractData): unknown {
+  createCrowdsaleContract(data: ICreateCrowdsaleContractData) {
     return ajax({
       method: 'post',
       url: URL.createCrowdsaleContract,
       data,
     });
   },
-  createWeddingContract(data: ICreateWeddingContractData): unknown {
+  createWeddingContract(data: ICreateWeddingContractData) {
     return ajax({
       method: 'post',
       url: URL.createWeddingContract,
       data,
+    });
+  },
+
+  getContracts(data: IGetContractsData) {
+    const { walletAddress } = data;
+    return ajax<IGetContractsReturnType>({
+      method: 'get',
+      url: `${URL.getContracts}${walletAddress}`,
     });
   },
 };

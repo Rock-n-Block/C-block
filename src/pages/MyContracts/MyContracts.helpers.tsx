@@ -1,5 +1,11 @@
 import React from 'react';
 import {
+  IGetContractsCrowdsaleContract,
+  IGetContractsProbateContract,
+  IGetContractsTokenContract,
+  IGetContractsWeddingContract,
+} from 'store/api/apiRequestBuilder.types';
+import {
   ContractToken as ContractTokenIcon, CrowdsaleIcon, KeyIcon, WeddingRingIcon, WillContract,
 } from 'theme/icons';
 import { formattedDate } from 'utils';
@@ -16,7 +22,9 @@ interface IContractButton {
 type TContractButtons = IContractButton[];
 export interface IContractsCard {
   contractKey?: string;
+  address: string;
   contractDate: string;
+  isTestnet: boolean;
   contractType: string;
   contractLogo: React.ReactElement;
   contractName: string;
@@ -24,7 +32,17 @@ export interface IContractsCard {
   additionalContentRenderType?: TAdditionalContentRenderType;
 }
 
-const currentDate = formattedDate('.');
+export interface ICreatedAtField { createdAt: string | number }
+export interface IGetContractsTokenContractWithCreatedAtField extends IGetContractsTokenContract, ICreatedAtField {}
+export interface IGetContractsProbateContractWithCreatedAtField extends IGetContractsProbateContract, ICreatedAtField {}
+export interface IGetContractsCrowdsaleContractWithCreatedAtField extends IGetContractsCrowdsaleContract, ICreatedAtField {}
+export interface IGetContractsWeddingContractWithCreatedAtField extends IGetContractsWeddingContract, ICreatedAtField {}
+export interface IGetContractsWithCreatedAtField {
+  tokens: IGetContractsTokenContractWithCreatedAtField[];
+  probates: IGetContractsProbateContractWithCreatedAtField[];
+  crowdsales: IGetContractsCrowdsaleContractWithCreatedAtField[];
+  weddings: IGetContractsWeddingContractWithCreatedAtField[];
+}
 
 export const contractButtons: Partial<Record<TContractButtonsTypes, IContractButton>> = {
   viewContract: {
@@ -57,31 +75,44 @@ export const contractButtons: Partial<Record<TContractButtonsTypes, IContractBut
   },
 };
 
-const createCrowdsaleCard = (date: string, contractName = '_Cr0wds@ale contract') => ({
-  contractDate: date,
+// eslint-disable-next-line arrow-body-style
+const createContractCard = (
+  contractName: string, address: string, isTestnet: boolean, createdAt: string | number,
+) => ({
+  contractName,
+  address,
+  contractDate: formattedDate('.', new Date(+createdAt * 1000)),
+  isTestnet,
+});
+
+const createCrowdsaleCard = ({
+  name, address, test_node, createdAt,
+}: IGetContractsCrowdsaleContractWithCreatedAtField) => ({
+  ...createContractCard(name, address, test_node, createdAt),
   contractType: 'Crowdsale contract',
   contractLogo: <CrowdsaleIcon />,
-  contractName,
   contractButtons: [
     contractButtons.viewContract,
   ],
 } as IContractsCard);
 
-const createTokenCard = (date: string, contractName = 'TokEn contract') => ({
-  contractDate: date,
+const createTokenCard = ({
+  name, address, test_node, createdAt,
+}: IGetContractsTokenContractWithCreatedAtField) => ({
+  ...createContractCard(name, address, test_node, createdAt),
   contractType: 'Token contract',
   contractLogo: <ContractTokenIcon />,
-  contractName,
   contractButtons: [
     contractButtons.viewContract,
   ],
 } as IContractsCard);
 
-const createLostkeyCard = (date: string, contractName = 'L0ssst1Key contract') => ({
-  contractDate: date,
+const createLostkeyCard = ({
+  name, address, test_node, createdAt,
+}: IGetContractsProbateContractWithCreatedAtField) => ({
+  ...createContractCard(name, address, test_node, createdAt),
   contractType: 'Lostkey Contract',
   contractLogo: <KeyIcon />,
-  contractName,
   contractButtons: [
     contractButtons.viewContract,
     contractButtons.setUp,
@@ -89,11 +120,12 @@ const createLostkeyCard = (date: string, contractName = 'L0ssst1Key contract') =
   ],
 } as IContractsCard);
 
-const createWillCard = (date: string, contractName = 'W1ll c0NtR@ Ct') => ({
-  contractDate: date,
+const createWillCard = ({
+  name, address, test_node, createdAt,
+}: IGetContractsProbateContractWithCreatedAtField) => ({
+  ...createContractCard(name, address, test_node, createdAt),
   contractType: 'Will Contract',
   contractLogo: <WillContract />,
-  contractName,
   contractButtons: [
     contractButtons.viewContract,
     contractButtons.setUp,
@@ -101,11 +133,12 @@ const createWillCard = (date: string, contractName = 'W1ll c0NtR@ Ct') => ({
   ],
 } as IContractsCard);
 
-const createWeddingCard = (date: string, contractName = 'W3Ddding contract') => ({
-  contractDate: date,
+const createWeddingCard = ({
+  name, address, test_node, createdAt,
+}: IGetContractsWeddingContractWithCreatedAtField) => ({
+  ...createContractCard(name, address, test_node, createdAt),
   contractType: 'Wedding contract',
   contractLogo: <WeddingRingIcon />,
-  contractName,
   contractButtons: [
     contractButtons.viewContract,
     contractButtons.requestWithdrawal,
@@ -113,10 +146,22 @@ const createWeddingCard = (date: string, contractName = 'W3Ddding contract') => 
   ],
 } as IContractsCard);
 
-export const contractsCards: IContractsCard[] = [
-  createCrowdsaleCard(currentDate),
-  createTokenCard(currentDate),
-  createLostkeyCard(currentDate),
-  createWillCard(currentDate),
-  createWeddingCard(currentDate),
+export const createContractCards = (data: IGetContractsWithCreatedAtField) => [
+  ...data.crowdsales.map((crowdsale) => createCrowdsaleCard(crowdsale)),
+  createCrowdsaleCard({
+    name: 'MOCK_CROWDSALE', createdAt: Date.now() / 1000, tx_hash: '0x000000', address: '0x11111', test_node: false,
+  }),
+  ...data.tokens.map((token) => createTokenCard(token)),
+  ...data.probates.map(
+    (probate, index) => ((index % 2 === 0) ? createLostkeyCard(probate) : createWillCard(probate)),
+  ),
+  ...data.weddings.map((wedding) => createWeddingCard(wedding)),
 ].map((item, index) => ({ ...item, contractKey: index.toString() } as IContractsCard));
+
+// export const contractsCards: IContractsCard[] = [
+//   createCrowdsaleCard(currentDate),
+//   createTokenCard(currentDate),
+//   createLostkeyCard(currentDate),
+//   createWillCard(currentDate),
+//   createWeddingCard(currentDate),
+// ].map((item, index) => ({ ...item, contractKey: index.toString() } as IContractsCard));

@@ -141,19 +141,19 @@ export const Preview: FC<PreviewProps> = ({
     let ret: string;
     switch (type) {
       case 'token': {
-        ret = contractForms.tokenContract.additional?.contractCreationPrice;
+        ret = contractForms.tokenContract.additional.contractCreationPrice;
         break;
       }
       case 'lostkey': {
-        ret = contractForms.lostKeyContract.additional?.contractCreationPrice;
+        ret = contractForms.lostKeyContract.additional.contractCreationPrice;
         break;
       }
       case 'will': {
-        ret = contractForms.willContract.additional?.contractCreationPrice;
+        ret = contractForms.willContract.additional.contractCreationPrice;
         break;
       }
       case 'crowdsale': {
-        ret = contractForms.crowdsaleContract.additional?.contractCreationPrice;
+        ret = contractForms.crowdsaleContract.additional.contractCreationPrice;
         break;
       }
       case 'weddingRing': {

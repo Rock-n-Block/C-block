@@ -22,15 +22,25 @@ interface Props {
 }
 
 export const ConfirmStatusModal: VFC<Props> = ({
-  open, statusType, date, setIsModalOpen,
+  open, statusType, date, setIsModalOpen, onAccept, onClose,
 }) => {
   const classes = useStyles();
 
   const dateAsString = useMemo(() => (typeof date === 'number' ? new Date(date * 1000) : date).toDateString(), [date]);
 
   const closeModal = useCallback(() => {
+    if (onClose) {
+      onClose();
+    }
     setIsModalOpen(false);
-  }, [setIsModalOpen]);
+  }, [onClose, setIsModalOpen]);
+
+  const handleAccept = useCallback(() => {
+    if (onAccept) {
+      onAccept();
+    }
+    closeModal();
+  }, [closeModal, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
@@ -62,7 +72,7 @@ export const ConfirmStatusModal: VFC<Props> = ({
           type="submit"
           color="secondary"
           variant="outlined"
-          onClick={closeModal}
+          onClick={handleAccept}
         >
           Confirm
         </Button>

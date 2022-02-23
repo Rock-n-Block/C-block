@@ -13,20 +13,59 @@ import { NetTag } from 'containers/Header/components/NetTag';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
 import {
-  SetUpModal, ConfirmStatusModal, SendTransactionModal, RequestWithdrawalModal, GetFundsModal,
+  SetUpModal,
+  ConfirmStatusModal,
+  SendTransactionModal,
+  RequestWithdrawalModal,
+  GetFundsModal,
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
+import { useWalletConnectorContext } from 'services';
+import { baseApi } from 'store/api/apiRequestBuilder';
+import { IContractData, IGetContractsReturnType } from 'store/api/apiRequestBuilder.types';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
 import {
-  contractButtons as contractButtonsHelper, contractsCards, IContractsCard, TContractButtonsTypes,
+  contractButtons as contractButtonsHelper, createContractCards, IContractsCard, IGetContractsWithCreatedAtField, TContractButtonsTypes,
 } from './MyContracts.helpers';
 import { useStyles } from './MyContracts.styles';
 
+const useSearch = <T extends Array<unknown>>(initList: T, debounceDelay = 500) => {
+  const [filteredList, setFilteredList] = useState<T>(initList);
+  const [searchValue, setSearchValue] = useState('');
+  const [debouncedSearchValue] = useDebounce(searchValue, debounceDelay);
+
+  const searchHandler = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  useEffect(() => {
+    if (!debouncedSearchValue) {
+      setFilteredList(initList);
+    } else {
+      const newFilteredList = initList.filter(({ contractName }) => {
+        const isContractNameInSearch = contractName.toLowerCase().includes(
+          debouncedSearchValue.toLowerCase(),
+        );
+        return isContractNameInSearch;
+      });
+      setFilteredList(newFilteredList as T);
+    }
+  }, [debouncedSearchValue, initList]);
+
+  return {
+    searchValue,
+    searchHandler,
+    setSearchValue,
+    debouncedSearchValue,
+    filteredList,
+  };
+};
+
 export const MyContracts: FC = () => {
-  const [cards, setCards] = useState(contractsCards);
-  const [filteredCards, setFilteredCards] = useState(contractsCards);
+  const [cards, setCards] = useState<IContractsCard[]>([]);
+  const { filteredList: filteredCards, searchHandler } = useSearch(cards);
 
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState(false);
   const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState(false);
@@ -35,10 +74,8 @@ export const MyContracts: FC = () => {
   const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState(false);
   const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState(false);
 
-  const [searchValue, setSearchValue] = useState('');
   const classes = useStyles();
-  const { isMainnet } = useShallowSelector(userSelector.getUser);
-  const [debouncedSearchValue] = useDebounce(searchValue, 500);
+  const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
 
   const openSetUpModal = useCallback(() => setIsSetUpModalOpen(true), []);
   const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
@@ -49,8 +86,9 @@ export const MyContracts: FC = () => {
 
   const [withdrawalActions, setWithdrawalActions] = useState<ComponentProps<typeof RequestWithdrawalModal> | {}>({});
   const [getFundsActions, setGetFundsActions] = useState<ComponentProps<typeof GetFundsModal> | {}>({});
+  const { walletService } = useWalletConnectorContext();
 
-  const buttonClickHandler = useCallback((contractKey: string, type: TContractButtonsTypes) => {
+  const buttonClickHandler = useCallback(async (contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
       case 'requestWithdrawal': {
         openRequestWithdrawalModal();
@@ -158,43 +196,93 @@ export const MyContracts: FC = () => {
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
-      case 'weddingRequestDivorce': return <AdditionalContentRequestDivorce onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')} onReject={noop} />;
-      case 'weddingRequestWithdrawal': return <AdditionalContentRequestWithdrawal onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')} onReject={noop} />;
-      case 'weddingSuccessfulDivorce': return (
-        <AdditionalContent>
-          <Box className={classes.successfulAdditionalContent}>
-            <CheckmarkCircleIcon />
-            <Typography className={clsx(classes.successfulAdditionalContentText, 'l')} variant="body1">There was a successful divorce</Typography>
-          </Box>
-        </AdditionalContent>
-      );
-      case 'weddingSuccessfulWithdrawal': return (
-        <AdditionalContent>
-          <Box className={classes.successfulAdditionalContent}>
-            <CheckmarkCircleIcon />
-            <Typography className={clsx(classes.successfulAdditionalContentText, 'l')} variant="body1">There was a successful withdrawal</Typography>
-          </Box>
-        </AdditionalContent>
-      );
-      default: return null;
+      case 'weddingRequestDivorce':
+        return (
+          <AdditionalContentRequestDivorce
+            onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')}
+            onReject={noop}
+          />
+        );
+      case 'weddingRequestWithdrawal':
+        return (
+          <AdditionalContentRequestWithdrawal
+            onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')}
+            onReject={noop}
+          />
+        );
+      case 'weddingSuccessfulDivorce':
+        return (
+          <AdditionalContent>
+            <Box className={classes.successfulAdditionalContent}>
+              <CheckmarkCircleIcon />
+              <Typography
+                className={clsx(classes.successfulAdditionalContentText, 'l')}
+                variant="body1"
+              >
+                There was a successful divorce
+              </Typography>
+            </Box>
+          </AdditionalContent>
+        );
+      case 'weddingSuccessfulWithdrawal':
+        return (
+          <AdditionalContent>
+            <Box className={classes.successfulAdditionalContent}>
+              <CheckmarkCircleIcon />
+              <Typography
+                className={clsx(classes.successfulAdditionalContentText, 'l')}
+                variant="body1"
+              >
+                There was a successful withdrawal
+              </Typography>
+            </Box>
+          </AdditionalContent>
+        );
+      default:
+        return null;
     }
   }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText]);
 
-  const searchHandler = useCallback((value: string) => {
-    setSearchValue(value);
-  }, []);
+  const transformCreatedAtField = async (data: IGetContractsReturnType) => {
+    const ret: IGetContractsReturnType = { ...data };
+    const web3 = walletService.Web3();
 
+    await Promise.all(
+      Object.keys(ret).map(async (key) => {
+        const contractsArr = ret[key] as IContractData[];
+        const txReceipts = await Promise.all(
+          contractsArr.map(({ tx_hash }) => web3.eth.getTransactionReceipt(tx_hash)),
+        );
+        const blocksInformation = await Promise.all(
+          txReceipts.map(({ blockNumber }) => web3.eth.getBlock(blockNumber)),
+        );
+
+        ret[key] = ret[key].map((contractData, index) => ({
+          ...contractData,
+          createdAt: blocksInformation[index].timestamp,
+        }));
+      }),
+    );
+    return ret as IGetContractsWithCreatedAtField;
+  };
+
+  // TODO: move to redux
   useEffect(() => {
-    if (!debouncedSearchValue) {
-      setFilteredCards(cards);
-    } else {
-      const newFilteredCards = cards.filter(({ contractName }) => {
-        const isContractNameInSearch = contractName.toLowerCase().includes(debouncedSearchValue.toLowerCase());
-        return isContractNameInSearch;
-      });
-      setFilteredCards(newFilteredCards);
+    if (userWalletAddress) {
+      const getContracts = async () => {
+        const { data } = await baseApi.getContracts({
+          walletAddress: userWalletAddress,
+        });
+        console.log(`Retrieved history for ${userWalletAddress}`, data);
+        const dataWithCreatedAtField = await transformCreatedAtField(data);
+        console.log('Transformed data', dataWithCreatedAtField);
+        const newContracts = createContractCards(dataWithCreatedAtField);
+        console.log('New Conctracts Cards', newContracts);
+        setCards(newContracts);
+      };
+      getContracts();
     }
-  }, [cards, debouncedSearchValue]);
+  }, [userWalletAddress]);
 
   return (
     <Container>
@@ -236,12 +324,13 @@ export const MyContracts: FC = () => {
           className={classes.search}
         />
         {filteredCards.map(({
+          contractKey,
           contractName,
           contractDate,
           contractType,
           contractLogo,
           contractButtons,
-          contractKey,
+          isTestnet,
         }, cardIndex) => (
           <Box
             key={contractKey}
@@ -249,9 +338,14 @@ export const MyContracts: FC = () => {
           >
             <Box className={classes.contractHead}>
               <Typography color="textSecondary">{contractType}</Typography>
-              <NetTag className={classes.chainTag} isTestnet={!isMainnet} />
+              <NetTag className={classes.chainTag} isTestnet={isTestnet} />
             </Box>
-            <Typography className={classes.contractDate} color="textSecondary">{contractDate}</Typography>
+            <Typography
+              className={classes.contractDate}
+              color="textSecondary"
+            >
+              {contractDate}
+            </Typography>
 
             <Box className={classes.contractTitle}>
               <IconButton>{contractLogo}</IconButton>
@@ -272,7 +366,8 @@ export const MyContracts: FC = () => {
                     value={type}
                     variant="outlined"
                     onClick={() => buttonClickHandler(contractKey, type)}
-                  >{title}
+                  >
+                    {title}
                   </Button>
                 ))}
               </Box>
