@@ -22,6 +22,7 @@ import { RequestStatus } from 'types';
 import { getContractCreationPrice } from 'store/contractForms/actions';
 import { getTokenAmountDisplay } from 'utils';
 import { getCeloConfigMetamask } from 'config';
+import { COMPLETE_MODAL_CONTRACT_CREATION_SUCCESS_TEXT } from 'appConstants';
 import { FullscreenLoader } from '../FullscreenLoader';
 import { CompleteModal } from '../CompleteModal';
 import { DisclaimerModal } from '../DisclaimerModal';
@@ -255,6 +256,7 @@ export const Preview: FC<PreviewProps> = ({
         open={resultModalState.open}
         result={resultModalState.result}
         onClose={closeResultModal}
+        successText={COMPLETE_MODAL_CONTRACT_CREATION_SUCCESS_TEXT}
       />
     </Container>
   );
