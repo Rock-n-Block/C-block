@@ -51,7 +51,7 @@ export function* getContractCreationPriceSaga({
         break;
       }
       case 'will': {
-        contractName = ContractsNames.lostKeyFactory;
+        contractName = ContractsNames.lastWillFactory;
         break;
       }
       case 'crowdsale': {

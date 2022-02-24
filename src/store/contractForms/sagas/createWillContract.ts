@@ -23,23 +23,19 @@ function* createWillContractSaga({
   try {
     yield put(apiActions.request(type));
 
-    const willContract: IWillContract = yield select(
-      contractFormsSelector.getWillContract,
-    );
-    const { isMainnet, address: myAddress }: UserState = yield select(
-      userSelector.getUser,
-    );
+    const willContract: IWillContract = yield select(contractFormsSelector.getWillContract);
+    const { isMainnet, address: myAddress }: UserState = yield select(userSelector.getUser);
 
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
-    const lostKeyFactoryContractData = contractsHelper.getContractData(
-      ContractsNames.lostKeyFactory,
+    const lastWillFactoryContractData = contractsHelper.getContractData(
+      ContractsNames.lastWillFactory,
       isMainnet,
     );
 
-    const lostKeyFactoryContract = new provider.eth.Contract(
-      lostKeyFactoryContractData.abi,
-      lostKeyFactoryContractData.address,
+    const lastWillFactoryContract = new provider.eth.Contract(
+      lastWillFactoryContractData.abi,
+      lastWillFactoryContractData.address,
     );
 
     const celoTokenContract = new provider.eth.Contract(
@@ -54,12 +50,12 @@ function* createWillContractSaga({
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
-        lostKeyFactoryContractData.address,
+        lastWillFactoryContractData.address,
       ).call,
     );
 
     const price: string = yield call(
-      lostKeyFactoryContract.methods.price(celoAddress).call,
+      lastWillFactoryContract.methods.price(celoAddress).call,
     );
     const { rewardAmount } = willContract;
     const rewardAmountSerilialized = getTokenAmount(rewardAmount, +celoDecimals, false);
@@ -74,7 +70,7 @@ function* createWillContractSaga({
         type: actionTypes.APPROVE,
         payload: {
           provider,
-          spender: lostKeyFactoryContractData.address,
+          spender: lastWillFactoryContractData.address,
           amount: totalAmountToBeApproved,
           tokenAddress: celoAddress,
         },
@@ -103,7 +99,7 @@ function* createWillContractSaga({
     ];
 
     const { transactionHash }: { transactionHash: string } = yield call(
-      lostKeyFactoryContract.methods.deployLostKey(...contractMethodArgs).send,
+      lastWillFactoryContract.methods.deployLostKey(...contractMethodArgs).send,
       {
         from: myAddress,
       },
