@@ -1,7 +1,7 @@
 export default {
   createTokenContract: 'new_token/',
-  createLostKeyContract: 'new_probate/',
-  createWillContract: 'new_probate/',
+  createLostKeyContract: 'new_lostkey/',
+  createWillContract: 'new_lastwill/',
   createCrowdsaleContract: 'new_crowdsale/',
   createWeddingContract: 'new_wedding/',
 };
