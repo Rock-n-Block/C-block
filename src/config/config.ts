@@ -138,6 +138,16 @@ export const contracts: IContracts = {
         abi: lostKeyFactoryAbi,
       },
     },
+    lastWillFactory: {
+      mainnet: {
+        address: '',
+        abi: lostKeyFactoryAbi,
+      },
+      testnet: {
+        address: '0x2b1cd0ADFec6Ed778238Cc31315a7b96E877f48a',
+        abi: lostKeyFactoryAbi,
+      },
+    },
 
     crowdsaleSoftCappableBonusable: {
       mainnet: {
