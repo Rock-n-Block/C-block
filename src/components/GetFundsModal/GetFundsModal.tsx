@@ -10,7 +10,7 @@ import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { PlusIcon } from 'theme/icons';
-import { fieldsHelper, ITokenAddressField } from './GetFundsModal.helpers';
+import { IGetFundsModalTokenAddressField, fieldsHelper } from './GetFundsModal.helpers';
 import { useStyles } from './GetFundsModal.styles';
 
 export interface Props {
@@ -18,7 +18,7 @@ export interface Props {
   open?: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: () => void;
+  onAccept?: (addresses: IGetFundsModalTokenAddressField[]) => void;
 }
 
 export const GetFundsModal: VFC<Props> = ({
@@ -29,29 +29,39 @@ export const GetFundsModal: VFC<Props> = ({
 }) => {
   const classes = useStyles();
   const [addresses, setAddresses] =
-    useState<ITokenAddressField[]>(fieldsHelper);
+    useState<IGetFundsModalTokenAddressField[]>(fieldsHelper);
+
+  const incrementId = useCallback(() => addresses[addresses.length - 1].id + 1, [addresses]);
 
   const addAddressHandler = useCallback(() => {
     setAddresses([
       ...addresses,
-      { address: '', id: addresses[addresses.length - 1].id + 1 },
+      { id: incrementId(), address: '' },
     ]);
-  }, [addresses]);
+  }, [addresses, incrementId]);
+
+  const handleChange = (value: IGetFundsModalTokenAddressField) => {
+    setAddresses(addresses.map((item) => (item.id === value.id ? value : item)));
+  };
+
+  const clearInputs = useCallback(() => {
+    setAddresses(fieldsHelper);
+  }, []);
 
   const closeModal = useCallback(() => {
     if (onClose) {
+      clearInputs();
       onClose();
     }
     setIsModalOpen(false);
-    setAddresses([{ address: '', id: 0 }]);
-  }, [onClose, setIsModalOpen]);
+  }, [clearInputs, onClose, setIsModalOpen]);
 
   const handleAccept = useCallback(() => {
     if (onAccept) {
-      onAccept();
+      onAccept(addresses);
     }
     closeModal();
-  }, [closeModal, onAccept]);
+  }, [addresses, closeModal, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
@@ -87,7 +97,14 @@ export const GetFundsModal: VFC<Props> = ({
       <Box>
         {addresses.map(({ address, id }) => (
           <Box key={id} className={classes.inputContainer}>
-            <TextField value={address} label="Token address" />
+            <TextField
+              value={address}
+              label="Token address"
+              onChange={(e) => handleChange({
+                id,
+                address: e.target.value,
+              })}
+            />
           </Box>
         ))}
         <Button

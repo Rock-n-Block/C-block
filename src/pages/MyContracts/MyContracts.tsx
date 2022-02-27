@@ -10,8 +10,8 @@ import clsx from 'clsx';
 import { noop } from 'lodash';
 
 import { NetTag } from 'containers/Header/components/NetTag';
-import { useShallowSelector } from 'hooks';
-import userSelector from 'store/user/selectors';
+// import { useShallowSelector } from 'hooks';
+// import userSelector from 'store/user/selectors';
 import {
   SetUpModal,
   ConfirmStatusModal,
@@ -21,8 +21,7 @@ import {
   CompleteModal,
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
-import { useWalletConnectorContext } from 'services';
-import { lostKeyAbi } from 'config/abi';
+// import { useWalletConnectorContext } from 'services';
 import {
   CROWDSALE_CONTRACT, LOSTKEY_CONTRACT, routes, TOKEN_CONTRACT, WEDDING_CONTRACT, WILL_CONTRACT,
 } from 'appConstants';
@@ -36,7 +35,9 @@ import {
 import {
   contractButtonsHelper, IContractsCard, isFoundContractKey, TContractButtonsTypes,
 } from './MyContracts.helpers';
-import { useSearch, useMyContracts } from './MyContracts.hooks';
+import {
+  useSearch, useMyContracts, useMyWeddingContract, useMyLostKeyContract,
+} from './hooks';
 import { useStyles } from './MyContracts.styles';
 
 export const MyContracts: FC = () => {
@@ -52,7 +53,7 @@ export const MyContracts: FC = () => {
   const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState(false);
 
   const classes = useStyles();
-  const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
+  // const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
 
   const openSetUpModal = useCallback(() => setIsSetUpModalOpen(true), []);
   const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
@@ -76,22 +77,22 @@ export const MyContracts: FC = () => {
     // dispatch(apiActions.reset(contractActionType));
   }, [resultModalState]);
 
-  const { walletService } = useWalletConnectorContext();
+  // const { walletService } = useWalletConnectorContext();
 
-  const fetchActiveStatusConfirmData = useCallback((contractAddress: string) => {
-    const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
-    try {
-      return Promise.all(
-        [
-          'CONFIRMATION_PERIOD', 'lastRecordedTime',
-        ].map((methodName) => contract.methods[methodName]().call()),
-      );
-    } catch (err) {
-      console.log(err);
-      return undefined;
-    }
-  }, [walletService]);
+  const onSuccessTx = useCallback(() => {
+    setResultModalState({ open: true, result: true });
+  }, []);
+  const onErrorTx = useCallback(() => {
+    setResultModalState({ open: true, result: false });
+  }, []);
+  const onFinishTx = useCallback(() => {
+    closeSendTransactionModal();
+  }, [closeSendTransactionModal]);
+
+  const { handleGetFundsAfterDivorce } = useMyWeddingContract(onSuccessTx, onErrorTx, onFinishTx);
+  const {
+    handleConfirmActiveStatus, fetchActiveStatusConfirmData,
+  } = useMyLostKeyContract(onSuccessTx, onErrorTx, onFinishTx);
 
   const [
     activeStatusModalProps, setActiveStatusModalProps,
@@ -99,27 +100,6 @@ export const MyContracts: FC = () => {
   const [
     liveStatusModalProps, setLiveStatusModalProps,
   ] = useState<ComponentProps<typeof ConfirmStatusModal> | {}>({});
-  const handleConfirmActiveStatus = useCallback(async (contractAddress: string) => {
-    const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
-    try {
-      await contract.methods.confirm().send({
-        from: userWalletAddress,
-      });
-      setResultModalState({
-        open: true,
-        result: true,
-      });
-    } catch (err) {
-      console.log(err);
-      setResultModalState({
-        open: true,
-        result: false,
-      });
-    } finally {
-      closeSendTransactionModal();
-    }
-  }, [closeSendTransactionModal, userWalletAddress, walletService]);
 
   const handleViewContract = useCallback((contractKey: string) => {
     const card = cards.find((item) => isFoundContractKey(item, contractKey));
@@ -287,11 +267,14 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'getFunds': {
+        const card = cards.find((item) => isFoundContractKey(item, contractKey));
+        const { address: contractAddress } = card;
         openGetFundsModal();
         setGetFundsActions({
           ...getFundsActions,
-          onAccept: () => {
+          onAccept: (tokensAddresses) => {
             openSendTransactionModal();
+            handleGetFundsAfterDivorce(contractAddress, tokensAddresses);
           },
         });
         break;
@@ -300,7 +283,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, getFundsActions, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
+  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, getFundsActions, handleConfirmActiveStatus, handleGetFundsAfterDivorce, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
