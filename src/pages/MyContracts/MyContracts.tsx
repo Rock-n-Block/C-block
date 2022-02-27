@@ -1,6 +1,7 @@
 import React, {
   FC, useCallback, useEffect, useState, ComponentProps,
 } from 'react';
+import { useNavigate } from 'react-router';
 import {
   Box, Button,
   Container, Grid, IconButton, TextField, Typography,
@@ -23,6 +24,13 @@ import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
 import { useWalletConnectorContext } from 'services';
 import { lostKeyAbi } from 'config/abi';
 import {
+  CROWDSALE_CONTRACT, LOSTKEY_CONTRACT, routes, TOKEN_CONTRACT, WEDDING_CONTRACT, WILL_CONTRACT,
+} from 'appConstants';
+import {
+  TPreviewContractNavigationState,
+  ILostKeyContract, ICrowdsaleContract, IWeddingContract, IWillContract, TokenContract,
+} from 'types';
+import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
 import {
@@ -32,6 +40,7 @@ import { useSearch, useMyContracts } from './MyContracts.hooks';
 import { useStyles } from './MyContracts.styles';
 
 export const MyContracts: FC = () => {
+  const navigate = useNavigate();
   const [cards, setCards] = useState<IContractsCard[]>([]);
   const { filteredList: filteredCards, searchHandler } = useSearch(cards);
 
@@ -112,8 +121,55 @@ export const MyContracts: FC = () => {
     }
   }, [closeSendTransactionModal, userWalletAddress, walletService]);
 
+  const handleViewContract = useCallback((contractKey: string) => {
+    const card = cards.find((item) => isFoundContractKey(item, contractKey));
+    console.log('handleViewContract', card);
+    const routeState = {
+      contractPreview: {
+        readonly: true,
+      },
+    } as TPreviewContractNavigationState;
+    let routeParam = '';
+    const { contractType, contractCreationData } = card;
+    switch (contractType) {
+      case 'Token contract': {
+        routeParam = TOKEN_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as TokenContract;
+        break;
+      }
+      case 'Crowdsale contract': {
+        routeParam = CROWDSALE_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as ICrowdsaleContract;
+        break;
+      }
+      case 'Lostkey contract': {
+        routeParam = LOSTKEY_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as ILostKeyContract;
+        break;
+      }
+      case 'Will contract': {
+        routeParam = WILL_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as IWillContract;
+        break;
+      }
+      case 'Wedding contract': {
+        routeParam = WEDDING_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as IWeddingContract;
+        break;
+      }
+      default: throw new Error('wrong param for handle view contract');
+    }
+    navigate(routes[routeParam]['preview-contract'].root, {
+      state: { ...routeState },
+    });
+  }, [cards, navigate]);
+
   const buttonClickHandler = useCallback(async (contractKey: string, type: TContractButtonsTypes) => {
     switch (type) {
+      case 'viewContract': {
+        handleViewContract(contractKey);
+        break;
+      }
       case 'requestWithdrawal': {
         openRequestWithdrawalModal();
         setWithdrawalActions({
@@ -244,7 +300,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, getFundsActions, handleConfirmActiveStatus, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
+  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, getFundsActions, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {

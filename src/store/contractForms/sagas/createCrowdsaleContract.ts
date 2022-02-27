@@ -2,8 +2,8 @@ import {
   all,
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
-
 import BigNumber from 'bignumber.js';
+import { TransactionReceipt } from 'web3-core';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -196,7 +196,7 @@ function* createCrowdsaleContractSaga({
       contractMethodArgs,
     });
 
-    const { transactionHash }: { transactionHash: string } = yield call(
+    const { transactionHash }: TransactionReceipt = yield call(
       crowdsaleFactoryContract.methods[methodName](...contractMethodArgs).send,
       {
         from: myAddress,

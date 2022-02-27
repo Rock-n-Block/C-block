@@ -2,6 +2,7 @@ import {
   call, put, select, takeLatest,
 } from 'redux-saga/effects';
 import BigNumber from 'bignumber.js';
+import { TransactionReceipt } from 'web3-core';
 
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -101,7 +102,7 @@ function* createLostKeyContractSaga({
       rewardAmountSerilialized,
     ];
 
-    const { transactionHash }: { transactionHash: string } = yield call(
+    const { transactionHash }: TransactionReceipt = yield call(
       lostKeyFactoryContract.methods.deployLostKey(...contractMethodArgs).send,
       {
         from: myAddress,

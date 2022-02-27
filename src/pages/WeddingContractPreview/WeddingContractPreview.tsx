@@ -1,11 +1,14 @@
 /* eslint-disable react/no-array-index-key */
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Grid, Typography } from '@material-ui/core';
 
 import { Preview, Copyable } from 'components';
 import { useProvider, useShallowSelector } from 'hooks';
+import {
+  TPreviewContractNavigationState, IWeddingContract,
+} from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteWeddingContractForm } from 'store/contractForms/reducer';
@@ -33,9 +36,15 @@ export const WeddingContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const { weddingContract } = useShallowSelector(contractFormsSelector.getContractForms);
+  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const weddingContractFromStore = useShallowSelector(contractFormsSelector.getWeddingContract);
+  const weddingContract = useMemo(
+    () => state?.contractPreview?.data as IWeddingContract || weddingContractFromStore,
+    [state?.contractPreview?.data, weddingContractFromStore],
+  );
 
   const classes = useStyles();
+
   return (
     <Preview
       type="weddingRing"
@@ -43,6 +52,7 @@ export const WeddingContractPreview = () => {
       launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
+      readonly={state?.contractPreview?.readonly}
     >
       {staticWeddingContractPreviewHelpers.map((previewBlock, index) => (
         <Box className={classes.tokenContractInfoBlock} key={index}>

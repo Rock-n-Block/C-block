@@ -6,5 +6,9 @@ export function formattedDate(separator = '-', d = new Date()) {
   if (month.length < 2) month = `0${month}`;
   if (day.length < 2) day = `0${day}`;
 
-  return `${year}${separator}${month}${separator}${day}`;
+  return [
+    year,
+    month,
+    day,
+  ].join(separator);
 }

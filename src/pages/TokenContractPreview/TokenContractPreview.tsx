@@ -1,8 +1,7 @@
 import React, {
-  Fragment,
-  useCallback,
+  Fragment, useCallback, useMemo,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Grid, Typography, Box } from '@material-ui/core';
 import clsx from 'clsx';
@@ -13,6 +12,9 @@ import {
   Copyable,
 } from 'components';
 import { useProvider, useShallowSelector } from 'hooks';
+import {
+  TPreviewContractNavigationState, TokenContract,
+} from 'types';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { routes } from 'appConstants';
 
@@ -44,7 +46,12 @@ export const TokenContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const tokenContract = useShallowSelector(contractFormsSelector.getTokenContract);
+  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const tokenContractFromStore = useShallowSelector(contractFormsSelector.getTokenContract);
+  const tokenContract = useMemo(
+    () => state?.contractPreview?.data as TokenContract || tokenContractFromStore,
+    [state?.contractPreview?.data, tokenContractFromStore],
+  );
 
   const classes = useStyles();
   let totalTokenAmount = 0;
@@ -55,6 +62,7 @@ export const TokenContractPreview = () => {
       launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
+      readonly={state?.contractPreview?.readonly}
     >
       {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
         // eslint-disable-next-line react/no-array-index-key

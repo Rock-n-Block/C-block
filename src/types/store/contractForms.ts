@@ -4,6 +4,13 @@ import { IWeddingContract } from './weddingContract';
 import { ILostKeyContract } from './lostKeyContract';
 import { IWillContract } from './willContract';
 
+export type TMyContracts =
+  | ILostKeyContract
+  | ICrowdsaleContract
+  | IWeddingContract
+  | IWillContract
+  | TokenContract;
+
 export type ContractFormsState = {
   tokenContract: TokenContract;
   crowdsaleContract: ICrowdsaleContract;

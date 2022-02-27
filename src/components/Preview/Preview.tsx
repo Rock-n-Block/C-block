@@ -36,9 +36,11 @@ export interface PreviewProps {
   launchAction: () => void;
   editAction: () => void;
   deleteAction: () => void;
+  readonly?: boolean;
 }
 
 export const Preview: FC<PreviewProps> = ({
+  readonly = false,
   launchAction,
   editAction,
   deleteAction,
@@ -208,37 +210,41 @@ export const Preview: FC<PreviewProps> = ({
         {children}
         <Box className={classes.stamp} />
       </Box>
-      <Box className={classes.controls}>
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="large"
-          className={classes.button}
-          onClick={openDisclaimerModal}
-        >
-          Launch
-        </Button>
-        <Box className={classes.editDeleteBtns}>
-          <Button
-            variant="outlined"
-            size="large"
-            className={clsx(classes.button, classes.editDelete)}
-            endIcon={<Edit />}
-            onClick={editAction}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="outlined"
-            size="large"
-            className={clsx(classes.button, classes.editDelete)}
-            endIcon={<TrashIcon />}
-            onClick={deleteAction}
-          >
-            Delete
-          </Button>
-        </Box>
-      </Box>
+      {
+        !readonly && (
+          <Box className={classes.controls}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              className={classes.button}
+              onClick={openDisclaimerModal}
+            >
+              Launch
+            </Button>
+            <Box className={classes.editDeleteBtns}>
+              <Button
+                variant="outlined"
+                size="large"
+                className={clsx(classes.button, classes.editDelete)}
+                endIcon={<Edit />}
+                onClick={editAction}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                className={clsx(classes.button, classes.editDelete)}
+                endIcon={<TrashIcon />}
+                onClick={deleteAction}
+              >
+                Delete
+              </Button>
+            </Box>
+          </Box>
+        )
+      }
       <DisclaimerModal
         open={isDisclaimerOpen}
         onClose={closeDisclaimerModal}

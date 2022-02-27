@@ -4,12 +4,12 @@ import {
 } from 'theme/icons';
 
 const CREATE_CONTRACT = 'create-contract';
-const TOKEN_CONTRACT = 'token-contract';
-const CROWDSALE_CONTRACT = 'crowdsale-contract';
+export const TOKEN_CONTRACT = 'token-contract';
+export const CROWDSALE_CONTRACT = 'crowdsale-contract';
 const PREVIEW_CONTRACT = 'preview-contract';
-const WEDDING_CONTRACT = 'wedding-contract';
-const LOSTKEY_CONTRACT = 'lostkey-contract';
-const WILL_CONTRACT = 'will-contract';
+export const WEDDING_CONTRACT = 'wedding-contract';
+export const LOSTKEY_CONTRACT = 'lostkey-contract';
+export const WILL_CONTRACT = 'will-contract';
 const MY_CONTRACTS = 'my-contracts';
 const CUSTOM_DEVELOPMENT = 'custom-development';
 const EARN_PATH = 'earn';
