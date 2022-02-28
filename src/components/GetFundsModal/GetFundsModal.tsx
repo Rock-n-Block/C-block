@@ -10,7 +10,7 @@ import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { PlusIcon } from 'theme/icons';
-import { IGetFundsModalTokenAddressField, fieldsHelper } from './GetFundsModal.helpers';
+import { IGetFundsModalTokenAddressField, fieldsHelper, incrementId } from './GetFundsModal.helpers';
 import { useStyles } from './GetFundsModal.styles';
 
 export interface Props {
@@ -31,14 +31,12 @@ export const GetFundsModal: VFC<Props> = ({
   const [addresses, setAddresses] =
     useState<IGetFundsModalTokenAddressField[]>(fieldsHelper);
 
-  const incrementId = useCallback(() => addresses[addresses.length - 1].id + 1, [addresses]);
-
   const addAddressHandler = useCallback(() => {
     setAddresses([
       ...addresses,
-      { id: incrementId(), address: '' },
+      { id: incrementId(addresses), address: '' },
     ]);
-  }, [addresses, incrementId]);
+  }, [addresses]);
 
   const handleChange = (value: IGetFundsModalTokenAddressField) => {
     setAddresses(addresses.map((item) => (item.id === value.id ? value : item)));

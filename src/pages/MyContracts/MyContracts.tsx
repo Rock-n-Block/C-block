@@ -91,7 +91,10 @@ export const MyContracts: FC = () => {
 
   const { handleGetFundsAfterDivorce } = useMyWeddingContract(onSuccessTx, onErrorTx, onFinishTx);
   const {
-    handleConfirmActiveStatus, fetchActiveStatusConfirmData,
+    handleConfirmActiveStatus,
+    fetchActiveStatusConfirmData,
+    handleAddTokens,
+    fetchSetUpModalTokenAddresses,
   } = useMyLostKeyContract(onSuccessTx, onErrorTx, onFinishTx);
 
   const [
@@ -100,6 +103,9 @@ export const MyContracts: FC = () => {
   const [
     liveStatusModalProps, setLiveStatusModalProps,
   ] = useState<ComponentProps<typeof ConfirmStatusModal> | {}>({});
+  const [
+    setUpModalProps, setSetUpModalProps,
+  ] = useState<ComponentProps<typeof SetUpModal> | {}>({});
 
   const handleViewContract = useCallback((contractKey: string) => {
     const card = cards.find((item) => isFoundContractKey(item, contractKey));
@@ -227,6 +233,18 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'setUp': {
+        const card = cards.find((item) => isFoundContractKey(item, contractKey));
+        const { address: contractAddress } = card;
+        const addresses = await fetchSetUpModalTokenAddresses(contractAddress);
+        setSetUpModalProps({
+          ...setUpModalProps,
+          contractAddress,
+          addresses,
+          onAccept: (tokensAddresses) => {
+            handleAddTokens(contractAddress, tokensAddresses.map(({ address }) => address));
+            openSendTransactionModal();
+          },
+        });
         openSetUpModal();
         break;
       }
@@ -283,7 +301,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, getFundsActions, handleConfirmActiveStatus, handleGetFundsAfterDivorce, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, withdrawalActions]);
+  }, [activeStatusModalProps, cards, fetchActiveStatusConfirmData, fetchSetUpModalTokenAddresses, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleGetFundsAfterDivorce, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
   const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
     switch (additionalContentRenderType) {
@@ -372,7 +390,12 @@ export const MyContracts: FC = () => {
         setIsModalOpen={setIsRequestWithdrawalModalOpen}
         {...withdrawalActions}
       />
-      <SetUpModal open={isSetUpModalOpen} setIsModalOpen={setIsSetUpModalOpen} />
+      <SetUpModal
+        open={isSetUpModalOpen}
+        setIsModalOpen={setIsSetUpModalOpen}
+        addresses={[]}
+        {...setUpModalProps}
+      />
       <ConfirmStatusModal
         open={isConfirmLiveStatusModalOpen}
         setIsModalOpen={setIsConfirmLiveStatusModalOpen}

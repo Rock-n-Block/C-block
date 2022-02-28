@@ -1,84 +1,203 @@
 import React, {
-  useCallback, useMemo, useState, VFC,
+  useCallback, useEffect, useMemo, useState, VFC,
 } from 'react';
 import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
 import clsx from 'clsx';
+import { useDebouncedCallback } from 'use-debounce';
 
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
+import { bep20Abi } from 'config/abi';
+import { useWalletConnectorContext } from 'services';
 import { PlusIcon } from '../../theme/icons';
-import { addressesArr, AddressesT } from './SetUpModal.helpers';
+import {
+  createAddressesArr,
+  ISetUpModalTokenAddressField,
+  ISetUpModalTokenAddress,
+  initTokensAddressesArr,
+  incrementId,
+} from './SetUpModal.helpers';
 import { useStyles } from './SetUpModal.styles';
 
 interface Props {
   className?: string;
   open?: boolean;
+  contractAddress?: string;
+  addresses: ISetUpModalTokenAddress[];
   setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: () => void;
+  onAccept?: (addresses: ISetUpModalTokenAddressField[]) => void;
 }
 
-export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
+export const SetUpModal: VFC<Props> = ({
+  open,
+  setIsModalOpen,
+  contractAddress,
+  addresses: initAddresses,
+  onClose,
+  onAccept,
+}) => {
+  const { walletService } = useWalletConnectorContext();
+  const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
   const classes = useStyles();
-  const [addresses, setAddresses] = useState<AddressesT>(addressesArr);
+  const [addresses, setAddresses] = useState<ISetUpModalTokenAddressField[]>(
+    [],
+  );
+
+  const debouncedCheckAllowance = useDebouncedCallback(
+    async ({ id, address }: ISetUpModalTokenAddressField) => {
+      const web3 = walletService.Web3();
+      const contract = new web3.eth.Contract(bep20Abi, address);
+      try {
+        const allowance = await contract.methods.allowance(userWalletAddress, contractAddress).call();
+        setAddresses(
+          addresses.map((item) => (item.id === id ? {
+            id,
+            address,
+            allowance,
+          } : item)),
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    1000,
+  );
+
+  useEffect(() => {
+    setAddresses(createAddressesArr(initAddresses));
+  }, [initAddresses]);
 
   const addAddressHandler = useCallback(() => {
-    setAddresses([...addresses, { address: '', id: addresses[addresses.length - 1].id + 1 }]);
+    setAddresses([
+      ...addresses,
+      { id: incrementId(addresses), address: '', allowance: '' },
+    ]);
   }, [addresses]);
 
+  const handleChange = (value: ISetUpModalTokenAddressField) => {
+    setAddresses(
+      addresses.map((item) => (item.id === value.id ? value : item)),
+    );
+    debouncedCheckAllowance(value);
+  };
+
+  const clearInputs = useCallback(() => {
+    setAddresses(initTokensAddressesArr);
+  }, []);
+
   const closeModal = useCallback(() => {
+    if (onClose) {
+      clearInputs();
+      onClose();
+    }
     setIsModalOpen(false);
-    setAddresses([{ address: '', id: 0 }]);
-  }, [setIsModalOpen]);
+  }, [clearInputs, onClose, setIsModalOpen]);
+
+  const handleApprove = async ({ id, address }: ISetUpModalTokenAddressField) => {
+    const web3 = walletService.Web3();
+    const contract = new web3.eth.Contract(bep20Abi, address);
+    try {
+      // TODO:
+      await contract.methods.approve(contractAddress, '1000000000000000000').send({
+        from: userWalletAddress,
+      });
+
+      handleChange({
+        id,
+        address,
+        allowance: '1000000000000000000', // TODO:
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleAccept = useCallback(() => {
+    if (onAccept) {
+      onAccept(
+        addresses.filter(({ address }) => !initAddresses
+          .map(({ address: initAddress }) => initAddress.toLowerCase())
+          .includes(address.toLowerCase())),
+      );
+    }
+    closeModal();
+  }, [addresses, closeModal, initAddresses, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
-  const title = useMemo(() => (
-    <Box className={classes.modalTitle}>
-      <Typography
-        align="left"
-        className={clsx(isLight ? '' : 'acidGreen gradient')}
-        variant="h2"
-      >
-        Set up
-      </Typography>
-    </Box>
-  ), [classes.modalTitle, isLight]);
+  const title = useMemo(
+    () => (
+      <Box className={classes.modalTitle}>
+        <Typography
+          align="left"
+          className={clsx(isLight ? '' : 'acidGreen gradient')}
+          variant="h2"
+        >
+          Set up
+        </Typography>
+      </Box>
+    ),
+    [classes.modalTitle, isLight],
+  );
 
   return (
-    <Modal className={clsx(classes.root)} open={open} onClose={closeModal} title={title}>
+    <Modal
+      className={clsx(classes.root)}
+      open={open}
+      onClose={closeModal}
+      title={title}
+    >
       <Typography
         className={clsx(classes.desc, 'l')}
         variant="body1"
         align="left"
       >
-        Please determine the addresses of tokens that
-        need to be transferred and give approve to the
-        contract to transfer them
+        Please determine the addresses of tokens that need to be transferred and
+        give approve to the contract to transfer them
       </Typography>
       <Box>
-        {addresses.map(({ address, id }) => (
+        {addresses.map(({ id, address, allowance }) => (
           <Box key={id} className={classes.inputContainer}>
-            <TextField value={address} label="Token address" />
-            <Button className={clsx(classes.button, classes.approveButton)} variant="outlined">Approve</Button>
+            <TextField
+              value={address}
+              label="Token address"
+              onChange={(e) => handleChange({
+                id,
+                address: e.target.value,
+                allowance,
+              })}
+            />
+            {
+              allowance === '0' && (
+                <Button
+                  className={clsx(classes.button, classes.approveButton)}
+                  variant="outlined"
+                  onClick={() => handleApprove({
+                    id,
+                    address,
+                    allowance,
+                  })}
+                >
+                  Approve
+                </Button>
+              )
+            }
           </Box>
         ))}
-        {
-           addresses.length < TOKEN_ADDRESSES_MAX_COUNT && (
-           <Button
-             variant="outlined"
-             onClick={addAddressHandler}
-             endIcon={<PlusIcon />}
-           >
-             Add address
-           </Button>
-           )
-        }
-
+        {addresses.length < TOKEN_ADDRESSES_MAX_COUNT && (
+          <Button
+            variant="outlined"
+            endIcon={<PlusIcon />}
+            onClick={addAddressHandler}
+          >
+            Add address
+          </Button>
+        )}
       </Box>
       <Box className={classes.modalControls}>
         <Button
@@ -87,7 +206,7 @@ export const SetUpModal: VFC<Props> = ({ open, setIsModalOpen }) => {
           type="submit"
           color="secondary"
           variant="outlined"
-          onClick={closeModal}
+          onClick={handleAccept}
         >
           Save
         </Button>
