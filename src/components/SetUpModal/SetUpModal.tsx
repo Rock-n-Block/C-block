@@ -10,7 +10,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
-import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
+import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { bep20Abi } from 'config/abi';
 import { useWalletConnectorContext } from 'services';
 import { PlusIcon } from '../../theme/icons';
@@ -102,15 +102,14 @@ export const SetUpModal: VFC<Props> = ({
     const web3 = walletService.Web3();
     const contract = new web3.eth.Contract(bep20Abi, address);
     try {
-      // TODO:
-      await contract.methods.approve(contractAddress, '1000000000000000000').send({
+      await contract.methods.approve(contractAddress, MAX_UINT_256).send({
         from: userWalletAddress,
       });
 
       handleChange({
         id,
         address,
-        allowance: '1000000000000000000', // TODO:
+        allowance: MAX_UINT_256,
       });
     } catch (err) {
       console.log(err);

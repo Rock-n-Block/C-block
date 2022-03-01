@@ -241,6 +241,7 @@ export const MyContracts: FC = () => {
           contractAddress,
           addresses,
           onAccept: (tokensAddresses) => {
+            if (!tokensAddresses.length) return;
             handleAddTokens(contractAddress, tokensAddresses.map(({ address }) => address));
             openSendTransactionModal();
           },
