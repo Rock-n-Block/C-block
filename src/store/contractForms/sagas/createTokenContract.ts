@@ -89,8 +89,12 @@ function* createTokenContractSaga({
       tokens,
       decimals,
     } = tokenContract;
+    const ownerAddressesForBackend = {};
     const ownerAddresses = tokens.map(
-      ({ address: tokenKeyAddress }: TokenContractDynamicForm) => tokenKeyAddress,
+      ({ address, name }: TokenContractDynamicForm) => {
+        ownerAddressesForBackend[name] = address;
+        return address;
+      },
     );
     const initSupply = tokens.map(({ amount }: TokenContractDynamicForm) => getTokenAmount(amount, +decimals, false));
     const timeStamps = tokens.map(
@@ -127,7 +131,7 @@ function* createTokenContractSaga({
     yield call(baseApi.createTokenContract, {
       tx_hash: transactionHash,
       name: tokenName,
-      addresses: ownerAddresses,
+      addresses: ownerAddressesForBackend,
     });
 
     yield put(apiActions.success(type));

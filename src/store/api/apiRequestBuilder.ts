@@ -6,7 +6,7 @@ interface IContractData {
   name: string;
 }
 interface ICreateTokenContractData extends IContractData {
-  addresses: string[];
+  addresses: Record<string, string>; // Map<ownerName, ownerAddress>
 }
 interface ICreateLostKeyContractData extends IContractData {
   mails: string[];
