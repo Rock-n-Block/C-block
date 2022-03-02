@@ -7,9 +7,10 @@ import { ConfirmationTimeBlock } from '../ConfirmationTimeBlock';
 import { useStyles as useCommonStyles } from '../../MyContracts.styles';
 
 export const AdditionalContentRequestDivorce: FC<{
+  countdownUntilTimestamp: number;
   onApprove: () => void;
   onReject: () => void;
-}> = ({ onApprove, onReject }) => {
+}> = ({ countdownUntilTimestamp, onApprove, onReject }) => {
   const commonClasses = useCommonStyles();
   return (
     <AdditionalContent>
@@ -19,7 +20,10 @@ export const AdditionalContentRequestDivorce: FC<{
         </Typography>
         <ApproveRejectBox onApprove={onApprove} onReject={onReject} />
       </Box>
-      <ConfirmationTimeBlock className={commonClasses.contractActionBlockInner} />
+      <ConfirmationTimeBlock
+        className={commonClasses.contractActionBlockInner}
+        countdownUntilTimestamp={countdownUntilTimestamp}
+      />
     </AdditionalContent>
   );
 };

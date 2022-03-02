@@ -2,7 +2,9 @@ import { TPingIntervalUnit } from 'types';
 
 const YEAR_AS_DAYS = 365;
 const MONTH_AS_DAYS = 30;
-const DAY_AS_SECONDS = 24 * 60 * 60;
+export const MINUTE_AS_SECONDS = 60;
+export const HOUR_AS_SECONDS = 60 * MINUTE_AS_SECONDS;
+export const DAY_AS_SECONDS = 24 * HOUR_AS_SECONDS;
 
 export const convertIntervalAsSeconds = (
   interval: string | number, units: TPingIntervalUnit,

@@ -151,6 +151,9 @@ export const MyContracts: FC = () => {
   }, [cards, navigate]);
 
   const buttonClickHandler = useCallback(async (contractKey: string, type: TContractButtonsTypes) => {
+    const card = cards.find((item) => isFoundContractKey(item, contractKey));
+    const { address: contractAddress } = card;
+
     switch (type) {
       case 'viewContract': {
         handleViewContract(contractKey);
@@ -250,9 +253,7 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'confirmLiveStatus': {
-        const card = cards.find((item) => isFoundContractKey(item, contractKey));
-        const { address } = card;
-        const response = await fetchActiveStatusConfirmData(address);
+        const response = await fetchActiveStatusConfirmData(contractAddress);
         if (!response) return;
         const [confirmationPeriod, lastRecordedTime] = response;
         const date = Number(confirmationPeriod) + Number(lastRecordedTime);
@@ -268,9 +269,7 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'confirmActiveStatus': {
-        const card = cards.find((item) => isFoundContractKey(item, contractKey));
-        const { address } = card;
-        const response = await fetchActiveStatusConfirmData(address);
+        const response = await fetchActiveStatusConfirmData(contractAddress);
         if (!response) return;
         const [confirmationPeriod, lastRecordedTime] = response;
         const date = Number(confirmationPeriod) + Number(lastRecordedTime);
@@ -286,8 +285,6 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'getFunds': {
-        const card = cards.find((item) => isFoundContractKey(item, contractKey));
-        const { address: contractAddress } = card;
         openGetFundsModal();
         setGetFundsActions({
           ...getFundsActions,
@@ -309,6 +306,7 @@ export const MyContracts: FC = () => {
       case 'weddingRequestDivorce':
         return (
           <AdditionalContentRequestDivorce
+            countdownUntilTimestamp={10000}
             onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')}
             onReject={noop}
           />
@@ -316,6 +314,7 @@ export const MyContracts: FC = () => {
       case 'weddingRequestWithdrawal':
         return (
           <AdditionalContentRequestWithdrawal
+            countdownUntilTimestamp={1646323273}
             onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')}
             onReject={noop}
           />
