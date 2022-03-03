@@ -57,7 +57,7 @@ export const useMyContracts = () => {
     const { data } = await baseApi.getContracts({
       walletAddress: userWalletAddress,
     });
-    console.log(`Retrieved history for ${userWalletAddress}`, data);
+    // console.log(`Retrieved history for ${userWalletAddress}`, data);
     return data;
   }, [userWalletAddress]);
 

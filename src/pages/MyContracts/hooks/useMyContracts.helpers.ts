@@ -49,17 +49,25 @@ export const transforms = {
       initSupply,
       timestamp, // optional, presents only if `freezable`
     } = params;
+    const tokensOwnersAsArray = Object
+      .entries(backendData.addresses)
+      .reduce((acc, [key, value]) => ({
+        ...acc,
+        [value.toString()]: key,
+      }), {});
     const tokens = new Array(owners.length)
       .fill('')
       .map((_, index) => {
         const [
           frozenUntilDate, isFrozen,
         ] = contractSettings.isFreezable ? [
-          timestamp[index], timestamp[index] === '0',
+          timestamp[index], timestamp[index] !== '0',
         ] : ['', false];
+
+        const address = owners[index];
         return {
-          address: owners[index],
-          name: 'TO BE DEFINED',
+          address,
+          name: tokensOwnersAsArray[address],
           amount: getTokenAmountDisplay(initSupply[index], +decimals),
           frozenUntilDate: formattedDate('-', new Date(+frozenUntilDate * 1000)),
           isFrozen,
@@ -174,6 +182,7 @@ export const getContractCreationData = (
   const celoDecimals = getCeloConfigMetamask(
     rootStore.store.getState().user.isMainnet,
   )[0].nativeCurrency.decimals;
+
   switch (methodName) {
     case 'deployLostKey': {
       const {

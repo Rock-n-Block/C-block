@@ -13,7 +13,11 @@ export const getTokenAmount = (
     return '0';
   }
 
-  const displayValue = new BigNumber(balance).multipliedBy(new BigNumber(10).pow(decimals));
+  const displayValue = new BigNumber(balance)
+    .decimalPlaces(decimals, 1)
+    .multipliedBy(
+      new BigNumber(10).pow(decimals),
+    );
 
   if (shouldFormatNumber) {
     const formattedValue = formatNumber(+displayValue.toFixed());

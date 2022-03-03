@@ -11,11 +11,18 @@ export const getDivorceStatus = (divorceTimestamp: number): TGetDivorceStatusRet
   return 'DIVORCE_DONE';
 };
 
+interface IWeddingContractActiveWithdrawalProposal {
+  amount: string;
+  proposedBy: string;
+  receiver: string;
+  timestamp: string;
+  token: string;
+}
+
 type IGetWithdrawalStatusReturnType = 'WITHDRAWAL_NOT_STARTED' | 'WITHDRAWAL_DONE' | 'WITHDRAWAL_PENDING';
 export const getWithdrawalStatus = (
   withdrawalProposalPending: boolean,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  activeWithdrawalProposal: any,
+  activeWithdrawalProposal: IWeddingContractActiveWithdrawalProposal,
 ): IGetWithdrawalStatusReturnType => {
   if (!withdrawalProposalPending) {
     return 'WITHDRAWAL_NOT_STARTED';

@@ -15,7 +15,9 @@ import {
 import { ContractFormsState, UserState } from 'types';
 import reducer from './rootReducer';
 import rootSaga from './rootSaga';
-import actionTypes from './contractForms/actionTypes';
+import contractFormsActionTypes from './contractForms/actionTypes';
+import myContractsActionTypes from './myContracts/actionTypes';
+import myContractsWeddingActionTypes from './myContracts/weddingContracts/actionTypes';
 import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -58,15 +60,24 @@ const store = configureStore({
           PERSIST,
           PURGE,
           REGISTER,
-          actionTypes.APPROVE,
-          actionTypes.GET_CONTRACT_CREATION_PRICE,
-          actionTypes.CREATE_TOKEN_CONTRACT,
-          actionTypes.CREATE_LOSTKEY_CONTRACT,
-          actionTypes.CREATE_WILL_CONTRACT,
-          actionTypes.CREATE_CROWDSALE_CONTRACT,
-          actionTypes.CREATE_WEDDING_CONTRACT,
-          actionTypes.GET_CROWDSALE_CONTRACT_ADDITIONAL_DATA,
-          actionTypes.GET_ERC20_SYMBOL,
+          contractFormsActionTypes.APPROVE,
+          contractFormsActionTypes.GET_CONTRACT_CREATION_PRICE,
+          contractFormsActionTypes.CREATE_TOKEN_CONTRACT,
+          contractFormsActionTypes.CREATE_LOSTKEY_CONTRACT,
+          contractFormsActionTypes.CREATE_WILL_CONTRACT,
+          contractFormsActionTypes.CREATE_CROWDSALE_CONTRACT,
+          contractFormsActionTypes.CREATE_WEDDING_CONTRACT,
+          contractFormsActionTypes.GET_CROWDSALE_CONTRACT_ADDITIONAL_DATA,
+          contractFormsActionTypes.GET_ERC20_SYMBOL,
+          // mycontracts & mycontracts/wedding
+          myContractsActionTypes.GET_MY_CONTRACTS,
+          myContractsWeddingActionTypes.INIT_DIVORCE,
+          myContractsWeddingActionTypes.APPROVE_DIVORCE,
+          myContractsWeddingActionTypes.REJECT_DIVORCE,
+
+          myContractsWeddingActionTypes.INIT_WITHDRAWAL,
+          myContractsWeddingActionTypes.APPROVE_WITHDRAWAL,
+          myContractsWeddingActionTypes.REJECT_WITHDRAWAL,
         ],
       },
     },
