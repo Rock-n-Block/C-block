@@ -16,6 +16,7 @@ export function* getCrowdsaleContractAdditionalDataSaga({
   type,
   payload: {
     provider,
+    // TODO: добавить параметр означающий брать данные не из краудсейл контракта, мб ручками сюда закидывать необходимые данные для запроса
   },
 }: ReturnType<typeof getCrowdsaleContractAdditionalData>) {
   try {

@@ -1,6 +1,6 @@
 import { ICrowdsaleContract } from './crowdsaleContract';
 import { TokenContract } from './tokenContract';
-import { IWeddingContract } from './weddingContract';
+import { IWeddingContract, ISpecificWeddingContractData } from './weddingContract';
 import { ILostKeyContract } from './lostKeyContract';
 import { IWillContract } from './willContract';
 
@@ -18,3 +18,7 @@ export type ContractFormsState = {
   lostKeyContract: ILostKeyContract;
   willContract: IWillContract;
 };
+
+export type TSpecificContractData =
+  | {}
+  | ISpecificWeddingContractData;

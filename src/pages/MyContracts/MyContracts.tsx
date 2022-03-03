@@ -1,15 +1,15 @@
 import React, {
   FC, useCallback, useEffect, useState, ComponentProps,
 } from 'react';
-import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 import {
   Box, Button,
   Container, Grid, IconButton, TextField, Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { noop } from 'lodash';
 
 import { NetTag } from 'containers/Header/components/NetTag';
+// import uiSelector from 'store/ui/selectors';
 // import { useShallowSelector } from 'hooks';
 // import userSelector from 'store/user/selectors';
 import {
@@ -22,13 +22,18 @@ import {
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
 // import { useWalletConnectorContext } from 'services';
-import {
-  CROWDSALE_CONTRACT, LOSTKEY_CONTRACT, routes, TOKEN_CONTRACT, WEDDING_CONTRACT, WILL_CONTRACT,
-} from 'appConstants';
-import {
-  TPreviewContractNavigationState,
-  ILostKeyContract, ICrowdsaleContract, IWeddingContract, IWillContract, TokenContract,
-} from 'types';
+// import {
+//   CROWDSALE_CONTRACT, LOSTKEY_CONTRACT, routes, TOKEN_CONTRACT, WEDDING_CONTRACT, WILL_CONTRACT,
+// } from 'appConstants';
+// import {
+//   // TPreviewContractNavigationState,
+//   // ILostKeyContract, ICrowdsaleContract, IWeddingContract, IWillContract, TokenContract,
+//   RequestStatus,
+// } from 'types';
+import { useProvider } from 'hooks';
+import myContractsActions from 'store/myContracts/actions';
+import myContractsWeddingsActions from 'store/myContracts/weddingContracts/actions';
+
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -41,7 +46,6 @@ import {
 import { useStyles } from './MyContracts.styles';
 
 export const MyContracts: FC = () => {
-  const navigate = useNavigate();
   const [cards, setCards] = useState<IContractsCard[]>([]);
   const { filteredList: filteredCards, searchHandler } = useSearch(cards);
 
@@ -94,7 +98,11 @@ export const MyContracts: FC = () => {
 
   const dispatch = useDispatch();
   const { getDefaultProvider } = useProvider();
+
   const {
+    fetchAndTransformContracts,
+    handleViewContract,
+
     getMyContractsRequestUi,
   } = useMyContracts();
 
@@ -114,6 +122,12 @@ export const MyContracts: FC = () => {
   }, [dispatch, getDefaultProvider]);
 
   const {
+    // handleInitDivorce,
+    // handleApproveDivorce,
+    // handleRejectDivorce,
+
+    handleGetFundsAfterDivorce,
+
     initWithdrawalRequestUi,
     approveWithdrawalRequestUi,
     rejectWithdrawalRequestUi,
@@ -194,48 +208,8 @@ export const MyContracts: FC = () => {
     setUpModalProps, setSetUpModalProps,
   ] = useState<ComponentProps<typeof SetUpModal> | {}>({});
 
-  const handleViewContract = useCallback((contractKey: string) => {
-    const card = cards.find((item) => isFoundContractKey(item, contractKey));
-    console.log('handleViewContract', card);
-    const routeState = {
-      contractPreview: {
-        readonly: true,
-      },
-    } as TPreviewContractNavigationState;
-    let routeParam = '';
-    const { contractType, contractCreationData } = card;
-    switch (contractType) {
-      case 'Token contract': {
-        routeParam = TOKEN_CONTRACT;
-        routeState.contractPreview.data = contractCreationData as TokenContract;
-        break;
-      }
-      case 'Crowdsale contract': {
-        routeParam = CROWDSALE_CONTRACT;
-        routeState.contractPreview.data = contractCreationData as ICrowdsaleContract;
-        break;
-      }
-      case 'Lostkey contract': {
-        routeParam = LOSTKEY_CONTRACT;
-        routeState.contractPreview.data = contractCreationData as ILostKeyContract;
-        break;
-      }
-      case 'Will contract': {
-        routeParam = WILL_CONTRACT;
-        routeState.contractPreview.data = contractCreationData as IWillContract;
-        break;
-      }
-      case 'Wedding contract': {
-        routeParam = WEDDING_CONTRACT;
-        routeState.contractPreview.data = contractCreationData as IWeddingContract;
-        break;
-      }
-      default: throw new Error('wrong param for handle view contract');
-    }
-    navigate(routes[routeParam]['preview-contract'].root, {
-      state: { ...routeState },
-    });
-  }, [cards, navigate]);
+  // const isSameDivorceAddress = userAddress.toLowerCase() === divorceProposedBy.toLowerCase() // cannot approve/reject divorce with the same address
+  // const isSameWithdrawalAddress = userAddress.toLowerCase() === activeWithdrawalProposal.proposedBy.toLowerCase(); // cannot approve/reject withdrawal with the same address
 
   const buttonClickHandler = useCallback(async (contractKey: string, type: TContractButtonsTypes) => {
     const card = cards.find((item) => isFoundContractKey(item, contractKey));
@@ -265,7 +239,7 @@ export const MyContracts: FC = () => {
                   additionalContentRenderType: 'weddingRequestWithdrawal',
                   contractButtons: [
                     contractButtonsHelper.viewContract,
-                    contractButtonsHelper.requestDivorce,
+                    // contractButtonsHelper.requestDivorce, // dunno
                   ],
                 } as typeof card;
               }
@@ -281,16 +255,19 @@ export const MyContracts: FC = () => {
           provider: getDefaultProvider(),
           contractAddress,
         }));
-                additionalContentRenderType: 'weddingRequestDivorce',
-                contractButtons: [
-                  contractButtonsHelper.viewContract,
-                ],
-              } as typeof card;
-            }
-            return card;
-          });
-          setCards(newState);
-
+        const newState = cards.map((card) => {
+          if (isFoundContractKey(card, contractKey)) {
+            return {
+              ...card,
+              additionalContentRenderType: 'weddingSuccessfulWithdrawal',
+              contractButtons: [
+                contractButtonsHelper.viewContract,
+              ],
+            } as typeof card;
+          }
+          return card;
+        });
+        setCards(newState);
         break;
       }
       case 'withdrawalReject': {
@@ -340,9 +317,10 @@ export const MyContracts: FC = () => {
           if (isFoundContractKey(card, contractKey)) {
             return {
               ...card,
-              additionalContentRenderType: 'weddingSuccessfulWithdrawal',
+              additionalContentRenderType: 'weddingSuccessfulDivorce',
               contractButtons: [
                 contractButtonsHelper.viewContract,
+                contractButtonsHelper.getFunds,
               ],
             } as typeof card;
           }
@@ -426,58 +404,58 @@ export const MyContracts: FC = () => {
     }
   }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, fetchSetUpModalTokenAddresses, getDefaultProvider, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleGetFundsAfterDivorce, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
-  const renderAdditionalContent = useCallback(({ additionalContentRenderType, contractKey }: IContractsCard) => {
-    switch (additionalContentRenderType) {
-      case 'weddingRequestDivorce':
-        return (
-          <AdditionalContentRequestDivorce
-            countdownUntilTimestamp={10000}
-            onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')}
-            onReject={noop}
-          />
-        );
-      case 'weddingRequestWithdrawal':
-        return (
-          <AdditionalContentRequestWithdrawal
-            countdownUntilTimestamp={1646323273}
-            onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')}
-            onReject={noop}
-          />
-        );
-      case 'weddingSuccessfulDivorce':
-        return (
-          <AdditionalContent>
-            <Box className={classes.successfulAdditionalContent}>
-              <CheckmarkCircleIcon />
-              <Typography
-                className={clsx(classes.successfulAdditionalContentText, 'l')}
-                variant="body1"
-              >
-                There was a successful divorce
-              </Typography>
-            </Box>
-          </AdditionalContent>
-        );
-      case 'weddingSuccessfulWithdrawal':
-        return (
-          <AdditionalContent>
-            <Box className={classes.successfulAdditionalContent}>
-              <CheckmarkCircleIcon />
-              <Typography
-                className={clsx(classes.successfulAdditionalContentText, 'l')}
-                variant="body1"
-              >
-                There was a successful withdrawal
-              </Typography>
-            </Box>
-          </AdditionalContent>
-        );
-      default:
-        return null;
-    }
-  }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText]);
-
-  const { fetchAndTransformContracts } = useMyContracts();
+  const renderAdditionalContent = useCallback(
+    ({ additionalContentRenderType, contractKey }: IContractsCard) => {
+      switch (additionalContentRenderType) {
+        case 'weddingRequestDivorce':
+          return (
+            <AdditionalContentRequestDivorce
+              countdownUntilTimestamp={10000}
+              onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')}
+              onReject={() => buttonClickHandler(contractKey, 'divorceReject')}
+            />
+          );
+        case 'weddingRequestWithdrawal':
+          return (
+            <AdditionalContentRequestWithdrawal
+              countdownUntilTimestamp={1646323273}
+              onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')}
+              onReject={() => buttonClickHandler(contractKey, 'withdrawalReject')}
+            />
+          );
+        case 'weddingSuccessfulDivorce':
+          return (
+            <AdditionalContent>
+              <Box className={classes.successfulAdditionalContent}>
+                <CheckmarkCircleIcon />
+                <Typography
+                  className={clsx(classes.successfulAdditionalContentText, 'l')}
+                  variant="body1"
+                >
+                  There was a successful divorce
+                </Typography>
+              </Box>
+            </AdditionalContent>
+          );
+        case 'weddingSuccessfulWithdrawal':
+          return (
+            <AdditionalContent>
+              <Box className={classes.successfulAdditionalContent}>
+                <CheckmarkCircleIcon />
+                <Typography
+                  className={clsx(classes.successfulAdditionalContentText, 'l')}
+                  variant="body1"
+                >
+                  There was a successful withdrawal
+                </Typography>
+              </Box>
+            </AdditionalContent>
+          );
+        default:
+          return null;
+      }
+    }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText],
+  );
 
   const getContracts = useCallback(async () => {
     try {

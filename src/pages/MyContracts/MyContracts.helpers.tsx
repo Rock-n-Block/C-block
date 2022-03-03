@@ -13,16 +13,18 @@ import {
   WeddingRingIcon,
   WillContract,
 } from 'theme/icons';
-import { TMyContracts } from 'types';
+import { TMyContracts, TSpecificContractData } from 'types';
 import { formattedDate } from 'utils';
 
 export type TContractButtonsTypes =
   | 'viewContract'
   | 'setUp'
   | 'requestDivorce'
-  | 'requestWithdrawal'
   | 'divorceApprove'
+  | 'divorceReject'
+  | 'requestWithdrawal'
   | 'withdrawalApprove'
+  | 'withdrawalReject'
   | 'getFunds'
   | 'confirmLiveStatus'
   | 'confirmActiveStatus';
@@ -45,7 +47,15 @@ type TContractType =
   | 'Lostkey contract'
   | 'Will contract'
   | 'Wedding contract';
-export interface IContractsCard {
+
+export interface IContractCreationField {
+  contractCreationData?: TMyContracts;
+}
+
+export interface ISpecificContractData {
+  specificContractData: TSpecificContractData;
+}
+export interface IContractsCard extends IContractCreationField, ISpecificContractData {
   contractKey?: string;
   address: string;
   contractDate: string;
@@ -55,14 +65,10 @@ export interface IContractsCard {
   contractName: string;
   contractButtons: TContractButtons;
   additionalContentRenderType?: TAdditionalContentRenderType;
-  contractCreationData?: TMyContracts;
 }
 
 export interface ICreatedAtField {
   createdAt: string | number;
-}
-export interface IContractCreationField {
-  contractCreationData?: TMyContracts;
 }
 
 export interface IGetContractsTokenContractWithCreatedAtField
@@ -117,6 +123,30 @@ export interface IGetContractsWithContractCreationField {
   crowdsales: IGetContractsCrowdsaleContractWithContractCreationField[];
   weddings: IGetContractsWeddingContractWithContractCreationField[];
 }
+// With Specific ISpecificContractData
+export interface IGetContractsTokenContractWithSpecificField
+  extends IGetContractsTokenContractWithContractCreationField,
+  ISpecificContractData {}
+export interface IGetContractsLostKeyContractWithSpecificField
+  extends IGetContractsLostKeyContractWithContractCreationField,
+  ISpecificContractData {}
+export interface IGetContractsWillContractWithSpecificField
+  extends IGetContractsWillContractWithContractCreationField,
+  ISpecificContractData {}
+export interface IGetContractsCrowdsaleContractWithSpecificField
+  extends IGetContractsCrowdsaleContractWithContractCreationField,
+  ISpecificContractData {}
+export interface IGetContractsWeddingContractWithSpecificField
+  extends IGetContractsWeddingContractWithContractCreationField,
+  ISpecificContractData {}
+
+export interface IGetContractsWithSpecificField {
+  tokens: IGetContractsTokenContractWithSpecificField[];
+  lostkeys: IGetContractsLostKeyContractWithSpecificField[];
+  lastwills: IGetContractsWillContractWithSpecificField[];
+  crowdsales: IGetContractsCrowdsaleContractWithSpecificField[];
+  weddings: IGetContractsWeddingContractWithSpecificField[];
+}
 
 export const contractButtonsHelper: Partial<
 Record<TContractButtonsTypes, IContractButton>
@@ -162,12 +192,14 @@ const createContractCard = (
   isTestnet: boolean,
   createdAt: string | number,
   contractCreationData: TMyContracts,
+  specificContractData: TSpecificContractData,
 ) => ({
   contractName,
   address,
   contractDate: formattedDate('.', new Date(+createdAt * 1000)),
   isTestnet,
   contractCreationData,
+  specificContractData,
 });
 
 const createCrowdsaleCard = ({
@@ -176,13 +208,15 @@ const createCrowdsaleCard = ({
   test_node,
   createdAt,
   contractCreationData,
-}: IGetContractsCrowdsaleContractWithContractCreationField) => ({
+  specificContractData,
+}: IGetContractsCrowdsaleContractWithSpecificField) => ({
   ...createContractCard(
     name,
     address,
     test_node,
     createdAt,
     contractCreationData,
+    specificContractData,
   ),
   contractType: 'Crowdsale contract',
   contractLogo: <CrowdsaleIcon />,
@@ -195,8 +229,11 @@ const createTokenCard = ({
   test_node,
   createdAt,
   contractCreationData,
-}: IGetContractsTokenContractWithContractCreationField) => ({
-  ...createContractCard(name, address, test_node, createdAt, contractCreationData),
+  specificContractData,
+}: IGetContractsTokenContractWithSpecificField) => ({
+  ...createContractCard(
+    name, address, test_node, createdAt, contractCreationData, specificContractData,
+  ),
   contractType: 'Token contract',
   contractLogo: <ContractTokenIcon />,
   contractButtons: [contractButtonsHelper.viewContract],
@@ -208,8 +245,11 @@ const createLostkeyCard = ({
   test_node,
   createdAt,
   contractCreationData,
-}: IGetContractsLostKeyContractWithContractCreationField) => ({
-  ...createContractCard(name, address, test_node, createdAt, contractCreationData),
+  specificContractData,
+}: IGetContractsLostKeyContractWithSpecificField) => ({
+  ...createContractCard(
+    name, address, test_node, createdAt, contractCreationData, specificContractData,
+  ),
   contractType: 'Lostkey contract',
   contractLogo: <KeyIcon />,
   contractButtons: [
@@ -225,8 +265,11 @@ const createWillCard = ({
   test_node,
   createdAt,
   contractCreationData,
-}: IGetContractsWillContractWithContractCreationField) => ({
-  ...createContractCard(name, address, test_node, createdAt, contractCreationData),
+  specificContractData,
+}: IGetContractsWillContractWithSpecificField) => ({
+  ...createContractCard(
+    name, address, test_node, createdAt, contractCreationData, specificContractData,
+  ),
   contractType: 'Will contract',
   contractLogo: <WillContract />,
   contractButtons: [
@@ -242,18 +285,36 @@ const createWeddingCard = ({
   test_node,
   createdAt,
   contractCreationData,
-}: IGetContractsWeddingContractWithContractCreationField) => ({
-  ...createContractCard(name, address, test_node, createdAt, contractCreationData),
-  contractType: 'Wedding contract',
-  contractLogo: <WeddingRingIcon />,
-  contractButtons: [
-    contractButtonsHelper.viewContract,
+  specificContractData,
+}: IGetContractsWeddingContractWithSpecificField) => {
+  // const specificWeddingContractData = specificContractData as ISpecificWeddingContractData;
+  const anotherContractButtons: TContractButtons = [
     contractButtonsHelper.requestWithdrawal,
     contractButtonsHelper.requestDivorce,
-  ],
-} as IContractsCard);
+  ];
+  // if (!specificWeddingContractData.withdrawalProposalPending &&
+  //   !specificWeddingContractData.divorceDisputed) {
+  //   anotherContractButtons.push(contractButtonsHelper.requestWithdrawal);
+  // }
 
-export const createContractCards = (data: IGetContractsWithContractCreationField) => [
+  // if (!specificWeddingContractData.divorceDisputed) {
+  //   anotherContractButtons.push(contractButtonsHelper.requestDivorce);
+  // }
+
+  return {
+    ...createContractCard(
+      name, address, test_node, createdAt, contractCreationData, specificContractData,
+    ),
+    contractType: 'Wedding contract',
+    contractLogo: <WeddingRingIcon />,
+    contractButtons: [
+      contractButtonsHelper.viewContract,
+      ...anotherContractButtons,
+    ],
+  } as IContractsCard;
+};
+
+export const createContractCards = (data: IGetContractsWithSpecificField) => [
   ...data.crowdsales.map((crowdsale) => createCrowdsaleCard(crowdsale)),
   createCrowdsaleCard({
     // TODO: remove this when cb-132 is ready
@@ -263,6 +324,7 @@ export const createContractCards = (data: IGetContractsWithContractCreationField
     address: '0x11111',
     test_node: false,
     // contractCreationData: {},
+    specificContractData: {},
   }),
   ...data.tokens.map((token) => createTokenCard(token)),
   ...data.lostkeys.map((lostkey) => createLostkeyCard(lostkey)),

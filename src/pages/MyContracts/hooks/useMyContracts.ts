@@ -1,6 +1,11 @@
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import { Transaction } from 'web3-core';
+import { noop } from 'lodash';
 
+import {
+  CROWDSALE_CONTRACT, LOSTKEY_CONTRACT, routes, TOKEN_CONTRACT, WEDDING_CONTRACT, WILL_CONTRACT,
+} from 'appConstants';
 import {
   TPreviewContractNavigationState,
   ILostKeyContract, ICrowdsaleContract, IWeddingContract, IWillContract, TokenContract, RequestStatus,
@@ -25,9 +30,12 @@ import {
   createContractCards,
   IGetContractsWithContractCreationField,
   IGetContractsWithCreatedAtField,
+  IGetContractsWithSpecificField,
   TGetContractsWithCreatedAtField,
+  IContractsCard,
 } from '../MyContracts.helpers';
 import { getContractCreationData } from './useMyContracts.helpers';
+import { useMyWeddingContract } from './useMyWeddingContract';
 
 type TFunctionParams = {
   methodName: TDeployContractCreationMethodNames;
@@ -157,6 +165,19 @@ export const useMyContracts = () => {
     [walletService],
   );
 
+  const { getWeddingContractsWithSpecicData } = useMyWeddingContract();
+
+  const transformSpecificContractField = useCallback(
+    async (data: IGetContractsWithContractCreationField) => {
+      const weddings = await getWeddingContractsWithSpecicData([...data.weddings]);
+      return {
+        ...data,
+        weddings,
+      } as IGetContractsWithSpecificField;
+    },
+    [getWeddingContractsWithSpecicData],
+  );
+
   const transformMyContractsData = useCallback(
     async (data: IGetContractsReturnType) => {
       const dataWithCreatedAtField = await transformCreatedAtField(data);
@@ -164,10 +185,13 @@ export const useMyContracts = () => {
         dataWithCreatedAtField,
       );
       console.log('Transformed data', dataWithCreationParams);
+      const dataWithSpecificContractField = await transformSpecificContractField(
+        dataWithCreationParams,
+      );
 
-      return dataWithCreationParams;
+      return dataWithSpecificContractField;
     },
-    [transformContractCreationField, transformCreatedAtField],
+    [transformContractCreationField, transformCreatedAtField, transformSpecificContractField],
   );
 
   const fetchAndTransformContracts = useCallback(async () => {
@@ -179,6 +203,47 @@ export const useMyContracts = () => {
     return newContracts;
   }, [fetchMyContracts, transformMyContractsData, userWalletAddress]);
 
+  const navigate = useNavigate();
+  const handleViewContract = useCallback((card: IContractsCard) => {
+    const routeState = {
+      contractPreview: {
+        readonly: true,
+      },
+    } as TPreviewContractNavigationState;
+    let routeParam = '';
+    const { contractType, contractCreationData } = card;
+    switch (contractType) {
+      case 'Token contract': {
+        routeParam = TOKEN_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as TokenContract;
+        break;
+      }
+      case 'Crowdsale contract': {
+        routeParam = CROWDSALE_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as ICrowdsaleContract;
+        break;
+      }
+      case 'Lostkey contract': {
+        routeParam = LOSTKEY_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as ILostKeyContract;
+        break;
+      }
+      case 'Will contract': {
+        routeParam = WILL_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as IWillContract;
+        break;
+      }
+      case 'Wedding contract': {
+        routeParam = WEDDING_CONTRACT;
+        routeState.contractPreview.data = contractCreationData as IWeddingContract;
+        break;
+      }
+      default: throw new Error('wrong param for handle view contract');
+    }
+    navigate(routes[routeParam]['preview-contract'].root, {
+      state: { ...routeState },
+    });
+  }, [navigate]);
 
   const getMyContractsRequestStatus = useShallowSelector(
     uiSelector.getProp(actionTypes.GET_MY_CONTRACTS),
@@ -210,6 +275,7 @@ export const useMyContracts = () => {
   );
 
   return {
+    fetchAndTransformContracts,
     handleViewContract,
     getMyContractsRequestUi,
   };

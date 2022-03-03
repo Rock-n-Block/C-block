@@ -12,12 +12,80 @@ import {
   RequestStatus,
   TRequestUiCallbacks,
 } from 'types';
+import {
+  IGetContractsWeddingContractWithContractCreationField, IGetContractsWeddingContractWithSpecificField,
+} from '../MyContracts.helpers';
+
+export interface IFetchWeddingContractReturnType {
+  activeWithdrawalProposal: string;
+  divorceProposedBy: string;
+  divorceTimestamp: string;
+  withdrawalProposalPending: string;
+}
 
 export const useMyWeddingContract = (
-  onSuccessTx: () => void, onErrorTx: () => void, onFinishTx: () => void,
+  onSuccessTx?: () => void, onErrorTx?: () => void, onFinishTx?: () => void,
 ) => {
   const { walletService } = useWalletConnectorContext();
   const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
+
+  const fetchWeddingContract = useCallback(
+    async (contractAddress: string) => {
+      const web3 = walletService.Web3();
+      const contract = new web3.eth.Contract(weddingAbi, contractAddress);
+
+      try {
+        const callsPromises = [
+          'activeWithdrawalProposal',
+          // 'divorceDisputed',
+          'divorceProposedBy',
+          'divorceTimestamp',
+          'withdrawalProposalPending',
+        ].map((methodName) => contract.methods[methodName]().call());
+        const [
+          activeWithdrawalProposal,
+          // divorceDisputed,
+          divorceProposedBy,
+          divorceTimestamp,
+          withdrawalProposalPending,
+        ] = await Promise.all<string>(callsPromises);
+        return {
+          activeWithdrawalProposal,
+          divorceProposedBy,
+          divorceTimestamp,
+          withdrawalProposalPending,
+        } as IFetchWeddingContractReturnType;
+      } catch (err) {
+        console.log(err);
+        return undefined;
+      }
+    }, [walletService],
+  );
+
+  const transformMergeWeddingContractsAndSpecificData = (
+    weddings: IGetContractsWeddingContractWithContractCreationField[],
+    weddingsSpecificData: IFetchWeddingContractReturnType[],
+  ) => weddings.map((wedding, index) => {
+    const specificData = weddingsSpecificData[index];
+    return {
+      ...wedding,
+      specificContractData: {
+        ...specificData,
+      },
+    };
+  }) as IGetContractsWeddingContractWithSpecificField[];
+
+  const getWeddingContractsWithSpecicData = useCallback(
+    async (
+      weddings: IGetContractsWeddingContractWithContractCreationField[],
+    ) => {
+      const promises = weddings.map((wedding) => fetchWeddingContract(wedding.address));
+      const fetchedSpecificWeddingsData = await Promise.all(promises);
+      console.log(fetchedSpecificWeddingsData);
+      return transformMergeWeddingContractsAndSpecificData(weddings, fetchedSpecificWeddingsData);
+    },
+    [fetchWeddingContract],
+  );
 
   const handleGetFundsAfterDivorce = useCallback(
     async (contractAddress: string, tokensAddresses: IGetFundsModalTokenAddressField[]) => {
@@ -215,6 +283,9 @@ export const useMyWeddingContract = (
 
   return {
     handleGetFundsAfterDivorce,
+    // fetchWeddingContract,
+    getWeddingContractsWithSpecicData,
+
     initWithdrawalRequestUi,
     approveWithdrawalRequestUi,
     rejectWithdrawalRequestUi,
