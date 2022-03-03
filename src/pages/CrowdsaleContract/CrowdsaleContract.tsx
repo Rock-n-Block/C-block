@@ -20,7 +20,7 @@ import { RemovableContractsFormBlock } from 'components';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ICrowdsaleContract } from 'types';
-import { useConnectDropdownModal, useProvider, useShallowSelector } from 'hooks';
+import { useConnectDropdownModal, useWeb3Provider, useShallowSelector } from 'hooks';
 import {
   crowdsaleContractDynamicFormInitialData,
   setCrowdsaleContractForm,
@@ -46,7 +46,7 @@ export const CrowdsaleContract: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
   const { crowdsaleContract } = useShallowSelector(contractFormsSelector.getContractForms);
   const {
     isWalletConnected, connectDropdownModal, openConnectDropdownModal,

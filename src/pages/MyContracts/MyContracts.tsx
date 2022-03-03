@@ -19,7 +19,7 @@ import {
   CompleteModal,
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
-import { useProvider } from 'hooks';
+import { useWeb3Provider } from 'hooks';
 import myContractsActions from 'store/myContracts/actions';
 import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContracts/weddingContracts/actions';
 
@@ -87,7 +87,7 @@ export const MyContracts: FC = () => {
   }, [closeSendTransactionModal]);
 
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
 
   const {
     fetchAndTransformContracts,

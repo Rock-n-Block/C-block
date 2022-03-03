@@ -8,7 +8,7 @@ import {
 import clsx from 'clsx';
 
 import { Preview, YesNoBlock, Copyable } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { routes } from 'appConstants';
 import { deleteCrowdsaleContractForm } from 'store/contractForms/reducer';
@@ -24,7 +24,7 @@ import {
 export const CrowdsaleContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
 
   const handleDelete = useCallback(() => {
     dispatch(deleteCrowdsaleContractForm());

@@ -6,7 +6,7 @@ import { WalletProviders } from 'types';
 import { useWalletConnectorContext } from 'services';
 import user from 'store/user/selectors';
 
-export const useProvider = () => {
+export const useWeb3Provider = () => {
   const { walletService } = useWalletConnectorContext();
   const { wallet } = useShallowSelector(user.getUser);
   const getDefaultProvider = useCallback(

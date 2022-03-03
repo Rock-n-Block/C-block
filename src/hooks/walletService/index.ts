@@ -1,1 +1,1 @@
-export * from './useProvider';
+export * from './useWeb3Provider';

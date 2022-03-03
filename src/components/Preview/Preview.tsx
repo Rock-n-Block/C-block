@@ -12,7 +12,7 @@ import {
 import clsx from 'clsx';
 
 import { Edit, TrashIcon } from 'theme/icons';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector } from 'hooks';
 import actionTypes from 'store/contractForms/actionTypes';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
@@ -52,7 +52,7 @@ export const Preview: FC<PreviewProps> = ({
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
   const { isMainnet } = useShallowSelector(userSelector.getUser);
   const [isDisclaimerOpen, setDisclaimerOpen] = useState(false);
   const [isPaymentOpen, setPaymentOpen] = useState(false);

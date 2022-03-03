@@ -11,7 +11,7 @@ import {
   YesNoBlock,
   Copyable,
 } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector } from 'hooks';
 import {
   TPreviewContractNavigationState, TokenContract,
 } from 'types';
@@ -29,7 +29,7 @@ import { useStyles } from './TokenContractPreview.styles';
 export const TokenContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
   const handleDelete = useCallback(() => {
     dispatch(deleteTokenContractForm());
     navigate(routes.root);

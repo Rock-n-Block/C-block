@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import {
   Preview, Copyable,
 } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector } from 'hooks';
 import { IWillContractDynamicForm, TPreviewContractNavigationState, IWillContract } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -25,7 +25,7 @@ import { useStyles } from './WillContractPreview.styles';
 export const WillContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
   const handleDelete = useCallback(() => {
     dispatch(deleteWillContractForm());
     navigate(routes.root);

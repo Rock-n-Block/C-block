@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Grid, Typography } from '@material-ui/core';
 
 import { Preview, Copyable } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector } from 'hooks';
 import {
   TPreviewContractNavigationState, IWeddingContract,
 } from 'types';
@@ -19,7 +19,7 @@ import { useStyles } from './WeddingContractPreview.styles';
 export const WeddingContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
   const handleDelete = useCallback(() => {
     dispatch(deleteWeddingContractForm());
     navigate(routes.root);

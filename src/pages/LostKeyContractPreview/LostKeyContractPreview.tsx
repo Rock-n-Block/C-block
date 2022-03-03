@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import {
   Preview, Copyable,
 } from 'components';
-import { useProvider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector } from 'hooks';
 import {
   ILostKeyContractDynamicForm, TPreviewContractNavigationState, ILostKeyContract,
 } from 'types';
@@ -26,7 +26,7 @@ import { useStyles } from './LostKeyContractPreview.styles';
 export const LostKeyContractPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getDefaultProvider } = useProvider();
+  const { getDefaultProvider } = useWeb3Provider();
 
   const handleDelete = useCallback(() => {
     dispatch(deleteLostKeyContractForm());
