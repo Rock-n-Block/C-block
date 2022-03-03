@@ -1,23 +1,22 @@
+export type TFieldKeys = 'tokenAddress' | 'amount' | 'addressToSend';
 export interface IField {
-  id: number;
+  key: TFieldKeys;
   label: string;
-  value: string;
 }
+
+export interface IModalFieldsState extends Record<TFieldKeys, string> {}
 
 export const fieldsHelper: IField[] = [
   {
-    id: 0,
+    key: 'tokenAddress',
     label: 'Token address',
-    value: '0x12A64F3D1194b084CBA4829',
   },
   {
-    id: 1,
+    key: 'amount',
     label: 'Amount',
-    value: '35',
   },
   {
-    id: 2,
+    key: 'addressToSend',
     label: 'Sent to',
-    value: '0x12A64F3D1194b084CBA4829',
   },
 ];

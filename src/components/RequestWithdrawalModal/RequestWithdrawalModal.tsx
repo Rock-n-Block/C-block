@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useMemo, VFC,
+  useCallback, useMemo, useState, VFC,
 } from 'react';
 import {
   Typography, Button, Box, TextField,
@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
-import { fieldsHelper } from './RequestWithdrawalModal.helpers';
+import { fieldsHelper, IModalFieldsState, TFieldKeys } from './RequestWithdrawalModal.helpers';
 import { useStyles } from './RequestWithdrawalModal.styles';
 
 interface Props {
@@ -17,13 +17,18 @@ interface Props {
   open?: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: () => void;
+  onAccept?: (modalState: IModalFieldsState) => void;
 }
 
 export const RequestWithdrawalModal: VFC<Props> = ({
   open, setIsModalOpen, onClose, onAccept,
 }) => {
   const classes = useStyles();
+  const [modalState, setModalState] = useState<IModalFieldsState>({
+    addressToSend: '',
+    amount: '',
+    tokenAddress: '',
+  });
   const closeModal = useCallback(() => {
     if (onClose) {
       onClose();
@@ -33,10 +38,17 @@ export const RequestWithdrawalModal: VFC<Props> = ({
 
   const handleAccept = useCallback(() => {
     if (onAccept) {
-      onAccept();
+      onAccept(modalState);
     }
     closeModal();
-  }, [closeModal, onAccept]);
+  }, [closeModal, onAccept, modalState]);
+
+  const handleChange = useCallback((key: TFieldKeys, value: string) => {
+    setModalState({
+      ...modalState,
+      [key]: value,
+    });
+  }, [modalState]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
@@ -56,9 +68,13 @@ export const RequestWithdrawalModal: VFC<Props> = ({
     <Modal className={clsx(classes.root)} open={open} onClose={closeModal} title={title}>
       <Box className={classes.modalInner}>
         <Box>
-          {fieldsHelper.map(({ id, label, value }) => (
-            <Box key={id} className={classes.fieldContainer}>
-              <TextField value={value} label={label} />
+          {fieldsHelper.map(({ key, label }) => (
+            <Box key={key} className={classes.fieldContainer}>
+              <TextField
+                value={modalState[key]}
+                label={label}
+                onChange={(e) => handleChange(key, e.target.value)}
+              />
             </Box>
           ))}
         </Box>
