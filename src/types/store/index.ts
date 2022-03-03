@@ -2,6 +2,7 @@ export * from './ui';
 export * from './user';
 export * from './contractForms.shared';
 export * from './contractForms';
+export * from './myContracts';
 
 export * from './actions';
 export * from './globals';

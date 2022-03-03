@@ -92,7 +92,27 @@ export const MyContracts: FC = () => {
     closeSendTransactionModal();
   }, [closeSendTransactionModal]);
 
+  const dispatch = useDispatch();
+  const { getDefaultProvider } = useProvider();
   const {
+    getMyContractsRequestUi,
+  } = useMyContracts();
+
+  useEffect(() => {
+    getMyContractsRequestUi({
+      onRequestTx,
+      onSuccessTx,
+      onErrorTx,
+      onFinishTx,
+    });
+  }, [getMyContractsRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
+
+  useEffect(() => {
+    dispatch(myContractsActions.getMyContracts({
+      provider: getDefaultProvider(),
+    }));
+  }, [dispatch, getDefaultProvider]);
+
   const {
     initWithdrawalRequestUi,
     approveWithdrawalRequestUi,

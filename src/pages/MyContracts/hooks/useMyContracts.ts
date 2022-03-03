@@ -1,6 +1,11 @@
 import { useCallback } from 'react';
 import { Transaction } from 'web3-core';
 
+import {
+  TPreviewContractNavigationState,
+  ILostKeyContract, ICrowdsaleContract, IWeddingContract, IWillContract, TokenContract, RequestStatus,
+  TRequestUiCallbacks,
+} from 'types';
 import { useWalletConnectorContext } from 'services';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -13,7 +18,9 @@ import {
 import {
   contractsHelper,
 } from 'utils';
+import uiSelector from 'store/ui/selectors';
 import { TDeployContractCreationMethodNames } from 'types/utils/contractsHelper';
+import actionTypes from 'store/myContracts/actionTypes';
 import {
   createContractCards,
   IGetContractsWithContractCreationField,
@@ -172,5 +179,38 @@ export const useMyContracts = () => {
     return newContracts;
   }, [fetchMyContracts, transformMyContractsData, userWalletAddress]);
 
-  return { fetchAndTransformContracts };
+
+  const getMyContractsRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.GET_MY_CONTRACTS),
+  );
+  const getMyContractsRequestUi = useCallback(
+    ({
+      onRequestTx = noop, onSuccessTx = noop, onErrorTx = noop, onFinishTx = noop,
+    }: TRequestUiCallbacks) => {
+      switch (getMyContractsRequestStatus) {
+        case RequestStatus.REQUEST: {
+          onRequestTx();
+          break;
+        }
+        case RequestStatus.SUCCESS: {
+          onSuccessTx();
+          onFinishTx();
+          break;
+        }
+        case RequestStatus.ERROR: {
+          onErrorTx();
+          onFinishTx();
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }, [getMyContractsRequestStatus],
+  );
+
+  return {
+    handleViewContract,
+    getMyContractsRequestUi,
+  };
 };
