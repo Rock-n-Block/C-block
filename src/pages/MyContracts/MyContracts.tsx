@@ -9,6 +9,7 @@ import {
 import clsx from 'clsx';
 
 import { NetTag } from 'containers/Header/components/NetTag';
+import { FullscreenLoader } from 'components/FullscreenLoader';
 // import uiSelector from 'store/ui/selectors';
 // import { useShallowSelector } from 'hooks';
 // import userSelector from 'store/user/selectors';
@@ -55,6 +56,7 @@ export const MyContracts: FC = () => {
   const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState(false);
   const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState(false);
   const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState(false);
+  const [isLoaderOpen, setIsLoaderOpen] = useState(false);
 
   const classes = useStyles();
   // const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
@@ -65,6 +67,7 @@ export const MyContracts: FC = () => {
   const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
   const openRequestWithdrawalModal = useCallback(() => setIsRequestWithdrawalModalOpen(true), []);
   const openGetFundsModal = useCallback(() => setIsGetFundsModalOpen(true), []);
+  const openLoader = useCallback(() => setIsLoaderOpen(true), []);
 
   const [withdrawalActions, setWithdrawalActions] = useState<ComponentProps<typeof RequestWithdrawalModal> | {}>({});
   const [getFundsActions, setGetFundsActions] = useState<ComponentProps<typeof GetFundsModal> | {}>({});
@@ -80,8 +83,7 @@ export const MyContracts: FC = () => {
     });
     // dispatch(apiActions.reset(contractActionType));
   }, [resultModalState]);
-
-  // const { walletService } = useWalletConnectorContext();
+  const closeLoader = useCallback(() => setIsLoaderOpen(false), []);
 
   const onRequestTx = useCallback(() => {
     openSendTransactionModal();
@@ -108,12 +110,10 @@ export const MyContracts: FC = () => {
 
   useEffect(() => {
     getMyContractsRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
+      onRequestTx: openLoader,
+      onFinishTx: closeLoader,
     });
-  }, [getMyContractsRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
+  }, [closeLoader, getMyContractsRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx, openLoader]);
 
   useEffect(() => {
     dispatch(myContractsActions.getMyContracts({
@@ -122,10 +122,6 @@ export const MyContracts: FC = () => {
   }, [dispatch, getDefaultProvider]);
 
   const {
-    // handleInitDivorce,
-    // handleApproveDivorce,
-    // handleRejectDivorce,
-
     handleGetFundsAfterDivorce,
 
     initWithdrawalRequestUi,
@@ -284,7 +280,6 @@ export const MyContracts: FC = () => {
             contractAddress,
           }),
         );
-        // handleInitDivorce(contractAddress);
         // TODO: remove this due to only for development purpose
         setTimeout(() => {
           const newState = cards.map((card) => {
@@ -305,8 +300,6 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'divorceApprove': {
-        // openSendTransactionModal();
-        // handleApproveDivorce(contractAddress);
         dispatch(
           myContractsWeddingsActions.approveDivorce({
             provider: getDefaultProvider(),
@@ -330,8 +323,6 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'divorceReject': {
-        // openSendTransactionModal();
-        // handleRejectDivorce(contractAddress);
         dispatch(
           myContractsWeddingsActions.rejectDivorce({
             provider: getDefaultProvider(),
