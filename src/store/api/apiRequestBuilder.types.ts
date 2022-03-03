@@ -3,7 +3,7 @@ export interface IContractData {
   name: string;
 }
 export interface ICreateTokenContractData extends IContractData {
-  addresses: string[];
+  addresses: Record<string, string>; // Map<ownerName, ownerAddress>
 }
 export interface ICreateLostKeyContractData extends IContractData {
   mails: string[];

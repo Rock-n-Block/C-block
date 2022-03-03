@@ -5,16 +5,18 @@ import clsx from 'clsx';
 
 import { Modal } from 'components/Modal';
 import { SuccessBigIcon, ErrorBigIcon } from 'theme/icons';
+import { COMPLETE_MODAL_DEFAULT_SUCCESS_TEXT } from 'appConstants';
 import { useStyles } from './CompleteModal.styles';
 
 export interface CompleteModalProps {
   open: boolean;
   onClose?: () => void;
   result?: boolean;
+  successText?: string;
 }
 
 export const CompleteModal: VFC<CompleteModalProps> = ({
-  open, onClose, result,
+  open, onClose, result, successText = COMPLETE_MODAL_DEFAULT_SUCCESS_TEXT,
 }) => {
   const classes = useStyles();
 
@@ -23,11 +25,11 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
       <>
         <SuccessBigIcon />
         <Typography className={clsx(classes.desc, 'l')} variant="body1">
-          The transaction was successfully completed
+          {successText}
         </Typography>
       </>
     ),
-    [classes.desc],
+    [classes.desc, successText],
   );
 
   const showError = useMemo(

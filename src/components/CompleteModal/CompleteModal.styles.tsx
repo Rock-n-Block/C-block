@@ -19,6 +19,7 @@ export const useStyles = makeStyles((theme: Theme) => {
     desc: {
       maxWidth: '80%',
       textAlign: 'center',
+      whiteSpace: 'break-spaces',
     },
   });
 });
