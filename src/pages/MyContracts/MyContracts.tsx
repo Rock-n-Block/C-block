@@ -10,9 +10,6 @@ import clsx from 'clsx';
 
 import { NetTag } from 'containers/Header/components/NetTag';
 import { FullscreenLoader } from 'components/FullscreenLoader';
-// import uiSelector from 'store/ui/selectors';
-// import { useShallowSelector } from 'hooks';
-// import userSelector from 'store/user/selectors';
 import {
   SetUpModal,
   ConfirmStatusModal,
@@ -22,20 +19,12 @@ import {
   CompleteModal,
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
-// import { useWalletConnectorContext } from 'services';
-// import {
-//   CROWDSALE_CONTRACT, LOSTKEY_CONTRACT, routes, TOKEN_CONTRACT, WEDDING_CONTRACT, WILL_CONTRACT,
-// } from 'appConstants';
-// import {
-//   // TPreviewContractNavigationState,
-//   // ILostKeyContract, ICrowdsaleContract, IWeddingContract, IWillContract, TokenContract,
-//   RequestStatus,
-// } from 'types';
 import { useProvider } from 'hooks';
 import myContractsActions from 'store/myContracts/actions';
 import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContracts/weddingContracts/actions';
 
 import { ISpecificWeddingContractData } from 'types';
+import { getDivorceStatus, getWithdrawalStatus } from './hooks/useMyWeddingContract.helpers';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -60,7 +49,6 @@ export const MyContracts: FC = () => {
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
 
   const classes = useStyles();
-  // const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
 
   const openSetUpModal = useCallback(() => setIsSetUpModalOpen(true), []);
   const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
@@ -82,7 +70,6 @@ export const MyContracts: FC = () => {
       ...resultModalState,
       open: false,
     });
-    // dispatch(apiActions.reset(contractActionType));
   }, [resultModalState]);
   const closeLoader = useCallback(() => setIsLoaderOpen(false), []);
 
@@ -107,6 +94,8 @@ export const MyContracts: FC = () => {
     handleViewContract,
 
     getMyContractsRequestUi,
+
+    subscribeOnEvents,
   } = useMyContracts();
 
   useEffect(() => {
@@ -412,18 +401,30 @@ export const MyContracts: FC = () => {
     ({ additionalContentRenderType, contractKey, specificContractData }: IContractsCard) => {
       switch (additionalContentRenderType) {
         case 'weddingRequestDivorce': {
+          const { divorceTimestamp } = specificContractData as ISpecificWeddingContractData;
+          const divorceStatus = getDivorceStatus(+divorceTimestamp);
+          console.log('getDirvoce', divorceStatus);
           return (
             <AdditionalContentRequestDivorce
-              countdownUntilTimestamp={10000}
+              countdownUntilTimestamp={+divorceTimestamp}
               onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')}
               onReject={() => buttonClickHandler(contractKey, 'divorceReject')}
             />
           );
         }
         case 'weddingRequestWithdrawal': {
+          const {
+            activeWithdrawalProposal,
+            withdrawalProposalPending,
+          } = specificContractData as ISpecificWeddingContractData;
+          const { timestamp } = activeWithdrawalProposal;
+          const withdrawalStatus = getWithdrawalStatus(
+            withdrawalProposalPending, activeWithdrawalProposal,
+          );
+          console.log('withdrawalStatus', withdrawalStatus);
           return (
             <AdditionalContentRequestWithdrawal
-              countdownUntilTimestamp={1646323273}
+              countdownUntilTimestamp={+timestamp}
               onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')}
               onReject={() => buttonClickHandler(contractKey, 'withdrawalReject')}
             />
@@ -467,12 +468,13 @@ export const MyContracts: FC = () => {
     try {
       const newCards = await fetchAndTransformContracts();
       if (newCards) {
+        subscribeOnEvents(newCards);
         setCards(newCards);
       }
     } catch (err) {
       console.log(err);
     }
-  }, [fetchAndTransformContracts]);
+  }, [fetchAndTransformContracts, subscribeOnEvents]);
 
   useEffect(() => {
     getContracts();

@@ -78,6 +78,8 @@ const store = configureStore({
           myContractsWeddingActionTypes.INIT_WITHDRAWAL,
           myContractsWeddingActionTypes.APPROVE_WITHDRAWAL,
           myContractsWeddingActionTypes.REJECT_WITHDRAWAL,
+
+          myContractsWeddingActionTypes.GET_FUNDS_AFTER_DIVORCE,
         ],
       },
     },

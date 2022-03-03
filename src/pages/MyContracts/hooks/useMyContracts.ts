@@ -167,6 +167,7 @@ export const useMyContracts = () => {
 
   const {
     getWeddingContractsWithSpecificData,
+    subscribeToAllEvents: subscribeToAllWeddingEvents,
   } = useMyWeddingContract();
 
   const transformSpecificContractField = useCallback(
@@ -276,9 +277,25 @@ export const useMyContracts = () => {
     }, [getMyContractsRequestStatus],
   );
 
+  const subscribeOnEvents = useCallback(
+    (data: IContractsCard[]) => {
+      data.forEach(({ address, contractType }) => {
+        if (contractType === 'Wedding contract') {
+          subscribeToAllWeddingEvents(address, (error, event) => {
+            console.log('divorce INIT', event);
+          }, (error, event) => {
+            console.log('withdrawal INIT', event);
+          });
+        }
+      });
+    },
+    [subscribeToAllWeddingEvents],
+  );
+
   return {
     fetchAndTransformContracts,
     handleViewContract,
     getMyContractsRequestUi,
+    subscribeOnEvents,
   };
 };

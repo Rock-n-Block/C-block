@@ -1,11 +1,10 @@
 import { useCallback } from 'react';
 import { noop } from 'lodash';
+import { EventData } from 'web3-eth-contract';
 
 import { useWalletConnectorContext } from 'services';
 import { useShallowSelector } from 'hooks';
 import uiSelector from 'store/ui/selectors';
-// import userSelector from 'store/user/selectors';
-// import { IGetFundsModalTokenAddressField } from 'components/GetFundsModal/GetFundsModal.helpers';
 import { weddingAbi } from 'config/abi';
 import actionTypes from 'store/myContracts/weddingContracts/actionTypes';
 import {
@@ -37,14 +36,12 @@ export const useMyWeddingContract = () => {
       try {
         const callsPromises = [
           'activeWithdrawalProposal',
-          // 'divorceDisputed',
           'divorceProposedBy',
           'divorceTimestamp',
           'withdrawalProposalPending',
         ].map((methodName) => contract.methods[methodName]().call());
         const [
           activeWithdrawalProposal,
-          // divorceDisputed,
           divorceProposedBy,
           divorceTimestamp,
           withdrawalProposalPending,
@@ -290,6 +287,19 @@ export const useMyWeddingContract = () => {
     }, [rejectWithdrawalRequestStatus],
   );
 
+  const subscribeToAllEvents = useCallback(
+    (
+      contractAddress: string,
+      divorceProposedCb: (error: Error, event: EventData) => void,
+      withdrawalProposedCb: (error: Error, event: EventData) => void,
+    ) => {
+      const contract = getWeddingContract(contractAddress);
+      contract.once('DivorceProposed', divorceProposedCb);
+      contract.once('WithdrawalProposed', withdrawalProposedCb);
+    },
+    [getWeddingContract],
+  );
+
   return {
     getFundsAfterDivorceRequestUi,
 
@@ -302,5 +312,7 @@ export const useMyWeddingContract = () => {
     initDivorceRequestUi,
     approveDivorceRequestUi,
     rejectDivorceRequestUi,
+
+    subscribeToAllEvents,
   };
 };

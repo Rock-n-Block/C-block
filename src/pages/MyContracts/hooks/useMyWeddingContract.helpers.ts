@@ -1,5 +1,12 @@
-type TGetDivorceStatusReturnType = 'DIVORCE_NOT_STARTED' | 'DIVORCE_PENDING' | 'DIVORCE_DONE';
-export const getDivorceStatus = (divorceTimestamp: number): TGetDivorceStatusReturnType => {
+import { IWeddingContractActiveWithdrawalProposal } from 'types';
+
+type TGetDivorceStatusReturnType =
+  | 'DIVORCE_NOT_STARTED'
+  | 'DIVORCE_PENDING'
+  | 'DIVORCE_DONE';
+export const getDivorceStatus = (
+  divorceTimestamp: number,
+): TGetDivorceStatusReturnType => {
   if (divorceTimestamp === 0) {
     return 'DIVORCE_NOT_STARTED';
   }
@@ -11,15 +18,10 @@ export const getDivorceStatus = (divorceTimestamp: number): TGetDivorceStatusRet
   return 'DIVORCE_DONE';
 };
 
-interface IWeddingContractActiveWithdrawalProposal {
-  amount: string;
-  proposedBy: string;
-  receiver: string;
-  timestamp: string;
-  token: string;
-}
-
-type IGetWithdrawalStatusReturnType = 'WITHDRAWAL_NOT_STARTED' | 'WITHDRAWAL_DONE' | 'WITHDRAWAL_PENDING';
+type IGetWithdrawalStatusReturnType =
+  | 'WITHDRAWAL_NOT_STARTED'
+  | 'WITHDRAWAL_DONE'
+  | 'WITHDRAWAL_PENDING';
 export const getWithdrawalStatus = (
   withdrawalProposalPending: boolean,
   activeWithdrawalProposal: IWeddingContractActiveWithdrawalProposal,
@@ -29,7 +31,7 @@ export const getWithdrawalStatus = (
   }
 
   // const nowTimestamp = Math.floor(Date.now() / 1000);
-  if (withdrawalProposalPending && !activeWithdrawalProposal) {
+  if (withdrawalProposalPending && activeWithdrawalProposal.timestamp === '0') {
     return 'WITHDRAWAL_DONE';
   }
   return 'WITHDRAWAL_PENDING';
