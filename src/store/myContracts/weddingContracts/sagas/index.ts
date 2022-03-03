@@ -8,6 +8,8 @@ import initDivorceSaga from './initDivorce';
 import approveDivorceSaga from './approveDivorce';
 import rejectDivorceSaga from './rejectDivorce';
 
+import getFundsAfterDivorceSaga from './getFundsAfterDivorce';
+
 export default function* weddingContractsSaga() {
   yield fork(initWithdrawalSaga);
   yield fork(approveWithdrawalSaga);
@@ -16,4 +18,6 @@ export default function* weddingContractsSaga() {
   yield fork(initDivorceSaga);
   yield fork(approveDivorceSaga);
   yield fork(rejectDivorceSaga);
+
+  yield fork(getFundsAfterDivorceSaga);
 }

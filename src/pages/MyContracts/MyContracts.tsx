@@ -33,8 +33,9 @@ import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
 // } from 'types';
 import { useProvider } from 'hooks';
 import myContractsActions from 'store/myContracts/actions';
-import myContractsWeddingsActions from 'store/myContracts/weddingContracts/actions';
+import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContracts/weddingContracts/actions';
 
+import { ISpecificWeddingContractData } from 'types';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -122,7 +123,7 @@ export const MyContracts: FC = () => {
   }, [dispatch, getDefaultProvider]);
 
   const {
-    handleGetFundsAfterDivorce,
+    getFundsAfterDivorceRequestUi,
 
     initWithdrawalRequestUi,
     approveWithdrawalRequestUi,
@@ -131,7 +132,16 @@ export const MyContracts: FC = () => {
     initDivorceRequestUi,
     approveDivorceRequestUi,
     rejectDivorceRequestUi,
-  } = useMyWeddingContract(onSuccessTx, onErrorTx, onFinishTx);
+  } = useMyWeddingContract();
+
+  useEffect(() => {
+    getFundsAfterDivorceRequestUi({
+      onRequestTx,
+      onSuccessTx,
+      onErrorTx,
+      onFinishTx,
+    });
+  }, [getFundsAfterDivorceRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
 
   useEffect(() => {
     initDivorceRequestUi({
@@ -383,8 +393,11 @@ export const MyContracts: FC = () => {
         setGetFundsActions({
           ...getFundsActions,
           onAccept: (tokensAddresses) => {
-            openSendTransactionModal();
-            handleGetFundsAfterDivorce(contractAddress, tokensAddresses);
+            dispatch(getFundsAfterDivorce({
+              provider: getDefaultProvider(),
+              contractAddress,
+              tokensAddresses,
+            }));
           },
         });
         break;
@@ -393,12 +406,12 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, fetchSetUpModalTokenAddresses, getDefaultProvider, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleGetFundsAfterDivorce, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
+  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, fetchSetUpModalTokenAddresses, getDefaultProvider, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
   const renderAdditionalContent = useCallback(
-    ({ additionalContentRenderType, contractKey }: IContractsCard) => {
+    ({ additionalContentRenderType, contractKey, specificContractData }: IContractsCard) => {
       switch (additionalContentRenderType) {
-        case 'weddingRequestDivorce':
+        case 'weddingRequestDivorce': {
           return (
             <AdditionalContentRequestDivorce
               countdownUntilTimestamp={10000}
@@ -406,7 +419,8 @@ export const MyContracts: FC = () => {
               onReject={() => buttonClickHandler(contractKey, 'divorceReject')}
             />
           );
-        case 'weddingRequestWithdrawal':
+        }
+        case 'weddingRequestWithdrawal': {
           return (
             <AdditionalContentRequestWithdrawal
               countdownUntilTimestamp={1646323273}
@@ -414,6 +428,7 @@ export const MyContracts: FC = () => {
               onReject={() => buttonClickHandler(contractKey, 'withdrawalReject')}
             />
           );
+        }
         case 'weddingSuccessfulDivorce':
           return (
             <AdditionalContent>
@@ -465,6 +480,7 @@ export const MyContracts: FC = () => {
 
   return (
     <Container>
+      {isLoaderOpen && <FullscreenLoader />}
       <CompleteModal
         open={resultModalState.open}
         result={resultModalState.result}

@@ -165,17 +165,19 @@ export const useMyContracts = () => {
     [walletService],
   );
 
-  const { getWeddingContractsWithSpecicData } = useMyWeddingContract();
+  const {
+    getWeddingContractsWithSpecificData,
+  } = useMyWeddingContract();
 
   const transformSpecificContractField = useCallback(
     async (data: IGetContractsWithContractCreationField) => {
-      const weddings = await getWeddingContractsWithSpecicData([...data.weddings]);
+      const weddings = await getWeddingContractsWithSpecificData([...data.weddings]);
       return {
         ...data,
         weddings,
       } as IGetContractsWithSpecificField;
     },
-    [getWeddingContractsWithSpecicData],
+    [getWeddingContractsWithSpecificData],
   );
 
   const transformMyContractsData = useCallback(

@@ -12,10 +12,18 @@ export type IWeddingContract = {
   daysForWithdrawalApproval: string;
 } & ContractAdditionalField;
 
+export interface IWeddingContractActiveWithdrawalProposal {
+  amount: string;
+  proposedBy: string;
+  receiver: string;
+  timestamp: string;
+  token: string;
+}
+
 export interface ISpecificWeddingContractData {
-  activeWithdrawalProposal: string;
+  activeWithdrawalProposal: IWeddingContractActiveWithdrawalProposal;
   // divorceDisputed: string;
   divorceProposedBy: string;
   divorceTimestamp: string;
-  withdrawalProposalPending: string;
+  withdrawalProposalPending: boolean;
 }

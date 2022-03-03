@@ -4,11 +4,12 @@ import { noop } from 'lodash';
 import { useWalletConnectorContext } from 'services';
 import { useShallowSelector } from 'hooks';
 import uiSelector from 'store/ui/selectors';
-import userSelector from 'store/user/selectors';
-import { IGetFundsModalTokenAddressField } from 'components/GetFundsModal/GetFundsModal.helpers';
+// import userSelector from 'store/user/selectors';
+// import { IGetFundsModalTokenAddressField } from 'components/GetFundsModal/GetFundsModal.helpers';
 import { weddingAbi } from 'config/abi';
 import actionTypes from 'store/myContracts/weddingContracts/actionTypes';
 import {
+  ISpecificWeddingContractData,
   RequestStatus,
   TRequestUiCallbacks,
 } from 'types';
@@ -16,23 +17,22 @@ import {
   IGetContractsWeddingContractWithContractCreationField, IGetContractsWeddingContractWithSpecificField,
 } from '../MyContracts.helpers';
 
-export interface IFetchWeddingContractReturnType {
-  activeWithdrawalProposal: string;
-  divorceProposedBy: string;
-  divorceTimestamp: string;
-  withdrawalProposalPending: string;
-}
+export interface IFetchWeddingContractReturnType extends ISpecificWeddingContractData {}
 
-export const useMyWeddingContract = (
-  onSuccessTx?: () => void, onErrorTx?: () => void, onFinishTx?: () => void,
-) => {
+export const useMyWeddingContract = () => {
   const { walletService } = useWalletConnectorContext();
-  const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
+
+  const getWeddingContract = useCallback(
+    (contractAddress: string) => {
+      const web3 = walletService.Web3();
+      const contract = new web3.eth.Contract(weddingAbi, contractAddress);
+      return contract;
+    }, [walletService],
+  );
 
   const fetchWeddingContract = useCallback(
     async (contractAddress: string) => {
-      const web3 = walletService.Web3();
-      const contract = new web3.eth.Contract(weddingAbi, contractAddress);
+      const contract = getWeddingContract(contractAddress);
 
       try {
         const callsPromises = [
@@ -48,7 +48,7 @@ export const useMyWeddingContract = (
           divorceProposedBy,
           divorceTimestamp,
           withdrawalProposalPending,
-        ] = await Promise.all<string>(callsPromises);
+        ] = await Promise.all(callsPromises);
         return {
           activeWithdrawalProposal,
           divorceProposedBy,
@@ -59,7 +59,7 @@ export const useMyWeddingContract = (
         console.log(err);
         return undefined;
       }
-    }, [walletService],
+    }, [getWeddingContract],
   );
 
   const transformMergeWeddingContractsAndSpecificData = (
@@ -75,7 +75,7 @@ export const useMyWeddingContract = (
     };
   }) as IGetContractsWeddingContractWithSpecificField[];
 
-  const getWeddingContractsWithSpecicData = useCallback(
+  const getWeddingContractsWithSpecificData = useCallback(
     async (
       weddings: IGetContractsWeddingContractWithContractCreationField[],
     ) => {
@@ -87,24 +87,33 @@ export const useMyWeddingContract = (
     [fetchWeddingContract],
   );
 
-  const handleGetFundsAfterDivorce = useCallback(
-    async (contractAddress: string, tokensAddresses: IGetFundsModalTokenAddressField[]) => {
-      const web3 = walletService.Web3();
-      const contract = new web3.eth.Contract(weddingAbi, contractAddress);
-      try {
-        await contract.methods.getFundsAfterDivorce(
-          tokensAddresses.map(({ address }) => address),
-        ).send({
-          from: userWalletAddress,
-        });
-        onSuccessTx();
-      } catch (err) {
-        console.log(err);
-        onErrorTx();
-      } finally {
-        onFinishTx();
+  const getFundsAfterDivorceRequestStatus = useShallowSelector(
+    uiSelector.getProp(actionTypes.GET_FUNDS_AFTER_DIVORCE),
+  );
+  const getFundsAfterDivorceRequestUi = useCallback(
+    ({
+      onRequestTx = noop, onSuccessTx = noop, onErrorTx = noop, onFinishTx = noop,
+    }: TRequestUiCallbacks) => {
+      switch (getFundsAfterDivorceRequestStatus) {
+        case RequestStatus.REQUEST: {
+          onRequestTx();
+          break;
+        }
+        case RequestStatus.SUCCESS: {
+          onSuccessTx();
+          onFinishTx();
+          break;
+        }
+        case RequestStatus.ERROR: {
+          onErrorTx();
+          onFinishTx();
+          break;
+        }
+        default: {
+          break;
+        }
       }
-    }, [onErrorTx, onFinishTx, onSuccessTx, userWalletAddress, walletService],
+    }, [getFundsAfterDivorceRequestStatus],
   );
 
   const initDivorceRequestStatus = useShallowSelector(
@@ -282,9 +291,9 @@ export const useMyWeddingContract = (
   );
 
   return {
-    handleGetFundsAfterDivorce,
-    // fetchWeddingContract,
-    getWeddingContractsWithSpecicData,
+    getFundsAfterDivorceRequestUi,
+
+    getWeddingContractsWithSpecificData,
 
     initWithdrawalRequestUi,
     approveWithdrawalRequestUi,

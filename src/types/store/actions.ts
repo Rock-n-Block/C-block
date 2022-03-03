@@ -1,3 +1,4 @@
+import { IGetFundsModalTokenAddressField } from 'components/GetFundsModal/GetFundsModal.helpers';
 import { IconType } from 'components/Preview/Preview.helpers';
 import Web3 from 'web3';
 
@@ -41,3 +42,7 @@ export type TRejectWithdrawalAction = TBaseWeddingAction;
 export type TInitDivorceAction = TBaseWeddingAction;
 export type TApproveDivorceAction = TBaseWeddingAction;
 export type TRejectDivorceAction = TBaseWeddingAction;
+
+export type TGetFundsAfterDivorceAction = TBaseWeddingAction & {
+  tokensAddresses: IGetFundsModalTokenAddressField[];
+};
