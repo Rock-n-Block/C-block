@@ -57,7 +57,6 @@ export const transforms = {
         ] = contractSettings.isFreezable ? [
           timestamp[index], timestamp[index] === '0',
         ] : ['', false];
-        console.log('adfdfdfd', frozenUntilDate);
         return {
           address: owners[index],
           name: 'TO BE DEFINED',

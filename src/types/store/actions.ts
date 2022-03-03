@@ -22,3 +22,22 @@ export type TGetCrowdsaleContractAdditionalDataAction = TProvider;
 export type TGetErc20SymbolAction = TProvider & {
   tokenAddress: string;
 };
+
+type TContractAddress = { contractAddress: string };
+
+// My Contracts Slice
+export type TGetMyContractsAction = TProvider;
+
+// My Contracts/Wedding
+type TBaseWeddingAction = TProvider & TContractAddress;
+export type TInitWithdrawalAction = TBaseWeddingAction & {
+  tokenAddress: string,
+  addressToSend: string,
+  amount: string,
+};
+export type TApproveWithdrawalAction = TBaseWeddingAction;
+export type TRejectWithdrawalAction = TBaseWeddingAction;
+
+export type TInitDivorceAction = TBaseWeddingAction;
+export type TApproveDivorceAction = TBaseWeddingAction;
+export type TRejectDivorceAction = TBaseWeddingAction;
