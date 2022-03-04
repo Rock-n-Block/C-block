@@ -18,6 +18,7 @@ import {
 import { bep20Abi } from 'config/abi';
 import { getCeloConfigMetamask } from 'config';
 import { getWeddingContract } from '../weddingContracts/sagas/getWeddingContracts.helpers';
+import { enableWeddingRequestDivorce, enableWeddingRequestWithdrawal } from '../reducer';
 
 export type TFunctionParams = {
   methodName: TDeployContractCreationMethodNames;
@@ -308,8 +309,14 @@ export const subscribeOnEvents = (provider: Web3, data: IContractsCard[]) => {
       console.log('Subscribe to all weddings Events');
       subscribeToAllWeddingEvents(provider, address, (error, event) => {
         console.log('divorce INIT', event);
+        rootStore.store.dispatch(enableWeddingRequestWithdrawal({
+          address,
+        }));
       }, (error, event) => {
         console.log('withdrawal INIT', event);
+        rootStore.store.dispatch(enableWeddingRequestDivorce({
+          address,
+        }));
       });
     }
   });

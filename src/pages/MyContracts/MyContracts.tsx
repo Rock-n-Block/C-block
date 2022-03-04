@@ -23,15 +23,16 @@ import { useShallowSelector, useWeb3Provider } from 'hooks';
 import myContractsActions from 'store/myContracts/actions';
 import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContracts/weddingContracts/actions';
 import myContractsSelector from 'store/myContracts/selectors';
+import userSelector from 'store/user/selectors';
 
 import { ISpecificWeddingContractData } from 'types';
-import { setMyContracts } from 'store/myContracts/reducer';
-import { getDivorceStatus, getWithdrawalStatus } from './hooks/useMyWeddingContract.helpers';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
 import {
-  contractButtonsHelper, IContractsCard, isFoundContractKey, TContractButtonsTypes,
+  isFoundContractKey,
+  IContractsCard,
+  TContractButtonsTypes,
   getContractLogo,
 } from './MyContracts.helpers';
 import {
@@ -43,6 +44,8 @@ export const MyContracts: FC = () => {
   const cards = useShallowSelector(myContractsSelector.getMyContracts);
 
   const { filteredList: filteredCards, searchHandler } = useSearch(cards);
+
+  const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
 
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState(false);
   const [isConfirmLiveStatusModalOpen, setIsConfirmLiveStatusModalOpen] = useState(false);
@@ -199,9 +202,6 @@ export const MyContracts: FC = () => {
     setUpModalProps, setSetUpModalProps,
   ] = useState<ComponentProps<typeof SetUpModal> | {}>({});
 
-  // const isSameDivorceAddress = userAddress.toLowerCase() === divorceProposedBy.toLowerCase() // cannot approve/reject divorce with the same address
-  // const isSameWithdrawalAddress = userAddress.toLowerCase() === activeWithdrawalProposal.proposedBy.toLowerCase(); // cannot approve/reject withdrawal with the same address
-
   const buttonClickHandler = useCallback(async (contractKey: string, type: TContractButtonsTypes) => {
     const card = cards.find((item) => isFoundContractKey(item, contractKey));
     const { address: contractAddress } = card;
@@ -223,20 +223,6 @@ export const MyContracts: FC = () => {
               addressToSend,
               amount,
             }));
-            const newState = cards.map((card) => {
-              if (isFoundContractKey(card, contractKey)) {
-                return {
-                  ...card,
-                  additionalContentRenderType: 'weddingRequestWithdrawal',
-                  contractButtons: [
-                    contractButtonsHelper.viewContract,
-                    // contractButtonsHelper.requestDivorce, // dunno
-                  ],
-                } as typeof card;
-              }
-              return card;
-            });
-            dispatch(setMyContracts(newState));
           },
         });
         break;
@@ -246,19 +232,6 @@ export const MyContracts: FC = () => {
           provider: getDefaultProvider(),
           contractAddress,
         }));
-        const newState = cards.map((card) => {
-          if (isFoundContractKey(card, contractKey)) {
-            return {
-              ...card,
-              additionalContentRenderType: 'weddingSuccessfulWithdrawal',
-              contractButtons: [
-                contractButtonsHelper.viewContract,
-              ],
-            } as typeof card;
-          }
-          return card;
-        });
-        dispatch(setMyContracts(newState));
         break;
       }
       case 'withdrawalReject': {
@@ -275,23 +248,6 @@ export const MyContracts: FC = () => {
             contractAddress,
           }),
         );
-        // TODO: remove this due to only for development purpose
-        setTimeout(() => {
-          const newState = cards.map((card) => {
-            if (isFoundContractKey(card, contractKey)) {
-              return {
-                ...card,
-                additionalContentRenderType: 'weddingRequestDivorce',
-                contractButtons: [
-                  contractButtonsHelper.viewContract,
-                ],
-              } as typeof card;
-            }
-            return card;
-          });
-          dispatch(setMyContracts(newState));
-        }, 2000);
-        openSendTransactionModal();
         break;
       }
       case 'divorceApprove': {
@@ -301,20 +257,6 @@ export const MyContracts: FC = () => {
             contractAddress,
           }),
         );
-        const newState = cards.map((card) => {
-          if (isFoundContractKey(card, contractKey)) {
-            return {
-              ...card,
-              additionalContentRenderType: 'weddingSuccessfulDivorce',
-              contractButtons: [
-                contractButtonsHelper.viewContract,
-                contractButtonsHelper.getFunds,
-              ],
-            } as typeof card;
-          }
-          return card;
-        });
-        dispatch(setMyContracts(newState));
         break;
       }
       case 'divorceReject': {
@@ -393,36 +335,42 @@ export const MyContracts: FC = () => {
     }
   }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, fetchSetUpModalTokenAddresses, getDefaultProvider, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
+  const isSameDivorceAddress = useCallback((divorceProposedBy: string) => userWalletAddress.toLowerCase() === divorceProposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject divorce with the same address
+  const isSameWithdrawalAddress = useCallback((proposedBy: string) => userWalletAddress.toLowerCase() === proposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject withdrawal with the same address
+
   const renderAdditionalContent = useCallback(
     ({ additionalContentRenderType, contractKey, specificContractData }: IContractsCard) => {
       switch (additionalContentRenderType) {
         case 'weddingRequestDivorce': {
-          const { divorceTimestamp } = specificContractData as ISpecificWeddingContractData;
-          const divorceStatus = getDivorceStatus(+divorceTimestamp);
-          console.log('getDirvoce', divorceStatus);
+          const {
+            divorceTimestamp,
+            divorceProposedBy,
+          } = specificContractData as ISpecificWeddingContractData;
+          // const divorceStatus = getDivorceStatus(+divorceTimestamp);
+          // console.log('getDirvoce', divorceStatus);
           return (
             <AdditionalContentRequestDivorce
               countdownUntilTimestamp={+divorceTimestamp}
-              onApprove={() => buttonClickHandler(contractKey, 'divorceApprove')}
-              onReject={() => buttonClickHandler(contractKey, 'divorceReject')}
+              onApprove={isSameDivorceAddress(divorceProposedBy) ? undefined : () => buttonClickHandler(contractKey, 'divorceApprove')}
+              onReject={isSameDivorceAddress(divorceProposedBy) ? undefined : () => buttonClickHandler(contractKey, 'divorceReject')}
             />
           );
         }
         case 'weddingRequestWithdrawal': {
           const {
             activeWithdrawalProposal,
-            withdrawalProposalPending,
+            // withdrawalProposalPending,
           } = specificContractData as ISpecificWeddingContractData;
-          const { timestamp } = activeWithdrawalProposal;
-          const withdrawalStatus = getWithdrawalStatus(
-            withdrawalProposalPending, activeWithdrawalProposal,
-          );
-          console.log('withdrawalStatus', withdrawalStatus);
+          const { timestamp, proposedBy } = activeWithdrawalProposal;
+          // const withdrawalStatus = getWithdrawalStatus(
+          //   withdrawalProposalPending, activeWithdrawalProposal,
+          // );
+          // console.log('withdrawalStatus', withdrawalStatus);
           return (
             <AdditionalContentRequestWithdrawal
               countdownUntilTimestamp={+timestamp}
-              onApprove={() => buttonClickHandler(contractKey, 'withdrawalApprove')}
-              onReject={() => buttonClickHandler(contractKey, 'withdrawalReject')}
+              onApprove={isSameWithdrawalAddress(proposedBy) ? undefined : () => buttonClickHandler(contractKey, 'withdrawalApprove')}
+              onReject={isSameWithdrawalAddress(proposedBy) ? undefined : () => buttonClickHandler(contractKey, 'withdrawalReject')}
             />
           );
         }
@@ -457,7 +405,7 @@ export const MyContracts: FC = () => {
         default:
           return null;
       }
-    }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText],
+    }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText, isSameDivorceAddress, isSameWithdrawalAddress],
   );
 
   useEffect(() => {

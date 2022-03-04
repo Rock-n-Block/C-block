@@ -11,6 +11,7 @@ import {
 } from 'types';
 import userSelector from 'store/user/selectors';
 import { weddingAbi } from 'config/abi';
+import { enableWeddingSuccessfulDivorce } from 'store/myContracts/reducer';
 import actionTypes from '../actionTypes';
 import { approveDivorce } from '../actions';
 
@@ -30,6 +31,9 @@ function* approveDivorceSaga({
       },
     );
 
+    yield put(enableWeddingSuccessfulDivorce({
+      contractAddress,
+    }));
     yield put(apiActions.success(type));
   } catch (err) {
     console.log(err);

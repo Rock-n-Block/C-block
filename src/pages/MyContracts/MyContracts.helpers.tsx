@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   IGetContractsCrowdsaleContract,
   IGetContractsLostKeyContract,
@@ -13,8 +14,9 @@ import {
   WeddingRingIcon,
   WillContract,
 } from 'theme/icons';
-import { TMyContracts, TSpecificContractData } from 'types';
+import { ISpecificWeddingContractData, TMyContracts, TSpecificContractData } from 'types';
 import { formattedDate } from 'utils';
+import { getDivorceStatus, getWithdrawalStatus } from './hooks/useMyWeddingContract.helpers';
 
 export type TContractButtonsTypes =
   | 'viewContract'
@@ -185,6 +187,11 @@ export const isFoundContractKey = (
   contractKeyToBeFound: string,
 ) => card.contractKey === contractKeyToBeFound;
 
+export const isFoundContract = (
+  card: IContractsCard,
+  contractAddress: string,
+) => card.address.toLowerCase() === contractAddress.toLowerCase();
+
 const createContractCard = (
   contractName: string,
   address: string,
@@ -282,25 +289,61 @@ const createWeddingCard = ({
   contractCreationData,
   specificContractData,
 }: IGetContractsWeddingContractWithSpecificField) => {
-  // const specificWeddingContractData = specificContractData as ISpecificWeddingContractData;
-  const anotherContractButtons: TContractButtons = [
-    contractButtonsHelper.requestWithdrawal,
-    contractButtonsHelper.requestDivorce,
-  ];
-  // if (!specificWeddingContractData.withdrawalProposalPending &&
-  //   !specificWeddingContractData.divorceDisputed) {
-  //   anotherContractButtons.push(contractButtonsHelper.requestWithdrawal);
-  // }
+  const {
+    activeWithdrawalProposal,
+    withdrawalProposalPending,
+  } = specificContractData as ISpecificWeddingContractData;
+  const withdrawalStatus = getWithdrawalStatus(
+    withdrawalProposalPending, activeWithdrawalProposal,
+  );
 
-  // if (!specificWeddingContractData.divorceDisputed) {
-  //   anotherContractButtons.push(contractButtonsHelper.requestDivorce);
-  // }
+  const { divorceTimestamp } = specificContractData as ISpecificWeddingContractData;
+  const divorceStatus = getDivorceStatus(+divorceTimestamp);
+
+  console.log(withdrawalStatus, divorceStatus);
+
+  const anotherContractButtons: TContractButtons = [
+    // FOR DEBUG: TODO:
+    // contractButtonsHelper.requestWithdrawal,
+    // contractButtonsHelper.requestDivorce,
+  ];
+  if (divorceStatus === 'DIVORCE_NOT_STARTED' && withdrawalStatus === 'WITHDRAWAL_NOT_STARTED') {
+    anotherContractButtons.push(contractButtonsHelper.requestWithdrawal);
+  }
+
+  switch (divorceStatus) {
+    case 'DIVORCE_NOT_STARTED':
+      anotherContractButtons.push(contractButtonsHelper.requestDivorce);
+      break;
+    case 'DIVORCE_DONE':
+      anotherContractButtons.push(contractButtonsHelper.getFunds);
+      break;
+    default:
+      break;
+  }
+
+  const additionalContentRenderType = (() => {
+    if (divorceStatus === 'DIVORCE_DONE') {
+      return 'weddingSuccessfulDivorce';
+    }
+    if (withdrawalStatus === 'WITHDRAWAL_DONE') {
+      return 'weddingSuccessfulWithdrawal';
+    }
+    if (divorceStatus === 'DIVORCE_PENDING') {
+      return 'weddingRequestDivorce';
+    }
+    if (withdrawalStatus === 'WITHDRAWAL_PENDING') {
+      return 'weddingRequestWithdrawal';
+    }
+    return undefined;
+  })() as TAdditionalContentRenderType;
 
   return {
     ...createContractCard(
       name, address, test_node, createdAt, contractCreationData, specificContractData,
     ),
     contractType: 'Wedding contract',
+    additionalContentRenderType,
     contractButtons: [
       contractButtonsHelper.viewContract,
       ...anotherContractButtons,
@@ -310,16 +353,6 @@ const createWeddingCard = ({
 
 export const createContractCards = (data: IGetContractsWithSpecificField) => [
   ...data.crowdsales.map((crowdsale) => createCrowdsaleCard(crowdsale)),
-  createCrowdsaleCard({
-    // TODO: remove this when cb-132 is ready
-    name: 'MOCK_CROWDSALE',
-    createdAt: Date.now() / 1000,
-    tx_hash: '0x000000',
-    address: '0x11111',
-    test_node: false,
-    // contractCreationData: {},
-    specificContractData: {},
-  }),
   ...data.tokens.map((token) => createTokenCard(token)),
   ...data.lostkeys.map((lostkey) => createLostkeyCard(lostkey)),
   ...data.lastwills.map((lastwill) => createWillCard(lastwill)),

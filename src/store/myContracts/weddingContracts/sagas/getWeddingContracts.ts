@@ -46,7 +46,7 @@ export function* getWeddingContractsWithSpecificDataSaga(
     fetchWeddingContractSaga, provider, wedding.address,
   ));
   const fetchedSpecificWeddingsData = yield all(promises);
-  console.log(fetchedSpecificWeddingsData);
+
   return transformMergeWeddingContractsAndSpecificData(
     weddings,
     fetchedSpecificWeddingsData,

@@ -6,6 +6,7 @@ import {
 } from 'redux-saga/effects';
 
 import apiActions from 'store/ui/actions';
+import { enableWeddingSuccessfulWithdrawal } from 'store/myContracts/reducer';
 import {
   UserState,
 } from 'types';
@@ -30,6 +31,9 @@ function* approveWithdrawalSaga({
       },
     );
 
+    yield put(enableWeddingSuccessfulWithdrawal({
+      contractAddress,
+    }));
     yield put(apiActions.success(type));
   } catch (err) {
     console.log(err);

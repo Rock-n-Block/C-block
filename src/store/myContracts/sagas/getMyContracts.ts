@@ -199,44 +199,6 @@ function* getMyContractsSaga({
 }: ReturnType<typeof getMyContracts>) {
   try {
     yield put(apiActions.request(type));
-    // const crowdsaleContract: ICrowdsaleContract = yield select(
-    //   contractFormsSelector.getCrowdsaleContract,
-    // );
-    // const { isMainnet, address: myAddress }: UserState = yield select(
-    //   userSelector.getUser,
-    // );
-
-    // const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
-
-    // const crowdsaleFactoryContract = new provider.eth.Contract(
-    //   crowdsaleFactoryContractData.abi,
-    //   crowdsaleFactoryContractData.address,
-    // );
-
-    // const celoTokenContract = new provider.eth.Contract(
-    //   bep20Abi,
-    //   celoAddress,
-    // );
-
-    // const allowance = yield call(
-    //   celoTokenContract.methods.allowance(
-    //     myAddress,
-    //     crowdsaleFactoryContractData.address,
-    //   ).call,
-    // );
-
-    // const price: string = yield call(getContractCreationPriceSaga, {
-    //   type: actionTypes.GET_CONTRACT_CREATION_PRICE,
-    //   payload: {
-    //     provider,
-    //     contractType: 'crowdsale',
-    //   },
-    // });
-
-    // yield call(baseApi.createCrowdsaleContract, {
-    //   tx_hash: transactionHash,
-    //   name: contractName,
-    // });
 
     const newCards = yield call(fetchAndTransformContractsSaga, provider);
     if (newCards) {

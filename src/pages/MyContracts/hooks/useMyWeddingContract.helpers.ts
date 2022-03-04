@@ -30,7 +30,6 @@ export const getWithdrawalStatus = (
     return 'WITHDRAWAL_NOT_STARTED';
   }
 
-  // const nowTimestamp = Math.floor(Date.now() / 1000);
   if (withdrawalProposalPending && activeWithdrawalProposal.timestamp === '0') {
     return 'WITHDRAWAL_DONE';
   }
