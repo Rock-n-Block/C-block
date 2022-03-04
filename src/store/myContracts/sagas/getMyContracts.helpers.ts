@@ -5,7 +5,6 @@ import { EventData } from 'web3-eth-contract';
 import {
   IContractsCard, IGetContractsCrowdsaleContractWithCreatedAtField, IGetContractsLostKeyContractWithCreatedAtField, IGetContractsTokenContractWithCreatedAtField, TGetContractsWithCreatedAtField,
 } from 'pages/MyContracts/MyContracts.helpers';
-// eslint-disable-next-line import/no-cycle
 import { TDeployContractCreationMethodNames, TDeployCrowdsaleContractCreationMethodNames, TDeployTokenContractCreationMethodNames } from 'types/utils/contractsHelper';
 import {
   ICrowdsaleContract, ILostKeyContract, IWeddingContract, IWillContract, TokenContract,
@@ -14,7 +13,6 @@ import rootStore from 'store/configureStore';
 import {
   contractsHelper, convertIntervalFromSeconds, formattedDate, getTokenAmountDisplay,
 } from 'utils';
-// import { all, call } from '@redux-saga/core/effects';
 import { bep20Abi } from 'config/abi';
 import { getCeloConfigMetamask } from 'config';
 import { getWeddingContract } from '../weddingContracts/sagas/getWeddingContracts.helpers';

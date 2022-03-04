@@ -13,13 +13,13 @@ import { Modal } from 'components/Modal';
 import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { bep20Abi } from 'config/abi';
 import { useWalletConnectorContext } from 'services';
+import { incrementLastId } from 'utils/identifactors';
 import { PlusIcon } from '../../theme/icons';
 import {
   createAddressesArr,
   ISetUpModalTokenAddressField,
   ISetUpModalTokenAddress,
   initTokensAddressesArr,
-  incrementId,
 } from './SetUpModal.helpers';
 import { useStyles } from './SetUpModal.styles';
 
@@ -75,7 +75,7 @@ export const SetUpModal: VFC<Props> = ({
   const addAddressHandler = useCallback(() => {
     setAddresses([
       ...addresses,
-      { id: incrementId(addresses), address: '', allowance: '' },
+      { id: incrementLastId(addresses), address: '', allowance: '' },
     ]);
   }, [addresses]);
 

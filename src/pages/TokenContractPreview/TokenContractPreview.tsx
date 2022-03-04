@@ -62,7 +62,7 @@ export const TokenContractPreview = () => {
       launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
-      readonly={state?.contractPreview?.readonly}
+      isReadonly={state?.contractPreview?.isReadonly}
     >
       {staticTokenContractPreviewHelpers.map((previewBlock, index) => (
         // eslint-disable-next-line react/no-array-index-key

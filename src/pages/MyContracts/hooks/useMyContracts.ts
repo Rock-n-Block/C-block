@@ -22,7 +22,7 @@ export const useMyContracts = () => {
   const handleViewContract = useCallback((card: IContractsCard) => {
     const routeState = {
       contractPreview: {
-        readonly: true,
+        isReadonly: true,
       },
     } as TPreviewContractNavigationState;
     let routeParam = '';

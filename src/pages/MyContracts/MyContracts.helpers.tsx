@@ -16,7 +16,9 @@ import {
 } from 'theme/icons';
 import { ISpecificWeddingContractData, TMyContracts, TSpecificContractData } from 'types';
 import { formattedDate } from 'utils';
-import { getDivorceStatus, getWithdrawalStatus } from './hooks/useMyWeddingContract.helpers';
+import {
+  DivorceStatusesEnum, getDivorceStatus, getWithdrawalStatus, WithdrawalStatusesEnum,
+} from './hooks/useMyWeddingContract.helpers';
 
 export type TContractButtonsTypes =
   | 'viewContract'
@@ -300,39 +302,29 @@ const createWeddingCard = ({
   const { divorceTimestamp } = specificContractData as ISpecificWeddingContractData;
   const divorceStatus = getDivorceStatus(+divorceTimestamp);
 
-  console.log(withdrawalStatus, divorceStatus);
-
-  const anotherContractButtons: TContractButtons = [
-    // FOR DEBUG: TODO:
-    // contractButtonsHelper.requestWithdrawal,
-    // contractButtonsHelper.requestDivorce,
-  ];
-  if (divorceStatus === 'DIVORCE_NOT_STARTED' && withdrawalStatus === 'WITHDRAWAL_NOT_STARTED') {
+  const anotherContractButtons: TContractButtons = [];
+  if (divorceStatus === DivorceStatusesEnum.DIVORCE_NOT_STARTED &&
+    withdrawalStatus === WithdrawalStatusesEnum.WITHDRAWAL_NOT_STARTED) {
     anotherContractButtons.push(contractButtonsHelper.requestWithdrawal);
   }
-
-  switch (divorceStatus) {
-    case 'DIVORCE_NOT_STARTED':
-      anotherContractButtons.push(contractButtonsHelper.requestDivorce);
-      break;
-    case 'DIVORCE_DONE':
-      anotherContractButtons.push(contractButtonsHelper.getFunds);
-      break;
-    default:
-      break;
+  if (divorceStatus === DivorceStatusesEnum.DIVORCE_NOT_STARTED) {
+    anotherContractButtons.push(contractButtonsHelper.requestDivorce);
+  }
+  if (divorceStatus === DivorceStatusesEnum.DIVORCE_DONE) {
+    anotherContractButtons.push(contractButtonsHelper.getFunds);
   }
 
   const additionalContentRenderType = (() => {
-    if (divorceStatus === 'DIVORCE_DONE') {
+    if (divorceStatus === DivorceStatusesEnum.DIVORCE_DONE) {
       return 'weddingSuccessfulDivorce';
     }
-    if (withdrawalStatus === 'WITHDRAWAL_DONE') {
+    if (withdrawalStatus === WithdrawalStatusesEnum.WITHDRAWAL_DONE) {
       return 'weddingSuccessfulWithdrawal';
     }
-    if (divorceStatus === 'DIVORCE_PENDING') {
+    if (divorceStatus === DivorceStatusesEnum.DIVORCE_PENDING) {
       return 'weddingRequestDivorce';
     }
-    if (withdrawalStatus === 'WITHDRAWAL_PENDING') {
+    if (withdrawalStatus === WithdrawalStatusesEnum.WITHDRAWAL_PENDING) {
       return 'weddingRequestWithdrawal';
     }
     return undefined;

@@ -1,21 +1,24 @@
 import {
   useCallback, useEffect, useRef, useState,
 } from 'react';
+import { TNullable } from 'types';
+
+interface IUseCountdownTimer {
+  startTime: number; // unix timestamp as seconds
+  period?: number; // unix timestamp as seconds
+  endTime?: number; // unix timestamp as seconds
+  disabled?: boolean;
+}
 
 export const useCountdownTimer = ({
   startTime,
   period,
   endTime = Date.now(),
   disabled = false,
-}: {
-  startTime: number; // unix timestamp as seconds
-  period?: number; // unix timestamp as seconds
-  endTime?: number; // unix timestamp as seconds
-  disabled?: boolean;
-}): {
-  secondsRemaining: number | null;
+}: IUseCountdownTimer): {
+  secondsRemaining: TNullable<number>;
 } => {
-  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
+  const [secondsRemaining, setSecondsRemaining] = useState<TNullable<number>>(null);
   const [currentSeconds, setCurrentSeconds] = useState(startTime);
 
   const timerIntervalIdRef = useRef<NodeJS.Timeout>();
@@ -31,27 +34,25 @@ export const useCountdownTimer = ({
   }, []);
 
   useEffect(() => {
-    if (!disabled) {
-      let endTimeValidated: number; // if period presented -> find endTime by period, OR use endTime
-      if (period) {
-        endTimeValidated = startTime + period;
-      } else {
-        endTimeValidated = endTime;
-      }
-
-      const secondsRemainingCalc = endTimeValidated - currentSeconds;
-      const hasTimerFinished = secondsRemainingCalc > 0;
-
-      timerIntervalIdRef.current = setTimeout(tick, 1000);
-
-      if (hasTimerFinished) {
-        setSecondsRemaining(secondsRemainingCalc);
-      } else {
-        cleanUpTimer();
-      }
-
-      return cleanUpTimer;
+    if (disabled) return cleanUpTimer();
+    let endTimeValidated: number; // if period presented -> find endTime by period, OR use endTime
+    if (period) {
+      endTimeValidated = startTime + period;
+    } else {
+      endTimeValidated = endTime;
     }
+
+    const secondsRemainingCalc = endTimeValidated - currentSeconds;
+    const hasTimerFinished = secondsRemainingCalc > 0;
+
+    timerIntervalIdRef.current = setTimeout(tick, 1000);
+
+    if (hasTimerFinished) {
+      setSecondsRemaining(secondsRemainingCalc);
+    } else {
+      cleanUpTimer();
+    }
+
     return cleanUpTimer;
   }, [
     startTime,

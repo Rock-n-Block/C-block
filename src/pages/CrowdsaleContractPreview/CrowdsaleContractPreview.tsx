@@ -58,7 +58,7 @@ export const CrowdsaleContractPreview = () => {
       launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
-      readonly={state?.contractPreview?.readonly}
+      isReadonly={state?.contractPreview?.isReadonly}
     >
       <Box paddingTop={2} paddingBottom={2}>
         <Typography

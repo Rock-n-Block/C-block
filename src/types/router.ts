@@ -5,7 +5,7 @@ import {
 
 interface IPreviewContractNavigationState {
   contractPreview: {
-    readonly: boolean;
+    isReadonly: boolean;
     data: TMyContracts;
   };
 }

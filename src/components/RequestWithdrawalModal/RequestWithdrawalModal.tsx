@@ -43,10 +43,10 @@ export const RequestWithdrawalModal: VFC<Props> = ({
     closeModal();
   }, [closeModal, onAccept, modalState]);
 
-  const handleChange = useCallback((key: TFieldKeys, value: string) => {
+  const handleChange = useCallback((key: TFieldKeys) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setModalState({
       ...modalState,
-      [key]: value,
+      [key]: e.target.value,
     });
   }, [modalState]);
 
@@ -73,7 +73,7 @@ export const RequestWithdrawalModal: VFC<Props> = ({
               <TextField
                 value={modalState[key]}
                 label={label}
-                onChange={(e) => handleChange(key, e.target.value)}
+                onChange={handleChange(key)}
               />
             </Box>
           ))}

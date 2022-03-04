@@ -60,7 +60,7 @@ export const LostKeyContractPreview = () => {
       launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
-      readonly={state?.contractPreview?.readonly}
+      isReadonly={state?.contractPreview?.isReadonly}
     >
       {staticLostKeyContractPreviewHelpers.map((sections) => (
         <Box key={JSON.stringify(sections)} className={classes.section}>

@@ -37,11 +37,11 @@ export interface PreviewProps {
   launchAction: () => void;
   editAction: () => void;
   deleteAction: () => void;
-  readonly?: boolean;
+  isReadonly?: boolean;
 }
 
 export const Preview: FC<PreviewProps> = ({
-  readonly = false,
+  isReadonly = false,
   launchAction,
   editAction,
   deleteAction,
@@ -212,7 +212,7 @@ export const Preview: FC<PreviewProps> = ({
         <Box className={classes.stamp} />
       </Box>
       {
-        !readonly && (
+        !isReadonly && (
           <Box className={classes.controls}>
             <Button
               variant="outlined"

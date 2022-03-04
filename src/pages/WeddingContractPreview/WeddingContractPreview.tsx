@@ -52,7 +52,7 @@ export const WeddingContractPreview = () => {
       launchAction={handleCreateContract}
       editAction={handleEdit}
       deleteAction={handleDelete}
-      readonly={state?.contractPreview?.readonly}
+      isReadonly={state?.contractPreview?.isReadonly}
     >
       {staticWeddingContractPreviewHelpers.map((previewBlock, index) => (
         <Box className={classes.tokenContractInfoBlock} key={index}>

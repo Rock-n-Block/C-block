@@ -10,7 +10,11 @@ import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { PlusIcon } from 'theme/icons';
-import { IGetFundsModalTokenAddressField, fieldsHelper, incrementId } from './GetFundsModal.helpers';
+import { incrementLastId } from 'utils/identifactors';
+import {
+  IGetFundsModalTokenAddressField,
+  initialFieldsState,
+} from './GetFundsModal.helpers';
 import { useStyles } from './GetFundsModal.styles';
 
 export interface Props {
@@ -29,21 +33,24 @@ export const GetFundsModal: VFC<Props> = ({
 }) => {
   const classes = useStyles();
   const [addresses, setAddresses] =
-    useState<IGetFundsModalTokenAddressField[]>(fieldsHelper);
+    useState<IGetFundsModalTokenAddressField[]>(initialFieldsState);
 
   const addAddressHandler = useCallback(() => {
     setAddresses([
       ...addresses,
-      { id: incrementId(addresses), address: '' },
+      { id: incrementLastId(addresses), address: '' },
     ]);
   }, [addresses]);
 
-  const handleChange = (value: IGetFundsModalTokenAddressField) => {
-    setAddresses(addresses.map((item) => (item.id === value.id ? value : item)));
+  const handleChange = (id: number) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setAddresses(addresses.map((item) => (item.id === id ? {
+      id,
+      address: e.target.value,
+    } : item)));
   };
 
   const clearInputs = useCallback(() => {
-    setAddresses(fieldsHelper);
+    setAddresses(initialFieldsState);
   }, []);
 
   const closeModal = useCallback(() => {
@@ -98,10 +105,7 @@ export const GetFundsModal: VFC<Props> = ({
             <TextField
               value={address}
               label="Token address"
-              onChange={(e) => handleChange({
-                id,
-                address: e.target.value,
-              })}
+              onChange={handleChange(id)}
             />
           </Box>
         ))}
