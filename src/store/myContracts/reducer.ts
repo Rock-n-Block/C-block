@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IContractsCard } from 'pages/MyContracts/MyContracts.helpers';
 import {
-  // ContractFormsState,
-  // TokenContract,
   MyContractsState,
 } from 'types';
 
@@ -12,22 +11,16 @@ export const initialState: MyContractsState = {
 export const myContractsReducer = createSlice({
   name: 'myContracts',
   initialState,
-  reducers: { // TODO: remove this shit
-    setMyContracts: (state, action: PayloadAction<{}>) => ({
+  reducers: {
+    setMyContracts: (state, action: PayloadAction<IContractsCard[]>) => ({
       ...state,
-      tokenContract: action.payload,
-    }),
-    // TODO: remove this shit
-    deleteTokenContractForm: (state) => ({
-      ...state,
-      // tokenContract: initialState.tokenContract,
+      contracts: action.payload,
     }),
   },
 });
 
 export const {
   setMyContracts,
-  deleteTokenContractForm,
 } = myContractsReducer.actions;
 
 export default myContractsReducer.reducer;

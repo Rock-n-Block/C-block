@@ -19,17 +19,20 @@ import {
   CompleteModal,
 } from 'components';
 import { CheckmarkCircleIcon, SearchIcon } from 'theme/icons';
-import { useWeb3Provider } from 'hooks';
+import { useShallowSelector, useWeb3Provider } from 'hooks';
 import myContractsActions from 'store/myContracts/actions';
 import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContracts/weddingContracts/actions';
+import myContractsSelector from 'store/myContracts/selectors';
 
 import { ISpecificWeddingContractData } from 'types';
+import { setMyContracts } from 'store/myContracts/reducer';
 import { getDivorceStatus, getWithdrawalStatus } from './hooks/useMyWeddingContract.helpers';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
 import {
   contractButtonsHelper, IContractsCard, isFoundContractKey, TContractButtonsTypes,
+  getContractLogo,
 } from './MyContracts.helpers';
 import {
   useSearch, useMyContracts, useMyWeddingContract, useMyLostKeyContract,
@@ -37,7 +40,8 @@ import {
 import { useStyles } from './MyContracts.styles';
 
 export const MyContracts: FC = () => {
-  const [cards, setCards] = useState<IContractsCard[]>([]);
+  const cards = useShallowSelector(myContractsSelector.getMyContracts);
+
   const { filteredList: filteredCards, searchHandler } = useSearch(cards);
 
   const [isSetUpModalOpen, setIsSetUpModalOpen] = useState(false);
@@ -90,12 +94,10 @@ export const MyContracts: FC = () => {
   const { getDefaultProvider } = useWeb3Provider();
 
   const {
-    fetchAndTransformContracts,
     handleViewContract,
 
     getMyContractsRequestUi,
 
-    subscribeOnEvents,
   } = useMyContracts();
 
   useEffect(() => {
@@ -104,12 +106,6 @@ export const MyContracts: FC = () => {
       onFinishTx: closeLoader,
     });
   }, [closeLoader, getMyContractsRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx, openLoader]);
-
-  useEffect(() => {
-    dispatch(myContractsActions.getMyContracts({
-      provider: getDefaultProvider(),
-    }));
-  }, [dispatch, getDefaultProvider]);
 
   const {
     getFundsAfterDivorceRequestUi,
@@ -240,7 +236,7 @@ export const MyContracts: FC = () => {
               }
               return card;
             });
-            setCards(newState);
+            dispatch(setMyContracts(newState));
           },
         });
         break;
@@ -262,7 +258,7 @@ export const MyContracts: FC = () => {
           }
           return card;
         });
-        setCards(newState);
+        dispatch(setMyContracts(newState));
         break;
       }
       case 'withdrawalReject': {
@@ -293,7 +289,7 @@ export const MyContracts: FC = () => {
             }
             return card;
           });
-          setCards(newState);
+          dispatch(setMyContracts(newState));
         }, 2000);
         openSendTransactionModal();
         break;
@@ -318,7 +314,7 @@ export const MyContracts: FC = () => {
           }
           return card;
         });
-        setCards(newState);
+        dispatch(setMyContracts(newState));
         break;
       }
       case 'divorceReject': {
@@ -464,21 +460,11 @@ export const MyContracts: FC = () => {
     }, [buttonClickHandler, classes.successfulAdditionalContent, classes.successfulAdditionalContentText],
   );
 
-  const getContracts = useCallback(async () => {
-    try {
-      const newCards = await fetchAndTransformContracts();
-      if (newCards) {
-        subscribeOnEvents(newCards);
-        setCards(newCards);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }, [fetchAndTransformContracts, subscribeOnEvents]);
-
   useEffect(() => {
-    getContracts();
-  }, [getContracts]);
+    dispatch(myContractsActions.getMyContracts({
+      provider: getDefaultProvider(),
+    }));
+  }, [dispatch, getDefaultProvider]);
 
   return (
     <Container>
@@ -537,7 +523,7 @@ export const MyContracts: FC = () => {
           contractName,
           contractDate,
           contractType,
-          contractLogo,
+          // contractLogo,
           contractButtons,
           isTestnet,
         }, cardIndex) => (
@@ -557,7 +543,7 @@ export const MyContracts: FC = () => {
             </Typography>
 
             <Box className={classes.contractTitle}>
-              <IconButton>{contractLogo}</IconButton>
+              <IconButton>{getContractLogo(contractType)}</IconButton>
               <Typography variant="h3">{contractName}</Typography>
             </Box>
             {

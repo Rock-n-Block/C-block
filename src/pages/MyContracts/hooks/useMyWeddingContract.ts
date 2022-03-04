@@ -1,89 +1,18 @@
 import { useCallback } from 'react';
 import { noop } from 'lodash';
-import { EventData } from 'web3-eth-contract';
 
-import { useWalletConnectorContext } from 'services';
-import { useShallowSelector } from 'hooks';
+import useShallowSelector from 'hooks/useShallowSelector';
 import uiSelector from 'store/ui/selectors';
-import { weddingAbi } from 'config/abi';
 import actionTypes from 'store/myContracts/weddingContracts/actionTypes';
 import {
   ISpecificWeddingContractData,
   RequestStatus,
   TRequestUiCallbacks,
 } from 'types';
-import {
-  IGetContractsWeddingContractWithContractCreationField, IGetContractsWeddingContractWithSpecificField,
-} from '../MyContracts.helpers';
 
 export interface IFetchWeddingContractReturnType extends ISpecificWeddingContractData {}
 
 export const useMyWeddingContract = () => {
-  const { walletService } = useWalletConnectorContext();
-
-  const getWeddingContract = useCallback(
-    (contractAddress: string) => {
-      const web3 = walletService.Web3();
-      const contract = new web3.eth.Contract(weddingAbi, contractAddress);
-      return contract;
-    }, [walletService],
-  );
-
-  const fetchWeddingContract = useCallback(
-    async (contractAddress: string) => {
-      const contract = getWeddingContract(contractAddress);
-
-      try {
-        const callsPromises = [
-          'activeWithdrawalProposal',
-          'divorceProposedBy',
-          'divorceTimestamp',
-          'withdrawalProposalPending',
-        ].map((methodName) => contract.methods[methodName]().call());
-        const [
-          activeWithdrawalProposal,
-          divorceProposedBy,
-          divorceTimestamp,
-          withdrawalProposalPending,
-        ] = await Promise.all(callsPromises);
-        return {
-          activeWithdrawalProposal,
-          divorceProposedBy,
-          divorceTimestamp,
-          withdrawalProposalPending,
-        } as IFetchWeddingContractReturnType;
-      } catch (err) {
-        console.log(err);
-        return undefined;
-      }
-    }, [getWeddingContract],
-  );
-
-  const transformMergeWeddingContractsAndSpecificData = (
-    weddings: IGetContractsWeddingContractWithContractCreationField[],
-    weddingsSpecificData: IFetchWeddingContractReturnType[],
-  ) => weddings.map((wedding, index) => {
-    const specificData = weddingsSpecificData[index];
-    return {
-      ...wedding,
-      specificContractData: {
-        ...specificData,
-      },
-    };
-  }) as IGetContractsWeddingContractWithSpecificField[];
-
-  const getWeddingContractsWithSpecificData = useCallback(
-    async (
-      weddings: IGetContractsWeddingContractWithContractCreationField[],
-    ) => {
-      const promises = weddings.map((wedding) => fetchWeddingContract(wedding.address));
-      const fetchedSpecificWeddingsData = await Promise.all(promises);
-      console.log(fetchedSpecificWeddingsData);
-      return transformMergeWeddingContractsAndSpecificData(weddings, fetchedSpecificWeddingsData);
-    },
-    [fetchWeddingContract],
-  );
-
   const getFundsAfterDivorceRequestStatus = useShallowSelector(
     uiSelector.getProp(actionTypes.GET_FUNDS_AFTER_DIVORCE),
   );
@@ -287,23 +216,8 @@ export const useMyWeddingContract = () => {
     }, [rejectWithdrawalRequestStatus],
   );
 
-  const subscribeToAllEvents = useCallback(
-    (
-      contractAddress: string,
-      divorceProposedCb: (error: Error, event: EventData) => void,
-      withdrawalProposedCb: (error: Error, event: EventData) => void,
-    ) => {
-      const contract = getWeddingContract(contractAddress);
-      contract.once('DivorceProposed', divorceProposedCb);
-      contract.once('WithdrawalProposed', withdrawalProposedCb);
-    },
-    [getWeddingContract],
-  );
-
   return {
     getFundsAfterDivorceRequestUi,
-
-    getWeddingContractsWithSpecificData,
 
     initWithdrawalRequestUi,
     approveWithdrawalRequestUi,
@@ -312,7 +226,5 @@ export const useMyWeddingContract = () => {
     initDivorceRequestUi,
     approveDivorceRequestUi,
     rejectDivorceRequestUi,
-
-    subscribeToAllEvents,
   };
 };

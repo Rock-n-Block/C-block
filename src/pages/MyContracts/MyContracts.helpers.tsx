@@ -61,7 +61,6 @@ export interface IContractsCard extends IContractCreationField, ISpecificContrac
   contractDate: string;
   isTestnet: boolean;
   contractType: TContractType;
-  contractLogo: React.ReactElement;
   contractName: string;
   contractButtons: TContractButtons;
   additionalContentRenderType?: TAdditionalContentRenderType;
@@ -219,7 +218,6 @@ const createCrowdsaleCard = ({
     specificContractData,
   ),
   contractType: 'Crowdsale contract',
-  contractLogo: <CrowdsaleIcon />,
   contractButtons: [contractButtonsHelper.viewContract],
 } as IContractsCard);
 
@@ -235,7 +233,6 @@ const createTokenCard = ({
     name, address, test_node, createdAt, contractCreationData, specificContractData,
   ),
   contractType: 'Token contract',
-  contractLogo: <ContractTokenIcon />,
   contractButtons: [contractButtonsHelper.viewContract],
 } as IContractsCard);
 
@@ -251,7 +248,6 @@ const createLostkeyCard = ({
     name, address, test_node, createdAt, contractCreationData, specificContractData,
   ),
   contractType: 'Lostkey contract',
-  contractLogo: <KeyIcon />,
   contractButtons: [
     contractButtonsHelper.viewContract,
     contractButtonsHelper.setUp,
@@ -271,7 +267,6 @@ const createWillCard = ({
     name, address, test_node, createdAt, contractCreationData, specificContractData,
   ),
   contractType: 'Will contract',
-  contractLogo: <WillContract />,
   contractButtons: [
     contractButtonsHelper.viewContract,
     contractButtonsHelper.setUp,
@@ -306,7 +301,6 @@ const createWeddingCard = ({
       name, address, test_node, createdAt, contractCreationData, specificContractData,
     ),
     contractType: 'Wedding contract',
-    contractLogo: <WeddingRingIcon />,
     contractButtons: [
       contractButtonsHelper.viewContract,
       ...anotherContractButtons,
@@ -331,9 +325,17 @@ export const createContractCards = (data: IGetContractsWithSpecificField) => [
   ...data.lastwills.map((lastwill) => createWillCard(lastwill)),
   ...data.weddings.map((wedding) => createWeddingCard(wedding)),
 ].map(
-  ({ contractLogo, ...dataForIndexKey }) => ({
-    ...dataForIndexKey,
-    contractLogo,
-    contractKey: JSON.stringify(dataForIndexKey),
+  (data) => ({
+    ...data,
+    contractKey: JSON.stringify(data),
   } as IContractsCard),
 );
+
+const contractLogos: Record<TContractType, React.ReactElement> = {
+  'Crowdsale contract': <CrowdsaleIcon />,
+  'Lostkey contract': <KeyIcon />,
+  'Token contract': <ContractTokenIcon />,
+  'Wedding contract': <WeddingRingIcon />,
+  'Will contract': <WillContract />,
+};
+export const getContractLogo = (contractType: TContractType) => contractLogos[contractType];
