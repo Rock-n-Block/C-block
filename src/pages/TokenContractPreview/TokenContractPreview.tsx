@@ -11,7 +11,7 @@ import {
   YesNoBlock,
   Copyable,
 } from 'components';
-import { useWeb3Provider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useResetScroll } from 'hooks';
 import {
   TPreviewContractNavigationState, TokenContract,
 } from 'types';
@@ -53,6 +53,7 @@ export const TokenContractPreview = () => {
     [state?.contractPreview?.data, tokenContractFromStore],
   );
 
+  useResetScroll();
   const classes = useStyles();
   let totalTokenAmount = 0;
   return (
