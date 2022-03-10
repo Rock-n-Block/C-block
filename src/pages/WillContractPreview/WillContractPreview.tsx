@@ -14,9 +14,8 @@ import { IWillContractDynamicForm, TPreviewContractNavigationState, IWillContrac
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteWillContractForm } from 'store/contractForms/reducer';
-import { getDeepValueByPath } from 'utils';
-
 import { createWillContract } from 'store/contractForms/actions';
+import { getDeepValueByPath } from 'utils';
 import {
   staticWillContractPreviewHelpers,
 } from './WillContractPreview.helpers';
@@ -29,6 +28,10 @@ export const WillContractPreview = () => {
   const handleDelete = useCallback(() => {
     dispatch(deleteWillContractForm());
     navigate(routes.root);
+    // dispatch(deleteContract({
+    //   contractType: 'will',
+    //   navigate,
+    // }));
   }, [dispatch, navigate]);
   const handleEdit = useCallback(() => {
     navigate(routes['will-contract'].root);

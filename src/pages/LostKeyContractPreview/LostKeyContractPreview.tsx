@@ -16,8 +16,8 @@ import {
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteLostKeyContractForm } from 'store/contractForms/reducer';
-import { getDeepValueByPath } from 'utils';
 import { createLostKeyContract } from 'store/contractForms/actions';
+import { getDeepValueByPath } from 'utils';
 import {
   staticLostKeyContractPreviewHelpers,
 } from './LostKeyContractPreview.helpers';

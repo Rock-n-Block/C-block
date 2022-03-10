@@ -10,10 +10,11 @@ import clsx from 'clsx';
 import { Preview, YesNoBlock, Copyable } from 'components';
 import { useWeb3Provider, useShallowSelector } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { routes } from 'appConstants';
 import { deleteCrowdsaleContractForm } from 'store/contractForms/reducer';
-import { constructExplorerUrl } from 'utils';
 import { createCrowdsaleContract } from 'store/contractForms/actions';
+import { routes } from 'appConstants';
+import { constructExplorerUrl } from 'utils';
+
 import { ICrowdsaleContract, TPreviewContractNavigationState } from 'types';
 import { useStyles } from './CrowdsaleContractPreview.styles';
 import {

@@ -16,10 +16,10 @@ import {
   TPreviewContractNavigationState, TokenContract,
 } from 'types';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { routes } from 'appConstants';
-
 import { deleteTokenContractForm } from 'store/contractForms/reducer';
 import { createTokenContract } from 'store/contractForms/actions';
+import { routes } from 'appConstants';
+
 import {
   dynamicTokenContractPreviewHelpers,
   staticTokenContractPreviewHelpers,

@@ -86,15 +86,6 @@ export const Preview: FC<PreviewProps> = ({
   const onPay = useCallback(async () => {
     await launchAction();
     closePaymentModal();
-    // setIsLoading(true);
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   openCompleteModal();
-    // }, 1000);
-    // setTimeout(() => {
-    //   navigate(routes.root);
-    //   deleteAction();
-    // }, 6000);
   }, [closePaymentModal, launchAction]);
 
   const contractActionType = useMemo(() => {
@@ -198,6 +189,15 @@ export const Preview: FC<PreviewProps> = ({
       }
     }
   }, [createContractRequestStatus]);
+
+  useEffect(() => {
+    if (resultModalState.open && resultModalState.result) {
+      setTimeout(() => {
+        closeResultModal();
+        deleteAction();
+      }, 3000);
+    }
+  }, [closeResultModal, deleteAction, resultModalState.open, resultModalState.result]);
 
   return (
     <Container className={classes.root}>
