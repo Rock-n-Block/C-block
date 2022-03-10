@@ -1,6 +1,7 @@
 import React, {
   FC, useState, useCallback, useMemo, useEffect,
 } from 'react';
+import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import {
   Box,
@@ -51,6 +52,7 @@ export const Preview: FC<PreviewProps> = ({
   className,
 }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { getDefaultProvider } = useWeb3Provider();
   const { isMainnet } = useShallowSelector(userSelector.getUser);
@@ -82,6 +84,10 @@ export const Preview: FC<PreviewProps> = ({
     dispatch(apiActions.reset(actionTypes.GET_CONTRACT_CREATION_PRICE));
     setPaymentOpen(false);
   }, [dispatch]);
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+  }, []);
 
   const onPay = useCallback(async () => {
     await launchAction();
@@ -211,41 +217,53 @@ export const Preview: FC<PreviewProps> = ({
         {children}
         <Box className={classes.stamp} />
       </Box>
-      {
-        !isReadonly && (
-          <Box className={classes.controls}>
+      <Box className={classes.controls}>
+        {
+          isReadonly ? (
             <Button
               variant="outlined"
               color="secondary"
               size="large"
               className={classes.button}
-              onClick={openDisclaimerModal}
+              onClick={handleBack}
             >
-              Launch
+              Back
             </Button>
-            <Box className={classes.editDeleteBtns}>
+          ) : (
+            <>
               <Button
                 variant="outlined"
+                color="secondary"
                 size="large"
-                className={clsx(classes.button, classes.editDelete)}
-                endIcon={<Edit />}
-                onClick={editAction}
+                className={classes.button}
+                onClick={openDisclaimerModal}
               >
-                Edit
+                Launch
               </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                className={clsx(classes.button, classes.editDelete)}
-                endIcon={<TrashIcon />}
-                onClick={deleteAction}
-              >
-                Delete
-              </Button>
-            </Box>
-          </Box>
-        )
-      }
+              <Box className={classes.editDeleteBtns}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  className={clsx(classes.button, classes.editDelete)}
+                  endIcon={<Edit />}
+                  onClick={editAction}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  className={clsx(classes.button, classes.editDelete)}
+                  endIcon={<TrashIcon />}
+                  onClick={deleteAction}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </>
+          )
+        }
+      </Box>
       <DisclaimerModal
         open={isDisclaimerOpen}
         onClose={closeDisclaimerModal}
