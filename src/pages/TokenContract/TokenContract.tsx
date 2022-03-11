@@ -171,7 +171,7 @@ export const TokenContract = memo(() => {
                                 name={`tokens[${indexLvl1}].${name}`}
                                 render={
                                 ({ form: { isSubmitting } }: FieldProps) => {
-                                  console.log(name);
+                                  // console.log(name);
                                   if (renderProps.type === 'switch') {
                                     const updatedHandleChange = (e) => {
                                       handleChange(`tokens[${indexLvl1}].${name}`)(e);
