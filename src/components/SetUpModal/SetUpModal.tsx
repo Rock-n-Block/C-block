@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { useDebouncedCallback } from 'use-debounce';
+import BigNumber from 'bignumber.js';
 
 import userSelector from 'store/user/selectors';
 import { useCheckIfTokenAddress, useShallowSelector } from 'hooks';
@@ -14,7 +15,7 @@ import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { bep20Abi } from 'config/abi';
 import { useWalletConnectorContext } from 'services';
 import { incrementLastId } from 'utils/identifactors';
-import { setNotification } from 'utils';
+import { setNotification, shortenPhrase } from 'utils';
 import { PlusIcon } from '../../theme/icons';
 import {
   createAddressesArr,
@@ -51,24 +52,50 @@ export const SetUpModal: VFC<Props> = ({
 
   const { checkIfTokenAddress } = useCheckIfTokenAddress();
 
-  const debouncedCheckAllowance = useDebouncedCallback(
+  const resetField = useCallback((id: number) => {
+    setAddresses(
+      addresses.map((item) => (item.id === id ? {
+        id,
+        address: '',
+        allowance: '',
+      } : item)),
+    );
+  }, [addresses]);
+
+  const addressesGuardFn = useCallback(
     async ({ id, address }: ISetUpModalTokenAddressField) => {
+      // filter items due to can be ['', '', '0x111], and it will result as 'has no unique items'
+      const addressesArray = addresses.map(({ address }) => address).filter((item) => item);
+      const hasUniqueAddresses = addressesArray.length === new Set(addressesArray).size;
+      if (!hasUniqueAddresses) {
+        setNotification({
+          type: 'warning',
+          message: `Provided ${shortenPhrase(address)} token's address is already added`,
+        });
+        resetField(id);
+        return false;
+      }
+
       const isTokenAddress = await checkIfTokenAddress(address);
       if (!isTokenAddress) {
         setNotification({
           type: 'warning',
           message: 'Provided token address is invalid',
         });
-        setAddresses(
-          addresses.map((item) => (item.id === id ? {
-            id,
-            address: '',
-            allowance: '',
-          } : item)),
-        );
-        return;
+        resetField(id);
+        return false;
       }
+      return true;
+    },
+    [addresses, checkIfTokenAddress, resetField],
+  );
 
+  const debouncedCheckAllowance = useDebouncedCallback(
+    async (tokenAddressField: ISetUpModalTokenAddressField) => {
+      const isValidated = await addressesGuardFn(tokenAddressField);
+      if (!isValidated) return;
+
+      const { id, address } = tokenAddressField;
       try {
         const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
         const allowance = await contract.methods.allowance(userWalletAddress, contractAddress).call();
@@ -133,7 +160,16 @@ export const SetUpModal: VFC<Props> = ({
     }
   };
 
+  const isDisabledAcceptButton = useMemo(() => {
+    if (!addresses.length) return true;
+    return addresses.some(({ allowance }) => {
+      if (!allowance) return true;
+      return new BigNumber(allowance).isLessThan(MAX_UINT_256);
+    });
+  }, [addresses]);
+
   const handleAccept = useCallback(() => {
+    if (isDisabledAcceptButton) return;
     if (onAccept) {
       onAccept(
         addresses.filter(({ address }) => !initAddresses
@@ -142,10 +178,9 @@ export const SetUpModal: VFC<Props> = ({
       );
     }
     closeModal();
-  }, [addresses, closeModal, initAddresses, onAccept]);
+  }, [addresses, closeModal, initAddresses, isDisabledAcceptButton, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
-
   const title = useMemo(
     () => (
       <Box className={classes.modalTitle}>
@@ -222,6 +257,7 @@ export const SetUpModal: VFC<Props> = ({
           type="submit"
           color="secondary"
           variant="outlined"
+          disabled={isDisabledAcceptButton}
           onClick={handleAccept}
         >
           Save
