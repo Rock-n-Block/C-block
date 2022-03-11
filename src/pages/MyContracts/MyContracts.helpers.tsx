@@ -259,8 +259,8 @@ const createLostkeyCard = ({
   const contractButtons = [contractButtonsHelper.viewContract];
   if (!isLostKey && !terminated) {
     contractButtons.push(contractButtonsHelper.setUp);
+    contractButtons.push(contractButtonsHelper.confirmActiveStatus);
   }
-  contractButtons.push(contractButtonsHelper.confirmActiveStatus);
   return {
     ...createContractCard(
       name, address, test_node, createdAt, contractCreationData, specificContractData,
@@ -282,8 +282,8 @@ const createWillCard = ({
   const contractButtons = [contractButtonsHelper.viewContract];
   if (!isLostKey && !terminated) {
     contractButtons.push(contractButtonsHelper.setUp);
+    contractButtons.push(contractButtonsHelper.confirmActiveStatus);
   }
-  contractButtons.push(contractButtonsHelper.confirmActiveStatus);
   return {
     ...createContractCard(
       name, address, test_node, createdAt, contractCreationData, specificContractData,
