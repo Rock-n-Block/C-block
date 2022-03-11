@@ -8,12 +8,13 @@ import clsx from 'clsx';
 import { useDebouncedCallback } from 'use-debounce';
 
 import userSelector from 'store/user/selectors';
-import { useShallowSelector } from 'hooks';
+import { useCheckIfTokenAddress, useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { bep20Abi } from 'config/abi';
 import { useWalletConnectorContext } from 'services';
 import { incrementLastId } from 'utils/identifactors';
+import { setNotification } from 'utils';
 import { PlusIcon } from '../../theme/icons';
 import {
   createAddressesArr,
@@ -48,11 +49,28 @@ export const SetUpModal: VFC<Props> = ({
     [],
   );
 
+  const { checkIfTokenAddress } = useCheckIfTokenAddress();
+
   const debouncedCheckAllowance = useDebouncedCallback(
     async ({ id, address }: ISetUpModalTokenAddressField) => {
-      const web3 = walletService.Web3();
-      const contract = new web3.eth.Contract(bep20Abi, address);
+      const isTokenAddress = await checkIfTokenAddress(address);
+      if (!isTokenAddress) {
+        setNotification({
+          type: 'warning',
+          message: 'Provided token address is invalid',
+        });
+        setAddresses(
+          addresses.map((item) => (item.id === id ? {
+            id,
+            address: '',
+            allowance: '',
+          } : item)),
+        );
+        return;
+      }
+
       try {
+        const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
         const allowance = await contract.methods.allowance(userWalletAddress, contractAddress).call();
         setAddresses(
           addresses.map((item) => (item.id === id ? {
@@ -99,9 +117,8 @@ export const SetUpModal: VFC<Props> = ({
   }, [clearInputs, onClose, setIsModalOpen]);
 
   const handleApprove = async ({ id, address }: ISetUpModalTokenAddressField) => {
-    const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(bep20Abi, address);
     try {
+      const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
       await contract.methods.approve(contractAddress, MAX_UINT_256).send({
         from: userWalletAddress,
       });
