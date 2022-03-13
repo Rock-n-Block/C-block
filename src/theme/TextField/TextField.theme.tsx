@@ -20,7 +20,7 @@ import {
 
 export const getMuiInputBase = (theme: Theme): Overrides['MuiInputBase'] => ({
   root: {
-    background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_3,
+    background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_4,
   },
   input: {
     borderRadius: theme.spacing(1.5),

@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import {
-  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_2,
+  COLOR_BLACK_1, COLOR_BLACK_3, COLOR_GREY_2, COLOR_GREY_3,
 } from 'theme/colors';
 
 import { getFormatMedia } from 'theme/utils';
@@ -19,7 +19,7 @@ export const useStyles = makeStyles((theme: Theme) => {
     },
     content: {
       padding: theme.spacing(3),
-      background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_2,
+      background: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_3,
       borderRadius: theme.spacing(2.5),
       border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
     },
