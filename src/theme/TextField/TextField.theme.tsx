@@ -24,9 +24,7 @@ export const getMuiInputBase = (theme: Theme): Overrides['MuiInputBase'] => ({
   },
   input: {
     borderRadius: theme.spacing(1.5),
-    padding: `${theme.spacing(3, 2.25, 1.5)} !important`,
-    // TODO: add correct paddings for Search TextField
-    // padding: `${theme.spacing(2.25, 1.75)} !important`,
+    // padding: `${theme.spacing(3, 2.5, 1.5)}`,
   },
 });
 
@@ -92,44 +90,42 @@ export const getMuiOutlinedInput = (
       '&:first-child': {
         position: 'absolute',
         top: theme.spacing(3),
-        left: theme.spacing(1),
-        width: '90%',
+        left: 0,
+        width: `calc(100% - ${theme.spacing(2.5) + theme.spacing(1)}px)`,
+        height: '100% !important',
         maxHeight: 100,
-        borderRadius: '0 important',
-        padding: `${theme.spacing(1)}px !important`,
+        borderRadius: '0 !important',
+        padding: `${theme.spacing(1, 1, 1, 2.5)} !important`,
         overflow: 'auto !important',
         '&:focus': {
           color: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_GREY_6,
         },
-        '& > *': {
-          'label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder': {
-            background: 'red !important',
-          },
-        },
-        'label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder': {
-          background: 'red !important',
-        },
+        // '& > *': {
+        //   'label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder': {
+        //     background: 'red !important',
+        //   },
+        // },
+        // 'label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder': {
+        //   background: 'red !important',
+        // },
       },
     },
   },
   input: {
     color: theme.palette.type === 'dark' ? COLOR_GREY : COLOR_BLACK_1,
+    padding: `${theme.spacing(2, 2.5)}`,
   },
 });
 
 export const getMuiInputLabel = (theme: Theme): Overrides['MuiInputLabel'] => ({
   root: {
     color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_GREY_6,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(14px, 18px) scale(1)',
   },
   outlined: {
+    transform: `translate(${[2.5, 2.5].map((val) => `${theme.spacing(val)}px`).join(', ')}) scale(1)`,
     '&$shrink': {
       color: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_5,
-      top: 14,
-      left: 4,
+      transform: `translate(${[2.5, 1].map((val) => `${theme.spacing(val)}px`).join(', ')}) scale(0.75)`,
     },
   },
 });
@@ -138,9 +134,13 @@ export const getMuiInputLabelDefaultProps = (): ComponentsProps['MuiInputLabel']
   // shrink: true,
 });
 
-export const getMuiTextField = (): Overrides['MuiTextField'] => ({
+export const getMuiTextField = (theme: Theme): Overrides['MuiTextField'] => ({
   root: {
     width: '100%',
+
+    '& label[data-shrink=true] + .MuiInputBase-formControl .MuiInputBase-input': {
+      padding: `${theme.spacing(3, 2.5, 1.5)}`,
+    },
   },
 });
 

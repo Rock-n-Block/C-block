@@ -66,7 +66,7 @@ const getBaseTheme = (theme: Theme): ThemeOptions => ({
     MuiInputBase: getMuiInputBase(theme),
     MuiOutlinedInput: getMuiOutlinedInput(theme),
     MuiInputLabel: getMuiInputLabel(theme),
-    MuiTextField: getMuiTextField(),
+    MuiTextField: getMuiTextField(theme),
     MuiFormHelperText: getMuiFormHelperText(),
     MuiSlider: getMuiSlider(),
     MuiTableCell: getMuiTableCell(theme),

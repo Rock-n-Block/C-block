@@ -11,7 +11,7 @@ import {
   MenuItem,
   makeStyles,
 } from '@material-ui/core';
-import { CloseIcon } from 'theme/icons';
+import { CloseIcon, SearchIcon } from 'theme/icons';
 
 export default {
   title: 'theme/TextField',
@@ -90,12 +90,26 @@ const Controls: React.FC<TextFieldProps> = (props) => {
       <TableCell className={classes.root}>
         <Control placeholder="Placeholder" variant="outlined" {...props} />
       </TableCell>
+
+      <TableCell className={classes.root}>
+        <Control
+          placeholder="Placeholder"
+          InputProps={{
+            startAdornment: <SearchIcon />,
+          }}
+          {...props}
+        />
+      </TableCell>
     </TableRow>
   );
 };
 
 export const Default: React.FC = () => (
-  <>
+  <div
+    style={{
+      overflow: 'auto',
+    }}
+  >
     <Controls multiline placeholder="Please describe what kind of the development do you need (new blockchain creation, token contract, individual smart contract etc.)" />
     <Typography variant="h6">Text Fields & Selects</Typography>
     <Table>
@@ -118,5 +132,5 @@ export const Default: React.FC = () => (
         </Controls>
       </TableBody>
     </Table>
-  </>
+  </div>
 );
