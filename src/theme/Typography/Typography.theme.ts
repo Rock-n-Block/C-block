@@ -130,8 +130,8 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
 
       '&.xs': {
         fontSize: '12px',
-        fontWeight: FontWeights.fontWeightMedium,
-        lineHeight: '20px',
+        fontWeight: FontWeights.fontWeightSemiBold,
+        lineHeight: '24px',
         letterSpacing: '0px',
       },
 

@@ -23,6 +23,7 @@ export const COLOR_GREY_4 = '#C5CEE0';
 export const COLOR_GREY_5 = '#6C778F';
 export const COLOR_GREY_6 = '#2E3A59';
 export const COLOR_GREY_7 = '#A7AEBD';
+export const COLOR_GREY_8 = '#EDF3FF';
 
 export const COLOR_YELLOW = '#F2C94C';
 
