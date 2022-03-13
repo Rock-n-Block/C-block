@@ -19,7 +19,7 @@ export const ApproveRejectBox: FC<{
           <Button
             className={clsx(commonClasses.button, classes.actionButton)}
             variant="outlined"
-            endIcon={<CheckmarkCircleIcon />}
+            endIcon={<CheckmarkCircleIcon className={classes.checkMarkCircleIcon} />}
             onClick={onApprove}
           >
             Approve
