@@ -81,7 +81,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     },
   },
   chainTag: {
-    background: theme.palette.type === 'dark' ? '' : COLOR_BLACK_3,
     ...flexHelper(),
     [theme.breakpoints.down('sm')]: {
       margin: 'unset',
