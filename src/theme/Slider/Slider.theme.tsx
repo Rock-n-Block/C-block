@@ -1,10 +1,12 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Theme, Tooltip } from '@material-ui/core';
 import { Overrides } from '@material-ui/core/styles/overrides';
 import { ComponentsProps } from '@material-ui/core/styles/props';
-import { COLOR_ACID_GREEN, COLOR_AKZ, COLOR_BLACK_3 } from '../colors';
+import {
+  COLOR_ACID_GREEN, COLOR_AKZ, COLOR_BLACK_3, COLOR_GREY_2,
+} from '../colors';
 
-export const getMuiSlider = (): Overrides['MuiSlider'] => ({
+export const getMuiSlider = (theme: Theme): Overrides['MuiSlider'] => ({
   root: {
     color: COLOR_ACID_GREEN,
     height: 8,
@@ -14,7 +16,7 @@ export const getMuiSlider = (): Overrides['MuiSlider'] => ({
     width: 40,
     top: 3,
     background: COLOR_AKZ,
-    border: `3px solid ${COLOR_BLACK_3}`,
+    border: `3px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
     transform: 'translate(-50%)',
   },
   active: {},
