@@ -28,10 +28,6 @@ export const WillContractPreview = () => {
   const handleDelete = useCallback(() => {
     dispatch(deleteWillContractForm());
     navigate(routes.root);
-    // dispatch(deleteContract({
-    //   contractType: 'will',
-    //   navigate,
-    // }));
   }, [dispatch, navigate]);
   const handleEdit = useCallback(() => {
     navigate(routes['will-contract'].root);
