@@ -31,8 +31,11 @@ export const useEarnData = () => {
   );
 
   const handleTransfer = useCallback((item: TFinishedContract) => {
-    console.log(item);
-  }, []);
+    dispatch(earnActions.transferReward({
+      provider: getDefaultProvider(),
+      contractAddress: item.address,
+    }));
+  }, [dispatch, getDefaultProvider]);
 
   const getFinishedContracts = useCallback(() => {
     dispatch(earnActions.getFinishedContracts({

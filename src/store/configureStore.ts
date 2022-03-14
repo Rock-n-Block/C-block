@@ -83,6 +83,7 @@ const store = configureStore({
           myContractsWeddingActionTypes.GET_FUNDS_AFTER_DIVORCE,
           // earn
           earnActionTypes.GET_FINISHED_CONTRACTS,
+          earnActionTypes.TRANSFER_REWARD,
         ],
       },
     },

@@ -49,3 +49,4 @@ export type TGetFundsAfterDivorceAction = TBaseWeddingAction & {
 
 // Earn Slice
 export type TGetFinishedContractsAction = TProvider;
+export type TTransferRewardAction = TProvider & TContractAddress;
