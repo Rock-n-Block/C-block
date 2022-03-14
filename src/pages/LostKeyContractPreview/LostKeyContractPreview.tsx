@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import {
   Preview, Copyable,
 } from 'components';
-import { useWeb3Provider, useShallowSelector, useResetScroll } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useScrollTop } from 'hooks';
 import {
   ILostKeyContractDynamicForm, TPreviewContractNavigationState, ILostKeyContract,
 } from 'types';
@@ -51,7 +51,7 @@ export const LostKeyContractPreview = () => {
     [lostKeyContractFromStore, state?.contractPreview?.data],
   );
 
-  useResetScroll();
+  useScrollTop();
   const classes = useStyles();
 
   return (

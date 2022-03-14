@@ -8,7 +8,7 @@ import {
 import clsx from 'clsx';
 
 import { Preview, YesNoBlock, Copyable } from 'components';
-import { useWeb3Provider, useShallowSelector, useResetScroll } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useScrollTop } from 'hooks';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { routes } from 'appConstants';
 import { deleteCrowdsaleContractForm } from 'store/contractForms/reducer';
@@ -49,7 +49,7 @@ export const CrowdsaleContractPreview = () => {
     [crowdsaleContractFromStore, state?.contractPreview?.data],
   );
 
-  useResetScroll();
+  useScrollTop();
   const classes = useStyles();
 
   return (

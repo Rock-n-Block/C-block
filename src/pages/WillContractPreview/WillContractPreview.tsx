@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import {
   Preview, Copyable,
 } from 'components';
-import { useWeb3Provider, useShallowSelector, useResetScroll } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useScrollTop } from 'hooks';
 import { IWillContractDynamicForm, TPreviewContractNavigationState, IWillContract } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -49,7 +49,7 @@ export const WillContractPreview = () => {
     [state?.contractPreview?.data, willContractFromStore],
   );
 
-  useResetScroll();
+  useScrollTop();
   const classes = useStyles();
 
   return (

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const useResetScroll = (
+export const useScrollTop = (
   pathname = window.location.href,
   behavior: ScrollBehavior = 'smooth',
 ) => {
