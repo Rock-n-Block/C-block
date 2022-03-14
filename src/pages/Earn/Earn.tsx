@@ -1,8 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, {
-  FC, useEffect,
+  FC,
 } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import {
   Container,
   Grid,
@@ -11,8 +11,8 @@ import {
 } from '@material-ui/core';
 
 import { EmptyTableBlock } from 'components';
-import { useWeb3Provider } from 'hooks';
-import earnActions from 'store/earn/actions';
+import { useDelayedTask } from 'hooks';
+// import earnActions from 'store/earn/actions';
 import { EarnListRow, EarnTable } from './components';
 import {
   pageMainConfig,
@@ -27,16 +27,13 @@ export const Earn: FC = () => {
     hasTableData,
     getRowItemData,
     handleTransfer,
+    getFinishedContracts,
   } = useEarnData();
 
-  const dispatch = useDispatch();
-  const { getDefaultProvider } = useWeb3Provider();
+  // const dispatch = useDispatch();
+  // const { getDefaultProvider } = useWeb3Provider();
 
-  useEffect(() => {
-    dispatch(earnActions.getFinishedContracts({
-      provider: getDefaultProvider(),
-    }));
-  }, [dispatch, getDefaultProvider]);
+  useDelayedTask(getFinishedContracts);
 
   return (
     <Container className={classes.root}>
