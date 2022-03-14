@@ -4,7 +4,7 @@ interface IPageMainConfig {
 
 export interface IRowData {
   userAddress: string;
-  reward: number;
+  reward: string;
 }
 
 type TRowsData = keyof IRowData;
@@ -78,30 +78,3 @@ export const tableConfig: ITableConfig = {
     },
   ],
 };
-
-export const mockPageData: IRowData[] = [
-  {
-    userAddress: '0x3a9A34d723f080a4f0B2fA72fc9F497028dA6414',
-    reward: 40,
-  },
-  {
-    userAddress: '0x3a9A34d723f080a4f0B2fA72fc9F497028dA6414',
-    reward: 10,
-  },
-  {
-    userAddress: '0x3a9A34d723f080a4f0B2fA72fc9F497028dA6414',
-    reward: 33,
-  },
-  {
-    userAddress: '0x3a9A34d723f080a4f0B2fA72fc9F497028dA6414',
-    reward: 123,
-  },
-  {
-    userAddress: '0x3a9A34d723f080a4f0B2fA72fc9F497028dA6414',
-    reward: 1,
-  },
-  {
-    userAddress: 'Just for test amigo',
-    reward: 10,
-  },
-];

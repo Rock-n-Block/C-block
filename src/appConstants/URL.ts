@@ -5,4 +5,6 @@ export default {
   createCrowdsaleContract: 'new_crowdsale/',
   createWeddingContract: 'new_wedding/',
   getContracts: 'history/',
+  getFinishedWillContracts: 'lastwill_finished/',
+  getFinishedLostKeyContracts: 'lostkey_finished/',
 };

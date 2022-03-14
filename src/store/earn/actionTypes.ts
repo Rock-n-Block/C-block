@@ -1,0 +1,3 @@
+export default {
+  GET_FINISHED_CONTRACTS: 'GET_FINISHED_CONTRACTS',
+};

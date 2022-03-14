@@ -24,7 +24,7 @@ export type TGetErc20SymbolAction = TProvider & {
   tokenAddress: string;
 };
 
-type TContractAddress = { contractAddress: string };
+export type TContractAddress = { contractAddress: string };
 
 // My Contracts Slice
 export type TGetMyContractsAction = TProvider;
@@ -46,3 +46,6 @@ export type TRejectDivorceAction = TBaseWeddingAction;
 export type TGetFundsAfterDivorceAction = TBaseWeddingAction & {
   tokensAddresses: IGetFundsModalTokenAddressField[];
 };
+
+// Earn Slice
+export type TGetFinishedContractsAction = TProvider;

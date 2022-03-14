@@ -21,8 +21,7 @@ import uiSelector from 'store/ui/selectors';
 import apiActions from 'store/ui/actions';
 import { RequestStatus } from 'types';
 import { getContractCreationPrice } from 'store/contractForms/actions';
-import { getTokenAmountDisplay } from 'utils';
-import { getCeloConfigMetamask } from 'config';
+import { contractsHelper, getTokenAmountDisplay } from 'utils';
 import { COMPLETE_MODAL_CONTRACT_CREATION_SUCCESS_TEXT } from 'appConstants';
 import { FullscreenLoader } from '../FullscreenLoader';
 import { CompleteModal } from '../CompleteModal';
@@ -143,7 +142,7 @@ export const Preview: FC<PreviewProps> = ({
     contractFormsSelector.getContractForms,
   );
   const celoDecimals = useMemo(
-    () => getCeloConfigMetamask(isMainnet)[0].nativeCurrency.decimals,
+    () => contractsHelper.getChainNativeCurrency(isMainnet).decimals,
     [isMainnet],
   );
   const paymentModalAmount = useMemo(() => {

@@ -2,7 +2,6 @@ import { INoNameContract } from '@amfi/connect-wallet/dist/interface';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 
-import { contracts } from 'config/config';
 import {
   crowdsaleNonSoftCappableBonusableAbi,
   crowdsaleNonSoftCappableNonBonusableAbi,
@@ -17,6 +16,7 @@ import {
 } from 'config/abi';
 import { ContractsNames } from 'types';
 import { TDeployCrowdsaleContractCreationMethodNames, TDeployTokenContractCreationMethodNames } from 'types/utils/contractsHelper';
+import { getCeloConfigMetamask, contracts } from 'config';
 
 enum ContractFactorySettings {
   Non = 'Non',
@@ -49,6 +49,11 @@ type IMethodNameSignatureMap = {
 };
 
 export const contractsHelper = {
+  getChainNativeCurrency(
+    isMainnet: boolean,
+  ) {
+    return getCeloConfigMetamask(isMainnet)[0].nativeCurrency;
+  },
   getContractData(
     contractName: ContractsNames,
     isMainnet: boolean,

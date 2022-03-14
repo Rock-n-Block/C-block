@@ -18,6 +18,7 @@ import rootSaga from './rootSaga';
 import contractFormsActionTypes from './contractForms/actionTypes';
 import myContractsActionTypes from './myContracts/actionTypes';
 import myContractsWeddingActionTypes from './myContracts/weddingContracts/actionTypes';
+import earnActionTypes from './earn/actionTypes';
 import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -80,6 +81,8 @@ const store = configureStore({
           myContractsWeddingActionTypes.REJECT_WITHDRAWAL,
 
           myContractsWeddingActionTypes.GET_FUNDS_AFTER_DIVORCE,
+          // earn
+          earnActionTypes.GET_FINISHED_CONTRACTS,
         ],
       },
     },

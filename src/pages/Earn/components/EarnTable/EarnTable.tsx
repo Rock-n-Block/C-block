@@ -17,30 +17,31 @@ import {
 import { EmptyTableBlock } from 'components';
 import { EarnTableRow } from 'pages/Earn/components/EarnTableRow';
 import {
-  IRowData, mockPageData, tableConfig,
+  tableConfig,
 } from 'pages/Earn/Earn.helpers';
 import { useStyles } from 'pages/Earn/Earn.styles';
+import { useEarnData } from 'pages/Earn/Earn.hooks';
 
 interface IEarnTableProps {
   className?: string;
   rowsPerPage?: number;
-  hasData: boolean;
-  onTransfer: (item: IRowData) => void;
 }
 
 export const EarnTable: FC<IEarnTableProps> = ({
-  className, hasData, rowsPerPage = 5, onTransfer,
+  className, rowsPerPage = 5,
 }) => {
   const classes = useStyles();
+  const {
+    finishedContracts,
+    hasTableData,
+    getRowItemData,
+    handleTransfer,
+  } = useEarnData();
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleChangePage = useCallback((event, newPage) => {
     setCurrentPage(newPage);
   }, []);
-
-  const handleTransfer = (item: IRowData) => {
-    onTransfer(item);
-  };
 
   return (
     <TableContainer className={className}>
@@ -59,20 +60,19 @@ export const EarnTable: FC<IEarnTableProps> = ({
           </TableRow>
         </TableHead>
         {
-          hasData ? (
+          hasTableData ? (
             <TableBody>
               {
-                mockPageData
+                finishedContracts
                   .slice(currentPage * rowsPerPage, currentPage * rowsPerPage + rowsPerPage)
                   .map((item, rowIndex) => {
                     const rowKey = JSON.stringify(item) + rowIndex;
-                    const { userAddress, reward } = item;
-
+                    const { deserializedRewardAmount } = getRowItemData(item);
                     return (
                       <EarnTableRow
                         key={rowKey}
-                        userAddress={userAddress}
-                        reward={reward.toString()}
+                        userAddress={item.address}
+                        reward={deserializedRewardAmount}
                         onTransfer={() => handleTransfer(item)}
                       />
                     );
@@ -90,12 +90,12 @@ export const EarnTable: FC<IEarnTableProps> = ({
           )
         }
         {
-          hasData && (
+          hasTableData && (
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[]}
-                  count={mockPageData.length}
+                  count={finishedContracts.length}
                   rowsPerPage={rowsPerPage}
                   page={currentPage}
                   onPageChange={handleChangePage}

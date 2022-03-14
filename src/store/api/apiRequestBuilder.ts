@@ -8,6 +8,8 @@ import {
   ICreateWeddingContractData,
   IGetContractsData,
   IGetContractsReturnType,
+  IGetFinishedWillContractsReturnType,
+  IGetFinishedLostKeyContractsReturnType,
 } from './apiRequestBuilder.types';
 
 const client: AxiosInstance = axios.create({
@@ -63,6 +65,19 @@ export const baseApi = {
     return ajax<IGetContractsReturnType>({
       method: 'get',
       url: `${URL.getContracts}${walletAddress}`,
+    });
+  },
+
+  getFinishedWillContracts() {
+    return ajax<IGetFinishedWillContractsReturnType>({
+      method: 'get',
+      url: URL.getFinishedWillContracts,
+    });
+  },
+  getFinishedLostKeyContracts() {
+    return ajax<IGetFinishedLostKeyContractsReturnType>({
+      method: 'get',
+      url: URL.getFinishedLostKeyContracts,
     });
   },
 };
