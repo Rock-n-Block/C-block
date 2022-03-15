@@ -68,7 +68,7 @@ const getBaseTheme = (theme: Theme): ThemeOptions => ({
     MuiInputLabel: getMuiInputLabel(theme),
     MuiTextField: getMuiTextField(),
     MuiFormHelperText: getMuiFormHelperText(),
-    MuiSlider: getMuiSlider(),
+    MuiSlider: getMuiSlider(theme),
     MuiTableCell: getMuiTableCell(theme),
     MuiTablePagination: getMuiTablePagination(),
   },

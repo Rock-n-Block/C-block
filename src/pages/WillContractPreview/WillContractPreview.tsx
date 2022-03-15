@@ -9,14 +9,13 @@ import clsx from 'clsx';
 import {
   Preview, Copyable,
 } from 'components';
-import { useWeb3Provider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useScrollTop } from 'hooks';
 import { IWillContractDynamicForm, TPreviewContractNavigationState, IWillContract } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteWillContractForm } from 'store/contractForms/reducer';
-import { getDeepValueByPath } from 'utils';
-
 import { createWillContract } from 'store/contractForms/actions';
+import { getDeepValueByPath } from 'utils';
 import {
   staticWillContractPreviewHelpers,
 } from './WillContractPreview.helpers';
@@ -49,6 +48,7 @@ export const WillContractPreview = () => {
     [state?.contractPreview?.data, willContractFromStore],
   );
 
+  useScrollTop();
   const classes = useStyles();
 
   return (

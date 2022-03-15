@@ -55,7 +55,7 @@ export const useMyContracts = () => {
       }
       default: throw new Error('wrong param for handle view contract');
     }
-    navigate(routes[routeParam]['preview-contract'].root, {
+    navigate(routes['my-contracts'][`preview-${routeParam}`].root, {
       state: { ...routeState },
     });
   }, [navigate]);

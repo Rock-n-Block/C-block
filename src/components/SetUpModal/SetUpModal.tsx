@@ -6,14 +6,16 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { useDebouncedCallback } from 'use-debounce';
+import BigNumber from 'bignumber.js';
 
 import userSelector from 'store/user/selectors';
-import { useShallowSelector } from 'hooks';
+import { useCheckIfTokenAddress, useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { bep20Abi } from 'config/abi';
 import { useWalletConnectorContext } from 'services';
 import { incrementLastId } from 'utils/identifactors';
+import { setNotification, shortenPhrase } from 'utils';
 import { PlusIcon } from '../../theme/icons';
 import {
   createAddressesArr,
@@ -48,11 +50,54 @@ export const SetUpModal: VFC<Props> = ({
     [],
   );
 
-  const debouncedCheckAllowance = useDebouncedCallback(
+  const { checkIfTokenAddress } = useCheckIfTokenAddress();
+
+  const resetField = useCallback((id: number) => {
+    setAddresses(
+      addresses.map((item) => (item.id === id ? {
+        id,
+        address: '',
+        allowance: '',
+      } : item)),
+    );
+  }, [addresses]);
+
+  const addressesGuardFn = useCallback(
     async ({ id, address }: ISetUpModalTokenAddressField) => {
-      const web3 = walletService.Web3();
-      const contract = new web3.eth.Contract(bep20Abi, address);
+      // filter items due to can be ['', '', '0x111], and it will result as 'has no unique items'
+      const addressesArray = addresses.map(({ address }) => address).filter((item) => item);
+      const hasUniqueAddresses = addressesArray.length === new Set(addressesArray).size;
+      if (!hasUniqueAddresses) {
+        setNotification({
+          type: 'warning',
+          message: `Provided ${shortenPhrase(address)} token's address is already added`,
+        });
+        resetField(id);
+        return false;
+      }
+
+      const isTokenAddress = await checkIfTokenAddress(address);
+      if (!isTokenAddress) {
+        setNotification({
+          type: 'warning',
+          message: 'Provided token address is invalid',
+        });
+        resetField(id);
+        return false;
+      }
+      return true;
+    },
+    [addresses, checkIfTokenAddress, resetField],
+  );
+
+  const debouncedCheckAllowance = useDebouncedCallback(
+    async (tokenAddressField: ISetUpModalTokenAddressField) => {
+      const isValidated = await addressesGuardFn(tokenAddressField);
+      if (!isValidated) return;
+
+      const { id, address } = tokenAddressField;
       try {
+        const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
         const allowance = await contract.methods.allowance(userWalletAddress, contractAddress).call();
         setAddresses(
           addresses.map((item) => (item.id === id ? {
@@ -99,9 +144,8 @@ export const SetUpModal: VFC<Props> = ({
   }, [clearInputs, onClose, setIsModalOpen]);
 
   const handleApprove = async ({ id, address }: ISetUpModalTokenAddressField) => {
-    const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(bep20Abi, address);
     try {
+      const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
       await contract.methods.approve(contractAddress, MAX_UINT_256).send({
         from: userWalletAddress,
       });
@@ -116,7 +160,16 @@ export const SetUpModal: VFC<Props> = ({
     }
   };
 
+  const isDisabledAcceptButton = useMemo(() => {
+    if (!addresses.length) return true;
+    return addresses.some(({ allowance }) => {
+      if (!allowance) return true;
+      return new BigNumber(allowance).isLessThan(MAX_UINT_256);
+    });
+  }, [addresses]);
+
   const handleAccept = useCallback(() => {
+    if (isDisabledAcceptButton) return;
     if (onAccept) {
       onAccept(
         addresses.filter(({ address }) => !initAddresses
@@ -125,10 +178,9 @@ export const SetUpModal: VFC<Props> = ({
       );
     }
     closeModal();
-  }, [addresses, closeModal, initAddresses, onAccept]);
+  }, [addresses, closeModal, initAddresses, isDisabledAcceptButton, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
-
   const title = useMemo(
     () => (
       <Box className={classes.modalTitle}>
@@ -205,6 +257,7 @@ export const SetUpModal: VFC<Props> = ({
           type="submit"
           color="secondary"
           variant="outlined"
+          disabled={isDisabledAcceptButton}
           onClick={handleAccept}
         >
           Save

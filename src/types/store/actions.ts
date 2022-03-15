@@ -1,6 +1,7 @@
+import Web3 from 'web3';
+
 import { IGetFundsModalTokenAddressField } from 'components/GetFundsModal/GetFundsModal.helpers';
 import { IconType } from 'components/Preview/Preview.helpers';
-import Web3 from 'web3';
 
 export type TProvider = { provider: Web3 };
 

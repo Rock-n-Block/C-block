@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Box, Typography } from '@material-ui/core';
-import clsx from 'clsx';
 
 import { ClockIcon } from 'theme/icons';
 import { useCountdownTimer } from 'hooks';
@@ -27,7 +26,7 @@ export const ConfirmationTimeBlock: FC<{
       </Typography>
       <Box className={classes.confirmationTimeBlockContent}>
         <ClockIcon />
-        <Typography className={clsx('acidGreen')} variant="h2" component="div">
+        <Typography className={classes.timerText} variant="h2" component="div">
           {formatDateAsDDHHMM(secondsRemaining)}
         </Typography>
       </Box>

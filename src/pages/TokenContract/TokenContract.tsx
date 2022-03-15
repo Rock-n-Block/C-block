@@ -172,7 +172,7 @@ export const TokenContract = memo(() => {
                                     !values.tokens[indexLvl1].isFrozen) {
                                     return null;
                                   }
-
+                                  
                                   if (renderProps.type === 'switch') {
                                     const updatedHandleChange = (e) => {
                                       handleChange(`tokens[${indexLvl1}].${name}`)(e);

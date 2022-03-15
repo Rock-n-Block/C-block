@@ -3,7 +3,7 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import {
-  COLOR_ACID_GREEN, COLOR_BLACK_3, COLOR_GREY_3,
+  COLOR_ACID_GREEN, COLOR_BLACK_2, COLOR_BLACK_3, COLOR_GREY_3, COLOR_GREY_4,
 } from 'theme/colors';
 
 import { getFormatMedia } from 'theme/utils';
@@ -41,7 +41,7 @@ export const useStyles = makeStyles<Theme, { withBorder: boolean }>((theme: Them
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      background: theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3,
+      background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_4,
       border: ({ withBorder }) => (withBorder
         ? `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3}`
         : 'unset'),

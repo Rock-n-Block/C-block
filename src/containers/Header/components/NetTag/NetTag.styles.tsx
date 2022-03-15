@@ -1,6 +1,8 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-import { COLOR_ACID_GREEN, COLOR_ERROR } from 'theme/colors';
+import {
+  COLOR_ACID_GREEN, COLOR_ERROR, COLOR_GREEN, COLOR_GREY_8,
+} from 'theme/colors';
 
 export const useStyles = makeStyles<Theme, { isTestnet: boolean }>((theme: Theme) => createStyles({
   root: {
@@ -17,7 +19,7 @@ export const useStyles = makeStyles<Theme, { isTestnet: boolean }>((theme: Theme
       position: 'absolute',
       left: 0,
       background: ({ isTestnet }) => (isTestnet ? COLOR_ERROR : COLOR_ACID_GREEN),
-      opacity: 0.1,
+      opacity: () => (theme.palette.type === 'dark' ? 0.1 : undefined),
       width: '100%',
       height: '100%',
     },
@@ -26,12 +28,22 @@ export const useStyles = makeStyles<Theme, { isTestnet: boolean }>((theme: Theme
     position: 'relative',
     width: 8,
     height: 8,
-    background: ({ isTestnet }) => (isTestnet ? COLOR_ERROR : COLOR_ACID_GREEN),
+    background: ({ isTestnet }) => {
+      if (theme.palette.type === 'light') {
+        return isTestnet ? COLOR_GREY_8 : COLOR_GREEN;
+      }
+      return isTestnet ? COLOR_ERROR : COLOR_ACID_GREEN;
+    },
     borderRadius: '50%',
     marginRight: theme.spacing(1),
   },
   text: {
     position: 'relative',
-    color: ({ isTestnet }) => (isTestnet ? COLOR_ERROR : COLOR_ACID_GREEN),
+    color: ({ isTestnet }) => {
+      if (theme.palette.type === 'light') {
+        return isTestnet ? COLOR_GREY_8 : COLOR_GREEN;
+      }
+      return isTestnet ? COLOR_ERROR : COLOR_ACID_GREEN;
+    },
   },
 }));
