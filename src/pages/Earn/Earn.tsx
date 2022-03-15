@@ -40,13 +40,20 @@ export const Earn: FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <EarnTable
-            className={classes.tableContainer}
-          />
+          {
+            hasTableData && (
+              <EarnTable
+                className={classes.tableContainer}
+              />
+            )
+          }
+          {
+            !hasTableData && <EmptyTableBlock />
+          }
 
           <Box className={classes.mobileTableData}>
             {
-              hasTableData ? (
+              hasTableData && (
                 finishedContracts.map((item, rowIndex) => {
                   const rowKey = JSON.stringify(item) + rowIndex;
                   const { deserializedRewardAmount } = getRowItemData(item);
@@ -59,8 +66,6 @@ export const Earn: FC = () => {
                     />
                   );
                 })
-              ) : (
-                <EmptyTableBlock />
               )
             }
           </Box>

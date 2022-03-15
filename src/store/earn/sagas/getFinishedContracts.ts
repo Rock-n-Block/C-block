@@ -7,7 +7,12 @@ import { AxiosResponse } from 'axios';
 import apiActions from 'store/ui/actions';
 import userSelector from 'store/user/selectors';
 import { baseApi } from 'store/api/apiRequestBuilder';
-import { IGetFinishedLostKeyContractsReturnType, IGetFinishedWillContractsReturnType } from 'store/api/apiRequestBuilder.types';
+import {
+  IFinishedLostKeyContract,
+  IFinishedWillContract,
+  IGetFinishedLostKeyContractsReturnType,
+  IGetFinishedWillContractsReturnType,
+} from 'store/api/apiRequestBuilder.types';
 import { contractsHelper } from 'utils';
 import { ContractsNames, TFinishedContract, UserState } from 'types';
 import actionTypes from '../actionTypes';
@@ -55,18 +60,38 @@ function* extendFinishedContractsWithRewardAmount(
   }
 }
 
-function* fetchAndTransformFinishedContracts(provider: Web3) {
+function* fetchFinishedWillContracts() {
   try {
     const {
       data: { lastwills },
     }: AxiosResponse<IGetFinishedWillContractsReturnType> = yield call(
       baseApi.getFinishedWillContracts,
     );
+    return lastwills;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}
+
+function* fetchFinishedLostKeyContracts() {
+  try {
     const {
       data: { lostkeys },
     }: AxiosResponse<IGetFinishedLostKeyContractsReturnType> = yield call(
       baseApi.getFinishedLostKeyContracts,
     );
+    return lostkeys;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}
+
+function* fetchAndTransformFinishedContracts(provider: Web3) {
+  try {
+    const lastwills: IFinishedWillContract[] = yield call(fetchFinishedWillContracts);
+    const lostkeys: IFinishedLostKeyContract[] = yield call(fetchFinishedLostKeyContracts);
     const finishedContracts = [
       ...lastwills,
       ...lostkeys,
