@@ -1,4 +1,5 @@
-import React, { useMemo, VFC } from 'react';
+import React, { useCallback, useMemo, VFC } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
@@ -6,6 +7,7 @@ import clsx from 'clsx';
 import { Modal } from 'components/Modal';
 import { SuccessBigIcon, ErrorBigIcon } from 'theme/icons';
 import { COMPLETE_MODAL_DEFAULT_SUCCESS_TEXT } from 'appConstants';
+import { closeModal as closeModalAction } from 'store/modals/reducer';
 import { useStyles } from './CompleteModal.styles';
 
 export interface CompleteModalProps {
@@ -19,6 +21,7 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
   open, onClose, result, successText = COMPLETE_MODAL_DEFAULT_SUCCESS_TEXT,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const showSuccess = useMemo(
     () => (
@@ -49,8 +52,17 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
     [classes.desc],
   );
 
+  const closeModal = useCallback(() => {
+    if (onClose) {
+      onClose();
+    }
+    dispatch(
+      closeModalAction(),
+    );
+  }, [dispatch, onClose]);
+
   return (
-    <Modal open={open} onClose={onClose} title=" " className={clsx(classes.root)}>
+    <Modal open={open} onClose={closeModal} title=" " className={clsx(classes.root)}>
       <Box className={classes.icon}>
         {result ? showSuccess : showError}
       </Box>

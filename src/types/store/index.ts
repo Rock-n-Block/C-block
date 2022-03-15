@@ -4,6 +4,7 @@ export * from './contractForms.shared';
 export * from './contractForms';
 export * from './myContracts';
 export * from './earn';
+export * from './modals';
 
 export * from './actions';
 export * from './globals';

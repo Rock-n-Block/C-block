@@ -1,7 +1,9 @@
 import React, { useCallback, VFC } from 'react';
-
+import { useDispatch } from 'react-redux';
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
+
+import { closeModal as closeModalAction } from 'store/modals/reducer';
 import { Modal } from '../Modal';
 import { Loader } from '../Loader';
 import { useStyles } from './SendTransactionModal.styles';
@@ -9,17 +11,21 @@ import { useStyles } from './SendTransactionModal.styles';
 interface Props {
   className?: string;
   open?: boolean;
-  setIsModalOpen: (isOpen: boolean) => void;
+  setIsModalOpen?: (isOpen: boolean) => void;
   onClose?: () => void;
   onAccept?: () => void;
 }
 
-export const SendTransactionModal: VFC<Props> = ({ open, setIsModalOpen }) => {
+export const SendTransactionModal: VFC<Props> = ({ open, setIsModalOpen = () => {} }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  }, [setIsModalOpen]);
+    dispatch(
+      closeModalAction(),
+    );
+  }, [dispatch, setIsModalOpen]);
 
   return (
     <Modal

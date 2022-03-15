@@ -5,10 +5,11 @@ import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 
 import { BreakpointsProvider } from 'hooks/useBreakpoints';
 import { darkTheme, lightTheme } from 'theme';
-import { Layout, Routes } from 'containers';
+import { Layout, ModalsContainer, Routes } from 'containers';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
 import { useWalletConnectorContext } from 'services';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             position="top-right"
             closeButton={false}
           />
+          <ModalsContainer />
           <Layout>
             <Routes />
           </Layout>

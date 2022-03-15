@@ -1,9 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, {
-  ComponentProps,
-  FC, useCallback, useEffect, useState,
+  FC,
 } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   Container,
   Grid,
@@ -11,12 +9,8 @@ import {
   Box,
 } from '@material-ui/core';
 
-import { CompleteModal, EmptyTableBlock, SendTransactionModal } from 'components';
-import { useDelayedTask, useShallowSelector } from 'hooks';
-import uiSelector from 'store/ui/selectors';
-import apiActions from 'store/ui/actions';
-import actionTypes from 'store/earn/actionTypes';
-import { RequestStatus } from 'types';
+import { EmptyTableBlock } from 'components';
+import { useDelayedTask } from 'hooks';
 import { EarnListRow, EarnTable } from './components';
 import {
   pageMainConfig,
@@ -33,61 +27,6 @@ export const Earn: FC = () => {
     handleTransfer,
     getFinishedContracts,
   } = useEarnData();
-
-  const dispatch = useDispatch();
-
-  const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState(false);
-  const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
-  const [
-    resultModalState, setResultModalState,
-  ] = useState<ComponentProps<typeof CompleteModal>>({ open: false, result: false });
-  const closeSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(false), []);
-  const closeResultModal = useCallback(() => {
-    setResultModalState({
-      ...resultModalState,
-      open: false,
-    });
-    dispatch(apiActions.reset(actionTypes.TRANSFER_REWARD));
-  }, [dispatch, resultModalState]);
-
-  const onRequestTx = useCallback(() => {
-    openSendTransactionModal();
-  }, [openSendTransactionModal]);
-  const onSuccessTx = useCallback(() => {
-    setResultModalState({ open: true, result: true });
-  }, []);
-  const onErrorTx = useCallback(() => {
-    setResultModalState({ open: true, result: false });
-  }, []);
-  const onFinishTx = useCallback(() => {
-    closeSendTransactionModal();
-  }, [closeSendTransactionModal]);
-
-  const transferRewardRequestStatus = useShallowSelector(
-    uiSelector.getProp(actionTypes.TRANSFER_REWARD),
-  );
-
-  useEffect(() => {
-    switch (transferRewardRequestStatus) {
-      case RequestStatus.REQUEST: {
-        onRequestTx();
-        break;
-      }
-      case RequestStatus.SUCCESS: {
-        onSuccessTx();
-        onFinishTx();
-        break;
-      }
-      case RequestStatus.ERROR: {
-        onErrorTx();
-        onFinishTx();
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  }, [transferRewardRequestStatus, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
 
   useDelayedTask(getFinishedContracts);
 
@@ -127,15 +66,6 @@ export const Earn: FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <CompleteModal
-        open={resultModalState.open}
-        result={resultModalState.result}
-        onClose={closeResultModal}
-      />
-      <SendTransactionModal
-        open={isSendTransactionModalOpen}
-        setIsModalOpen={setIsSendTransactionModalOpen}
-      />
     </Container>
   );
 };
