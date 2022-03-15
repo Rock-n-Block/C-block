@@ -11,6 +11,7 @@ import {
 } from 'types';
 import userSelector from 'store/user/selectors';
 import { weddingAbi } from 'config/abi';
+import { getMyContracts } from 'store/myContracts/actions';
 import actionTypes from '../actionTypes';
 import { rejectWithdrawal } from '../actions';
 
@@ -31,6 +32,9 @@ function* rejectWithdrawalSaga({
     );
 
     yield put(apiActions.success(type));
+    yield put(getMyContracts({
+      provider,
+    }));
   } catch (err) {
     console.log(err);
     yield put(apiActions.error(type, err));

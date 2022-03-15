@@ -10,13 +10,15 @@ import {
   ICrowdsaleContract, ILostKeyContract, IWeddingContract, IWillContract, TokenContract,
 } from 'types';
 import rootStore from 'store/configureStore';
+import myContractsActions from 'store/myContracts/actions';
 import {
   contractsHelper, convertIntervalFromSeconds, formattedDate, getTokenAmountDisplay,
 } from 'utils';
 import { bep20Abi } from 'config/abi';
 import { getCeloConfigMetamask } from 'config';
+
 import { getWeddingContract } from '../weddingContracts/sagas/getWeddingContracts.helpers';
-import { enableWeddingRequestDivorce, enableWeddingRequestWithdrawal } from '../reducer';
+// import { enableWeddingRequestDivorce, enableWeddingRequestWithdrawal } from '../reducer';
 
 export type TFunctionParams = {
   methodName: TDeployContractCreationMethodNames;
@@ -307,13 +309,19 @@ export const subscribeOnEvents = (provider: Web3, data: IContractsCard[]) => {
       console.log('Subscribe to all weddings Events');
       subscribeToAllWeddingEvents(provider, address, (error, event) => {
         console.log('divorce INIT', event);
-        rootStore.store.dispatch(enableWeddingRequestWithdrawal({
-          address,
+        // rootStore.store.dispatch(enableWeddingRequestWithdrawal({
+        //   address,
+        // }));
+        rootStore.store.dispatch(myContractsActions.getMyContracts({
+          provider,
         }));
       }, (error, event) => {
         console.log('withdrawal INIT', event);
-        rootStore.store.dispatch(enableWeddingRequestDivorce({
-          address,
+        // rootStore.store.dispatch(enableWeddingRequestDivorce({
+        //   address,
+        // }));
+        rootStore.store.dispatch(myContractsActions.getMyContracts({
+          provider,
         }));
       });
     }

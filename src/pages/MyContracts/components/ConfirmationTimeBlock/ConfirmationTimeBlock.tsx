@@ -23,7 +23,7 @@ export const ConfirmationTimeBlock: FC<{
   return (
     <Box className={className}>
       <Typography className={commonClasses.contractActionText}>
-        Сonfirmation time
+        Confirmation time
       </Typography>
       <Box className={classes.confirmationTimeBlockContent}>
         <ClockIcon />

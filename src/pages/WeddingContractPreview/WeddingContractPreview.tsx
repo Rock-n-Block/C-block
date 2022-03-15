@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Grid, Typography } from '@material-ui/core';
 
 import { Preview, Copyable } from 'components';
-import { useWeb3Provider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useScrollTop } from 'hooks';
 import {
   TPreviewContractNavigationState, IWeddingContract,
 } from 'types';
@@ -43,6 +43,7 @@ export const WeddingContractPreview = () => {
     [state?.contractPreview?.data, weddingContractFromStore],
   );
 
+  useScrollTop();
   const classes = useStyles();
 
   return (

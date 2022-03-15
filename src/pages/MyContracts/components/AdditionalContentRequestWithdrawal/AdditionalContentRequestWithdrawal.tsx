@@ -8,8 +8,8 @@ import { useStyles as useCommonStyles } from '../../MyContracts.styles';
 
 export const AdditionalContentRequestWithdrawal: FC<{
   countdownUntilTimestamp: number;
-  onApprove: () => void;
-  onReject: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
 }> = ({ countdownUntilTimestamp, onApprove, onReject }) => {
   const commonClasses = useCommonStyles();
   return (

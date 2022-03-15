@@ -25,7 +25,8 @@ import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContra
 import myContractsSelector from 'store/myContracts/selectors';
 import userSelector from 'store/user/selectors';
 
-import { ISpecificWeddingContractData } from 'types';
+import { ISpecificWeddingContractData, IWeddingContract } from 'types';
+import { convertIntervalAsSeconds } from 'utils';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -339,7 +340,9 @@ export const MyContracts: FC = () => {
   const isSameWithdrawalAddress = useCallback((proposedBy: string) => userWalletAddress.toLowerCase() === proposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject withdrawal with the same address
 
   const renderAdditionalContent = useCallback(
-    ({ additionalContentRenderType, contractKey, specificContractData }: IContractsCard) => {
+    ({
+      additionalContentRenderType, contractKey, specificContractData, contractCreationData,
+    }: IContractsCard) => {
       switch (additionalContentRenderType) {
         case 'weddingRequestDivorce': {
           const {
@@ -359,16 +362,17 @@ export const MyContracts: FC = () => {
         case 'weddingRequestWithdrawal': {
           const {
             activeWithdrawalProposal,
-            // withdrawalProposalPending,
           } = specificContractData as ISpecificWeddingContractData;
           const { timestamp, proposedBy } = activeWithdrawalProposal;
-          // const withdrawalStatus = getWithdrawalStatus(
-          //   withdrawalProposalPending, activeWithdrawalProposal,
-          // );
-          // console.log('withdrawalStatus', withdrawalStatus);
+          const { daysForWithdrawalApproval } = contractCreationData as IWeddingContract;
+          const secondsForWithdrawalApproval = convertIntervalAsSeconds(
+            daysForWithdrawalApproval,
+            'Day',
+          );
+          const countdownUntilTimestamp = Number(timestamp) + secondsForWithdrawalApproval;
           return (
             <AdditionalContentRequestWithdrawal
-              countdownUntilTimestamp={+timestamp}
+              countdownUntilTimestamp={countdownUntilTimestamp}
               onApprove={isSameWithdrawalAddress(proposedBy) ? undefined : () => buttonClickHandler(contractKey, 'withdrawalApprove')}
               onReject={isSameWithdrawalAddress(proposedBy) ? undefined : () => buttonClickHandler(contractKey, 'withdrawalReject')}
             />
