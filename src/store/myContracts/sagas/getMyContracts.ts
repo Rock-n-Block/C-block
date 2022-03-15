@@ -32,6 +32,8 @@ import {
   TFunctionParams,
 } from './getMyContracts.helpers';
 import { getWeddingContractsWithSpecificDataSaga } from '../weddingContracts/sagas/getWeddingContracts';
+import { getLostKeyContractsWithSpecificDataSaga } from '../lostkeyContracts/sagas/getLostKeyContracts';
+import { getWillContractsWithSpecificDataSaga } from '../willContracts/sagas/getWillContracts';
 
 function* transformCreatedAtField(
   provider: Web3,
@@ -141,14 +143,32 @@ function* transformSpecificContractField(
   provider: Web3,
   data: IGetContractsWithContractCreationField,
 ) {
-  const weddings = yield call(
-    getWeddingContractsWithSpecificDataSaga,
-    provider,
-    [...data.weddings],
-  );
+  const [
+    weddings,
+    lostkeys,
+    lastwills,
+  ] = yield all([
+    call(
+      getWeddingContractsWithSpecificDataSaga,
+      provider,
+      [...data.weddings],
+    ),
+    call(
+      getLostKeyContractsWithSpecificDataSaga,
+      provider,
+      [...data.lostkeys],
+    ),
+    call(
+      getWillContractsWithSpecificDataSaga,
+      provider,
+      [...data.lastwills],
+    ),
+  ]);
   return {
     ...data,
     weddings,
+    lostkeys,
+    lastwills,
   } as IGetContractsWithSpecificField;
 }
 

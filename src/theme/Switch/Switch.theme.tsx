@@ -3,7 +3,7 @@ import { Overrides } from '@material-ui/core/styles/overrides';
 import { ComponentsProps } from '@material-ui/core/styles/props';
 
 import {
-  COLOR_AKZ, COLOR_BLACK, COLOR_BLACK_4,
+  COLOR_AKZ, COLOR_BLACK_1, COLOR_BLACK_4, COLOR_BLACK_5, COLOR_GREY_3, COLOR_GREY_5,
 } from '../colors';
 
 export const getMuiSwitch = (theme: Theme): Overrides['MuiSwitch'] => {
@@ -36,7 +36,7 @@ export const getMuiSwitch = (theme: Theme): Overrides['MuiSwitch'] => {
       // ...trackSize,
       borderRadius: '64px',
       opacity: 0.5,
-      backgroundColor: COLOR_BLACK_4,
+      backgroundColor: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_5,
 
       '.MuiSwitch-switchBase$checked + &': {
         background: COLOR_AKZ,
@@ -94,10 +94,14 @@ export const getMuiSwitch = (theme: Theme): Overrides['MuiSwitch'] => {
         },
 
         transform: `translateX(calc(${trackSize.width} - 100%))`,
+
+        '& .MuiSwitch-thumb': {
+          backgroundColor: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_BLACK_5,
+        },
       },
     },
     thumb: {
-      backgroundColor: COLOR_BLACK,
+      backgroundColor: theme.palette.type === 'dark' ? COLOR_BLACK_1 : COLOR_GREY_3,
       boxShadow: 'unset',
       width: 26,
       height: 26,

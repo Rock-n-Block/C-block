@@ -27,6 +27,7 @@ export const useStyles = makeStyles<Theme, { isSelected: boolean }>((theme: Them
       },
       '&:hover': {
         boxShadow: `2px 0px 0px 0px ${COLOR_ACID_GREEN} inset`,
+        background: theme.palette.type === 'light' ? theme.palette.secondary.main : undefined,
         '& > *': {
           color: COLOR_ACID_GREEN,
           '& > *': {

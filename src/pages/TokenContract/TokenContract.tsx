@@ -150,11 +150,8 @@ export const TokenContract = memo(() => {
                       >
                         {dynamicFormDataConfig.map(({
                           id, name, renderProps, icon, isShort,
+                        // eslint-disable-next-line arrow-body-style
                         }, indexLvl2) => {
-                          if (name === 'frozenUntilDate' && !values.tokens[indexLvl1].isFrozen) {
-                            return null;
-                          }
-
                           return (
                             <Grid
                               item
@@ -171,7 +168,11 @@ export const TokenContract = memo(() => {
                                 name={`tokens[${indexLvl1}].${name}`}
                                 render={
                                 ({ form: { isSubmitting } }: FieldProps) => {
-                                  console.log(name);
+                                  if (name === 'frozenUntilDate' &&
+                                    !values.tokens[indexLvl1].isFrozen) {
+                                    return null;
+                                  }
+
                                   if (renderProps.type === 'switch') {
                                     const updatedHandleChange = (e) => {
                                       handleChange(`tokens[${indexLvl1}].${name}`)(e);

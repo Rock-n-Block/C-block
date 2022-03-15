@@ -9,15 +9,15 @@ import clsx from 'clsx';
 import {
   Preview, Copyable,
 } from 'components';
-import { useWeb3Provider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useScrollTop } from 'hooks';
 import {
   ILostKeyContractDynamicForm, TPreviewContractNavigationState, ILostKeyContract,
 } from 'types';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { deleteLostKeyContractForm } from 'store/contractForms/reducer';
-import { getDeepValueByPath } from 'utils';
 import { createLostKeyContract } from 'store/contractForms/actions';
+import { getDeepValueByPath } from 'utils';
 import {
   staticLostKeyContractPreviewHelpers,
 } from './LostKeyContractPreview.helpers';
@@ -51,6 +51,7 @@ export const LostKeyContractPreview = () => {
     [lostKeyContractFromStore, state?.contractPreview?.data],
   );
 
+  useScrollTop();
   const classes = useStyles();
 
   return (

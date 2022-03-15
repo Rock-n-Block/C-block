@@ -14,7 +14,9 @@ import {
   WeddingRingIcon,
   WillContract,
 } from 'theme/icons';
-import { ISpecificWeddingContractData, TMyContracts, TSpecificContractData } from 'types';
+import {
+  ISpecificLostKeyContractData, ISpecificWeddingContractData, ISpecificWillContractData, TMyContracts, TSpecificContractData,
+} from 'types';
 import { formattedDate } from 'utils';
 import {
   DivorceStatusesEnum, getDivorceStatus, getWithdrawalStatus, WithdrawalStatusesEnum,
@@ -252,17 +254,21 @@ const createLostkeyCard = ({
   createdAt,
   contractCreationData,
   specificContractData,
-}: IGetContractsLostKeyContractWithSpecificField) => ({
-  ...createContractCard(
-    name, address, test_node, createdAt, contractCreationData, specificContractData,
-  ),
-  contractType: 'Lostkey contract',
-  contractButtons: [
-    contractButtonsHelper.viewContract,
-    contractButtonsHelper.setUp,
-    contractButtonsHelper.confirmActiveStatus,
-  ],
-} as IContractsCard);
+}: IGetContractsLostKeyContractWithSpecificField) => {
+  const { isLostKey, terminated } = specificContractData as ISpecificLostKeyContractData;
+  const contractButtons = [contractButtonsHelper.viewContract];
+  if (!isLostKey && !terminated) {
+    contractButtons.push(contractButtonsHelper.setUp);
+    contractButtons.push(contractButtonsHelper.confirmActiveStatus);
+  }
+  return {
+    ...createContractCard(
+      name, address, test_node, createdAt, contractCreationData, specificContractData,
+    ),
+    contractType: 'Lostkey contract',
+    contractButtons,
+  } as IContractsCard;
+};
 
 const createWillCard = ({
   name,
@@ -271,17 +277,21 @@ const createWillCard = ({
   createdAt,
   contractCreationData,
   specificContractData,
-}: IGetContractsWillContractWithSpecificField) => ({
-  ...createContractCard(
-    name, address, test_node, createdAt, contractCreationData, specificContractData,
-  ),
-  contractType: 'Will contract',
-  contractButtons: [
-    contractButtonsHelper.viewContract,
-    contractButtonsHelper.setUp,
-    contractButtonsHelper.confirmLiveStatus,
-  ],
-} as IContractsCard);
+}: IGetContractsWillContractWithSpecificField) => {
+  const { isLostKey, terminated } = specificContractData as ISpecificWillContractData;
+  const contractButtons = [contractButtonsHelper.viewContract];
+  if (!isLostKey && !terminated) {
+    contractButtons.push(contractButtonsHelper.setUp);
+    contractButtons.push(contractButtonsHelper.confirmActiveStatus);
+  }
+  return {
+    ...createContractCard(
+      name, address, test_node, createdAt, contractCreationData, specificContractData,
+    ),
+    contractType: 'Will contract',
+    contractButtons,
+  } as IContractsCard;
+};
 
 const createWeddingCard = ({
   name,
@@ -302,16 +312,16 @@ const createWeddingCard = ({
   const { divorceTimestamp } = specificContractData as ISpecificWeddingContractData;
   const divorceStatus = getDivorceStatus(+divorceTimestamp);
 
-  const anotherContractButtons: TContractButtons = [];
+  const contractButtons: TContractButtons = [contractButtonsHelper.viewContract];
   if (divorceStatus === DivorceStatusesEnum.DIVORCE_NOT_STARTED &&
     withdrawalStatus === WithdrawalStatusesEnum.WITHDRAWAL_NOT_STARTED) {
-    anotherContractButtons.push(contractButtonsHelper.requestWithdrawal);
+    contractButtons.push(contractButtonsHelper.requestWithdrawal);
   }
   if (divorceStatus === DivorceStatusesEnum.DIVORCE_NOT_STARTED) {
-    anotherContractButtons.push(contractButtonsHelper.requestDivorce);
+    contractButtons.push(contractButtonsHelper.requestDivorce);
   }
   if (divorceStatus === DivorceStatusesEnum.DIVORCE_DONE) {
-    anotherContractButtons.push(contractButtonsHelper.getFunds);
+    contractButtons.push(contractButtonsHelper.getFunds);
   }
 
   const additionalContentRenderType = (() => {
@@ -336,10 +346,7 @@ const createWeddingCard = ({
     ),
     contractType: 'Wedding contract',
     additionalContentRenderType,
-    contractButtons: [
-      contractButtonsHelper.viewContract,
-      ...anotherContractButtons,
-    ],
+    contractButtons,
   } as IContractsCard;
 };
 

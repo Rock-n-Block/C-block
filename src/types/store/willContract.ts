@@ -16,3 +16,8 @@ export interface IWillContract extends ContractAdditionalField {
   rewardAmount: string;
   ownerEmail: string;
 }
+
+export interface ISpecificWillContractData {
+  isLostKey: boolean;
+  terminated: boolean;
+}

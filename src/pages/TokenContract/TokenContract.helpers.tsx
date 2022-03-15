@@ -7,6 +7,30 @@ import {
   contractNameSchema, ethereumAddressSchema, latinAndNumbers, latinAndNumbersWithOrNotSeparatedBySpaceRegExp,
 } from 'utils';
 
+//
+// mapper: (arrItem) => arrItem; // just like standard Array.prototype.map()
+// pathCreator: (index: number) => `array[${index}].fieldName`
+// `pathCreator` is needed to return specific field that triggered error
+//    like that: `intervals[${i}].intervalTime`
+Yup.addMethod(Yup.array, 'unique', function yupUnique(message, mapper, pathCreator) {
+  return this.test('unique', message, function yupUniqueTest(list) {
+    const mappedList = list.map(mapper);
+
+    for (let i = 0; i < mappedList.length; i += 1) {
+      const item = mappedList[i];
+      const firstIndex = mappedList.indexOf(item);
+      const lastIndex = mappedList.lastIndexOf(item);
+      if (firstIndex !== lastIndex) {
+        return this.createError({
+          path: pathCreator(lastIndex),
+          message,
+        });
+      }
+    }
+    return true;
+  });
+});
+
 const yesterday = new Date(Date.now() - 86400000);
 // because of safari
 const maxDate = new Date('9999-12-12'.replace(/-/g, '/'));
@@ -33,7 +57,9 @@ export const validationSchema = Yup.object().shape({
         then: Yup.date().min(yesterday).max(maxDate).required(),
       }),
     }),
-  ),
+  // @ts-expect-error due to Yup.addMethod()
+  // ).unique('Token address must be unique', (item) => item.address, (index) => `tokens[${index}].address`),
+  ).unique('Wallet name must be unique', (item) => item.name?.trim(), (index) => `tokens[${index}].name`),
 });
 
 type TokenContractFieldType = {
