@@ -24,7 +24,6 @@ export const getMuiInputBase = (theme: Theme): Overrides['MuiInputBase'] => ({
   },
   input: {
     borderRadius: theme.spacing(1.5),
-    // padding: `${theme.spacing(3, 2.5, 1.5)}`,
   },
 });
 
@@ -100,14 +99,6 @@ export const getMuiOutlinedInput = (
         '&:focus': {
           color: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_GREY_6,
         },
-        // '& > *': {
-        //   'label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder': {
-        //     background: 'red !important',
-        //   },
-        // },
-        // 'label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder': {
-        //   background: 'red !important',
-        // },
       },
     },
   },
