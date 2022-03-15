@@ -4,7 +4,7 @@ import {
 } from 'types';
 
 export const initialState: ModalsState = {
-  activeModal: Modals.none,
+  activeModal: Modals.Init,
   open: false,
 };
 
