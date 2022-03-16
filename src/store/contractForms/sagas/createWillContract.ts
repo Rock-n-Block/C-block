@@ -7,7 +7,6 @@ import { TransactionReceipt } from 'web3-core';
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { bep20Abi } from 'config/abi';
 import { contractsHelper, convertIntervalAsSeconds, getTokenAmount } from 'utils';
 import {
   ContractsNames, IWillContract, UserState,
@@ -29,18 +28,18 @@ function* createWillContractSaga({
 
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
-    const lastWillFactoryContractData = contractsHelper.getContractData(
+    const { address: lastWillFactoryAddress } = contractsHelper.getContractData(
       ContractsNames.lastWillFactory,
       isMainnet,
     );
 
-    const lastWillFactoryContract = new provider.eth.Contract(
-      lastWillFactoryContractData.abi,
-      lastWillFactoryContractData.address,
+    const lastWillFactoryContract = contractsHelper.getWillFactoryContract(
+      provider,
+      lastWillFactoryAddress,
     );
 
-    const celoTokenContract = new provider.eth.Contract(
-      bep20Abi,
+    const celoTokenContract = contractsHelper.getBep20Contract(
+      provider,
       celoAddress,
     );
 
@@ -51,7 +50,7 @@ function* createWillContractSaga({
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
-        lastWillFactoryContractData.address,
+        lastWillFactoryAddress,
       ).call,
     );
 
@@ -71,7 +70,7 @@ function* createWillContractSaga({
         type: actionTypes.APPROVE,
         payload: {
           provider,
-          spender: lastWillFactoryContractData.address,
+          spender: lastWillFactoryAddress,
           amount: totalAmountToBeApproved,
           tokenAddress: celoAddress,
         },
@@ -91,16 +90,14 @@ function* createWillContractSaga({
       pingIntervalAsValue, pingIntervalAsDateUnits,
     );
 
-    const contractMethodArgs: (string | string[] | number[] | number)[] = [
-      celoAddress,
-      reserveAddresses,
-      sharesPercents,
-      pingIntervalAsSeconds,
-      rewardAmountSerilialized,
-    ];
-
     const { transactionHash }: TransactionReceipt = yield call(
-      lastWillFactoryContract.methods.deployLostKey(...contractMethodArgs).send,
+      lastWillFactoryContract.methods.deployLostKey(
+        celoAddress,
+        reserveAddresses,
+        sharesPercents,
+        pingIntervalAsSeconds,
+        rewardAmountSerilialized,
+      ).send,
       {
         from: myAddress,
       },

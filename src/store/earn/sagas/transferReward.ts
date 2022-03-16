@@ -5,9 +5,9 @@ import {
 import userSelector from 'store/user/selectors';
 import apiActions from 'store/ui/actions';
 import { setActiveModal } from 'store/modals/reducer';
-import { lostKeyAbi } from 'config/abi';
 
 import { Modals } from 'types';
+import { contractsHelper } from 'utils';
 import actionTypes from '../actionTypes';
 import { transferReward } from '../actions';
 import { removeFinishedContract } from '../reducer';
@@ -24,7 +24,7 @@ function* transferRewardSaga({
     }));
 
     const { address: userWalletAddress } = yield select(userSelector.getUser);
-    const contract = new provider.eth.Contract(lostKeyAbi, contractAddress);
+    const contract = contractsHelper.getLostKeyContract(provider, contractAddress);
 
     yield call(
       contract.methods.distribute().send,

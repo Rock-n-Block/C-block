@@ -5,9 +5,10 @@ import {
   select,
   takeLatest,
 } from 'redux-saga/effects';
+
 import apiActions from 'store/ui/actions';
 import userSelector from 'store/user/selectors';
-import { bep20Abi } from 'config/abi';
+import { contractsHelper } from 'utils';
 import actionTypes from '../actionTypes';
 import { approve } from '../actions';
 
@@ -24,7 +25,7 @@ export function* approveSaga({
     yield put(apiActions.request(type));
     const { address: myAddress } = yield select(userSelector.getUser);
 
-    const tokenContract = new provider.eth.Contract(bep20Abi, tokenAddress);
+    const tokenContract = contractsHelper.getBep20Contract(provider, tokenAddress);
     yield call(tokenContract.methods.approve(spender, amount.toString()).send, {
       from: myAddress,
     });

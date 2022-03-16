@@ -3,13 +3,13 @@ import Web3 from 'web3';
 
 import { IGetContractsLostKeyContractWithContractCreationField } from 'pages/MyContracts/MyContracts.helpers';
 import { ISpecificLostKeyContractData } from 'types';
+import { contractsHelper } from 'utils';
 import {
-  getLostKeyContract,
   transformMergeLostKeyContractsAndSpecificData,
 } from './getLostKeyContracts.helpers';
 
 function* fetchLostKeyContractSaga(provider: Web3, contractAddress: string) {
-  const contract = getLostKeyContract(provider, contractAddress);
+  const contract = contractsHelper.getLostKeyContract(provider, contractAddress);
 
   try {
     const callsPromises = [

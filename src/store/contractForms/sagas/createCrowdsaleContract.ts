@@ -8,7 +8,6 @@ import { TransactionReceipt } from 'web3-core';
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { bep20Abi } from 'config/abi';
 import { contractsHelper, convertIntervalAsSeconds, getTokenAmount } from 'utils';
 import {
   ContractsNames, ICrowdsaleContract, UserState,
@@ -48,15 +47,13 @@ function* createCrowdsaleContractSaga({
       isMainnet,
     );
 
-    const crowdsaleFactoryContract = new provider.eth.Contract(
+    const crowdsaleFactoryContract = contractsHelper.getCrowdsaleFactoryContract(
+      provider,
       crowdsaleFactoryContractData.abi,
       crowdsaleFactoryContractData.address,
     );
 
-    const celoTokenContract = new provider.eth.Contract(
-      bep20Abi,
-      celoAddress,
-    );
+    const celoTokenContract = contractsHelper.getBep20Contract(provider, celoAddress);
 
     const allowance = yield call(
       celoTokenContract.methods.allowance(
@@ -105,10 +102,7 @@ function* createCrowdsaleContractSaga({
       amountBonus,
     } = crowdsaleContract;
 
-    const userToken = new provider.eth.Contract(
-      bep20Abi,
-      tokenAddress,
-    );
+    const userToken = contractsHelper.getBep20Contract(provider, tokenAddress);
     const tokenDecimals: string = yield call(
       userToken.methods.decimals().call,
     );
@@ -137,7 +131,7 @@ function* createCrowdsaleContractSaga({
 
     const ratesDecimals: string[] = yield all(
       tokens.map(({ address }) => {
-        const contract = new provider.eth.Contract(bep20Abi, address);
+        const contract = contractsHelper.getBep20Contract(provider, address);
         const decimalsPromise = call(contract.methods.decimals().call);
         return decimalsPromise;
       }),

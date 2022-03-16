@@ -3,21 +3,20 @@ import Web3 from 'web3';
 
 import { IFetchWeddingContractReturnType } from 'pages/MyContracts/hooks';
 import { IGetContractsWeddingContractWithContractCreationField } from 'pages/MyContracts/MyContracts.helpers';
-import { getRidOfIndexesInResultObject } from 'utils';
+import { contractsHelper, getRidOfIndexesInResultObject } from 'utils';
 import {
-  getWeddingContract,
   transformMergeWeddingContractsAndSpecificData,
 } from './getWeddingContracts.helpers';
 
 function* fetchWeddingContractSaga(provider: Web3, contractAddress: string) {
-  const contract = getWeddingContract(provider, contractAddress);
+  const contract = contractsHelper.getWeddingContract(provider, contractAddress);
 
   try {
     const callsPromises = [
-      'activeWithdrawalProposal',
-      'divorceProposedBy',
-      'divorceTimestamp',
-      'withdrawalProposalPending',
+      'activeWithdrawalProposal' as const,
+      'divorceProposedBy' as const,
+      'divorceTimestamp' as const,
+      'withdrawalProposalPending' as const,
     ].map((methodName) => call(contract.methods[methodName]().call));
     const [
       activeWithdrawalProposal,

@@ -77,11 +77,6 @@ export function* getContractCreationPriceSaga({
         break;
     }
 
-    console.log({
-      contractName,
-      priceMethodArgs,
-    });
-
     const factoryContractData = contractsHelper.getContractData(
       contractName,
       isMainnet,

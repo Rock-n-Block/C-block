@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import { Transaction } from 'web3-core';
-import { EventData } from 'web3-eth-contract';
 
 import {
   IContractsCard, IGetContractsCrowdsaleContractWithCreatedAtField, IGetContractsLostKeyContractWithCreatedAtField, IGetContractsTokenContractWithCreatedAtField, TGetContractsWithCreatedAtField,
@@ -14,11 +13,8 @@ import myContractsActions from 'store/myContracts/actions';
 import {
   contractsHelper, convertIntervalFromSeconds, formattedDate, getTokenAmountDisplay,
 } from 'utils';
-import { bep20Abi } from 'config/abi';
 import { getCeloConfigMetamask } from 'config';
-
-import { getWeddingContract } from '../weddingContracts/sagas/getWeddingContracts.helpers';
-// import { enableWeddingRequestDivorce, enableWeddingRequestWithdrawal } from '../reducer';
+import { DivorceProposed, WithdrawalProposed } from 'types/abi/wedding';
 
 export type TFunctionParams = {
   methodName: TDeployContractCreationMethodNames;
@@ -123,7 +119,7 @@ const transformCreationDataToCrowdsaleContract = async (
 
   const ratesDecimals = await Promise.all(
     tokensAddresses.map((address: string) => {
-      const contract = new web3.eth.Contract(bep20Abi, address);
+      const contract = contractsHelper.getBep20Contract(web3, address);
       const decimalsPromise = contract.methods.decimals().call();
       return decimalsPromise;
     }),
@@ -295,10 +291,10 @@ export const getContractCreationData = (
 export const subscribeToAllWeddingEvents = (
   provider: Web3,
   contractAddress: string,
-  divorceProposedCb: (error: Error, event: EventData) => void,
-  withdrawalProposedCb: (error: Error, event: EventData) => void,
+  divorceProposedCb: (error: Error, event: DivorceProposed) => void,
+  withdrawalProposedCb: (error: Error, event: WithdrawalProposed) => void,
 ) => {
-  const contract = getWeddingContract(provider, contractAddress);
+  const contract = contractsHelper.getWeddingContract(provider, contractAddress);
   contract.once('DivorceProposed', divorceProposedCb);
   contract.once('WithdrawalProposed', withdrawalProposedCb);
 };
@@ -309,17 +305,11 @@ export const subscribeOnEvents = (provider: Web3, data: IContractsCard[]) => {
       console.log('Subscribe to all weddings Events');
       subscribeToAllWeddingEvents(provider, address, (error, event) => {
         console.log('divorce INIT', event);
-        // rootStore.store.dispatch(enableWeddingRequestWithdrawal({
-        //   address,
-        // }));
         rootStore.store.dispatch(myContractsActions.getMyContracts({
           provider,
         }));
       }, (error, event) => {
         console.log('withdrawal INIT', event);
-        // rootStore.store.dispatch(enableWeddingRequestDivorce({
-        //   address,
-        // }));
         rootStore.store.dispatch(myContractsActions.getMyContracts({
           provider,
         }));

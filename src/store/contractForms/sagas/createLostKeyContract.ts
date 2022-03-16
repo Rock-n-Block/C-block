@@ -7,7 +7,6 @@ import { TransactionReceipt } from 'web3-core';
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { bep20Abi } from 'config/abi';
 import { contractsHelper, convertIntervalAsSeconds, getTokenAmount } from 'utils';
 import {
   ContractsNames, ILostKeyContract, UserState,
@@ -33,20 +32,17 @@ function* createLostKeyContractSaga({
 
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
-    const lostKeyFactoryContractData = contractsHelper.getContractData(
+    const { address: lostKeyFactoryAddress } = contractsHelper.getContractData(
       ContractsNames.lostKeyFactory,
       isMainnet,
     );
 
-    const lostKeyFactoryContract = new provider.eth.Contract(
-      lostKeyFactoryContractData.abi,
-      lostKeyFactoryContractData.address,
+    const lostKeyFactoryContract = contractsHelper.getLostKeyFactoryContract(
+      provider,
+      lostKeyFactoryAddress,
     );
 
-    const celoTokenContract = new provider.eth.Contract(
-      bep20Abi,
-      celoAddress,
-    );
+    const celoTokenContract = contractsHelper.getBep20Contract(provider, celoAddress);
 
     const celoDecimals: string = yield call(
       celoTokenContract.methods.decimals().call,
@@ -55,7 +51,7 @@ function* createLostKeyContractSaga({
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
-        lostKeyFactoryContractData.address,
+        lostKeyFactoryAddress,
       ).call,
     );
 
@@ -75,7 +71,7 @@ function* createLostKeyContractSaga({
         type: actionTypes.APPROVE,
         payload: {
           provider,
-          spender: lostKeyFactoryContractData.address,
+          spender: lostKeyFactoryAddress,
           amount: totalAmountToBeApproved,
           tokenAddress: celoAddress,
         },
@@ -94,16 +90,14 @@ function* createLostKeyContractSaga({
       pingIntervalAsValue, pingIntervalAsDateUnits,
     );
 
-    const contractMethodArgs: (string | string[] | number[] | number)[] = [
-      celoAddress,
-      reserveAddresses,
-      sharesPercents,
-      pingIntervalAsSeconds,
-      rewardAmountSerilialized,
-    ];
-
     const { transactionHash }: TransactionReceipt = yield call(
-      lostKeyFactoryContract.methods.deployLostKey(...contractMethodArgs).send,
+      lostKeyFactoryContract.methods.deployLostKey(
+        celoAddress,
+        reserveAddresses,
+        sharesPercents,
+        pingIntervalAsSeconds,
+        rewardAmountSerilialized,
+      ).send,
       {
         from: myAddress,
       },

@@ -3,20 +3,44 @@ import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 
 import {
+  bep20Abi,
   crowdsaleNonSoftCappableBonusableAbi,
   crowdsaleNonSoftCappableNonBonusableAbi,
   crowdsaleSoftCappableBonusableAbi,
   crowdsaleSoftCappableNonBonusableAbi,
+  lostKeyAbi,
   lostKeyFactoryAbi,
   tokenMintableFreezableAbi,
   tokenMintableNonFreezableAbi,
   tokenNonMintableFreezableAbi,
   tokenNonMintableNonFreezableAbi,
+  weddingAbi,
   weddingFactoryAbi,
 } from 'config/abi';
-import { ContractsNames } from 'types';
-import { TDeployCrowdsaleContractCreationMethodNames, TDeployTokenContractCreationMethodNames } from 'types/utils/contractsHelper';
+import {
+  TDeployCrowdsaleContractCreationMethodNames,
+  TDeployTokenContractCreationMethodNames,
+} from 'types/utils/contractsHelper';
 import { getCeloConfigMetamask, contracts } from 'config';
+
+import { ContractsNames } from 'types';
+import { Bep20 } from 'types/abi/bep20';
+
+import { CrowdsaleNonSoftCappableBonusable } from 'types/abi/crowdsaleNonSoftCappableBonusable';
+import { CrowdsaleNonSoftCappableNonBonusable } from 'types/abi/crowdsaleNonSoftCappableNonBonusable';
+import { CrowdsaleSoftCappableBonusable } from 'types/abi/crowdsaleSoftCappableBonusable';
+import { CrowdsaleSoftCappableNonBonusable } from 'types/abi/crowdsaleSoftCappableNonBonusable';
+
+import { TokenMintableFreezable } from 'types/abi/tokenMintableFreezable';
+import { TokenMintableNonFreezable } from 'types/abi/tokenMintableNonFreezable';
+import { TokenNonMintableFreezable } from 'types/abi/tokenNonMintableFreezable';
+import { TokenNonMintableNonFreezable } from 'types/abi/tokenNonMintableNonFreezable';
+
+import { LostKey } from 'types/abi/lostKey';
+import { LostKeyFactory } from 'types/abi/lostKeyFactory';
+
+import { Wedding } from 'types/abi/wedding';
+import { WeddingFactory } from 'types/abi/weddingFactory';
 
 enum ContractFactorySettings {
   Non = 'Non',
@@ -36,24 +60,96 @@ enum CrowdsaleContractFactorySettings {
 }
 
 type ISignatureMethodNameMap = {
-  [key in string]: string
+  [key in string]: string;
 };
 
 interface ISignatureMap {
-  abi: AbiItem,
-  signature: string,
+  abi: AbiItem;
+  signature: string;
 }
 
 type IMethodNameSignatureMap = {
-  [key in string]: ISignatureMap
+  [key in string]: ISignatureMap;
 };
 
-export const contractsHelper = {
-  getChainNativeCurrency(
-    isMainnet: boolean,
-  ) {
-    return getCeloConfigMetamask(isMainnet)[0].nativeCurrency;
+const contractsGetter = {
+  getBep20Contract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      bep20Abi,
+      contractAddress,
+    ) as unknown as Bep20;
   },
+  getWillContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      lostKeyAbi,
+      contractAddress,
+    ) as unknown as LostKey;
+  },
+  getWillFactoryContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      lostKeyFactoryAbi,
+      contractAddress,
+    ) as unknown as LostKeyFactory;
+  },
+  getLostKeyContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      lostKeyAbi,
+      contractAddress,
+    ) as unknown as LostKey;
+  },
+  getLostKeyFactoryContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      lostKeyFactoryAbi,
+      contractAddress,
+    ) as unknown as LostKeyFactory;
+  },
+  getCrowdsaleFactoryContract(
+    provider: Web3,
+    crowdsaleFactoryAbi: AbiItem | AbiItem[],
+    contractAddress: string,
+  ) {
+    return new provider.eth.Contract(
+      crowdsaleFactoryAbi,
+      contractAddress,
+    ) as unknown as
+      | CrowdsaleNonSoftCappableBonusable
+      | CrowdsaleNonSoftCappableNonBonusable
+      | CrowdsaleSoftCappableBonusable
+      | CrowdsaleSoftCappableNonBonusable;
+  },
+  getTokenFactoryContract(
+    provider: Web3,
+    tokenFactoryAbi: AbiItem | AbiItem[],
+    contractAddress: string,
+  ) {
+    return new provider.eth.Contract(
+      tokenFactoryAbi,
+      contractAddress,
+    ) as unknown as |
+    TokenMintableFreezable |
+    TokenMintableNonFreezable |
+    TokenNonMintableFreezable |
+    TokenNonMintableNonFreezable;
+  },
+  getWeddingContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      weddingAbi,
+      contractAddress,
+    ) as unknown as Wedding;
+  },
+  getWeddingFactoryContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      weddingFactoryAbi,
+      contractAddress,
+    ) as unknown as WeddingFactory;
+  },
+};
+
+const getChainNativeCurrency = (isMainnet: boolean) => getCeloConfigMetamask(isMainnet)[0].nativeCurrency;
+
+export const contractsHelper = {
+  ...contractsGetter,
+  getChainNativeCurrency,
   getContractData(
     contractName: ContractsNames,
     isMainnet: boolean,
@@ -90,9 +186,15 @@ export const contractsHelper = {
   getTokenFactoryCreationParamsByDeployMethodName(
     deployMethodName: TDeployTokenContractCreationMethodNames,
   ) {
-    const isBurnable = deployMethodName.includes(TokenContractFactorySettings.Burnable);
-    const isMintable = deployMethodName.includes(TokenContractFactorySettings.Mintable);
-    const isFreezable = deployMethodName.includes(TokenContractFactorySettings.Freezable);
+    const isBurnable = deployMethodName.includes(
+      TokenContractFactorySettings.Burnable,
+    );
+    const isMintable = deployMethodName.includes(
+      TokenContractFactorySettings.Mintable,
+    );
+    const isFreezable = deployMethodName.includes(
+      TokenContractFactorySettings.Freezable,
+    );
     return {
       isBurnable,
       isMintable,
@@ -134,9 +236,12 @@ export const contractsHelper = {
     deployMethodName: TDeployCrowdsaleContractCreationMethodNames,
   ) {
     const isSoftcappable = !deployMethodName.includes(
-      ContractFactorySettings.Non + CrowdsaleContractFactorySettings.SoftCappable,
+      ContractFactorySettings.Non +
+        CrowdsaleContractFactorySettings.SoftCappable,
     );
-    const isBonusable = deployMethodName.includes(CrowdsaleContractFactorySettings.Bonusable);
+    const isBonusable = deployMethodName.includes(
+      CrowdsaleContractFactorySettings.Bonusable,
+    );
     const isDatesChangeable = deployMethodName.includes(
       CrowdsaleContractFactorySettings.DatesChangeable,
     );

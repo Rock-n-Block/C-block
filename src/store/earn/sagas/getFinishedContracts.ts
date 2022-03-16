@@ -23,10 +23,9 @@ function* fetchFinishedContractsRewardAmount(provider: Web3, addresses: string[]
   try {
     const { isMainnet }: UserState = yield select(userSelector.getUser);
     const {
-      abi: celoAbi,
       address: celoAddress,
     } = contractsHelper.getContractData(ContractsNames.celo, isMainnet);
-    const celoTokenContract = new provider.eth.Contract(celoAbi, celoAddress);
+    const celoTokenContract = contractsHelper.getBep20Contract(provider, celoAddress);
     const rewardAmounts: string[] = yield all(
       addresses.map((address) => call(celoTokenContract.methods.balanceOf(address).call)),
     );
