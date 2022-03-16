@@ -13,15 +13,14 @@
     "lint": "eslint \"{src,types}/**/*.ts{,x}\" --cache",
     "lint-fix": "npm run format && npm run lint-fix:ts",
     "lint-fix:ts": "eslint \"{src,types}/**/*.ts{,x}\" --fix",
-
     "test:update": "jest --updateSnapshot ./src",
     "test:watch": "jest ./src",
     "test:coverage": "jest --coverage --watchAll=false ./src",
-
     "pre-commit": "lint-staged",
     "generate-swagger-types": "node ./scripts/generate-swagger-types/download-schema.js && node ./scripts/generate-swagger-types/generate-types.js",
-    "prepare": "husky install",
-    "postinstall": "yarn run generate-swagger-types"
+    "generate-chain-types": "typechain --target=web3-v1 '**/abi/*.json' --out-dir='./src/types/abi'",
+    "postinstall": "yarn run generate-swagger-types && yarn run generate-chain-types",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -97,6 +96,7 @@
     "@testing-library/react": "^12.1.0",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.2.1",
+    "@typechain/web3-v1": "^5.0.0",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.173",
     "@types/react": "^17.0.21",
@@ -120,6 +120,7 @@
     "react-docgen-typescript-loader": "^3.7.2",
     "react-scripts": "^4.0.3",
     "react-test-renderer": "^17.0.2",
+    "typechain": "^7.0.1",
     "typescript": "^4.4.3 && <4.5.0"
   },
   "resolutions": {
