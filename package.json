@@ -13,17 +13,16 @@
     "lint": "eslint \"{src,types}/**/*.ts{,x}\" --cache",
     "lint-fix": "npm run format && npm run lint-fix:ts",
     "lint-fix:ts": "eslint \"{src,types}/**/*.ts{,x}\" --fix",
+
     "test:update": "jest --updateSnapshot ./src",
     "test:watch": "jest ./src",
-    "test:coverage": "jest --coverage --watchAll=false ./src"
+    "test:coverage": "jest --coverage --watchAll=false ./src",
+
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -111,7 +110,7 @@
     "husky": "^7.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jest-css-modules": "^2.1.0",
-    "lint-staged": ">=10",
+    "lint-staged": "^12.3.6",
     "opener": "^1.5.2",
     "plop": "2.7.4",
     "prettier": "2.4.1",
