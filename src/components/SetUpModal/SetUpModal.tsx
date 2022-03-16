@@ -1,6 +1,7 @@
 import React, {
   useCallback, useEffect, useMemo, useState, VFC,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
@@ -9,13 +10,15 @@ import { useDebouncedCallback } from 'use-debounce';
 import BigNumber from 'bignumber.js';
 
 import userSelector from 'store/user/selectors';
+import { setActiveModal } from 'store/modals/reducer';
 import { useCheckIfTokenAddress, useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { bep20Abi } from 'config/abi';
 import { useWalletConnectorContext } from 'services';
 import { incrementLastId } from 'utils/identifactors';
-import { setNotification, shortenPhrase } from 'utils';
+import { contractsHelper, setNotification, shortenPhrase } from 'utils';
+import { Modals } from 'types';
 import { PlusIcon } from '../../theme/icons';
 import {
   createAddressesArr,
@@ -46,6 +49,7 @@ export const SetUpModal: VFC<Props> = ({
   const { walletService } = useWalletConnectorContext();
   const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [addresses, setAddresses] = useState<ISetUpModalTokenAddressField[]>(
     [],
   );
@@ -144,8 +148,13 @@ export const SetUpModal: VFC<Props> = ({
   }, [clearInputs, onClose, setIsModalOpen]);
 
   const handleApprove = async ({ id, address }: ISetUpModalTokenAddressField) => {
+    const provider = walletService.Web3();
     try {
-      const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
+      dispatch(setActiveModal({
+        activeModal: Modals.SendTxPending,
+        open: true,
+      }));
+      const contract = contractsHelper.getBep20Contract(provider, address);
       await contract.methods.approve(contractAddress, MAX_UINT_256).send({
         from: userWalletAddress,
       });
@@ -155,8 +164,16 @@ export const SetUpModal: VFC<Props> = ({
         address,
         allowance: MAX_UINT_256,
       });
+      dispatch(setActiveModal({
+        activeModal: Modals.SendTxSuccess,
+        open: true,
+      }));
     } catch (err) {
       console.log(err);
+      dispatch(setActiveModal({
+        activeModal: Modals.SendTxRejected,
+        open: true,
+      }));
     }
   };
 
