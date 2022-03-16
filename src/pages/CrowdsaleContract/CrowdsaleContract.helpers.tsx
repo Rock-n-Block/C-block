@@ -12,11 +12,26 @@ export const validationSchema = Yup.object().shape({
 
   tokens: Yup.array().of(
     Yup.object().shape({
-      address: Yup.string().required(),
-      rate: Yup.number().min(1).max(100000)
-        .required(),
+      address: ethereumAddressSchema.required(),
+      rate: Yup.number().min(1).max(100000).required(),
     }),
-  ),
+  ).test('saleAndPaymentTokensUnique', function saleAndPaymentTokensUnique(list) {
+    const mappedList = list.map((item) => item.address);
+
+    const tokenAddress = this.resolve(Yup.ref('tokenAddress')) as string;
+
+    for (let i = 0; i < mappedList.length; i += 1) {
+      const item = mappedList[i];
+
+      if (item === tokenAddress) {
+        return this.createError({
+          path: `tokens[${i}].address`,
+          message: 'Sale token & payment token addresses must be unique',
+        });
+      }
+    }
+    return true;
+  }),
 
   softcapTokens: Yup.number().integer().min(0).required(),
   saleDuration: Yup.number().integer().min(1).required(),
