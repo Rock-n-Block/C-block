@@ -4,7 +4,7 @@ import {
 
 import myContractsSelector from 'store/myContracts/selectors';
 import userSelector from 'store/user/selectors';
-import { myContractsReducer } from 'store/myContracts/reducer';
+import { setUpModalSetAddresses } from 'store/myContracts/reducer';
 import { UserState, ISetUpModalTokenAddressField } from 'types';
 import { contractsHelper } from 'utils';
 
@@ -45,12 +45,13 @@ function* updateAllowanceSaga(
       contract.methods.allowance(userWalletAddress, contractAddress).call,
     );
     yield put(
-      myContractsReducer.actions.setUpModalSetAddresses({
+      setUpModalSetAddresses({
         contractAddress,
         addresses: addresses.map((item) => (item.id === id ? {
           id,
           address,
           allowance,
+          isAdded: false,
         } : item)),
       }),
     );

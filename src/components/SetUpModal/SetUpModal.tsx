@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useMemo, VFC,
+  useCallback, useMemo, VFC,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -9,31 +9,29 @@ import clsx from 'clsx';
 import { useDebouncedCallback } from 'use-debounce';
 import BigNumber from 'bignumber.js';
 
-import userSelector from 'store/user/selectors';
-import myContractsSelector from 'store/myContracts/selectors';
 import {
   useShallowSelector, useWeb3Provider,
 } from 'hooks';
 import { Modal } from 'components/Modal';
 import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
+import userSelector from 'store/user/selectors';
+import myContractsSelector from 'store/myContracts/selectors';
+import uiSelector from 'store/ui/selectors';
+import { myContractsReducer } from 'store/myContracts/reducer';
+import { updateAllowance, setUpModalApprove } from 'store/myContracts/setUpModal/actions';
+import actionTypes from 'store/myContracts/setUpModal/actionTypes';
 import { incrementLastId } from 'utils/identifactors';
 import {
   ISetUpModalTokenAddressField,
-  ISetUpModalTokenAddress,
+  RequestStatus,
 } from 'types';
-import { myContractsReducer } from 'store/myContracts/reducer';
-import { updateAllowance, setUpModalApprove } from 'store/myContracts/setUpModal/actions';
 import { PlusIcon } from '../../theme/icons';
-import {
-  createAddressesArr,
-} from './SetUpModal.helpers';
 import { useStyles } from './SetUpModal.styles';
 
 interface Props {
   className?: string;
   open?: boolean;
   contractAddress?: string;
-  addresses: ISetUpModalTokenAddress[];
   setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
   onAccept?: (addresses: ISetUpModalTokenAddressField[]) => void;
@@ -43,7 +41,6 @@ export const SetUpModal: VFC<Props> = ({
   open,
   setIsModalOpen,
   contractAddress = '',
-  addresses: initAddresses,
   onClose,
   onAccept,
 }) => {
@@ -64,14 +61,9 @@ export const SetUpModal: VFC<Props> = ({
     1000,
   );
 
-  useEffect(() => {
-    dispatch(
-      myContractsReducer.actions.setUpModalSetAddresses({
-        contractAddress,
-        addresses: createAddressesArr(initAddresses),
-      }),
-    );
-  }, [contractAddress, dispatch, initAddresses]);
+  const approveRequestUi = useShallowSelector(
+    uiSelector.getProp(actionTypes.SETUP_MODAL_APPROVE),
+  );
 
   const addAddressHandler = useCallback(() => {
     dispatch(
@@ -79,7 +71,9 @@ export const SetUpModal: VFC<Props> = ({
         contractAddress,
         addresses: [
           ...addresses,
-          { id: incrementLastId(addresses), address: '', allowance: '' },
+          {
+            id: incrementLastId(addresses), address: '', allowance: '', isAdded: false,
+          },
         ],
       }),
     );
@@ -126,13 +120,11 @@ export const SetUpModal: VFC<Props> = ({
     if (isDisabledAcceptButton) return;
     if (onAccept) {
       onAccept(
-        addresses.filter(({ address }) => !initAddresses
-          .map(({ address: initAddress }) => initAddress.toLowerCase())
-          .includes(address.toLowerCase())),
+        addresses.filter(({ isAdded }) => !isAdded),
       );
     }
     closeModal();
-  }, [addresses, closeModal, initAddresses, isDisabledAcceptButton, onAccept]);
+  }, [addresses, closeModal, isDisabledAcceptButton, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
   const title = useMemo(
@@ -166,15 +158,19 @@ export const SetUpModal: VFC<Props> = ({
         give approve to the contract to transfer them
       </Typography>
       <Box>
-        {addresses.map(({ id, address, allowance }) => (
+        {addresses.map(({
+          id, address, allowance, isAdded,
+        }) => (
           <Box key={id} className={classes.inputContainer}>
             <TextField
               value={address}
               label="Token address"
+              disabled={isAdded}
               onChange={(e) => handleChange({
                 id,
                 address: e.target.value,
                 allowance,
+                isAdded: false,
               })}
             />
             {
@@ -182,10 +178,12 @@ export const SetUpModal: VFC<Props> = ({
                 <Button
                   className={clsx(classes.button, classes.approveButton)}
                   variant="outlined"
+                  disabled={isAdded || approveRequestUi === RequestStatus.REQUEST}
                   onClick={() => handleApprove({
                     id,
                     address,
                     allowance,
+                    isAdded: false,
                   })}
                 >
                   Approve

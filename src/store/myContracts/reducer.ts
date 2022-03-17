@@ -228,6 +228,7 @@ export const {
 
   setUpModalClearInputs,
   setUpModalResetField,
+  setUpModalSetAddresses,
 } = myContractsReducer.actions;
 
 export default myContractsReducer.reducer;

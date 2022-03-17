@@ -3,9 +3,7 @@ import { useCallback } from 'react';
 import { useWalletConnectorContext } from 'services';
 import useShallowSelector from 'hooks/useShallowSelector';
 import userSelector from 'store/user/selectors';
-import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { contractsHelper } from 'utils';
-import { ISetUpModalTokenAddress } from 'types';
 
 export const useMyLostKeyContract = (
   onSuccessTx: () => void, onErrorTx: () => void, onFinishTx: () => void,
@@ -45,43 +43,10 @@ export const useMyLostKeyContract = (
     }
   }, [walletService]);
 
-  const fetchSetUpModalTokenAddresses = useCallback(async (contractAddress: string) => {
-    const web3 = walletService.Web3();
-    const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
-
-    const tokensAddressesPromises = new Array(TOKEN_ADDRESSES_MAX_COUNT)
-      .fill('')
-      .map((_, index) => contract.methods.tokensToSend(index).call());
-    try {
-      const settledTokensAddresses = await Promise.allSettled(
-        tokensAddressesPromises,
-      );
-      const tokensAddresses = settledTokensAddresses
-        .filter(({ status }) => status === 'fulfilled')
-        .map((item) => item.status === 'fulfilled' && item.value);
-
-      const allowances = await Promise.all(
-        tokensAddresses.map((address) => {
-          const contract = contractsHelper.getBep20Contract(web3, address);
-          return contract.methods.allowance(userWalletAddress, contractAddress).call();
-        }),
-      );
-
-      return tokensAddresses.map((address, index) => ({
-        address,
-        allowance: allowances[index],
-      } as ISetUpModalTokenAddress));
-    } catch (err) {
-      console.log(err);
-      return undefined;
-    }
-  }, [userWalletAddress, walletService]);
-
   const handleAddTokens = useCallback(
     async (contractAddress: string, tokensAddresses: string[]) => {
       const web3 = walletService.Web3();
       const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
-      console.log('handleAddTokens', tokensAddresses);
       try {
         await contract.methods.addToken(tokensAddresses).send({
           from: userWalletAddress,
@@ -102,6 +67,5 @@ export const useMyLostKeyContract = (
     fetchActiveStatusConfirmData,
 
     handleAddTokens,
-    fetchSetUpModalTokenAddresses,
   };
 };

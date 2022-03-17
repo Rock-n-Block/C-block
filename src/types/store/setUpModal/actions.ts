@@ -1,12 +1,12 @@
-import { TProvider } from '../actions';
+import { TContractAddress, TProvider } from '../actions';
 import { ISetUpModalTokenAddressField } from './storeTypes';
 
-export type TUpdateAllowanceAction = TProvider & {
-  contractAddress: string;
+export type TUpdateAllowanceAction = TProvider & TContractAddress & {
   tokenAddressField: ISetUpModalTokenAddressField;
 };
 
-export type TSetUpModalApproveAction = TProvider & {
-  contractAddress: string;
+export type TSetUpModalApproveAction = TProvider & TContractAddress & {
   tokenAddressField: ISetUpModalTokenAddressField;
 };
+
+export type TGetSetUpModalTokenAddressesAction = TProvider & TContractAddress;

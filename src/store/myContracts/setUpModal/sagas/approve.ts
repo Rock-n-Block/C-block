@@ -7,9 +7,10 @@ import { ISetUpModalTokenAddressField, Modals } from 'types';
 
 import { setActiveModal } from 'store/modals/reducer';
 import contractFormsActionTypes from 'store/contractForms/actionTypes';
-import { MAX_UINT_256 } from 'appConstants';
-import { myContractsReducer } from 'store/myContracts/reducer';
 import { approveSaga } from 'store/contractForms/sagas/approveSaga';
+import { setUpModalSetAddresses } from 'store/myContracts/reducer';
+import apiActions from 'store/ui/actions';
+import { MAX_UINT_256 } from 'appConstants';
 import { setUpModalApprove } from '../actions';
 import actionTypes from '../actionTypes';
 
@@ -24,6 +25,7 @@ function* setUpModalApproveSaga(
     },
   }: ReturnType<typeof setUpModalApprove>,
 ) {
+  yield put(apiActions.request(type));
   const addresses: ISetUpModalTokenAddressField[] = yield select(
     myContractsSelector.getSetUpModalAddresses(contractAddress),
   );
@@ -47,12 +49,13 @@ function* setUpModalApproveSaga(
     });
 
     yield put(
-      myContractsReducer.actions.setUpModalSetAddresses({
+      setUpModalSetAddresses({
         contractAddress,
         addresses: addresses.map((item) => (item.id === id ? {
           id,
           address,
           allowance: MAX_UINT_256,
+          isAdded: true,
         } : item)),
       }),
     );
@@ -61,12 +64,14 @@ function* setUpModalApproveSaga(
       activeModal: Modals.SendTxSuccess,
       open: true,
     }));
+    yield put(apiActions.success(type));
   } catch (err) {
     console.log(err);
     yield put(setActiveModal({
       activeModal: Modals.SendTxRejected,
       open: true,
     }));
+    yield put(apiActions.error(type, err));
   }
 }
 

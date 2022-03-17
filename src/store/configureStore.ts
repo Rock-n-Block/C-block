@@ -86,6 +86,7 @@ const store = configureStore({
 
           setUpActionTypes.SETUP_MODAL_UPDATE_ALLOWANCE,
           setUpActionTypes.SETUP_MODAL_APPROVE,
+          setUpActionTypes.GET_SETUP_MODAL_TOKEN_ADDRESSES,
         ],
       },
     },
