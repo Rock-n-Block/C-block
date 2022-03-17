@@ -416,7 +416,7 @@ export const MyContracts: FC = () => {
     dispatch(myContractsActions.getMyContracts({
       provider: getDefaultProvider(),
     }));
-  }, [dispatch, getDefaultProvider]);
+  }, [dispatch, getDefaultProvider, userWalletAddress]);
 
   return (
     <Container>
