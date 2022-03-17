@@ -22,7 +22,8 @@ export const userReducer = createSlice({
       isLight: !state.isLight,
     }),
     connectWalletState: (state, action: PayloadAction<Partial<UserState>>) => ({
-      ...state, ...action.payload,
+      ...state,
+      ...action.payload,
     }),
     disconnectWalletState: (state) => {
       localStorage.removeItem('walletconnect');

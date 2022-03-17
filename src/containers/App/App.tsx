@@ -22,7 +22,10 @@ function App() {
     if (address?.length) {
       connect(wallet);
     }
-  }, [address, connect, wallet]);
+    // next line is needed to prevent running walletService.connect()
+    //    on each render(), probably due to @see https://github.com/discord/eslint-plugin-react-discord/blob/master/docs/rules/jsx-no-constructed-context-values.md
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ThemeProvider theme={selectedTheme}>

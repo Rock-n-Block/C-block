@@ -35,7 +35,7 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
   const handleConnect = useCallback((walletProvider: WalletProviders) => {
     onClose();
     connect(walletProvider);
-  }, [connect, onClose]);
+  }, [onClose]);
 
   return (
     <Modal open={open} onClose={onClose} title={isConnected ? ' ' : 'Connect Wallet'} className={className}>
