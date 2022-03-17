@@ -55,7 +55,7 @@ function* setUpModalApproveSaga(
           id,
           address,
           allowance: MAX_UINT_256,
-          isAdded: true,
+          isAdded: false,
         } : item)),
       }),
     );

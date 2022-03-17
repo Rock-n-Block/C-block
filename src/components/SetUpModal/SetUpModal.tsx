@@ -110,10 +110,18 @@ export const SetUpModal: VFC<Props> = ({
 
   const isDisabledAcceptButton = useMemo(() => {
     if (!addresses.length) return true;
-    return addresses.some(({ allowance }) => {
+
+    const hasInsufficientAllowance = addresses.some(({ allowance }) => {
       if (!allowance) return true;
       return new BigNumber(allowance).isLessThan(MAX_UINT_256);
     });
+    if (hasInsufficientAllowance) return true;
+
+    const hasNotAddedTokens = addresses.some(({ isAdded }) => !isAdded);
+    if (!hasNotAddedTokens) {
+      return true;
+    }
+    return false;
   }, [addresses]);
 
   const handleAccept = useCallback(() => {
@@ -123,8 +131,7 @@ export const SetUpModal: VFC<Props> = ({
         addresses.filter(({ isAdded }) => !isAdded),
       );
     }
-    closeModal();
-  }, [addresses, closeModal, isDisabledAcceptButton, onAccept]);
+  }, [addresses, isDisabledAcceptButton, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
   const title = useMemo(

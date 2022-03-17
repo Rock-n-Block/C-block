@@ -43,29 +43,8 @@ export const useMyLostKeyContract = (
     }
   }, [walletService]);
 
-  const handleAddTokens = useCallback(
-    async (contractAddress: string, tokensAddresses: string[]) => {
-      const web3 = walletService.Web3();
-      const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
-      try {
-        await contract.methods.addToken(tokensAddresses).send({
-          from: userWalletAddress,
-        });
-        onSuccessTx();
-      } catch (err) {
-        console.log(err);
-        onErrorTx();
-      } finally {
-        onFinishTx();
-      }
-    },
-    [onErrorTx, onFinishTx, onSuccessTx, userWalletAddress, walletService],
-  );
-
   return {
     handleConfirmActiveStatus,
     fetchActiveStatusConfirmData,
-
-    handleAddTokens,
   };
 };

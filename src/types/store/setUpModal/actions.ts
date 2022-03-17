@@ -10,3 +10,6 @@ export type TSetUpModalApproveAction = TProvider & TContractAddress & {
 };
 
 export type TGetSetUpModalTokenAddressesAction = TProvider & TContractAddress;
+export type TSetUpModalAddTokensAction = TProvider & TContractAddress & {
+  tokensAddresses: string[];
+};

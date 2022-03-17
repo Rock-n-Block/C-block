@@ -4,6 +4,7 @@ import {
   TSetUpModalApproveAction,
   TUpdateAllowanceAction,
   TGetSetUpModalTokenAddressesAction,
+  TSetUpModalAddTokensAction,
 } from 'types';
 
 import actionTypes from './actionTypes';
@@ -17,9 +18,13 @@ export const updateAllowance = createAction<TUpdateAllowanceAction>(
 export const getSetUpModalTokenAddresses = createAction<TGetSetUpModalTokenAddressesAction>(
   actionTypes.GET_SETUP_MODAL_TOKEN_ADDRESSES,
 );
+export const setUpModalAddTokens = createAction<TSetUpModalAddTokensAction>(
+  actionTypes.SETUP_MODAL_ADD_TOKENS,
+);
 
 export default {
   setUpModalApprove,
   updateAllowance,
   getSetUpModalTokenAddresses,
+  setUpModalAddTokens,
 };

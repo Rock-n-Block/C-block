@@ -190,7 +190,6 @@ export const MyContracts: FC = () => {
   const {
     handleConfirmActiveStatus,
     fetchActiveStatusConfirmData,
-    handleAddTokens,
   } = useMyLostKeyContract(onSuccessTx, onErrorTx, onFinishTx);
 
   const [
@@ -281,8 +280,13 @@ export const MyContracts: FC = () => {
           contractAddress,
           onAccept: (tokensAddresses) => {
             if (!tokensAddresses.length) return;
-            handleAddTokens(contractAddress, tokensAddresses.map(({ address }) => address));
-            openSendTransactionModal();
+            dispatch(
+              setUpModalActions.setUpModalAddTokens({
+                provider: getDefaultProvider(),
+                contractAddress,
+                tokensAddresses: tokensAddresses.map(({ address }) => address),
+              }),
+            );
           },
         });
         openSetUpModal();
@@ -338,7 +342,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, getDefaultProvider, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
+  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, getDefaultProvider, getFundsActions, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
   const isSameDivorceAddress = useCallback((divorceProposedBy: string) => userWalletAddress.toLowerCase() === divorceProposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject divorce with the same address
   const isSameWithdrawalAddress = useCallback((proposedBy: string) => userWalletAddress.toLowerCase() === proposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject withdrawal with the same address
