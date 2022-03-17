@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useMemo, useState, VFC,
+  useCallback, useEffect, useMemo, VFC,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -10,21 +10,22 @@ import { useDebouncedCallback } from 'use-debounce';
 import BigNumber from 'bignumber.js';
 
 import userSelector from 'store/user/selectors';
-import { setActiveModal } from 'store/modals/reducer';
-import { useCheckIfTokenAddress, useShallowSelector } from 'hooks';
+import myContractsSelector from 'store/myContracts/selectors';
+import {
+  useShallowSelector, useWeb3Provider,
+} from 'hooks';
 import { Modal } from 'components/Modal';
 import { MAX_UINT_256, TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
-import { bep20Abi } from 'config/abi';
-import { useWalletConnectorContext } from 'services';
 import { incrementLastId } from 'utils/identifactors';
-import { contractsHelper, setNotification, shortenPhrase } from 'utils';
-import { Modals } from 'types';
+import {
+  ISetUpModalTokenAddressField,
+  ISetUpModalTokenAddress,
+} from 'types';
+import { myContractsReducer } from 'store/myContracts/reducer';
+import { updateAllowance, setUpModalApprove } from 'store/myContracts/setUpModal/actions';
 import { PlusIcon } from '../../theme/icons';
 import {
   createAddressesArr,
-  ISetUpModalTokenAddressField,
-  ISetUpModalTokenAddress,
-  initTokensAddressesArr,
 } from './SetUpModal.helpers';
 import { useStyles } from './SetUpModal.styles';
 
@@ -41,141 +42,77 @@ interface Props {
 export const SetUpModal: VFC<Props> = ({
   open,
   setIsModalOpen,
-  contractAddress,
+  contractAddress = '',
   addresses: initAddresses,
   onClose,
   onAccept,
 }) => {
-  const { walletService } = useWalletConnectorContext();
-  const { address: userWalletAddress } = useShallowSelector(userSelector.getUser);
+  const { getDefaultProvider } = useWeb3Provider();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [addresses, setAddresses] = useState<ISetUpModalTokenAddressField[]>(
-    [],
-  );
 
-  const { checkIfTokenAddress } = useCheckIfTokenAddress();
-
-  const resetField = useCallback((id: number) => {
-    setAddresses(
-      addresses.map((item) => (item.id === id ? {
-        id,
-        address: '',
-        allowance: '',
-      } : item)),
-    );
-  }, [addresses]);
-
-  const addressesGuardFn = useCallback(
-    async ({ id, address }: ISetUpModalTokenAddressField) => {
-      // filter items due to can be ['', '', '0x111], and it will result as 'has no unique items'
-      const addressesArray = addresses.map(({ address }) => address).filter((item) => item);
-      const hasUniqueAddresses = addressesArray.length === new Set(addressesArray).size;
-      if (!hasUniqueAddresses) {
-        setNotification({
-          type: 'warning',
-          message: `Provided ${shortenPhrase(address)} token's address is already added`,
-        });
-        resetField(id);
-        return false;
-      }
-
-      const isTokenAddress = await checkIfTokenAddress(address);
-      if (!isTokenAddress) {
-        setNotification({
-          type: 'warning',
-          message: 'Provided token address is invalid',
-        });
-        resetField(id);
-        return false;
-      }
-      return true;
-    },
-    [addresses, checkIfTokenAddress, resetField],
-  );
+  const addresses = useShallowSelector(myContractsSelector.getSetUpModalAddresses(contractAddress));
 
   const debouncedCheckAllowance = useDebouncedCallback(
-    async (tokenAddressField: ISetUpModalTokenAddressField) => {
-      const isValidated = await addressesGuardFn(tokenAddressField);
-      if (!isValidated) return;
-
-      const { id, address } = tokenAddressField;
-      try {
-        const contract = walletService.connectWallet.getContract({ abi: bep20Abi, address });
-        const allowance = await contract.methods.allowance(userWalletAddress, contractAddress).call();
-        setAddresses(
-          addresses.map((item) => (item.id === id ? {
-            id,
-            address,
-            allowance,
-          } : item)),
-        );
-      } catch (err) {
-        console.log(err);
-      }
+    (tokenAddressField: ISetUpModalTokenAddressField) => {
+      dispatch(updateAllowance({
+        provider: getDefaultProvider(),
+        contractAddress,
+        tokenAddressField,
+      }));
     },
     1000,
   );
 
   useEffect(() => {
-    setAddresses(createAddressesArr(initAddresses));
-  }, [initAddresses]);
+    dispatch(
+      myContractsReducer.actions.setUpModalSetAddresses({
+        contractAddress,
+        addresses: createAddressesArr(initAddresses),
+      }),
+    );
+  }, [contractAddress, dispatch, initAddresses]);
 
   const addAddressHandler = useCallback(() => {
-    setAddresses([
-      ...addresses,
-      { id: incrementLastId(addresses), address: '', allowance: '' },
-    ]);
-  }, [addresses]);
+    dispatch(
+      myContractsReducer.actions.setUpModalSetAddresses({
+        contractAddress,
+        addresses: [
+          ...addresses,
+          { id: incrementLastId(addresses), address: '', allowance: '' },
+        ],
+      }),
+    );
+  }, [addresses, contractAddress, dispatch]);
 
-  const handleChange = (value: ISetUpModalTokenAddressField) => {
-    setAddresses(
-      addresses.map((item) => (item.id === value.id ? value : item)),
+  const handleChange = useCallback((value: ISetUpModalTokenAddressField) => {
+    dispatch(
+      myContractsReducer.actions.setUpModalSetAddresses({
+        contractAddress,
+        addresses: addresses.map((item) => (item.id === value.id ? value : item)),
+      }),
     );
     debouncedCheckAllowance(value);
-  };
-
-  const clearInputs = useCallback(() => {
-    setAddresses(initTokensAddressesArr);
-  }, []);
+  }, [addresses, contractAddress, debouncedCheckAllowance, dispatch]);
 
   const closeModal = useCallback(() => {
     if (onClose) {
-      clearInputs();
+      dispatch(myContractsReducer.actions.setUpModalClearInputs({ contractAddress }));
       onClose();
     }
     setIsModalOpen(false);
-  }, [clearInputs, onClose, setIsModalOpen]);
+  }, [contractAddress, dispatch, onClose, setIsModalOpen]);
 
-  const handleApprove = async ({ id, address }: ISetUpModalTokenAddressField) => {
-    const provider = walletService.Web3();
-    try {
-      dispatch(setActiveModal({
-        activeModal: Modals.SendTxPending,
-        open: true,
+  const handleApprove = useCallback(
+    (tokenAddressField: ISetUpModalTokenAddressField) => {
+      const provider = getDefaultProvider();
+      dispatch(setUpModalApprove({
+        provider,
+        contractAddress,
+        tokenAddressField,
       }));
-      const contract = contractsHelper.getBep20Contract(provider, address);
-      await contract.methods.approve(contractAddress, MAX_UINT_256).send({
-        from: userWalletAddress,
-      });
-
-      handleChange({
-        id,
-        address,
-        allowance: MAX_UINT_256,
-      });
-      dispatch(setActiveModal({
-        activeModal: Modals.SendTxSuccess,
-        open: true,
-      }));
-    } catch (err) {
-      console.log(err);
-      dispatch(setActiveModal({
-        activeModal: Modals.SendTxRejected,
-        open: true,
-      }));
-    }
-  };
+    }, [contractAddress, dispatch, getDefaultProvider],
+  );
 
   const isDisabledAcceptButton = useMemo(() => {
     if (!addresses.length) return true;

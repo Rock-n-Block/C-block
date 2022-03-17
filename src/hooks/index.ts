@@ -5,5 +5,4 @@ export * from './modals';
 export * from './walletService';
 export * from './useCountdownTimer';
 export * from './useDelayedTask';
-export * from './useCheckIfTokenAddress';
 export * from './useScrollTop';

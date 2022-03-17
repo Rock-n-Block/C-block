@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 
 import { useWalletConnectorContext } from 'services';
-import { useShallowSelector } from 'hooks';
+import useShallowSelector from 'hooks/useShallowSelector';
 import userSelector from 'store/user/selectors';
 import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
-import { ISetUpModalTokenAddress } from 'components/SetUpModal/SetUpModal.helpers';
 import { contractsHelper } from 'utils';
+import { ISetUpModalTokenAddress } from 'types';
 
 export const useMyLostKeyContract = (
   onSuccessTx: () => void, onErrorTx: () => void, onFinishTx: () => void,
