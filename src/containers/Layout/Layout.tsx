@@ -33,7 +33,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       <Sidebar className={classes.sidebar} closeSidebar={toggleSidebar} />
       <Box className={classes.content}>
         <Header openSidebar={toggleSidebar} />
-        {children}
+        <Box className={classes.children}>
+          {children}
+        </Box>
         <Box className={classes.greenBlob} />
       </Box>
     </Box>
