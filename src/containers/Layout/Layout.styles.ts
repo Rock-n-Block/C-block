@@ -44,6 +44,13 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       position: 'relative',
       zIndex: 1,
     },
+    particleCanvas: {
+      // @ts-expect-error position is not allowed !important
+      position: 'fixed !important',
+      width: '100%',
+      height: '100vh ',
+      overflow: 'hidden',
+    },
     greenBlob: {
       position: 'absolute',
       zIndex: 0,

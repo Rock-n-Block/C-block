@@ -6733,6 +6733,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001109, can
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001283.tgz#8573685bdae4d733ef18f78d44ba0ca5fe9e896b"
   integrity sha512-9RoKo841j1GQFSJz/nCXOj0sD7tHBtlowjYlrqIUS812x9/emfBLBt6IyMz1zIaYc/eRL8Cs6HPUVi2Hzq4sIg==
 
+canvas-particle-network@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/canvas-particle-network/-/canvas-particle-network-1.5.0.tgz#410e11af7b780b948cc75442a67ae6ff738d5f4a"
+  integrity sha1-QQ4Rr3t4C5SMx1RCpnrm/3ONX0o=
+
 capture-exit@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/capture-exit/-/capture-exit-2.0.0.tgz#fb953bfaebeb781f62898239dabb426d08a509a4"

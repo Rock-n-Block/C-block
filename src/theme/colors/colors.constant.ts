@@ -12,6 +12,7 @@ export const COLOR_BLACK_4 = '#64656A';
 export const COLOR_BLACK_5 = '#192038';
 export const COLOR_BLACK_6 = '#131417';
 export const COLOR_BLACK_7 = '#111215';
+export const COLOR_BLACK_8 = '#151114';
 
 export const COLOR_BLACK_SCALE_5 = 'rgba(0, 0, 0, .5)';
 
@@ -24,6 +25,7 @@ export const COLOR_GREY_5 = '#6C778F';
 export const COLOR_GREY_6 = '#2E3A59';
 export const COLOR_GREY_7 = '#A7AEBD';
 export const COLOR_GREY_8 = '#EDF3FF';
+export const COLOR_GREY_9 = '#B5BDCE';
 
 export const COLOR_YELLOW = '#F2C94C';
 

@@ -7,3 +7,4 @@ export * from './useCountdownTimer';
 export * from './useDelayedTask';
 export * from './useCheckIfTokenAddress';
 export * from './useScrollTop';
+export * from './useParticleNetwork';
