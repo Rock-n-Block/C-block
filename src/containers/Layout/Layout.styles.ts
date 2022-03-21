@@ -18,8 +18,13 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       maxWidth: 240,
       flexBasis: '25%',
       height: '100vh',
+      transition: theme.transitions.create(['transform'], {
+        duration: theme.transitions.duration.standard,
+        easing: theme.transitions.easing.easeOut,
+      }),
       [theme.breakpoints.down(768)]: {
         position: 'fixed',
+        transform: ({ isSidebarOpen }) => `translate3d(${isSidebarOpen ? '0%' : '-150%'}, 0, 0)`,
         height: '100%',
         maxWidth: 'unset',
         width: '100%',
