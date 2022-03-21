@@ -6,6 +6,7 @@ import React, {
 import { useLocation } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 
+import { GreenGlobImg } from 'assets';
 import userSelector from 'store/user/selectors';
 import { COLOR_BLACK_8, COLOR_GREY_9 } from 'theme/colors';
 import { Sidebar } from 'components/Sidebar';
@@ -49,7 +50,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         <Box className={classes.children}>
           {children}
         </Box>
-        <Box className={classes.greenBlob} />
+        <img className={classes.greenBlob} src={GreenGlobImg} alt="" />
       </Box>
     </Box>
   );
