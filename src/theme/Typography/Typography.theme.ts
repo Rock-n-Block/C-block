@@ -26,10 +26,7 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
   } as TypographyStyleOptions;
 
   return {
-    fontFamily: 'Arial',
-    // fontWeightRegular: FontWeights.fontWeightRegular,
-    // fontWeightMedium: FontWeights.fontWeightMedium,
-    // fontWeightSemiBold: FontWeights.fontWeightSemiBold,
+    fontFamily: 'Inter, Arial, Helvetica, sans-serif',
 
     h1: {
       ...allVariants,
@@ -96,7 +93,6 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     },
     button: {
       ...allVariants,
-      fontFamily: 'Arial Black',
       fontSize: '18px',
       fontWeight: FontWeights.fontWeightMedium,
       lineHeight: '24px',
@@ -174,7 +170,6 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
     caption: {
       ...allVariants,
       '&.category': {
-        fontFamily: 'Arial Black',
         fontSize: '12px',
         lineHeight: '16px',
         letterSpacing: '0.05em',

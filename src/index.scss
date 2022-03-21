@@ -10,7 +10,7 @@ div[id="root"] {
   border: 0;
   height: 100%;
   width: 100%;
-  font-family: sans-serif, Arial, Helvetica, sans-serif;
+  font-family: Inter, Arial, Helvetica, sans-serif;
   ::-webkit-datetime-edit-fields-wrapper {
     position: absolute;
     left: 12px;
@@ -157,3 +157,5 @@ button {
     }
   }
 }
+
+@import './styles/fonts';
