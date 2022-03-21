@@ -1,7 +1,8 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useContext } from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
+import { IEvent, IEventError } from '@amfi/connect-wallet/dist/interface';
 
 import { getCeloConfigMetamask } from 'config';
 import {
@@ -16,6 +17,7 @@ import { WalletService } from '../walletService';
 declare global {
   interface Window {
     ethereum: any;
+    celo: any;
   }
 }
 
@@ -29,15 +31,24 @@ type IWalletConnectorContext = TNullable<{
 
 const walletConnectorContext = createContext<IWalletConnectorContext>(null);
 
-class Connector extends React.Component<
-any,
-{
+interface OwnProps {}
+interface ConnectedProps {
+  isMainnet: boolean;
+}
+interface DispatchProps {
+  connectWallet: (payload: Partial<UserState>) => void;
+  disconnectWallet: () => void;
+}
+
+type TConnectorProps = OwnProps & ConnectedProps & DispatchProps;
+type TConnectorState = {
   provider: WalletService;
   address: string;
   isContractsExists: boolean;
-}
-> {
-  constructor(props: any) {
+};
+
+class Connector extends React.Component<TConnectorProps, TConnectorState> {
+  constructor(props: TConnectorProps) {
     super(props);
 
     this.state = {
@@ -45,9 +56,6 @@ any,
       address: '',
       isContractsExists: false,
     };
-
-    this.connect = this.connect.bind(this);
-    this.disconnect = this.disconnect.bind(this);
   }
 
   componentDidMount() {
@@ -58,18 +66,19 @@ any,
     );
 
     if (localStorage.walletconnect) {
-      console.log('here');
       this.connect(WalletProviders.walletConnect);
     }
   }
 
   connect = async (provider: WalletProviders) => {
-    if (provider === 'MetaMask' && window?.ethereum) {
+    if (provider === 'MetaMask' && window.ethereum) {
+      // @see https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: getCeloConfigMetamask(this.props.isMainnet),
       });
     }
+
     if (provider !== WalletProviders.celo) {
       try {
         const isConnected = await this.state.provider.initWalletConnect(
@@ -84,8 +93,6 @@ any,
             wallet: provider,
           });
         }
-
-        return;
       } catch (err) {
         console.log(err);
         this.disconnect();
@@ -94,6 +101,23 @@ any,
           message: `${provider} is not installed or unlocked`,
         });
       }
+
+      const eventSubs = this.state.provider.connectWallet.eventSubscriber().subscribe(
+        (res: IEvent) => {
+          if (res.name === 'accountsChanged') {
+            this.props.connectWallet({
+              address: res.address,
+              wallet: provider,
+            });
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (err: IEventError) => {
+          eventSubs.unsubscribe();
+          this.disconnect();
+        },
+      );
+      return;
     }
 
     if (window.celo) {
@@ -111,22 +135,23 @@ any,
     }
   };
 
-  disconnect() {
+  disconnect = () => {
     delete localStorage.walletconnect;
     this.setState({
       address: '',
     });
-  }
+    this.props.disconnectWallet();
+  };
 
   render() {
     return (
       <walletConnectorContext.Provider
         value={{
           walletService: this.state.provider,
-          connect: this.connect,
-          disconnect: this.disconnect,
           address: this.state.address,
           isContractsExists: this.state.isContractsExists,
+          connect: this.connect,
+          disconnect: this.disconnect,
         }}
       >
         {this.props.children}
@@ -135,12 +160,12 @@ any,
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch: any) => ({
   connectWallet: (payload: UserState) => dispatch(connectWalletState(payload)),
   disconnectWallet: () => dispatch(disconnectWalletState()),
 });
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps: MapStateToProps<ConnectedProps, OwnProps> = (state: State) => ({
   isMainnet: state.user.isMainnet,
 });
 

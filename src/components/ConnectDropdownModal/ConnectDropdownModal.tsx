@@ -1,16 +1,17 @@
 import React, {
   useCallback, useMemo, VFC,
 } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Typography, Box, Button } from '@material-ui/core';
 
 import { useWalletConnectorContext } from 'services';
 import { WalletProviders } from 'types';
 import { Modal } from 'components/Modal';
-import { useDispatch } from 'react-redux';
 import { disconnectWalletState } from 'store/user/reducer';
-import { useStyles } from './ConnectDropdownModal.styles';
+import { clearAllForms } from 'store/contractForms/reducer';
 import { connectDropdownModalData } from './ConnectDropdownModal.helpers';
+import { useStyles } from './ConnectDropdownModal.styles';
 
 export interface ConnectDropdownModalProps {
   address: string;
@@ -29,13 +30,14 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
 
   const disconnect = useCallback(async () => {
     onClose();
-    setTimeout(() => dispatch(disconnectWalletState()), 10);
-  }, [onClose]);
+    dispatch(disconnectWalletState());
+    dispatch(clearAllForms());
+  }, [dispatch, onClose]);
 
   const handleConnect = useCallback((walletProvider: WalletProviders) => {
     onClose();
     connect(walletProvider);
-  }, [connect, onClose]);
+  }, [onClose]);
 
   return (
     <Modal open={open} onClose={onClose} title={isConnected ? ' ' : 'Connect Wallet'} className={className}>

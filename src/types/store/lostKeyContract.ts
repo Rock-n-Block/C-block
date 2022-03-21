@@ -1,3 +1,4 @@
+import { ISetUpModalTokenAddressField } from './setUpModal/storeTypes';
 import { ContractAdditionalField } from './contractForms.shared';
 import { TPingIntervalUnit } from './globals';
 
@@ -20,4 +21,5 @@ export interface ILostKeyContract extends ContractAdditionalField {
 export interface ISpecificLostKeyContractData {
   isLostKey: boolean;
   terminated: boolean;
+  addresses: ISetUpModalTokenAddressField[];
 }

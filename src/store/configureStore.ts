@@ -19,6 +19,7 @@ import contractFormsActionTypes from './contractForms/actionTypes';
 import myContractsActionTypes from './myContracts/actionTypes';
 import myContractsWeddingActionTypes from './myContracts/weddingContracts/actionTypes';
 import earnActionTypes from './earn/actionTypes';
+import setUpActionTypes from './myContracts/setUpModal/actionTypes';
 import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -82,6 +83,11 @@ const store = configureStore({
 
           earnActionTypes.GET_FINISHED_CONTRACTS,
           earnActionTypes.TRANSFER_REWARD,
+
+          setUpActionTypes.SETUP_MODAL_UPDATE_ALLOWANCE,
+          setUpActionTypes.SETUP_MODAL_APPROVE,
+          setUpActionTypes.GET_SETUP_MODAL_TOKEN_ADDRESSES,
+          setUpActionTypes.SETUP_MODAL_ADD_TOKENS,
         ],
       },
     },

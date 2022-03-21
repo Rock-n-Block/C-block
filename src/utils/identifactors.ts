@@ -1,5 +1,5 @@
 import { IGetFundsModalTokenAddressField } from 'components/GetFundsModal/GetFundsModal.helpers';
-import { ISetUpModalTokenAddressField } from 'components/SetUpModal/SetUpModal.helpers';
+import { ISetUpModalTokenAddressField } from 'types';
 
 export const incrementLastId = (addresses: ISetUpModalTokenAddressField[] | IGetFundsModalTokenAddressField[]) => {
   if (!addresses.length) {

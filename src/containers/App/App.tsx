@@ -5,7 +5,7 @@ import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 
 import { BreakpointsProvider } from 'hooks/useBreakpoints';
 import { darkTheme, lightTheme } from 'theme';
-import { Layout, ModalsContainer, Routes } from 'containers';
+import { Layout, ModalsContainer, AppRoutes } from 'containers';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
 import { useWalletConnectorContext } from 'services';
@@ -22,7 +22,10 @@ function App() {
     if (address?.length) {
       connect(wallet);
     }
-  }, [address, connect, wallet]);
+    // next line is needed to prevent running walletService.connect()
+    //    on each render(), probably due to @see https://github.com/discord/eslint-plugin-react-discord/blob/master/docs/rules/jsx-no-constructed-context-values.md
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ThemeProvider theme={selectedTheme}>
@@ -37,7 +40,7 @@ function App() {
           />
           <ModalsContainer />
           <Layout>
-            <Routes />
+            <AppRoutes />
           </Layout>
         </StylesProvider>
       </BreakpointsProvider>

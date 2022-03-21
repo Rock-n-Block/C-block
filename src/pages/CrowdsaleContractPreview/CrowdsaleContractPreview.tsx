@@ -43,7 +43,7 @@ export const CrowdsaleContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const { state } = useLocation() as { state: TPreviewContractNavigationState };
   const crowdsaleContractFromStore = useShallowSelector(contractFormsSelector.getCrowdsaleContract);
   const crowdsaleContract = useMemo(
     () => state?.contractPreview?.data as ICrowdsaleContract || crowdsaleContractFromStore,

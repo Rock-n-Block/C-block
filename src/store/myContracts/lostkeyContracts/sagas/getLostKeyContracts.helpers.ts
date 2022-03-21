@@ -11,6 +11,7 @@ export const transformMergeLostKeyContractsAndSpecificData = (
   return {
     ...lostkey,
     specificContractData: {
+      addresses: [],
       ...specificData,
     },
   };

@@ -46,7 +46,7 @@ export const TokenContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const { state } = useLocation() as { state: TPreviewContractNavigationState };
   const tokenContractFromStore = useShallowSelector(contractFormsSelector.getTokenContract);
   const tokenContract = useMemo(
     () => state?.contractPreview?.data as TokenContract || tokenContractFromStore,

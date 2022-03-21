@@ -24,9 +24,10 @@ import myContractsActions from 'store/myContracts/actions';
 import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContracts/weddingContracts/actions';
 import myContractsSelector from 'store/myContracts/selectors';
 import userSelector from 'store/user/selectors';
+import setUpModalActions from 'store/myContracts/setUpModal/actions';
 
-import { ISpecificWeddingContractData, IWeddingContract } from 'types';
 import { convertIntervalAsSeconds } from 'utils';
+import { ISpecificWeddingContractData, IWeddingContract } from 'types';
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -189,8 +190,6 @@ export const MyContracts: FC = () => {
   const {
     handleConfirmActiveStatus,
     fetchActiveStatusConfirmData,
-    handleAddTokens,
-    fetchSetUpModalTokenAddresses,
   } = useMyLostKeyContract(onSuccessTx, onErrorTx, onFinishTx);
 
   const [
@@ -270,15 +269,24 @@ export const MyContracts: FC = () => {
         break;
       }
       case 'setUp': {
-        const addresses = await fetchSetUpModalTokenAddresses(contractAddress);
+        dispatch(
+          setUpModalActions.getSetUpModalTokenAddresses({
+            provider: getDefaultProvider(),
+            contractAddress,
+          }),
+        );
         setSetUpModalProps({
           ...setUpModalProps,
           contractAddress,
-          addresses,
           onAccept: (tokensAddresses) => {
             if (!tokensAddresses.length) return;
-            handleAddTokens(contractAddress, tokensAddresses.map(({ address }) => address));
-            openSendTransactionModal();
+            dispatch(
+              setUpModalActions.setUpModalAddTokens({
+                provider: getDefaultProvider(),
+                contractAddress,
+                tokensAddresses: tokensAddresses.map(({ address }) => address),
+              }),
+            );
           },
         });
         openSetUpModal();
@@ -334,7 +342,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, fetchSetUpModalTokenAddresses, getDefaultProvider, getFundsActions, handleAddTokens, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
+  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, getDefaultProvider, getFundsActions, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
   const isSameDivorceAddress = useCallback((divorceProposedBy: string) => userWalletAddress.toLowerCase() === divorceProposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject divorce with the same address
   const isSameWithdrawalAddress = useCallback((proposedBy: string) => userWalletAddress.toLowerCase() === proposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject withdrawal with the same address
@@ -349,8 +357,6 @@ export const MyContracts: FC = () => {
             divorceTimestamp,
             divorceProposedBy,
           } = specificContractData as ISpecificWeddingContractData;
-          // const divorceStatus = getDivorceStatus(+divorceTimestamp);
-          // console.log('getDirvoce', divorceStatus);
           return (
             <AdditionalContentRequestDivorce
               countdownUntilTimestamp={+divorceTimestamp}
@@ -416,7 +422,7 @@ export const MyContracts: FC = () => {
     dispatch(myContractsActions.getMyContracts({
       provider: getDefaultProvider(),
     }));
-  }, [dispatch, getDefaultProvider]);
+  }, [dispatch, getDefaultProvider, userWalletAddress]);
 
   return (
     <Container>
@@ -443,7 +449,6 @@ export const MyContracts: FC = () => {
       <SetUpModal
         open={isSetUpModalOpen}
         setIsModalOpen={setIsSetUpModalOpen}
-        addresses={[]}
         {...setUpModalProps}
       />
       <ConfirmStatusModal

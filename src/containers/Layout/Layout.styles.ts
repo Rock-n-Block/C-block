@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-import { COLOR_ACID_GREEN, COLOR_LAYOUT_BACKGROUND_DARK, COLOR_LAYOUT_BACKGROUND_LIGHT } from 'theme/colors';
+import { COLOR_LAYOUT_BACKGROUND_DARK, COLOR_LAYOUT_BACKGROUND_LIGHT } from 'theme/colors';
 
 export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
   (theme: Theme) => createStyles({
@@ -44,18 +44,25 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
         height: ({ isSidebarOpen }) => (isSidebarOpen ? '100vh' : 'unset'),
       },
     },
+    children: {
+      position: 'relative',
+      zIndex: 1,
+    },
+    particleCanvas: {
+      // @ts-expect-error position is not allowed !important
+      position: 'fixed !important',
+      width: '100%',
+      height: '100vh ',
+      overflow: 'hidden',
+    },
     greenBlob: {
-      zIndex: -1,
       position: 'absolute',
-      width: '25vw',
-      height: '25vh',
-      background: COLOR_ACID_GREEN,
-      right: '-12.5vh',
-      top: 'calc(100vh - 12.5vh)',
-      filter: 'blur(400px)',
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-      },
+      zIndex: 0,
+      top: 0,
+      right: 0,
+      transform: 'translate3d(50%, 25%, 0)',
+      width: '1176px',
+      height: '1176px',
     },
   }),
 );

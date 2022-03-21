@@ -200,18 +200,22 @@ function* fetchAndTransformContractsSaga(provider: Web3) {
   const { address: userWalletAddress }: UserState = yield select(
     userSelector.getUser,
   );
-  if (!userWalletAddress) return undefined;
-  const { data }: AxiosResponse<IGetContractsReturnType> = yield call(baseApi.getContracts, {
-    walletAddress: userWalletAddress,
-  });
-  const transformedData = yield call(
-    transformMyContractsDataSaga,
-    provider,
-    data,
-  );
-  const newContracts = createContractCards(transformedData);
-  console.log('New Conctracts Cards', newContracts);
-  return newContracts;
+  if (!userWalletAddress) return [];
+  try {
+    const { data }: AxiosResponse<IGetContractsReturnType> = yield call(baseApi.getContracts, {
+      walletAddress: userWalletAddress,
+    });
+    const transformedData = yield call(
+      transformMyContractsDataSaga,
+      provider,
+      data,
+    );
+    const newContracts = createContractCards(transformedData);
+    return newContracts;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
 }
 
 function* getMyContractsSaga({

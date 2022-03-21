@@ -44,7 +44,7 @@ export const LostKeyContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const { state } = useLocation() as { state: TPreviewContractNavigationState };
   const lostKeyContractFromStore = useShallowSelector(contractFormsSelector.getLostKeyContract);
   const lostKeyContract = useMemo(
     () => state?.contractPreview?.data as ILostKeyContract || lostKeyContractFromStore,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   call,
   put,
@@ -23,6 +22,7 @@ export function* approveSaga({
 }: ReturnType<typeof approve>) {
   try {
     yield put(apiActions.request(type));
+
     const { address: myAddress } = yield select(userSelector.getUser);
 
     const tokenContract = contractsHelper.getBep20Contract(provider, tokenAddress);

@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { contractButtonsHelper, IContractsCard, isFoundContract } from 'pages/MyContracts/MyContracts.helpers';
 import {
+  ISetUpModalTokenAddressField,
+  ISpecificLostKeyContractData,
   MyContractsState,
 } from 'types';
 
@@ -12,13 +14,13 @@ export const myContractsReducer = createSlice({
   name: 'myContracts',
   initialState,
   reducers: {
-    setMyContracts: (state: MyContractsState, action: PayloadAction<IContractsCard[]>) => ({
+    setMyContracts: (state, action: PayloadAction<IContractsCard[]>) => ({
       ...state,
       contracts: action.payload,
     }),
 
     enableWeddingRequestWithdrawal: (
-      state: MyContractsState,
+      state,
       action: PayloadAction<{
         address: string
       }>,
@@ -31,7 +33,6 @@ export const myContractsReducer = createSlice({
             additionalContentRenderType: 'weddingRequestWithdrawal',
             contractButtons: [
               contractButtonsHelper.viewContract,
-              // contractButtonsHelper.requestDivorce, // dunno
             ],
           } as typeof card;
         }
@@ -45,7 +46,7 @@ export const myContractsReducer = createSlice({
     },
 
     enableWeddingRequestDivorce: (
-      state: MyContractsState,
+      state,
       action: PayloadAction<{
         address: string
       }>,
@@ -71,7 +72,7 @@ export const myContractsReducer = createSlice({
     },
 
     enableWeddingSuccessfulWithdrawal: (
-      state: MyContractsState,
+      state,
       action: PayloadAction<{
         contractAddress: string
       }>,
@@ -97,7 +98,7 @@ export const myContractsReducer = createSlice({
     },
 
     enableWeddingSuccessfulDivorce: (
-      state: MyContractsState,
+      state,
       action: PayloadAction<{
         contractAddress: string
       }>,
@@ -122,6 +123,99 @@ export const myContractsReducer = createSlice({
         contracts: newState,
       };
     },
+
+    // Set Up Moodal Reducer
+    setUpModalClearInputs(
+      state,
+      action: PayloadAction<{
+        contractAddress: string,
+      }>,
+    ) {
+      const { contractAddress } = action.payload;
+      const newState = state.contracts.map((card) => {
+        if (isFoundContract(card, contractAddress)) {
+          return {
+            ...card,
+            specificContractData: {
+              ...card.specificContractData,
+              addresses: [
+                {
+                  id: 0,
+                  address: '',
+                  allowance: '0',
+                },
+              ],
+            } as ISpecificLostKeyContractData,
+          } as typeof card;
+        }
+        return card;
+      });
+
+      return {
+        ...state,
+        contracts: newState,
+      };
+    },
+
+    setUpModalResetField(
+      state,
+      action: PayloadAction<{
+        contractAddress: string,
+        fieldId: number,
+      }>,
+    ) {
+      const { contractAddress, fieldId } = action.payload;
+      const newState = state.contracts.map((card) => {
+        if (isFoundContract(card, contractAddress)) {
+          const specificContractData = card.specificContractData as ISpecificLostKeyContractData;
+          return {
+            ...card,
+            specificContractData: {
+              ...specificContractData,
+              addresses: specificContractData.addresses.map((item) => (item.id === fieldId ? {
+                id: fieldId,
+                address: '',
+                allowance: '',
+              } : item)),
+            } as ISpecificLostKeyContractData,
+          } as typeof card;
+        }
+        return card;
+      });
+
+      return {
+        ...state,
+        contracts: newState,
+      };
+    },
+
+    setUpModalSetAddresses(
+      state,
+      action: PayloadAction<{
+        contractAddress: string,
+        addresses: ISetUpModalTokenAddressField[],
+      }>,
+    ) {
+      const { contractAddress, addresses } = action.payload;
+      const newState = state.contracts.map((card) => {
+        if (isFoundContract(card, contractAddress)) {
+          const specificContractData = card.specificContractData as ISpecificLostKeyContractData;
+          return {
+            ...card,
+            specificContractData: {
+              ...specificContractData,
+              addresses,
+            } as ISpecificLostKeyContractData,
+          } as typeof card;
+        }
+        return card;
+      });
+
+      return {
+        ...state,
+        contracts: newState,
+      };
+    },
   },
 });
 
@@ -131,6 +225,10 @@ export const {
   enableWeddingRequestDivorce,
   enableWeddingSuccessfulWithdrawal,
   enableWeddingSuccessfulDivorce,
+
+  setUpModalClearInputs,
+  setUpModalResetField,
+  setUpModalSetAddresses,
 } = myContractsReducer.actions;
 
 export default myContractsReducer.reducer;

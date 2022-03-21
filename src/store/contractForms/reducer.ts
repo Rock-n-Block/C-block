@@ -171,6 +171,11 @@ export const contractFormReducer = createSlice({
       ...state,
       willContract: initialState.willContract,
     }),
+
+    clearAllForms: (state) => ({
+      ...state,
+      ...initialState,
+    }),
   },
 });
 
@@ -189,6 +194,8 @@ export const {
 
   setWillContractForm,
   deleteWillContractForm,
+
+  clearAllForms,
 } = contractFormReducer.actions;
 
 export default contractFormReducer.reducer;

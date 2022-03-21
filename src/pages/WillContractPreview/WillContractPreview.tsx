@@ -41,7 +41,7 @@ export const WillContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const { state } = useLocation() as { state: TPreviewContractNavigationState };
   const willContractFromStore = useShallowSelector(contractFormsSelector.getWillContract);
   const willContract = useMemo(
     () => state?.contractPreview?.data as IWillContract || willContractFromStore,

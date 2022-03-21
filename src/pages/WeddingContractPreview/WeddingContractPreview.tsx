@@ -36,7 +36,7 @@ export const WeddingContractPreview = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
-  const { state }: { state: TPreviewContractNavigationState } = useLocation();
+  const { state } = useLocation() as { state: TPreviewContractNavigationState };
   const weddingContractFromStore = useShallowSelector(contractFormsSelector.getWeddingContract);
   const weddingContract = useMemo(
     () => state?.contractPreview?.data as IWeddingContract || weddingContractFromStore,

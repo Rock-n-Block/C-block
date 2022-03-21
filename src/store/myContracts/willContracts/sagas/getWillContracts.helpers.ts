@@ -12,6 +12,7 @@ export const transformMergeWillContractsAndSpecificData = (
   return {
     ...will,
     specificContractData: {
+      addresses: [],
       ...specificData,
     },
   };
