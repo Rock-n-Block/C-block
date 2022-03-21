@@ -14,7 +14,10 @@ import {
   IGetFinishedWillContractsReturnType,
 } from 'store/api/apiRequestBuilder.types';
 import { contractsHelper } from 'utils';
-import { ContractsNames, TFinishedContract, UserState } from 'types';
+import {
+  ContractsNames, Modals, TFinishedContract, UserState,
+} from 'types';
+import { setActiveModal } from 'store/modals/reducer';
 import actionTypes from '../actionTypes';
 import { getFinishedContracts } from '../actions';
 import { setFinishedContracts } from '../reducer';
@@ -114,15 +117,27 @@ function* getFinishedContractsSaga({
 }: ReturnType<typeof getFinishedContracts>) {
   try {
     yield put(apiActions.request(type));
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: true,
+    }));
 
     const finishedContracts: TFinishedContract[] = yield call(
       fetchAndTransformFinishedContracts,
       provider,
     );
     yield put(setFinishedContracts(finishedContracts));
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: false,
+    }));
     yield put(apiActions.success(type));
   } catch (err) {
     console.log(err);
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: false,
+    }));
     yield put(apiActions.error(type, err));
   }
 }

@@ -1,4 +1,5 @@
 export enum Modals {
+  FullscreenLoader = 'FullscreenLoader',
   SendTxPending = 'SendTxPending',
   SendTxRejected = 'SendTxRejected',
   SendTxSuccess = 'SendTxSuccess',

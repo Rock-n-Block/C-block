@@ -5,8 +5,10 @@ import { useShallowSelector, useWeb3Provider } from 'hooks';
 import userSelectors from 'store/user/selectors';
 import earnSelectors from 'store/earn/selectors';
 import earnActions from 'store/earn/actions';
+import earnActionTypes from 'store/earn/actionTypes';
+import uiSelector from 'store/ui/selectors';
 import { contractsHelper, getTokenAmountDisplay } from 'utils';
-import { TFinishedContract } from 'types';
+import { RequestStatus, TFinishedContract } from 'types';
 
 export const useEarnData = () => {
   const dispatch = useDispatch();
@@ -43,8 +45,17 @@ export const useEarnData = () => {
     }));
   }, [dispatch, getDefaultProvider]);
 
+  const getFinishedContractsRequestStatus = useShallowSelector(
+    uiSelector.getProp(earnActionTypes.GET_FINISHED_CONTRACTS),
+  );
+  const isGetFinishedContractsLoading = useMemo(
+    () => getFinishedContractsRequestStatus === RequestStatus.REQUEST,
+    [getFinishedContractsRequestStatus],
+  );
+
   return {
     finishedContracts,
+    isGetFinishedContractsLoading,
     hasTableData,
     getRowItemData,
     handleTransfer,

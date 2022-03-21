@@ -8,7 +8,6 @@ import {
 import apiActions from 'store/ui/actions';
 import userSelector from 'store/user/selectors';
 import { contractsHelper } from 'utils';
-
 import actionTypes from '../actionTypes';
 import { approve } from '../actions';
 
