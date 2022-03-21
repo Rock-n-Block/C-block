@@ -211,7 +211,6 @@ function* fetchAndTransformContractsSaga(provider: Web3) {
       data,
     );
     const newContracts = createContractCards(transformedData);
-    console.log('New Conctracts Cards', newContracts);
     return newContracts;
   } catch (err) {
     console.log(err);

@@ -9,7 +9,6 @@ import createCrowdsaleContract from './createCrowdsaleContract';
 import createWeddingContract from './createWeddingContract';
 import getErc20Symbol from './erc20/getSymbol';
 import getCrowdsaleContractAdditionalData from './getCrowdsaleContractAdditionalData';
-import clearAllContractForms from './clearAllContractForms';
 
 export default function* createContractsSaga() {
   yield fork(getErc20Symbol);
@@ -23,6 +22,4 @@ export default function* createContractsSaga() {
   yield fork(createWeddingContract);
 
   yield fork(getCrowdsaleContractAdditionalData);
-
-  yield fork(clearAllContractForms);
 }
