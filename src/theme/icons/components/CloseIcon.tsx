@@ -5,7 +5,7 @@ import { IconProps } from '../icons.types';
 
 import { BaseSVGIcon } from './BaseSVGIcon';
 
-const size = '29';
+const size = '24';
 
 export const CloseIcon: React.FC<IconProps> = (props) => (
   <BaseSVGIcon
