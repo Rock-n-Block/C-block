@@ -13,7 +13,7 @@ import {
 } from './apiRequestBuilder.types';
 
 const client: AxiosInstance = axios.create({
-  baseURL: 'https://devcblock.rocknblock.io/api/v1/',
+  baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
 });
 
 export default async function ajax<T>(

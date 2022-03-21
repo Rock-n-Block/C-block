@@ -11,7 +11,7 @@ import {
   UserState,
 } from 'types';
 import userSelector from 'store/user/selectors';
-import { weddingAbi } from 'config/abi';
+import { contractsHelper } from 'utils';
 import actionTypes from '../actionTypes';
 import { approveWithdrawal } from '../actions';
 
@@ -23,7 +23,7 @@ function* approveWithdrawalSaga({
     yield put(apiActions.request(type));
 
     const { address: userWalletAddress }: UserState = yield select(userSelector.getUser);
-    const contract = new provider.eth.Contract(weddingAbi, contractAddress);
+    const contract = contractsHelper.getWeddingContract(provider, contractAddress);
     yield call(
       contract.methods.executeWithdrawalProposal().send,
       {

@@ -14,7 +14,10 @@ import {
   IGetFinishedWillContractsReturnType,
 } from 'store/api/apiRequestBuilder.types';
 import { contractsHelper } from 'utils';
-import { ContractsNames, TFinishedContract, UserState } from 'types';
+import {
+  ContractsNames, Modals, TFinishedContract, UserState,
+} from 'types';
+import { setActiveModal } from 'store/modals/reducer';
 import actionTypes from '../actionTypes';
 import { getFinishedContracts } from '../actions';
 import { setFinishedContracts } from '../reducer';
@@ -23,10 +26,9 @@ function* fetchFinishedContractsRewardAmount(provider: Web3, addresses: string[]
   try {
     const { isMainnet }: UserState = yield select(userSelector.getUser);
     const {
-      abi: celoAbi,
       address: celoAddress,
     } = contractsHelper.getContractData(ContractsNames.celo, isMainnet);
-    const celoTokenContract = new provider.eth.Contract(celoAbi, celoAddress);
+    const celoTokenContract = contractsHelper.getBep20Contract(provider, celoAddress);
     const rewardAmounts: string[] = yield all(
       addresses.map((address) => call(celoTokenContract.methods.balanceOf(address).call)),
     );
@@ -115,15 +117,27 @@ function* getFinishedContractsSaga({
 }: ReturnType<typeof getFinishedContracts>) {
   try {
     yield put(apiActions.request(type));
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: true,
+    }));
 
     const finishedContracts: TFinishedContract[] = yield call(
       fetchAndTransformFinishedContracts,
       provider,
     );
     yield put(setFinishedContracts(finishedContracts));
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: false,
+    }));
     yield put(apiActions.success(type));
   } catch (err) {
     console.log(err);
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: false,
+    }));
     yield put(apiActions.error(type, err));
   }
 }

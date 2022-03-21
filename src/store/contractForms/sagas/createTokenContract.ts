@@ -7,7 +7,6 @@ import { TransactionReceipt } from 'web3-core';
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { bep20Abi } from 'config/abi';
 import { contractsHelper, getTokenAmount } from 'utils';
 import {
   ContractsNames, TokenContract, TokenContractDynamicForm, UserState,
@@ -46,13 +45,14 @@ function* createTokenContractSaga({
       isMainnet,
     );
 
-    const tokenFactoryContract = new provider.eth.Contract(
+    const tokenFactoryContract = contractsHelper.getTokenFactoryContract(
+      provider,
       tokenFactoryContractData.abi,
       tokenFactoryContractData.address,
     );
 
-    const celoTokenContract = new provider.eth.Contract(
-      bep20Abi,
+    const celoTokenContract = contractsHelper.getBep20Contract(
+      provider,
       celoAddress,
     );
 

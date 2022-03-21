@@ -16,8 +16,11 @@
     "test:update": "jest --updateSnapshot ./src",
     "test:watch": "jest ./src",
     "test:coverage": "jest --coverage --watchAll=false ./src",
-    "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "generate-swagger-types": "node ./scripts/generate-swagger-types/download-schema.js && node ./scripts/generate-swagger-types/generate-types.js",
+    "generate-chain-types": "typechain --target=web3-v1 '**/abi/*.json' --out-dir='./src/types/abi'",
+    "postinstall": "yarn run generate-swagger-types && yarn run generate-chain-types",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -94,11 +97,13 @@
     "@testing-library/react": "^12.1.0",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.2.1",
+    "@typechain/web3-v1": "^5.0.0",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.173",
     "@types/react": "^17.0.21",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/redux-persist": "^4.3.1",
+    "dotenv": "^16.0.0",
     "eslint-config-airbnb-typescript": "9.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
@@ -116,6 +121,7 @@
     "react-docgen-typescript-loader": "^3.7.2",
     "react-scripts": "^4.0.3",
     "react-test-renderer": "^17.0.2",
+    "typechain": "^7.0.1",
     "typescript": "^4.4.3 && <4.5.0"
   },
   "resolutions": {

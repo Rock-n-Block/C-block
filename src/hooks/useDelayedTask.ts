@@ -17,11 +17,21 @@ export const useDelayedTask = (
     }, delay);
   }, [callback, delay]);
 
+  const stopTask = useCallback(() => {
+    clearTimeout(timerIdRef.current);
+  }, []);
+
   useEffect(() => {
     if (shouldRunImmediatelyRef.current) {
       callback();
       shouldRunImmediatelyRef.current = false;
     }
     delayedTask();
-  }, [callback, delayedTask, shouldRunImmediately]);
+
+    return stopTask;
+  }, [callback, delayedTask, shouldRunImmediately, stopTask]);
+
+  return {
+    stopTask,
+  };
 };

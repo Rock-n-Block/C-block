@@ -5,7 +5,7 @@ import {
 import apiActions from 'store/ui/actions';
 import { getErc20Symbol } from 'store/contractForms/actions';
 import actionTypes from 'store/contractForms/actionTypes';
-import { bep20Abi } from 'config/abi';
+import { contractsHelper } from 'utils';
 
 export function* getSymbolSaga({
   type,
@@ -17,8 +17,8 @@ export function* getSymbolSaga({
   try {
     yield put(apiActions.request(type));
 
-    const contract = new provider.eth.Contract(
-      bep20Abi,
+    const contract = contractsHelper.getBep20Contract(
+      provider,
       tokenAddress,
     );
 

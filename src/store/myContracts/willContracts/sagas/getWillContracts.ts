@@ -3,23 +3,23 @@ import Web3 from 'web3';
 
 import { IGetContractsWillContractWithContractCreationField } from 'pages/MyContracts/MyContracts.helpers';
 import { ISpecificWillContractData } from 'types';
+import { contractsHelper } from 'utils';
 import {
-  getWillContract,
   transformMergeWillContractsAndSpecificData,
 } from './getWillContracts.helpers';
 
 function* fetchWillContractSaga(provider: Web3, contractAddress: string) {
-  const contract = getWillContract(provider, contractAddress);
+  const contract = contractsHelper.getWillContract(provider, contractAddress);
 
   try {
     const callsPromises = [
-      'isLostKey',
-      'terminated',
+      'isLostKey' as const,
+      'terminated' as const,
     ].map((methodName) => call(contract.methods[methodName]().call));
     const [
       isLostKey,
       terminated,
-    ] = yield all(callsPromises);
+    ]: boolean[] = yield all(callsPromises);
 
     return {
       isLostKey,

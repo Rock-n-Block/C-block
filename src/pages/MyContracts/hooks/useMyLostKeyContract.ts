@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import { useWalletConnectorContext } from 'services';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
-import { bep20Abi, lostKeyAbi } from 'config/abi';
 import { TOKEN_ADDRESSES_MAX_COUNT } from 'appConstants';
 import { ISetUpModalTokenAddress } from 'components/SetUpModal/SetUpModal.helpers';
+import { contractsHelper } from 'utils';
 
 export const useMyLostKeyContract = (
   onSuccessTx: () => void, onErrorTx: () => void, onFinishTx: () => void,
@@ -15,7 +15,7 @@ export const useMyLostKeyContract = (
 
   const handleConfirmActiveStatus = useCallback(async (contractAddress: string) => {
     const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
+    const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
     try {
       await contract.methods.confirm().send({
         from: userWalletAddress,
@@ -31,11 +31,12 @@ export const useMyLostKeyContract = (
 
   const fetchActiveStatusConfirmData = useCallback((contractAddress: string) => {
     const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
+    const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
     try {
       return Promise.all(
         [
-          'CONFIRMATION_PERIOD', 'lastRecordedTime',
+          'CONFIRMATION_PERIOD' as const,
+          'lastRecordedTime' as const,
         ].map((methodName) => contract.methods[methodName]().call()),
       );
     } catch (err) {
@@ -46,11 +47,11 @@ export const useMyLostKeyContract = (
 
   const fetchSetUpModalTokenAddresses = useCallback(async (contractAddress: string) => {
     const web3 = walletService.Web3();
-    const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
+    const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
 
     const tokensAddressesPromises = new Array(TOKEN_ADDRESSES_MAX_COUNT)
       .fill('')
-      .map((_, index) => contract.methods.tokensToSend(index).call() as Promise<string>);
+      .map((_, index) => contract.methods.tokensToSend(index).call());
     try {
       const settledTokensAddresses = await Promise.allSettled(
         tokensAddressesPromises,
@@ -61,7 +62,7 @@ export const useMyLostKeyContract = (
 
       const allowances = await Promise.all(
         tokensAddresses.map((address) => {
-          const contract = new web3.eth.Contract(bep20Abi, address);
+          const contract = contractsHelper.getBep20Contract(web3, address);
           return contract.methods.allowance(userWalletAddress, contractAddress).call();
         }),
       );
@@ -79,7 +80,7 @@ export const useMyLostKeyContract = (
   const handleAddTokens = useCallback(
     async (contractAddress: string, tokensAddresses: string[]) => {
       const web3 = walletService.Web3();
-      const contract = new web3.eth.Contract(lostKeyAbi, contractAddress);
+      const contract = contractsHelper.getLostKeyContract(web3, contractAddress);
       console.log('handleAddTokens', tokensAddresses);
       try {
         await contract.methods.addToken(tokensAddresses).send({

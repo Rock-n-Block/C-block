@@ -1,26 +1,38 @@
-export { default as bep20Abi } from './bep20';
-export { default as saleAbi } from './sale';
+import { AbiItem } from 'web3-utils';
+import bep20 from './bep20.json';
+import sale from './sale.json';
 
-export { default as tokenMintableFreezableAbi } from './tokenMintableFreezable';
-export { default as tokenMintableNonFreezableAbi } from './tokenMintableNonFreezable';
-export { default as tokenNonMintableFreezableAbi } from './tokenNonMintableFreezable';
-export { default as tokenNonMintableNonFreezableAbi } from './tokenNonMintableNonFreezable';
+import tokenMintableFreezable from './tokenMintableFreezable.json';
+import tokenMintableNonFreezable from './tokenMintableNonFreezable.json';
+import tokenNonMintableFreezable from './tokenNonMintableFreezable.json';
+import tokenNonMintableNonFreezable from './tokenNonMintableNonFreezable.json';
 
-export {
-  default as crowdsaleNonSoftCappableBonusableAbi,
-} from './crowdsaleNonSoftCappableBonusable';
-export {
-  default as crowdsaleNonSoftCappableNonBonusableAbi,
-} from './crowdsaleNonSoftCappableNonBonusable';
-export {
-  default as crowdsaleSoftCappableBonusableAbi,
-} from './crowdsaleSoftCappableBonusable';
-export {
-  default as crowdsaleSoftCappableNonBonusableAbi,
-} from './crowdsaleSoftCappableNonBonusable';
+import crowdsaleNonSoftCappableBonusable from './crowdsaleNonSoftCappableBonusable.json';
+import crowdsaleNonSoftCappableNonBonusable from './crowdsaleNonSoftCappableNonBonusable.json';
+import crowdsaleSoftCappableBonusable from './crowdsaleSoftCappableBonusable.json';
+import crowdsaleSoftCappableNonBonusable from './crowdsaleSoftCappableNonBonusable.json';
 
-export { default as weddingFactoryAbi } from './weddingFactory';
-export { default as weddingAbi } from './wedding';
+import weddingFactory from './weddingFactory.json';
+import wedding from './wedding.json'; // Instance of WeddingFactory
 
-export { default as lostKeyFactoryAbi } from './lostKeyFactory';
-export { default as lostKeyAbi } from './lostKey';
+import lostKeyFactory from './lostKeyFactory.json';
+import lostKey from './lostKey.json'; // Instance of LostKeyFactory
+
+export const bep20Abi = bep20 as AbiItem[];
+export const saleAbi = sale as AbiItem[];
+
+export const tokenMintableFreezableAbi = tokenMintableFreezable as AbiItem[];
+export const tokenMintableNonFreezableAbi = tokenMintableNonFreezable as AbiItem[];
+export const tokenNonMintableFreezableAbi = tokenNonMintableFreezable as AbiItem[];
+export const tokenNonMintableNonFreezableAbi = tokenNonMintableNonFreezable as AbiItem[];
+
+export const crowdsaleNonSoftCappableBonusableAbi = crowdsaleNonSoftCappableBonusable as AbiItem[];
+export const crowdsaleNonSoftCappableNonBonusableAbi = crowdsaleNonSoftCappableNonBonusable as AbiItem[];
+export const crowdsaleSoftCappableBonusableAbi = crowdsaleSoftCappableBonusable as AbiItem[];
+export const crowdsaleSoftCappableNonBonusableAbi = crowdsaleSoftCappableNonBonusable as AbiItem[];
+
+export const weddingFactoryAbi = weddingFactory as AbiItem[];
+export const weddingAbi = wedding as AbiItem[];
+
+export const lostKeyFactoryAbi = lostKeyFactory as AbiItem[];
+export const lostKeyAbi = lostKey as AbiItem[];

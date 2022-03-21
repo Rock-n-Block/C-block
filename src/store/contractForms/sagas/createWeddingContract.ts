@@ -7,7 +7,6 @@ import { TransactionReceipt } from 'web3-core';
 import apiActions from 'store/ui/actions';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { bep20Abi } from 'config/abi';
 import { contractsHelper, convertIntervalAsSeconds } from 'utils';
 import {
   ContractsNames, IWeddingContract, UserState,
@@ -34,25 +33,25 @@ function* createWeddingContractSaga({
 
     const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
-    const weddingFactoryContractData = contractsHelper.getContractData(
+    const { address: weddingFactoryAddress } = contractsHelper.getContractData(
       ContractsNames.weddingFactory,
       isMainnet,
     );
 
-    const weddingFactoryContract = new provider.eth.Contract(
-      weddingFactoryContractData.abi,
-      weddingFactoryContractData.address,
+    const weddingFactoryContract = contractsHelper.getWeddingFactoryContract(
+      provider,
+      weddingFactoryAddress,
     );
 
-    const celoTokenContract = new provider.eth.Contract(
-      bep20Abi,
+    const celoTokenContract = contractsHelper.getBep20Contract(
+      provider,
       celoAddress,
     );
 
     const allowance = yield call(
       celoTokenContract.methods.allowance(
         myAddress,
-        weddingFactoryContractData.address,
+        weddingFactoryAddress,
       ).call,
     );
 
@@ -73,7 +72,7 @@ function* createWeddingContractSaga({
         type: actionTypes.APPROVE,
         payload: {
           provider,
-          spender: weddingFactoryContractData.address,
+          spender: weddingFactoryAddress,
           amount: totalAmountToBeApproved,
           tokenAddress: celoAddress,
         },
@@ -88,18 +87,17 @@ function* createWeddingContractSaga({
       partnerOneSliderValue,
     } = weddingContract;
 
-    const partnersAddresses = [partnerOneAddress, partnerTwoAddress];
+    const partnersAddresses: [string, string] = [partnerOneAddress, partnerTwoAddress];
 
-    const contractMethodArgs: string[] = [
-      celoAddress,
-      ...partnersAddresses,
-      convertIntervalAsSeconds(daysForWithdrawalApproval, 'Day').toString(),
-      convertIntervalAsSeconds(daysForDivorceApproval, 'Day').toString(),
-      partnerOneSliderValue.toString(),
-    ];
-
+    // as unknown as LostKey
     const { transactionHash }: TransactionReceipt = yield call(
-      weddingFactoryContract.methods.deployWedding(...contractMethodArgs).send,
+      weddingFactoryContract.methods.deployWedding(
+        celoAddress,
+        ...partnersAddresses,
+        convertIntervalAsSeconds(daysForWithdrawalApproval, 'Day'),
+        convertIntervalAsSeconds(daysForDivorceApproval, 'Day'),
+        partnerOneSliderValue,
+      ).send,
       {
         from: myAddress,
       },

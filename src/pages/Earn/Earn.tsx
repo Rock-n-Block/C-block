@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, {
-  FC,
+  FC, useMemo,
 } from 'react';
 import {
   Container,
@@ -22,6 +22,7 @@ export const Earn: FC = () => {
   const classes = useStyles();
   const {
     finishedContracts,
+    isGetFinishedContractsLoading,
     hasTableData,
     getRowItemData,
     handleTransfer,
@@ -29,6 +30,34 @@ export const Earn: FC = () => {
   } = useEarnData();
 
   useDelayedTask(getFinishedContracts);
+
+  const tableDataJsx = useMemo(() => {
+    if (isGetFinishedContractsLoading) return null;
+    if (!hasTableData) return <EmptyTableBlock />;
+    return (
+      <>
+        <EarnTable
+          className={classes.tableContainer}
+        />
+        <Box className={classes.mobileTableData}>
+          {
+            finishedContracts.map((item, rowIndex) => {
+              const rowKey = JSON.stringify(item) + rowIndex;
+              const { deserializedRewardAmount } = getRowItemData(item);
+              return (
+                <EarnListRow
+                  key={rowKey}
+                  userAddress={item.address}
+                  reward={deserializedRewardAmount}
+                  onTransfer={() => handleTransfer(item)}
+                />
+              );
+            })
+          }
+        </Box>
+      </>
+    );
+  }, [classes.mobileTableData, classes.tableContainer, finishedContracts, getRowItemData, handleTransfer, hasTableData, isGetFinishedContractsLoading]);
 
   return (
     <Container className={classes.root}>
@@ -40,35 +69,7 @@ export const Earn: FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          {
-            hasTableData && (
-              <EarnTable
-                className={classes.tableContainer}
-              />
-            )
-          }
-          {
-            !hasTableData && <EmptyTableBlock />
-          }
-
-          <Box className={classes.mobileTableData}>
-            {
-              hasTableData && (
-                finishedContracts.map((item, rowIndex) => {
-                  const rowKey = JSON.stringify(item) + rowIndex;
-                  const { deserializedRewardAmount } = getRowItemData(item);
-                  return (
-                    <EarnListRow
-                      key={rowKey}
-                      userAddress={item.address}
-                      reward={deserializedRewardAmount}
-                      onTransfer={() => handleTransfer(item)}
-                    />
-                  );
-                })
-              )
-            }
-          </Box>
+          {tableDataJsx}
         </Grid>
       </Grid>
     </Container>
