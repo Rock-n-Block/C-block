@@ -15,7 +15,6 @@ export const useStyles = makeStyles((theme: Theme) => {
     root: {
       ...flexHelper('space-between', 'flex-start'),
       flexDirection: 'column',
-      height: '100vh',
       padding: SIDEBAR_CONTAINER_PADDING,
       background: theme.palette.primary.main,
     },

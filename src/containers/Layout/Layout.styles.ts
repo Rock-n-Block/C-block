@@ -17,11 +17,10 @@ export const useStyles = makeStyles<Theme, { isSidebarOpen: boolean }>(
       minWidth: 240,
       maxWidth: 240,
       flexBasis: '25%',
-      transition: '300ms',
+      height: '100vh',
       [theme.breakpoints.down(768)]: {
         position: 'fixed',
-        left: ({ isSidebarOpen }) => (isSidebarOpen ? '0%' : '-150%'),
-        height: '100vh',
+        height: '100%',
         maxWidth: 'unset',
         width: '100%',
       },
