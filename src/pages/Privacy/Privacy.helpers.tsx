@@ -1,3 +1,5 @@
+import { PRIVACY_SUPPORT_EMAIL } from 'appConstants';
+
 export const htmlContent = `
     <h1>C-Block Privacy Policy</h1>
     <div style="text-align: left">02.19.2021</div>
@@ -31,10 +33,10 @@ export const htmlContent = `
         <p style="text-align: justify;"><span style="font-weight: 400;">C-Block has implemented a number of security measures to ensure that your information is not lost, abused, or altered. Our data security measures include, but are not limited to: PCI Scanning, Secured Sockets Layered encryption technology, pseudonymization, internal data access restrictions, and strict physical access controls to buildings &amp; files. Please note that it is impossible to guarantee 100% secure transmission of data over the Internet nor method of electronic storage. As such, we request that you understand the responsibility to independently take safety precautions to protect your own personal information.</span></p>
         <p style="text-align: justify;"><span style="font-weight: 400;">If you suspect that your personal information has been compromised, especially account and/or password information, please contact C-Block customer service immediately.</span></p>
         <h2 style="text-align: justify;"><span style="font-weight: 700;">How to request data deletion?</span></h2>
-        <p style="text-align: justify;"><span style="font-weight: 400;">To delete your account with all the collected data, please, make a request to C-Block support team by writing an email to support@mywish.io. Please, add the letter subject "Data deletion request"
+        <p style="text-align: justify;"><span style="font-weight: 400;">To delete your account with all the collected data, please, make a request to C-Block support team by writing an email to ${PRIVACY_SUPPORT_EMAIL}. Please, add the letter subject "Data deletion request"
 The data will be deleted within 7 working days, from the request confirmation.</span></p>
         <h2 style="text-align: justify;"><span style="font-weight: 700;">Contact us</span></h2>
-        <p style="text-align: justify;"><span style="font-weight: 400;">We are committed to respecting the freedoms and rights of all our C-Block users who have placed their trust in our service. If you should have any questions or concerns regarding this Privacy Policy, or if you would like to file a Data Protection request, please contact us by support@mywish.io.</span></p>
+        <p style="text-align: justify;"><span style="font-weight: 400;">We are committed to respecting the freedoms and rights of all our C-Block users who have placed their trust in our service. If you should have any questions or concerns regarding this Privacy Policy, or if you would like to file a Data Protection request, please contact us by ${PRIVACY_SUPPORT_EMAIL}.</span></p>
         <h1 style="text-align: justify;"><br><br></h1>
     </div>
 `;
