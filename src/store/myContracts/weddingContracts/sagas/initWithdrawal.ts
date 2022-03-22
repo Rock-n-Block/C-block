@@ -10,7 +10,8 @@ import {
   UserState,
 } from 'types';
 import userSelector from 'store/user/selectors';
-import { contractsHelper, getTokenAmount } from 'utils';
+import { contractsHelper, getTokenAmount, setNotification } from 'utils';
+import { checkIfTokenAddress } from 'store/erc20/sagas';
 import actionTypes from '../actionTypes';
 import { initWithdrawal } from '../actions';
 
@@ -20,6 +21,20 @@ function* initWithdrawalSaga({
     provider, contractAddress, tokenAddress, addressToSend, amount,
   },
 }: ReturnType<typeof initWithdrawal>) {
+  try {
+    const isTokenAddress: boolean = yield call(checkIfTokenAddress, provider, tokenAddress);
+    if (!isTokenAddress) {
+      setNotification({
+        type: 'warning',
+        message: 'Provided token address is invalid',
+      });
+      return;
+    }
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+
   try {
     yield put(apiActions.request(type));
 
