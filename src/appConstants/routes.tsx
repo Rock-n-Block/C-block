@@ -15,6 +15,8 @@ const PREVIEW_CONTRACT = 'preview-contract';
 const MY_CONTRACTS = 'my-contracts';
 const CUSTOM_DEVELOPMENT = 'custom-development';
 const EARN_PATH = 'earn';
+const TERMS = 'terms';
+const PRIVACY = 'privacy';
 
 const PREVIEW_TOKEN_CONTRACT = 'preview-token-contract' as const;
 const PREVIEW_CROWDSALE_CONTRACT = 'preview-crowdsale-contract' as const;
@@ -110,6 +112,18 @@ const customDevelopmentRoute = {
   icon: null,
 };
 
+const termsRoute = {
+  root: `/${TERMS}`,
+  title: 'Terms of service',
+  icon: null,
+};
+
+const privacyRoute = {
+  root: `/${PRIVACY}`,
+  title: 'Privacy policy',
+  icon: null,
+};
+
 export const routes = {
   root: `/${CREATE_CONTRACT}`,
   title: 'Create Contract',
@@ -122,4 +136,6 @@ export const routes = {
   [MY_CONTRACTS]: myContractsRoute,
   [EARN_PATH]: earnRoute,
   [CUSTOM_DEVELOPMENT]: customDevelopmentRoute,
+  [TERMS]: termsRoute,
+  [PRIVACY]: privacyRoute,
 };

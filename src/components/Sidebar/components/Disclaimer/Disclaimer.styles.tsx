@@ -9,4 +9,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     borderRadius: '12px',
     padding: theme.spacing(2),
   },
+  link: {
+    textDecoration: 'underline',
+  },
 }));

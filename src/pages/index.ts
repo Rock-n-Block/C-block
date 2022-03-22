@@ -12,3 +12,6 @@ export * from './LostKeyContractPreview';
 export * from './WillContract';
 export * from './WillContractPreview';
 export * from './Earn';
+
+export * from './Terms';
+export * from './Privacy';
