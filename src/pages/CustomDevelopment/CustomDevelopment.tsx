@@ -16,19 +16,18 @@ import {
 
 import { CloseCircleIcon } from 'theme/icons';
 import {
-  customDevelopmentFormConfig, initFormValues, validationSchema, isAtLeastOneFormFieldFilled,
+  CustomDevelopmentFormValues,
+  customDevelopmentFormConfig,
+  initFormValues,
+  validationSchema,
+  isAtLeastOneFormFieldFilled,
+  sendEmail,
 } from './CustomDevelopment.helpers';
 import { useStyles } from './CustomDevelopment.styles';
 
-type CustomDevelopmentFormValues = {
-  userName: string;
-  email: string;
-  contractName: string;
-  request: string;
-};
-
 export const CustomDevelopment = () => {
   const classes = useStyles();
+
   return (
     <Container className={classes.root}>
       <Grid container>
@@ -44,8 +43,8 @@ export const CustomDevelopment = () => {
               values: CustomDevelopmentFormValues,
               { resetForm },
             ) => {
+              sendEmail(values);
               resetForm();
-              alert(JSON.stringify(values));
             }}
           >
             {({
