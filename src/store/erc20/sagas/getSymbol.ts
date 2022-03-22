@@ -3,9 +3,9 @@ import {
 } from '@redux-saga/core/effects';
 
 import apiActions from 'store/ui/actions';
-import { getErc20Symbol } from 'store/contractForms/actions';
-import actionTypes from 'store/contractForms/actionTypes';
 import { contractsHelper } from 'utils';
+import { getErc20Symbol } from '../actions';
+import actionTypes from '../actionTypes';
 
 export function* getSymbolSaga({
   type,

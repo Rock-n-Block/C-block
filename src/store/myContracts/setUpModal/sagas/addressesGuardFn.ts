@@ -4,7 +4,7 @@ import type Web3 from 'web3';
 import { myContractsReducer } from 'store/myContracts/reducer';
 import { ISetUpModalTokenAddress, ISetUpModalTokenAddressField } from 'types';
 import { setNotification, shortenPhrase } from 'utils';
-import { checkIfTokenAddress } from './checkIfTokenAddress';
+import { checkIfTokenAddress } from 'store/erc20/sagas';
 
 export function* addressesGuardFn(
   provider: Web3,

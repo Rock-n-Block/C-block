@@ -1,20 +1,17 @@
 import { createAction } from '@reduxjs/toolkit';
 
 import {
-  TApproveAction,
   TGetContractCreationPrice,
   TCreateTokenContractAction,
   TCreateLostKeyContractAction,
   TCreateWillContractAction,
   TCreateCrowdsaleContractAction,
   TCreateWeddingContractAction,
-  TGetErc20SymbolAction,
   TGetCrowdsaleContractAdditionalDataAction,
 } from 'types';
 
 import actionTypes from './actionTypes';
 
-export const approve = createAction<TApproveAction>(actionTypes.APPROVE);
 export const getContractCreationPrice = createAction<TGetContractCreationPrice>(
   actionTypes.GET_CONTRACT_CREATION_PRICE,
 );
@@ -35,8 +32,4 @@ export const getCrowdsaleContractAdditionalData = createAction<TGetCrowdsaleCont
 );
 export const createWeddingContract = createAction<TCreateWeddingContractAction>(
   actionTypes.CREATE_WEDDING_CONTRACT,
-);
-
-export const getErc20Symbol = createAction<TGetErc20SymbolAction>(
-  actionTypes.GET_ERC20_SYMBOL,
 );

@@ -8,6 +8,7 @@ export * from './setUpModal';
 export * from './earn';
 
 export * from './actions';
+export * from './erc20.actions';
 export * from './globals';
 
 export * from './crowdsaleContract';

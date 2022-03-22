@@ -1,13 +1,14 @@
 import { fork } from 'redux-saga/effects';
 
-import approveSaga from './approveSaga';
+import approveSaga from 'store/erc20/sagas/approveSaga';
+import getErc20Symbol from 'store/erc20/sagas/getSymbol';
+
 import getContractCreationPriceSaga from './getContractCreationPriceSaga';
 import createTokenContract from './createTokenContract';
 import createLostKeyContract from './createLostKeyContract';
 import createWillContract from './createWillContract';
 import createCrowdsaleContract from './createCrowdsaleContract';
 import createWeddingContract from './createWeddingContract';
-import getErc20Symbol from './erc20/getSymbol';
 import getCrowdsaleContractAdditionalData from './getCrowdsaleContractAdditionalData';
 
 export default function* createContractsSaga() {

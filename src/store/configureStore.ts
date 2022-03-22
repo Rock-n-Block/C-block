@@ -15,6 +15,7 @@ import {
 import { ContractFormsState, UserState } from 'types';
 import reducer from './rootReducer';
 import rootSaga from './rootSaga';
+import erc20ActionTypes from './erc20/actionTypes';
 import contractFormsActionTypes from './contractForms/actionTypes';
 import myContractsActionTypes from './myContracts/actionTypes';
 import myContractsWeddingActionTypes from './myContracts/weddingContracts/actionTypes';
@@ -62,7 +63,9 @@ const store = configureStore({
           PERSIST,
           PURGE,
           REGISTER,
-          contractFormsActionTypes.APPROVE,
+          erc20ActionTypes.APPROVE,
+          erc20ActionTypes.GET_ERC20_SYMBOL,
+
           contractFormsActionTypes.GET_CONTRACT_CREATION_PRICE,
           contractFormsActionTypes.CREATE_TOKEN_CONTRACT,
           contractFormsActionTypes.CREATE_LOSTKEY_CONTRACT,
@@ -70,7 +73,6 @@ const store = configureStore({
           contractFormsActionTypes.CREATE_CROWDSALE_CONTRACT,
           contractFormsActionTypes.CREATE_WEDDING_CONTRACT,
           contractFormsActionTypes.GET_CROWDSALE_CONTRACT_ADDITIONAL_DATA,
-          contractFormsActionTypes.GET_ERC20_SYMBOL,
 
           myContractsActionTypes.GET_MY_CONTRACTS,
           myContractsWeddingActionTypes.INIT_DIVORCE,

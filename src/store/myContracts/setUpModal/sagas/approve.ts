@@ -6,8 +6,8 @@ import myContractsSelector from 'store/myContracts/selectors';
 import { ISetUpModalTokenAddressField, Modals } from 'types';
 
 import { setActiveModal } from 'store/modals/reducer';
-import contractFormsActionTypes from 'store/contractForms/actionTypes';
-import { approveSaga } from 'store/contractForms/sagas/approveSaga';
+import { approveSaga } from 'store/erc20/sagas/approveSaga';
+import erc20ActionTypes from 'store/erc20/actionTypes';
 import { setUpModalSetAddresses } from 'store/myContracts/reducer';
 import apiActions from 'store/ui/actions';
 import { MAX_UINT_256 } from 'appConstants';
@@ -39,7 +39,7 @@ function* setUpModalApproveSaga(
     }));
 
     yield call(approveSaga, {
-      type: contractFormsActionTypes.APPROVE,
+      type: erc20ActionTypes.APPROVE,
       payload: {
         provider,
         spender: contractAddress,

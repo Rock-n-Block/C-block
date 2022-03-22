@@ -10,7 +10,8 @@ import {
   ICrowdsaleContract,
 } from 'types';
 import { setCrowdsaleContractForm } from 'store/contractForms/reducer';
-import { getSymbolSaga } from './erc20/getSymbol';
+import { getSymbolSaga } from 'store/erc20/sagas/getSymbol';
+import erc20ActionTypes from 'store/erc20/actionTypes';
 
 export function* getCrowdsaleContractAdditionalDataSaga({
   type,
@@ -27,7 +28,7 @@ export function* getCrowdsaleContractAdditionalDataSaga({
 
     const { tokenAddress } = crowdsaleContract;
     const tokenToSaleSymbol: string = yield call(getSymbolSaga, {
-      type: actionTypes.GET_ERC20_SYMBOL,
+      type: erc20ActionTypes.GET_ERC20_SYMBOL,
       payload: {
         provider,
         tokenAddress,
@@ -38,7 +39,7 @@ export function* getCrowdsaleContractAdditionalDataSaga({
     const paymentTokensSymbols: string[] = yield all(
       tokens.map(({ address }) => call(
         getSymbolSaga, {
-          type: actionTypes.GET_ERC20_SYMBOL,
+          type: erc20ActionTypes.GET_ERC20_SYMBOL,
           payload: {
             provider,
             tokenAddress: address,

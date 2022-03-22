@@ -12,9 +12,10 @@ import {
   ContractsNames, IWillContract, UserState,
 } from 'types';
 import { baseApi } from 'store/api/apiRequestBuilder';
+import { approveSaga } from 'store/erc20/sagas/approveSaga';
+import erc20ActionTypes from 'store/erc20/actionTypes';
 import actionTypes from '../actionTypes';
 import { createWillContract } from '../actions';
-import { approveSaga } from './approveSaga';
 
 function* createWillContractSaga({
   type,
@@ -67,7 +68,7 @@ function* createWillContractSaga({
     const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(totalAmountToBeApproved);
     if (!hasAllowance) {
       yield call(approveSaga, {
-        type: actionTypes.APPROVE,
+        type: erc20ActionTypes.APPROVE,
         payload: {
           provider,
           spender: lastWillFactoryAddress,
