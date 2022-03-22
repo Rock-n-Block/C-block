@@ -40,15 +40,17 @@ export const RequestWithdrawalModal: VFC<Props> = ({
     if (onAccept) {
       onAccept(modalState);
     }
-    closeModal();
-  }, [closeModal, onAccept, modalState]);
+  }, [onAccept, modalState]);
 
-  const handleChange = useCallback((key: TFieldKeys) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setModalState({
-      ...modalState,
-      [key]: e.target.value,
-    });
-  }, [modalState]);
+  const handleChange = useCallback(
+    (key: TFieldKeys) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      const newModalState: IModalFieldsState = {
+        ...modalState,
+        [key]: e.target.value,
+      };
+      setModalState(newModalState);
+    }, [modalState],
+  );
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
