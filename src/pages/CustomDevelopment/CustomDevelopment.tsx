@@ -13,8 +13,11 @@ import {
   Field,
   FieldProps,
 } from 'formik';
+
 import { CloseCircleIcon } from 'theme/icons';
-import { customDevelopmentFormConfig, initFormValues, validationSchema } from './CustomDevelopment.helpers';
+import {
+  customDevelopmentFormConfig, initFormValues, validationSchema, isAtLeastOneFormFieldFilled,
+} from './CustomDevelopment.helpers';
 import { useStyles } from './CustomDevelopment.styles';
 
 type CustomDevelopmentFormValues = {
@@ -47,53 +50,58 @@ export const CustomDevelopment = () => {
           >
             {({
               errors, touched, values, handleChange, handleBlur, isValid,
-            }) => (
-              <Form translate={undefined} className={classes.form}>
-                {customDevelopmentFormConfig.map(({ id, name, renderProps }) => (
-                  <Field
-                    key={name}
-                    id={id}
-                    name={name}
-                    render={
-                    ({ form: { isSubmitting } }: FieldProps) => (
-                      <TextField
-                        {...renderProps}
-                        disabled={isSubmitting}
-                        onChange={handleChange}
-                        value={values[name]}
-                        onBlur={(e: SyntheticEvent) => handleBlur(e)}
-                        helperText={(errors[name] && touched[name]) && `Error ${name}`}
-                        error={errors[name] && touched[name]}
-                      />
-                    )
-                  }
-                  />
-                ))}
-                <Box className={classes.customDevelopmentControlsContainer}>
-                  <Button
-                    size="large"
-                    type="submit"
-                    color="secondary"
-                    disabled={!isValid}
-                    variant="outlined"
-                    className={classes.submitButton}
-                  >
-                    Send
-                  </Button>
-                  <Button
-                    size="large"
-                    type="reset"
-                    color="secondary"
-                    variant="outlined"
-                    endIcon={<CloseCircleIcon />}
-                    className={classes.resetButton}
-                    disabled={!Object.keys(touched).length}
-                  >
-                    Clean
-                  </Button>
-                </Box>
-              </Form>
-            )}
+            }) => {
+              const hasFormFilledFields = isAtLeastOneFormFieldFilled(values);
+              const isDisabledCleanButton = !hasFormFilledFields;
+              const isDisabledSendButton = !hasFormFilledFields || !isValid;
+              return (
+                <Form translate={undefined} className={classes.form}>
+                  {customDevelopmentFormConfig.map(({ id, name, renderProps }) => (
+                    <Field
+                      key={name}
+                      id={id}
+                      name={name}
+                      render={
+                      ({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          {...renderProps}
+                          disabled={isSubmitting}
+                          onChange={handleChange}
+                          value={values[name]}
+                          onBlur={(e: SyntheticEvent) => handleBlur(e)}
+                          helperText={(errors[name] && touched[name]) && errors[name]}
+                          error={errors[name] && touched[name]}
+                        />
+                      )
+                    }
+                    />
+                  ))}
+                  <Box className={classes.customDevelopmentControlsContainer}>
+                    <Button
+                      className={classes.submitButton}
+                      size="large"
+                      type="submit"
+                      color="secondary"
+                      variant="outlined"
+                      disabled={isDisabledSendButton}
+                    >
+                      Send
+                    </Button>
+                    <Button
+                      className={classes.resetButton}
+                      size="large"
+                      type="reset"
+                      color="secondary"
+                      variant="outlined"
+                      endIcon={<CloseCircleIcon />}
+                      disabled={isDisabledCleanButton}
+                    >
+                      Clean
+                    </Button>
+                  </Box>
+                </Form>
+              );
+            }}
           </Formik>
         </Grid>
       </Grid>

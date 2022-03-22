@@ -13,6 +13,11 @@ export const initFormValues = {
   request: '',
 };
 
+// eslint-disable-next-line arrow-body-style
+export const isAtLeastOneFormFieldFilled = (form: typeof initFormValues) => {
+  return Object.keys(form).some((key: keyof typeof form) => Boolean(form[key].length));
+};
+
 export const validationSchema = Yup.object().shape({
   userName: Yup.string()
     .min(6)
@@ -22,11 +27,11 @@ export const validationSchema = Yup.object().shape({
     .required('Required'),
   contractName: Yup.string()
     .min(6)
-    .required(),
+    .required('Required'),
   request: Yup.string()
     .min(6)
     .max(350)
-    .required(),
+    .required('Required'),
 });
 
 export const customDevelopmentFormConfig = [
