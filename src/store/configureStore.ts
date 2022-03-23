@@ -21,6 +21,7 @@ import myContractsActionTypes from './myContracts/actionTypes';
 import myContractsWeddingActionTypes from './myContracts/weddingContracts/actionTypes';
 import earnActionTypes from './earn/actionTypes';
 import setUpActionTypes from './myContracts/setUpModal/actionTypes';
+import confirmActiveStatusModalActionTypes from './myContracts/confirmActiveStatusModal/actionTypes';
 import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -90,6 +91,8 @@ const store = configureStore({
           setUpActionTypes.SETUP_MODAL_APPROVE,
           setUpActionTypes.GET_SETUP_MODAL_TOKEN_ADDRESSES,
           setUpActionTypes.SETUP_MODAL_ADD_TOKENS,
+
+          confirmActiveStatusModalActionTypes.CONFIRM_ACTIVE_STATUS_MODAL_CONFIRM,
         ],
       },
     },

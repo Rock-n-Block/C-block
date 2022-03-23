@@ -24,9 +24,11 @@ import myContractsWeddingsActions, { getFundsAfterDivorce } from 'store/myContra
 import myContractsSelector from 'store/myContracts/selectors';
 import userSelector from 'store/user/selectors';
 import setUpModalActions from 'store/myContracts/setUpModal/actions';
+import confirmActiveStatusModalActions from 'store/myContracts/confirmActiveStatusModal/actions';
 
 import { convertIntervalAsSeconds } from 'utils';
 import { ISpecificWeddingContractData, IWeddingContract } from 'types';
+
 import {
   AdditionalContent, AdditionalContentRequestDivorce, AdditionalContentRequestWithdrawal,
 } from './components';
@@ -60,7 +62,6 @@ export const MyContracts: FC = () => {
   const openSetUpModal = useCallback(() => setIsSetUpModalOpen(true), []);
   const openConfirmLiveStatusModal = useCallback(() => setIsConfirmLiveStatusModalOpen(true), []);
   const openConfirmActiveStatusModal = useCallback(() => setIsConfirmActiveStatusModalOpen(true), []);
-  const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
   const openRequestWithdrawalModal = useCallback(() => setIsRequestWithdrawalModalOpen(true), []);
   const openGetFundsModal = useCallback(() => setIsGetFundsModalOpen(true), []);
 
@@ -70,23 +71,12 @@ export const MyContracts: FC = () => {
     resultModalState, setResultModalState,
   ] = useState<ComponentProps<typeof CompleteModal>>({ open: false, result: false });
 
-  const closeSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(false), []);
   const closeResultModal = useCallback(() => {
     setResultModalState({
       ...resultModalState,
       open: false,
     });
   }, [resultModalState]);
-
-  const onSuccessTx = useCallback(() => {
-    setResultModalState({ open: true, result: true });
-  }, []);
-  const onErrorTx = useCallback(() => {
-    setResultModalState({ open: true, result: false });
-  }, []);
-  const onFinishTx = useCallback(() => {
-    closeSendTransactionModal();
-  }, [closeSendTransactionModal]);
 
   const dispatch = useDispatch();
   const { getDefaultProvider } = useWeb3Provider();
@@ -96,9 +86,8 @@ export const MyContracts: FC = () => {
   } = useMyContracts();
 
   const {
-    handleConfirmActiveStatus,
     fetchActiveStatusConfirmData,
-  } = useMyLostKeyContract(onSuccessTx, onErrorTx, onFinishTx);
+  } = useMyLostKeyContract();
 
   const [
     activeStatusModalProps, setActiveStatusModalProps,
@@ -209,8 +198,12 @@ export const MyContracts: FC = () => {
           ...liveStatusModalProps,
           date,
           onAccept: () => {
-            handleConfirmActiveStatus(contractAddress);
-            openSendTransactionModal();
+            dispatch(
+              confirmActiveStatusModalActions.confirmActiveStatusModalConfirm({
+                provider: getDefaultProvider(),
+                contractAddress,
+              }),
+            );
           },
         });
         openConfirmLiveStatusModal();
@@ -225,8 +218,12 @@ export const MyContracts: FC = () => {
           ...activeStatusModalProps,
           date,
           onAccept: () => {
-            handleConfirmActiveStatus(contractAddress);
-            openSendTransactionModal();
+            dispatch(
+              confirmActiveStatusModalActions.confirmActiveStatusModalConfirm({
+                provider: getDefaultProvider(),
+                contractAddress,
+              }),
+            );
           },
         });
         openConfirmActiveStatusModal();
@@ -250,7 +247,7 @@ export const MyContracts: FC = () => {
         break;
       }
     }
-  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, getDefaultProvider, getFundsActions, handleConfirmActiveStatus, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSendTransactionModal, openSetUpModal, setUpModalProps, withdrawalActions]);
+  }, [activeStatusModalProps, cards, dispatch, fetchActiveStatusConfirmData, getDefaultProvider, getFundsActions, handleViewContract, liveStatusModalProps, openConfirmActiveStatusModal, openConfirmLiveStatusModal, openGetFundsModal, openRequestWithdrawalModal, openSetUpModal, setUpModalProps, withdrawalActions]);
 
   const isSameDivorceAddress = useCallback((divorceProposedBy: string) => userWalletAddress.toLowerCase() === divorceProposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject divorce with the same address
   const isSameWithdrawalAddress = useCallback((proposedBy: string) => userWalletAddress.toLowerCase() === proposedBy.toLowerCase(), [userWalletAddress]); // cannot approve/reject withdrawal with the same address

@@ -6,6 +6,7 @@ export * from './contractForms';
 export * from './myContracts';
 export * from './setUpModal';
 export * from './earn';
+export * from './confirmActiveStatusModal';
 
 export * from './actions';
 export * from './erc20.actions';
