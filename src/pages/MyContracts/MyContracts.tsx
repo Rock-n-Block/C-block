@@ -9,7 +9,6 @@ import {
 import clsx from 'clsx';
 
 import { NetTag } from 'containers/Header/components/NetTag';
-import { FullscreenLoader } from 'components/FullscreenLoader';
 import {
   SetUpModal,
   ConfirmStatusModal,
@@ -38,7 +37,7 @@ import {
   getContractLogo,
 } from './MyContracts.helpers';
 import {
-  useSearch, useMyContracts, useMyWeddingContract, useMyLostKeyContract,
+  useSearch, useMyContracts, useMyLostKeyContract,
 } from './hooks';
 import { useStyles } from './MyContracts.styles';
 
@@ -55,7 +54,6 @@ export const MyContracts: FC = () => {
   const [isSendTransactionModalOpen, setIsSendTransactionModalOpen] = useState(false);
   const [isRequestWithdrawalModalOpen, setIsRequestWithdrawalModalOpen] = useState(false);
   const [isGetFundsModalOpen, setIsGetFundsModalOpen] = useState(false);
-  const [isLoaderOpen, setIsLoaderOpen] = useState(false);
 
   const classes = useStyles();
 
@@ -65,7 +63,6 @@ export const MyContracts: FC = () => {
   const openSendTransactionModal = useCallback(() => setIsSendTransactionModalOpen(true), []);
   const openRequestWithdrawalModal = useCallback(() => setIsRequestWithdrawalModalOpen(true), []);
   const openGetFundsModal = useCallback(() => setIsGetFundsModalOpen(true), []);
-  const openLoader = useCallback(() => setIsLoaderOpen(true), []);
 
   const [withdrawalActions, setWithdrawalActions] = useState<ComponentProps<typeof RequestWithdrawalModal> | {}>({});
   const [getFundsActions, setGetFundsActions] = useState<ComponentProps<typeof GetFundsModal> | {}>({});
@@ -80,11 +77,7 @@ export const MyContracts: FC = () => {
       open: false,
     });
   }, [resultModalState]);
-  const closeLoader = useCallback(() => setIsLoaderOpen(false), []);
 
-  const onRequestTx = useCallback(() => {
-    openSendTransactionModal();
-  }, [openSendTransactionModal]);
   const onSuccessTx = useCallback(() => {
     setResultModalState({ open: true, result: true });
   }, []);
@@ -100,92 +93,7 @@ export const MyContracts: FC = () => {
 
   const {
     handleViewContract,
-
-    getMyContractsRequestUi,
-
   } = useMyContracts();
-
-  useEffect(() => {
-    getMyContractsRequestUi({
-      onRequestTx: openLoader,
-      onFinishTx: closeLoader,
-    });
-  }, [closeLoader, getMyContractsRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx, openLoader]);
-
-  const {
-    getFundsAfterDivorceRequestUi,
-
-    initWithdrawalRequestUi,
-    approveWithdrawalRequestUi,
-    rejectWithdrawalRequestUi,
-
-    initDivorceRequestUi,
-    approveDivorceRequestUi,
-    rejectDivorceRequestUi,
-  } = useMyWeddingContract();
-
-  useEffect(() => {
-    getFundsAfterDivorceRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [getFundsAfterDivorceRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
-
-  useEffect(() => {
-    initDivorceRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [initDivorceRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
-
-  useEffect(() => {
-    approveDivorceRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [approveDivorceRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
-
-  useEffect(() => {
-    rejectDivorceRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [rejectDivorceRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
-
-  useEffect(() => {
-    initWithdrawalRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [initWithdrawalRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
-
-  useEffect(() => {
-    approveWithdrawalRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [approveWithdrawalRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
-
-  useEffect(() => {
-    rejectWithdrawalRequestUi({
-      onRequestTx,
-      onSuccessTx,
-      onErrorTx,
-      onFinishTx,
-    });
-  }, [rejectWithdrawalRequestUi, onErrorTx, onFinishTx, onRequestTx, onSuccessTx]);
 
   const {
     handleConfirmActiveStatus,
@@ -426,7 +334,6 @@ export const MyContracts: FC = () => {
 
   return (
     <Container>
-      {isLoaderOpen && <FullscreenLoader />}
       <CompleteModal
         open={resultModalState.open}
         result={resultModalState.result}

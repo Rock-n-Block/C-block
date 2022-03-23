@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios';
 
 import apiActions from 'store/ui/actions';
 import userSelector from 'store/user/selectors';
-import { UserState } from 'types';
+import { Modals, UserState } from 'types';
 import { setMyContracts } from 'store/myContracts/reducer';
 import {
   IContractData,
@@ -24,6 +24,7 @@ import {
 } from 'pages/MyContracts/MyContracts.helpers';
 import { contractsHelper } from 'utils';
 import { baseApi } from 'store/api/apiRequestBuilder';
+import { setActiveModal } from 'store/modals/reducer';
 import actionTypes from '../actionTypes';
 import { getMyContracts } from '../actions';
 import {
@@ -224,6 +225,10 @@ function* getMyContractsSaga({
 }: ReturnType<typeof getMyContracts>) {
   try {
     yield put(apiActions.request(type));
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: true,
+    }));
 
     const newCards = yield call(fetchAndTransformContractsSaga, provider);
     if (newCards) {
@@ -235,6 +240,11 @@ function* getMyContractsSaga({
   } catch (err) {
     console.log(err);
     yield put(apiActions.error(type, err));
+  } finally {
+    yield put(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: false,
+    }));
   }
 }
 

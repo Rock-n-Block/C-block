@@ -1,7 +1,9 @@
-import { IFetchWeddingContractReturnType } from 'pages/MyContracts/hooks';
 import {
   IGetContractsWeddingContractWithContractCreationField, IGetContractsWeddingContractWithSpecificField,
 } from 'pages/MyContracts/MyContracts.helpers';
+import { ISpecificWeddingContractData } from 'types';
+
+export interface IFetchWeddingContractReturnType extends ISpecificWeddingContractData {}
 
 export const transformMergeWeddingContractsAndSpecificData = (
   weddings: IGetContractsWeddingContractWithContractCreationField[],
