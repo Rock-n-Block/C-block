@@ -20,6 +20,8 @@ import {
   WillContract,
   WillContractPreview,
   Earn,
+  Terms,
+  Privacy,
 } from 'pages';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -112,6 +114,15 @@ const RoutesContainer: FC = () => {
             <Route
               path={routes['custom-development'].root}
               element={<CustomDevelopment />}
+            />
+
+            <Route
+              path={routes['terms'].root}
+              element={<Terms />}
+            />
+            <Route
+              path={routes['privacy'].root}
+              element={<Privacy />}
             />
 
             <Route path="*" element={RedirectToHomePage} />
