@@ -11,13 +11,16 @@ export interface ICreateTokenContractData extends IContractData, IAddresses {}
 interface IMails {
   mails: string[];
 }
+export interface IMailsMap {
+  mails: Record<string, string>; // Map<email, ethAddress>
+}
 interface IMailsWithOwnerMail extends IMails {
   owner_mail: string;
 }
 export interface ICreateLostKeyContractData extends IContractData, IMailsWithOwnerMail {}
 export interface ICreateWillContractData extends ICreateLostKeyContractData {}
 export interface ICreateCrowdsaleContractData extends IContractData {}
-export interface ICreateWeddingContractData extends IContractData, IMails {}
+export interface ICreateWeddingContractData extends IContractData, IMailsMap {}
 // export type TCreateContractsData =
 //   | ICreateTokenContractData
 //   | ICreateLostKeyContractData

@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { Transaction } from 'web3-core';
 
 import {
-  IContractsCard, IGetContractsCrowdsaleContractWithCreatedAtField, IGetContractsLostKeyContractWithCreatedAtField, IGetContractsTokenContractWithCreatedAtField, TGetContractsWithCreatedAtField,
+  IContractsCard, IGetContractsCrowdsaleContractWithCreatedAtField, IGetContractsLostKeyContractWithCreatedAtField, IGetContractsTokenContractWithCreatedAtField, IGetContractsWeddingContractWithContractCreationField, TGetContractsWithCreatedAtField,
 } from 'pages/MyContracts/MyContracts.helpers';
 import { TDeployContractCreationMethodNames, TDeployCrowdsaleContractCreationMethodNames, TDeployTokenContractCreationMethodNames } from 'types/utils/contractsHelper';
 import {
@@ -211,12 +211,16 @@ export const getContractCreationData = (
         _decisionTimeWithdrawal: secondsForWithdrawalApproval,
         _percentageToProposingWhenDisputed: partnerOneSliderValue,
       } = params;
+      const backendWeddingData = backendData as IGetContractsWeddingContractWithContractCreationField;
+      const [
+        partnerOneEmail, partnerTwoEmail,
+      ] = Object.keys(backendWeddingData.mails) as [string, string];
       const ret: IWeddingContract = {
         contractName: backendData.name,
         partnerOneAddress,
         partnerTwoAddress,
-        partnerOneEmail: backendData.mails[0],
-        partnerTwoEmail: backendData.mails[1],
+        partnerOneEmail,
+        partnerTwoEmail,
         partnerOneSliderValue: +partnerOneSliderValue,
         partnerTwoSliderValue: 100 - Number(partnerOneSliderValue),
         daysForDivorceApproval: convertIntervalFromSeconds(

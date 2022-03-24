@@ -9,7 +9,6 @@
 
 export interface Wedding {
     address?: string;
-    mails?: string[];
     name?: string;
     testNode?: boolean;
     txHash?: string;

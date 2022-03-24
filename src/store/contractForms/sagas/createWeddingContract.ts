@@ -14,6 +14,7 @@ import {
 import { baseApi } from 'store/api/apiRequestBuilder';
 import { approveSaga } from 'store/erc20/sagas/approveSaga';
 import erc20ActionTypes from 'store/erc20/actionTypes';
+import { IMailsMap } from 'store/api/apiRequestBuilder.types';
 import actionTypes from '../actionTypes';
 import { createWeddingContract } from '../actions';
 import { getContractCreationPriceSaga } from './getContractCreationPriceSaga';
@@ -110,10 +111,10 @@ function* createWeddingContractSaga({
       partnerTwoEmail,
     } = weddingContract;
 
-    const mails = [
-      partnerOneEmail,
-      partnerTwoEmail,
-    ];
+    const mails: IMailsMap['mails'] = {
+      [partnerOneEmail]: partnerOneAddress,
+      [partnerTwoEmail]: partnerTwoAddress,
+    };
 
     yield call(baseApi.createWeddingContract, {
       tx_hash: transactionHash,
