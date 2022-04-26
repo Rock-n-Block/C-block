@@ -56,9 +56,9 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   contractButtons: {
     ...flexHelper('flex-start'),
-    width: '100%',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
+      width: '100%',
       '&:not(:last-child)': {
         marginBottom: theme.spacing(2),
       },
