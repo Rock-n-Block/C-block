@@ -156,15 +156,13 @@ export const MyContracts: FC = () => {
         openBurnTokenModal();
         setBurnTokenModalProps({
           ...burnTokenModalProps,
+          contractAddress,
+          decimals: +(card.contractCreationData as TokenContract).decimals,
           onAccept: (burnAmount) => {
             dispatch(burnTokenModalActions.burnTokenModalBurn({
               provider: getDefaultProvider(),
               contractAddress,
-              burnAmount: getTokenAmount(
-                burnAmount,
-                +(card.contractCreationData as TokenContract).decimals,
-                false,
-              ),
+              burnAmount,
             }));
           },
           onClose: () => {
@@ -448,6 +446,8 @@ export const MyContracts: FC = () => {
       <BurnTokenModal
         open={isBurnTokenModalOpen}
         setIsModalOpen={setIsBurnTokenModalOpen}
+        contractAddress=""
+        decimals={0}
         {...burnTokenModalProps}
       />
       <MintTokenModal
