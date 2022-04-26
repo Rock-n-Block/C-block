@@ -17,6 +17,7 @@ import { CheckBox } from 'components/CheckBox';
 import { Modal } from 'components/Modal';
 import userSelector from 'store/user/selectors';
 import { Snowflake } from 'theme/icons';
+import { DAY_AS_SECONDS, formattedDate } from 'utils';
 import { useStyles } from './MintTokenModal.styles';
 
 interface Props {
@@ -37,19 +38,21 @@ export const MintTokenModal: VFC<Props> = ({
 }) => {
   const classes = useStyles();
 
+  const tomorrowDate = formattedDate('-', new Date(Date.now() + DAY_AS_SECONDS * 1000));
+
   const [address, setAddress] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
-  const [freezeUntilDate, setFreezeUntilDate] = useState('');
+  const [freezeUntilDate, setFreezeUntilDate] = useState(tomorrowDate);
   const [freezeUntilTimestamp, setFreezeUntilTimestamp] = useState(0);
   const [isFrozen, setIsFrozen] = useState(false);
 
-  const clearInputs = () => {
+  const clearInputs = useCallback(() => {
     setAddress('');
     setTokenAmount('');
-    setFreezeUntilDate('');
+    setFreezeUntilDate(tomorrowDate);
     setFreezeUntilTimestamp(0);
     setIsFrozen(false);
-  };
+  }, [tomorrowDate]);
 
   const closeModal = useCallback(() => {
     if (onClose) {
@@ -57,7 +60,7 @@ export const MintTokenModal: VFC<Props> = ({
       onClose();
     }
     setIsModalOpen(false);
-  }, [onClose, setIsModalOpen]);
+  }, [clearInputs, onClose, setIsModalOpen]);
 
   const isDisabledAcceptButton = useMemo(() => {
     if (!Web3.utils.isAddress(address)) return true;
