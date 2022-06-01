@@ -23,40 +23,97 @@ import {
   COLOR_BUTTON_SECONDARY_DARK_HOVER,
   COLOR_BUTTON_SECONDARY_LIGHT_HOVER,
   COLOR_GREY_2,
+  COLOR_GREY_3,
   COLOR_BLACK_4,
+  COLOR_BLACK_7,
 } from 'theme/colors';
 import { FontWeights } from 'theme/Typography';
 
 export const getMuiButton = (theme: Theme): Overrides['MuiButton'] => {
+  const customStyles: CSSProperties = {
+    '&.border-radius-s': {
+      borderRadius: theme.spacing(1),
+    },
+  };
+
+  const containedCommon: CSSProperties = {
+    ...theme.typography.body2,
+    ...customStyles,
+    padding: theme.spacing(1, 4),
+
+    color: COLOR_BLACK_7,
+    borderRadius: 100,
+    backgroundColor: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_GREY_3,
+    transition: '200ms',
+
+    '&$sizeLarge': {
+      ...theme.typography.button,
+      padding: theme.spacing(2, 4),
+      color: COLOR_BLACK_7,
+    },
+    '&$sizeSmall': {
+      padding: theme.spacing(1, 2),
+      fontSize: '12px',
+      lineHeight: '14px',
+      fontWeight: FontWeights.fontWeightSemiBold,
+    },
+    '&:hover': {
+      color: COLOR_BLACK,
+      background: theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_HOVER : COLOR_BUTTON_PRIMARY_LIGHT_HOVER,
+      backgroundColor: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_GREY_3,
+      '& $startIcon': {
+        '& > *': {
+          fill: COLOR_BLACK_3,
+        },
+      },
+    },
+    '&:active': {
+      color: COLOR_BLACK,
+      background: theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_ACTIVE : COLOR_BUTTON_PRIMARY_LIGHT_ACTIVE,
+      '& $startIcon': {
+        '& > *': {
+          fill: COLOR_BLACK_3,
+        },
+      },
+    },
+    '&$disabled': {
+      opacity: 0.5,
+      borderWidth: 0,
+      color: `${theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_DISABLED : COLOR_BUTTON_PRIMARY_LIGHT_DISABLED} !important`,
+      backgroundColor: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_2,
+      '& $startIcon': {
+        '& > *': {
+          fill: `${theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_DISABLED : COLOR_BUTTON_PRIMARY_LIGHT_DISABLED} !important`,
+        },
+      },
+      '& $endIcon': {
+        '& > *': {
+          fill: theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_DISABLED : COLOR_BUTTON_PRIMARY_LIGHT_DISABLED,
+        },
+      },
+    },
+    '& $startIcon': {
+      '& > *': {
+        fill: COLOR_BLACK_3,
+      },
+    },
+  };
+
   const outlinedCommon: CSSProperties = {
     color: COLOR_WHITE,
     borderRadius: 100,
     border: `1px solid ${COLOR_ACID_GREEN}`,
-    backgroundColor: theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_DEFAULT : COLOR_BUTTON_PRIMARY_LIGHT_DEFAULT,
+    background: theme.palette.type === 'dark' ? COLOR_BUTTON_PRIMARY_DARK_DEFAULT : COLOR_BUTTON_PRIMARY_LIGHT_DEFAULT,
     transition: '200ms',
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-    paddingBottom: theme.spacing(1),
-    paddingTop: theme.spacing(1),
+    padding: theme.spacing(1, 4),
     ...theme.typography.body2,
 
-    '& $startIcon': {
-      '& > *': {
-        fill: COLOR_ACID_GREEN,
-      },
-    },
     '&$sizeLarge': {
-      paddingLeft: theme.spacing(4),
-      paddingRight: theme.spacing(4),
-      paddingBottom: theme.spacing(2),
-      paddingTop: theme.spacing(2),
+      padding: theme.spacing(2, 4),
       ...theme.typography.button,
     },
     '&$sizeSmall': {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      paddingBottom: theme.spacing(1),
-      paddingTop: theme.spacing(1),
+      padding: theme.spacing(1, 2),
       fontSize: '12px',
       lineHeight: '14px',
       fontWeight: FontWeights.fontWeightSemiBold,
@@ -95,13 +152,15 @@ export const getMuiButton = (theme: Theme): Overrides['MuiButton'] => {
         },
       },
     },
+    '& $startIcon': {
+      '& > *': {
+        fill: COLOR_ACID_GREEN,
+      },
+    },
   };
 
   return {
-    outlined: {
-      ...outlinedCommon,
-      ...theme.typography.body2,
-    },
+    outlined: outlinedCommon,
     outlinedPrimary: outlinedCommon,
     outlinedSecondary: {
       ...outlinedCommon,
@@ -111,6 +170,9 @@ export const getMuiButton = (theme: Theme): Overrides['MuiButton'] => {
         background: `${theme.palette.type === 'dark' ? COLOR_BUTTON_SECONDARY_DARK_HOVER : COLOR_BUTTON_SECONDARY_LIGHT_HOVER} !important`,
       },
     },
+
+    contained: containedCommon,
+    containedPrimary: containedCommon,
 
     startIcon: {
       marginRight: theme.spacing(1.5),
