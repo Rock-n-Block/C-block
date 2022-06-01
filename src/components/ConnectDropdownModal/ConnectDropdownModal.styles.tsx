@@ -10,7 +10,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     padding: theme.spacing(1),
     borderRadius: theme.spacing(4.5),
     border: `1px solid ${COLOR_BLACK_3}`,
-    boxSizing: 'border-box',
+    cursor: 'pointer',
     '&:hover': {
       borderColor: COLOR_ACID_GREEN,
     },

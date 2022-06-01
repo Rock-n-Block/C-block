@@ -17,5 +17,11 @@ export const useStyles = makeStyles<Theme, { hasTitle: boolean }>((theme: Theme)
       minWidth: 300,
       marginBottom: ({ hasTitle }) => (hasTitle ? theme.spacing(4) : undefined),
     },
+    closeBtn: {
+      transition: theme.transitions.create('transform'),
+      '&:hover': {
+        transform: 'rotate(-90deg)',
+      },
+    },
   });
 });

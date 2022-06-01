@@ -45,7 +45,7 @@ export const Modal: FC<ModalProps> = ({
     >
       <Box className={classes.modalTitle}>
         {titleJsx}
-        <IconButton color="secondary" onClick={onClose}>
+        <IconButton className={classes.closeBtn} color="secondary" onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </Box>
