@@ -12,7 +12,7 @@ export interface ModalProps {
   className?: string;
   title?: string | ReactNode;
   open: boolean;
-  onClose: () => void,
+  onClose?: () => void,
 }
 
 export const Modal: FC<ModalProps> = ({
@@ -45,9 +45,13 @@ export const Modal: FC<ModalProps> = ({
     >
       <Box className={classes.modalTitle}>
         {titleJsx}
-        <IconButton className={classes.closeBtn} color="secondary" onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
+        {
+          onClose ? (
+            <IconButton className={classes.closeBtn} color="secondary" onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          ) : null
+        }
       </Box>
       {children}
     </Dialog>
