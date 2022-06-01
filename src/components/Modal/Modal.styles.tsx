@@ -15,7 +15,7 @@ export const useStyles = makeStyles<Theme, { hasTitle: boolean }>((theme: Theme)
       justifyContent: 'space-between',
       alignItems: 'center',
       minWidth: 300,
-      marginBottom: ({ hasTitle }) => (hasTitle ? theme.spacing(4) : undefined),
+      marginBottom: ({ hasTitle }) => (hasTitle ? theme.spacing(4) : 'initial'),
     },
     closeBtn: {
       transition: theme.transitions.create('transform'),
