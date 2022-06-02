@@ -18,7 +18,6 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   buttonsContainer: {
     ...flexHelper('flex-start', 'center'),
-    paddingTop: theme.spacing(3),
   },
   button: {
     textTransform: 'none',

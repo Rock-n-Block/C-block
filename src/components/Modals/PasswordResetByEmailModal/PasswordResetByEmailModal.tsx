@@ -1,18 +1,22 @@
 import React, {
-  useCallback, useMemo, useState, VFC,
+  useCallback, useMemo, VFC,
 } from 'react';
 import clsx from 'clsx';
 import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
+import {
+  Field, FieldProps, Form, Formik, FormikHelpers,
+} from 'formik';
 
 import userSelector from 'store/user/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modal } from 'components/Modal';
 import { EmailIcon } from 'theme/icons';
 import {
-  IField,
-  initialFieldsState,
+  initFormValues,
+  validationSchema,
+  IFormValues,
 } from './PasswordResetByEmailModal.helpers';
 import { useStyles } from './PasswordResetByEmailModal.styles';
 
@@ -21,7 +25,7 @@ export interface Props {
   open?: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: (email: IField) => void;
+  onAccept?: (email: IFormValues['email']) => void;
 }
 
 export const PasswordResetByEmailModal: VFC<Props> = ({
@@ -31,30 +35,20 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
   onAccept,
 }) => {
   const classes = useStyles();
-  const [email, setEmail] = useState<IField>(initialFieldsState);
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const clearInputs = useCallback(() => {
-    setEmail(initialFieldsState);
-  }, []);
 
   const closeModal = useCallback(() => {
     if (onClose) {
-      clearInputs();
       onClose();
     }
     setIsModalOpen(false);
-  }, [clearInputs, onClose, setIsModalOpen]);
+  }, [onClose, setIsModalOpen]);
 
-  const handleAccept = useCallback(() => {
+  const handleAccept = useCallback((email: IFormValues['email']) => {
     if (onAccept) {
       onAccept(email);
     }
     closeModal();
-  }, [email, closeModal, onAccept]);
+  }, [closeModal, onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
@@ -79,31 +73,65 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
       onClose={closeModal}
       title={title}
     >
-      <Box>
-        <Box className={classes.inputContainer}>
-          <TextField
-            value={email}
-            label="Email"
-            onChange={handleChange}
-            InputProps={{
-              endAdornment: <EmailIcon />,
-            }}
-          />
-        </Box>
-      </Box>
-      <Box className={classes.buttonsContainer}>
-        <Button
-          className={clsx(classes.button)}
-          size="large"
-          type="submit"
-          color="primary"
-          variant="contained"
-          onClick={handleAccept}
-          fullWidth
-        >
-          Send
-        </Button>
-      </Box>
+      <Formik
+        initialValues={initFormValues}
+        validateOnMount
+        validationSchema={validationSchema}
+        onSubmit={(
+          values,
+          { resetForm }: FormikHelpers<IFormValues>,
+        ) => {
+          handleAccept(values.email);
+          resetForm();
+        }}
+      >
+        {({
+          errors, touched, values, handleChange, handleBlur, isValid,
+        // eslint-disable-next-line arrow-body-style
+        }) => {
+          return (
+            <Form translate={undefined}>
+              <Box className={classes.inputContainer}>
+                <Field
+                  key="email"
+                  id="email"
+                  name="email"
+                  render={
+                      ({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          name="email"
+                          label="Email"
+                          InputProps={{
+                            endAdornment: <EmailIcon />,
+                          }}
+                          disabled={isSubmitting}
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          helperText={(errors.email && touched.email) && errors.email}
+                          error={errors.email && touched.email}
+                        />
+                      )
+                    }
+                />
+              </Box>
+              <Box className={classes.buttonsContainer}>
+                <Button
+                  className={clsx(classes.button)}
+                  size="large"
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  fullWidth
+                  disabled={!isValid}
+                >
+                  Send
+                </Button>
+              </Box>
+            </Form>
+          );
+        }}
+      </Formik>
     </Modal>
   );
 };
