@@ -18,8 +18,8 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     },
   },
   breadcrumbsAndConnect: {
+    flexDirection: 'column-reverse',
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column-reverse',
       marginBottom: theme.spacing(3),
     },
   },

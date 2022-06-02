@@ -1,9 +1,12 @@
 import React, { VFC } from 'react';
 
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { AddressButton } from 'components';
+import { useBreakpoints, WindowFormat } from 'hooks';
+import { LogOutIcon } from 'theme/icons';
+
 import { useStyles } from './ConnectButton.styles';
 
 export interface ConnectButtonProps {
@@ -14,22 +17,55 @@ export interface ConnectButtonProps {
 
 export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, className }) => {
   const classes = useStyles();
+  const isWalletConnected = address !== '';
+  const windowFormat = useBreakpoints({
+    desktop: WindowFormat.desktop,
+    mobile: WindowFormat.mobile,
+    tablet: WindowFormat.tablet,
+    wideDesktop: WindowFormat.wideDesktop,
+  });
+
   return (
     <Box className={clsx(classes.root, className)}>
-      {address !== '' ? (
-        <AddressButton
-          onClick={handleModal}
-          address={address}
-        />
+      {isWalletConnected ? (
+        <Box className={classes.connectButtonWrapper}>
+          <AddressButton
+            className={classes.addressButton}
+            onClick={handleModal}
+            address={address}
+          />
+          {
+            windowFormat === WindowFormat.mobile ? (
+              <IconButton
+                className={classes.signOutIconButton}
+                color="primary"
+                onClick={handleModal}
+              >
+                <LogOutIcon />
+              </IconButton>
+            ) : (
+              <Button
+                variant="outlined"
+                size="medium"
+                className={clsx(classes.connectButton, classes.signOutButton)}
+                onClick={handleModal}
+              >
+                Sign out
+              </Button>
+            )
+          }
+        </Box>
       ) : (
-        <Button
-          variant="outlined"
-          size="large"
-          className={classes.connectButton}
-          onClick={handleModal}
-        >
-          Connect Wallet
-        </Button>
+        <Box className={classes.connectButtonWrapper}>
+          <Button
+            variant="contained"
+            size="medium"
+            className={classes.connectButton}
+            onClick={handleModal}
+          >
+            Log in
+          </Button>
+        </Box>
       )}
     </Box>
   );

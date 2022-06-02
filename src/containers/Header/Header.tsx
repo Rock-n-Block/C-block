@@ -51,7 +51,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
         <Grid item xs={12} sm={6} md={6} lg={8} xl={8} className={classes.breadcrumbs}>
           {isBreadcrumbsVisible && <Breadcrumbs paths={paths} />}
         </Grid>
-        <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <ConnectButton
             handleModal={handleModal}
             address={address}

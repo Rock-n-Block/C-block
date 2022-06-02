@@ -36,3 +36,4 @@ export * from './ClockIcon';
 export * from './CheckmarkCircleIcon';
 export * from './LoaderIcon';
 export * from './FlameIcon';
+export * from './LogOutIcon';
