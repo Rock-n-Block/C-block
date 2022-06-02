@@ -23,7 +23,7 @@ import { useStyles } from './PasswordResetByEmailModal.styles';
 export interface Props {
   className?: string;
   open?: boolean;
-  setIsModalOpen: (isOpen: boolean) => void;
+  setIsModalOpen?: (isOpen: boolean) => void;
   onClose?: () => void;
   onAccept?: (email: IFormValues['email']) => void;
 }
@@ -40,7 +40,9 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
     if (onClose) {
       onClose();
     }
-    setIsModalOpen(false);
+    if (setIsModalOpen) {
+      setIsModalOpen(false);
+    }
   }, [onClose, setIsModalOpen]);
 
   const handleAccept = useCallback((email: IFormValues['email']) => {
