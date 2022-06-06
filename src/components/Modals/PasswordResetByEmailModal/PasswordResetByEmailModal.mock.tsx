@@ -5,7 +5,7 @@ export const mockedProps: Props = {
   onClose(): void {
     throw new Error('Function not implemented.');
   },
-  onAccept(): void {
+  onSubmit(): void {
     throw new Error('Function not implemented.');
   },
   setIsModalOpen() {},

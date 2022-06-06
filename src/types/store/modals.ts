@@ -13,4 +13,7 @@ export enum Modals {
 export type ModalsState = {
   activeModal: Modals;
   open: boolean;
+  modals: {
+    [modalType in Modals]: boolean;
+  }
 };

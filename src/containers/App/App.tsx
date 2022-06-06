@@ -5,7 +5,9 @@ import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 
 import { BreakpointsProvider } from 'hooks/useBreakpoints';
 import { darkTheme, lightTheme } from 'theme';
-import { Layout, ModalsContainer, AppRoutes } from 'containers';
+import {
+  Layout, ModalsContainer, AuthModalsContainer, AppRoutes,
+} from 'containers';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
 import { useWalletConnectorContext } from 'services';
@@ -39,6 +41,7 @@ function App() {
             closeButton={false}
           />
           <ModalsContainer />
+          <AuthModalsContainer />
           <Layout>
             <AppRoutes />
           </Layout>

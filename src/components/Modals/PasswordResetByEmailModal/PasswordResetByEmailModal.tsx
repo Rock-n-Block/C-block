@@ -25,14 +25,14 @@ export interface Props {
   open?: boolean;
   setIsModalOpen?: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: (email: IFormValues['email']) => void;
+  onSubmit?: (email: IFormValues['email']) => void;
 }
 
 export const PasswordResetByEmailModal: VFC<Props> = ({
   open,
   setIsModalOpen,
   onClose,
-  onAccept,
+  onSubmit,
 }) => {
   const classes = useStyles();
 
@@ -45,12 +45,11 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
     }
   }, [onClose, setIsModalOpen]);
 
-  const handleAccept = useCallback((email: IFormValues['email']) => {
-    if (onAccept) {
-      onAccept(email);
+  const handleSubmit = useCallback((email: IFormValues['email']) => {
+    if (onSubmit) {
+      onSubmit(email);
     }
-    closeModal();
-  }, [closeModal, onAccept]);
+  }, [onSubmit]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 
@@ -83,7 +82,7 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
           values,
           { resetForm }: FormikHelpers<IFormValues>,
         ) => {
-          handleAccept(values.email);
+          handleSubmit(values.email);
           resetForm();
         }}
       >

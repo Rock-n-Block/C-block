@@ -1,14 +1,18 @@
 import React, {
-  useCallback, useMemo, useState, VFC,
+  useCallback, useMemo,
+  VFC,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Container, Typography, Box, IconButton, Grid,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { Logo, Breadcrumbs, ConnectDropdownModal } from 'components';
+import { Logo, Breadcrumbs } from 'components';
 import { Menu } from 'theme/icons';
 import userSelector from 'store/user/selectors';
+import { setActiveModal } from 'store/modals/reducer';
 import { useShallowSelector, useNavigation } from 'hooks';
+import { Modals } from 'types';
 import { ConnectButton } from './components/ConnectButton';
 import { NetTag } from './components/NetTag';
 import { useStyles } from './Header.styles';
@@ -27,17 +31,17 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
 
   const [paths, title, icon] = useNavigation();
 
-  const [isModalOpen, setModalOpen] = useState(false);
-
   const isBreadcrumbsVisible = useMemo(() => paths.length > 1, [paths.length]);
 
-  const handleModal = useCallback(() => {
-    setModalOpen(!isModalOpen);
-  }, [isModalOpen]);
+  const dispatch = useDispatch();
 
-  const closeModal = useCallback(() => {
-    setModalOpen(false);
-  }, []);
+  const handleModal = useCallback(() => {
+    dispatch(setActiveModal({
+      modals: {
+        [Modals.Login]: true,
+      },
+    }));
+  }, [dispatch]);
 
   return (
     <Container className={clsx(classes.root, className)}>
@@ -73,11 +77,6 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
           {isBreadcrumbsVisible && <NetTag className={classes.chainTag} isTestnet={!isMainnet} />}
         </Grid>
       </Grid>
-      <ConnectDropdownModal
-        address={address}
-        open={isModalOpen}
-        onClose={closeModal}
-      />
     </Container>
   );
 };
