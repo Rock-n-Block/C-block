@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import modalsSelector from 'store/modals/selectors';
@@ -8,7 +9,6 @@ import { PasswordResetByEmailModal } from 'components/Modals/PasswordResetByEmai
 import { PasswordResetModal } from 'components/Modals/PasswordResetModal';
 import { LoginModal } from 'components/Modals/LoginModal';
 import { closeAllModals, closeModal } from 'store/modals/reducer';
-import { useLocation } from 'react-router-dom';
 
 export const AuthModalsContainer: FC = () => {
   const isPasswordResetByEmailOpen = useShallowSelector(

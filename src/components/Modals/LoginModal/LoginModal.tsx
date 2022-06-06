@@ -61,8 +61,7 @@ export const LoginModal: VFC<Props> = ({
     if (onAccept) {
       onAccept();
     }
-    closeModal();
-  }, [closeModal, onAccept]);
+  }, [onAccept]);
 
   const { address: userWalletAddress, isLight } = useShallowSelector(userSelector.getUser);
 
@@ -80,8 +79,9 @@ export const LoginModal: VFC<Props> = ({
   const dispatch = useDispatch();
   const handleForgotPassword = () => {
     dispatch(setActiveModal({
-      activeModal: Modals.PasswordResetByEmail,
-      open: true,
+      modals: {
+        [Modals.PasswordResetByEmail]: true,
+      },
     }));
   };
 
@@ -143,11 +143,11 @@ export const LoginModal: VFC<Props> = ({
             validateOnMount
             validationSchema={signUpValidationSchema}
             onSubmit={(
-              values,
-              { resetForm }: FormikHelpers<ISignUpFormValues>,
+              // values,
+              // { resetForm }: FormikHelpers<ISignUpFormValues>,
             ) => {
               handleAccept();
-              resetForm();
+              // resetForm();
             }}
           >
             {({
@@ -394,7 +394,7 @@ export const LoginModal: VFC<Props> = ({
                       color="primary"
                       variant="contained"
                       fullWidth
-                      disabled={!isValid}
+                      disabled={!isValid || !userWalletAddress}
                     >
                       Log in
                     </Button>

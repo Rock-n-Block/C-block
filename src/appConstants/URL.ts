@@ -9,4 +9,8 @@ export default {
   getFinishedLostKeyContracts: 'lostkey_finished/',
 
   getRates: 'rates/',
+
+  accounts: {
+    resetPassword: 'accounts/password/reset',
+  },
 };

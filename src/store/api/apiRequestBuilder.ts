@@ -12,6 +12,10 @@ import {
   IGetFinishedLostKeyContractsReturnType,
   TGetRatesReturnType,
 } from './apiRequestBuilder.types';
+import {
+  IResetPassword,
+  IResetPasswordReturnType,
+} from './auth.types';
 
 const client: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
@@ -23,6 +27,16 @@ export default async function ajax<T>(
   const apiCall: AxiosResponse<T, typeof requestConfig> = await client(requestConfig);
   return apiCall;
 }
+
+export const authApi = {
+  resetPassword(data: IResetPassword) {
+    return ajax<IResetPasswordReturnType>({
+      method: 'post',
+      url: URL.accounts.resetPassword,
+      data,
+    });
+  },
+};
 
 export const baseApi = {
   createTokenContract(data: ICreateTokenContractData) {
