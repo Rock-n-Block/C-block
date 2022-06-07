@@ -23,6 +23,7 @@ import {
   Terms,
   Privacy,
   ResetPassword,
+  ConfirmEmail,
 } from 'pages';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -128,6 +129,10 @@ const RoutesContainer: FC = () => {
             <Route
               path={routes['password/reset/:uid/:token'].root}
               element={<ResetPassword />}
+            />
+            <Route
+              path={routes['confirm-email'].root}
+              element={<ConfirmEmail />}
             />
 
             <Route path="*" element={RedirectToHomePage} />
