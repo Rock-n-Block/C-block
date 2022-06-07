@@ -50,8 +50,7 @@ export const PasswordResetModal: VFC<Props> = ({
     if (onAccept) {
       onAccept(password);
     }
-    closeModal();
-  }, [closeModal, onAccept]);
+  }, [onAccept]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
 

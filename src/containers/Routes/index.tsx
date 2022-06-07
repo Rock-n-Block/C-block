@@ -22,6 +22,7 @@ import {
   Earn,
   Terms,
   Privacy,
+  ResetPassword,
 } from 'pages';
 import { useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -123,6 +124,10 @@ const RoutesContainer: FC = () => {
             <Route
               path={routes['privacy'].root}
               element={<Privacy />}
+            />
+            <Route
+              path={routes['password/reset/:uid/:token'].root}
+              element={<ResetPassword />}
             />
 
             <Route path="*" element={RedirectToHomePage} />

@@ -17,6 +17,7 @@ const CUSTOM_DEVELOPMENT = 'custom-development';
 const EARN_PATH = 'earn';
 const TERMS = 'terms';
 const PRIVACY = 'privacy';
+const RESET_PASSWORD_CONFIRMATION_LINK = 'password/reset/:uid/:token';
 
 const PREVIEW_TOKEN_CONTRACT = 'preview-token-contract' as const;
 const PREVIEW_CROWDSALE_CONTRACT = 'preview-crowdsale-contract' as const;
@@ -124,6 +125,12 @@ const privacyRoute = {
   icon: null,
 };
 
+const resetPasswordRoute = {
+  root: `/${RESET_PASSWORD_CONFIRMATION_LINK}`,
+  title: 'Reset password',
+  icon: null,
+};
+
 export const routes = {
   root: `/${CREATE_CONTRACT}`,
   title: 'Create Contract',
@@ -138,4 +145,6 @@ export const routes = {
   [CUSTOM_DEVELOPMENT]: customDevelopmentRoute,
   [TERMS]: termsRoute,
   [PRIVACY]: privacyRoute,
+
+  [RESET_PASSWORD_CONFIRMATION_LINK]: resetPasswordRoute,
 };

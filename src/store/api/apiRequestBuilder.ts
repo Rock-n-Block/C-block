@@ -13,6 +13,7 @@ import {
   TGetRatesReturnType,
 } from './apiRequestBuilder.types';
 import {
+  IConfirmResetPassword,
   IResetPassword,
   IResetPasswordReturnType,
 } from './auth.types';
@@ -33,6 +34,13 @@ export const authApi = {
     return ajax<IResetPasswordReturnType>({
       method: 'post',
       url: URL.accounts.resetPassword,
+      data,
+    });
+  },
+  confirmResetPassword(data: IConfirmResetPassword) {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.confirmResetPassword,
       data,
     });
   },

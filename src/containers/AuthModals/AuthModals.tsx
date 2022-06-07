@@ -21,6 +21,9 @@ export const AuthModalsContainer: FC = () => {
   const isPasswordResetOpen = useShallowSelector(
     modalsSelector.selectModalState(Modals.PasswordReset),
   );
+  const isPasswordResetPending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.PasswordResetPending),
+  );
   const isLoginOpen = useShallowSelector(
     modalsSelector.selectModalState(Modals.Login),
   );
@@ -30,6 +33,7 @@ export const AuthModalsContainer: FC = () => {
 
   const {
     handlePasswordResetByEmail,
+    handlePasswordReset,
   } = useAuthHandlers();
   const dispatch = useDispatch();
   const handleClosePasswordResetByEmailModal = useCallback(() => {
@@ -59,7 +63,12 @@ export const AuthModalsContainer: FC = () => {
         onClose={handleClosePasswordResetByEmailModal}
       />
       <LoadingModal open={isPasswordResetByEmailPending} text="Sending password reset e-mail" />
-      <PasswordResetModal open={isPasswordResetOpen} onClose={handleClosePasswordResetModal} />
+      <PasswordResetModal
+        open={isPasswordResetOpen}
+        onAccept={handlePasswordReset}
+        onClose={handleClosePasswordResetModal}
+      />
+      <LoadingModal open={isPasswordResetPending} text="Setting new password" />
       <LoginModal open={isLoginOpen} mode="login" onClose={handleCloseLoginModal} />
       <LoginModal open={isSignUpOpen} mode="signup" onClose={handleCloseSignUpModal} />
     </>
