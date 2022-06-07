@@ -17,9 +17,13 @@ export const confirmResetPassword = createAction<TConfirmResetPasswordAction>(
 export const registerAccount = createAction<TRegisterAccountAction>(
   actionTypes.USER_AUTH_REGISTER_ACCOUNT,
 );
+export const logout = createAction(
+  actionTypes.USER_AUTH_LOGOUT,
+);
 
 export default {
   resetPassword,
   confirmResetPassword,
   registerAccount,
+  logout,
 };

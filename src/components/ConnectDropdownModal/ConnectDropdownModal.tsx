@@ -14,6 +14,7 @@ import {
 import { disconnectWalletState } from 'store/user/reducer';
 import userSelectors from 'store/user/selectors';
 import { clearAllForms } from 'store/contractForms/reducer';
+import authActions from 'store/user/auth/actions';
 import { connectDropdownModalData } from './ConnectDropdownModal.helpers';
 import { useStyles } from './ConnectDropdownModal.styles';
 
@@ -39,6 +40,7 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
   const disconnect = useCallback(async () => {
     onClose();
     dispatch(disconnectWalletState());
+    dispatch(authActions.logout());
     dispatch(clearAllForms());
   }, [dispatch, onClose]);
 

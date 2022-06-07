@@ -12,8 +12,9 @@ export default {
 
   accounts: {
     getMetamaskMessage: 'accounts/get_metamask_message/',
-    registerAccount: 'accounts/registration',
-    resetPassword: 'accounts/password/reset',
-    confirmResetPassword: 'accounts/password/reset/confirm',
+    registerAccount: 'accounts/registration/',
+    logout: 'accounts/logout/',
+    resetPassword: 'accounts/password/reset/',
+    confirmResetPassword: 'accounts/password/reset/confirm/',
   },
 };

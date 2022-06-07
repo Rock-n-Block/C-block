@@ -45,6 +45,12 @@ export const authApi = {
       data,
     });
   },
+  logout() {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.logout,
+    });
+  },
   resetPassword(data: IResetPassword) {
     return ajax<IResetPasswordReturnType>({
       method: 'post',
