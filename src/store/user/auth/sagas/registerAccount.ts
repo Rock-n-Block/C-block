@@ -57,10 +57,11 @@ function* registerAccountSaga({
 
     yield put(apiActions.success(type));
   } catch (err) {
-    console.log(err);
+    const axiosRequestError = Object.values(err?.response?.data).join('; ');
+    console.log(err, err?.response, axiosRequestError);
     setNotification({
       type: 'error',
-      message: 'Error occurred while register new account',
+      message: `Error occurred while register new account: ${axiosRequestError}`,
     });
     yield put(apiActions.error(type, err));
   }

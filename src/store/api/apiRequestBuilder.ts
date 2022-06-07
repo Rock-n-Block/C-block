@@ -1,4 +1,6 @@
-import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
+import axios, {
+  AxiosRequestConfig, AxiosInstance, AxiosResponse,
+} from 'axios';
 import { URL } from 'appConstants';
 import configureStore from '../configureStore';
 import userSelectors from '../user/selectors';

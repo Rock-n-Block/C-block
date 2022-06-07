@@ -27,7 +27,7 @@ export function* getFirstRegistrationAccountDataSaga({
     }));
     yield put(apiActions.success(type));
   } catch (err) {
-    console.log(err);
+    console.log(err, err.response);
     yield put(apiActions.error(type, err));
   }
 }

@@ -63,18 +63,17 @@ function* loginSaga({
         type: 'error',
         message: 'Connected wallet address is different to the one chosen on sign up',
       });
-      yield put(
-        logout(),
-      );
+      yield put(logout());
       throw new Error('First registration account wallet address must stay the same');
     }
 
     yield put(apiActions.success(type));
   } catch (err) {
-    console.log(err);
+    const axiosRequestError = Object.values(err?.response?.data).join('; ');
+    console.log(err, err?.response, axiosRequestError);
     setNotification({
       type: 'error',
-      message: 'Error occurred while logging in',
+      message: `Error occurred while logging in: ${axiosRequestError}`,
     });
     yield put(apiActions.error(type, err));
   }
