@@ -11,7 +11,10 @@ export const initialState: ModalsState = {
     FullscreenLoader: false,
     Login: false,
     PasswordReset: false,
+    PasswordResetPending: false,
     PasswordResetByEmail: false,
+    PasswordResetByEmailPending: false,
+
     SendTxPending: false,
     SendTxRejected: false,
     SendTxSuccess: false,

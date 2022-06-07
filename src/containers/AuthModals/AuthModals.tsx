@@ -9,10 +9,14 @@ import { PasswordResetByEmailModal } from 'components/Modals/PasswordResetByEmai
 import { PasswordResetModal } from 'components/Modals/PasswordResetModal';
 import { LoginModal } from 'components/Modals/LoginModal';
 import { closeAllModals, closeModal } from 'store/modals/reducer';
+import { LoadingModal } from 'components/Modals';
 
 export const AuthModalsContainer: FC = () => {
   const isPasswordResetByEmailOpen = useShallowSelector(
     modalsSelector.selectModalState(Modals.PasswordResetByEmail),
+  );
+  const isPasswordResetByEmailPending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.PasswordResetByEmailPending),
   );
   const isPasswordResetOpen = useShallowSelector(
     modalsSelector.selectModalState(Modals.PasswordReset),
@@ -54,6 +58,7 @@ export const AuthModalsContainer: FC = () => {
         onSubmit={handlePasswordResetByEmail}
         onClose={handleClosePasswordResetByEmailModal}
       />
+      <LoadingModal open={isPasswordResetByEmailPending} text="Sending password reset e-mail" />
       <PasswordResetModal open={isPasswordResetOpen} onClose={handleClosePasswordResetModal} />
       <LoginModal open={isLoginOpen} mode="login" onClose={handleCloseLoginModal} />
       <LoginModal open={isSignUpOpen} mode="signup" onClose={handleCloseSignUpModal} />

@@ -25,8 +25,9 @@ export const useAuthHandlers = () => {
   useEffect(() => {
     if (resetPasswordRequestStatus === RequestStatus.REQUEST) {
       dispatch(setActiveModal({
-        activeModal: Modals.FullscreenLoader,
-        open: true,
+        modals: {
+          [Modals.PasswordResetByEmailPending]: true,
+        },
       }));
     }
   }, [dispatch, resetPasswordRequestStatus]);
@@ -34,7 +35,7 @@ export const useAuthHandlers = () => {
   useEffect(() => {
     if (resetPasswordRequestStatus === RequestStatus.SUCCESS ||
       resetPasswordRequestStatus === RequestStatus.ERROR) {
-      dispatch(closeModal());
+      dispatch(closeModal(Modals.PasswordResetByEmailPending));
     }
   }, [dispatch, resetPasswordRequestStatus]);
 

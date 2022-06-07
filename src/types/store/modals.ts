@@ -1,8 +1,11 @@
 export enum Modals {
   PasswordResetByEmail = 'PasswordResetByEmail',
+  PasswordResetByEmailPending = 'PasswordResetByEmailPending',
   PasswordReset = 'PasswordReset',
+  PasswordResetPending = 'PasswordResetPending',
   SignUp = 'SignUp',
   Login = 'Login',
+
   FullscreenLoader = 'FullscreenLoader',
   SendTxPending = 'SendTxPending',
   SendTxRejected = 'SendTxRejected',

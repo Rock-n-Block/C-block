@@ -5,14 +5,16 @@ import clsx from 'clsx';
 
 import { Modal } from 'components/Modal';
 import { Loader } from 'components';
-import { useStyles } from './ConnectWalletLoadingModal.styles';
+import { useStyles } from './LoadingModal.styles';
 
-export interface ConnectWalletLoadingModalProps {
+export interface LoadingModalProps {
   open: boolean;
+  text?: string;
 }
 
-export const ConnectWalletLoadingModal: VFC<ConnectWalletLoadingModalProps> = ({
+export const LoadingModal: VFC<LoadingModalProps> = ({
   open,
+  text = '',
 }) => {
   const classes = useStyles();
 
@@ -21,7 +23,7 @@ export const ConnectWalletLoadingModal: VFC<ConnectWalletLoadingModalProps> = ({
       <Box className={classes.icon}>
         <Loader />
         <Typography className={clsx(classes.desc)} variant="h3">
-          Connect wallet
+          {text}
         </Typography>
       </Box>
     </Modal>
