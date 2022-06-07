@@ -32,6 +32,20 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   icon: {
     marginRight: theme.spacing(3),
   },
+  text: {
+    maxHeight: 100,
+    overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+      background: theme.palette.secondary.main,
+      width: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      background: 'rgba(0, 0, 0, 0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: COLOR_ACID_GREEN,
+    },
+  },
 
   chip: {
     display: 'flex',

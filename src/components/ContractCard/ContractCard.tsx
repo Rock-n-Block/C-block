@@ -31,7 +31,9 @@ export const ContractCard: VFC<ContractCardProps> = ({
         <IconButton className={classes.icon}>{icon}</IconButton>
         <Typography variant="h3">{title}</Typography>
       </Box>
-      {text}
+      <Box className={classes.text}>
+        {text}
+      </Box>
       <Box className={classes.chip}>
         <img className={classes.celoIcon} src={celoIcon} alt="celo token" height="24" width="24" />
         {
