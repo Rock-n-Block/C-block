@@ -14,3 +14,8 @@ export type TRegisterAccountAction = TProvider & {
   password1: string;
   password2: string;
 };
+
+export type TLoginAction = {
+  email: string;
+  password: string;
+};

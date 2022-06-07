@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 import { URL } from 'appConstants';
+import configureStore from '../configureStore';
+import userSelectors from '../user/selectors';
 import {
   ICreateWillContractData,
   ICreateCrowdsaleContractData,
@@ -18,11 +20,23 @@ import {
   IResetPasswordReturnType,
   IGetMetamaskMessageReturnType,
   IRegisterAccount,
+  ILogin,
 } from './auth.types';
 
 const client: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
 });
+
+const getAuthHeaders = () => {
+  const storeState = configureStore.store.getState();
+  const { authorizationToken } = userSelectors.getUser(storeState);
+  if (authorizationToken) {
+    return {
+      Authorization: `Basic ${authorizationToken}`,
+    };
+  }
+  return {};
+};
 
 export default async function ajax<T>(
   requestConfig: AxiosRequestConfig,
@@ -45,10 +59,18 @@ export const authApi = {
       data,
     });
   },
+  login(data: ILogin) {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.login,
+      data,
+    });
+  },
   logout() {
     return ajax({
       method: 'post',
       url: URL.accounts.logout,
+      headers: getAuthHeaders(),
     });
   },
   resetPassword(data: IResetPassword) {
@@ -69,6 +91,7 @@ export const authApi = {
     return ajax({
       method: 'get',
       url: URL.accounts.getFirstRegistrationAccountData,
+      headers: getAuthHeaders(),
     });
   },
 };

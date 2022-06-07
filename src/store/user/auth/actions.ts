@@ -4,6 +4,7 @@ import {
   TResetPasswordAction,
   TConfirmResetPasswordAction,
   TRegisterAccountAction,
+  TLoginAction,
 } from 'types';
 
 import actionTypes from './actionTypes';
@@ -19,6 +20,9 @@ export const registerAccount = createAction<TRegisterAccountAction>(
 );
 export const logout = createAction(
   actionTypes.USER_AUTH_LOGOUT,
+);
+export const login = createAction<TLoginAction>(
+  actionTypes.USER_AUTH_LOGIN,
 );
 
 export default {

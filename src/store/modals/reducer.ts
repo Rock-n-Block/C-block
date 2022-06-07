@@ -20,6 +20,7 @@ export const initialState: ModalsState = {
     SignUp: false,
     SignUpPending: false,
     Login: false,
+    LoginPending: false,
   },
 };
 

@@ -7,6 +7,7 @@ import {
 import apiActions from 'store/ui/actions';
 import { authApi } from 'store/api/apiRequestBuilder';
 import { setNotification } from 'utils';
+import { setUser } from 'store/user/reducer';
 import { logout } from '../actions';
 import actionTypes from '../actionTypes';
 
@@ -33,6 +34,12 @@ function* logoutSaga({
   } catch (err) {
     console.log(err);
     yield put(apiActions.error(type, err));
+  } finally {
+    yield put(
+      setUser({
+        authorizationToken: '',
+      }),
+    );
   }
 }
 

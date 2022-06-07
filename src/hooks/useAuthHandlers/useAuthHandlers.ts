@@ -2,7 +2,9 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { resetPassword, confirmResetPassword, registerAccount } from 'store/user/auth/actions';
+import {
+  resetPassword, confirmResetPassword, registerAccount, login,
+} from 'store/user/auth/actions';
 import authActionTypes from 'store/user/auth/actionTypes';
 import uiSelector from 'store/ui/selectors';
 import { closeModal, setActiveModal } from 'store/modals/reducer';
@@ -47,7 +49,8 @@ export const useAuthHandlers = () => {
   const handleSignUp = useCallback(
     ({
       email,
-      password, confirmPassword,
+      password,
+      confirmPassword,
     }: {
       email: string;
       password: string;
@@ -64,6 +67,15 @@ export const useAuthHandlers = () => {
     }, [dispatch, getDefaultProvider],
   );
 
+  const handleLogin = useCallback(({ email, password }: { email: string; password: string; }) => {
+    dispatch(
+      login({
+        email,
+        password,
+      }),
+    );
+  }, [dispatch]);
+
   const resetPasswordRequestStatus = useShallowSelector(
     uiSelector.getProp(authActionTypes.USER_AUTH_RESET_PASSWORD),
   );
@@ -72,6 +84,9 @@ export const useAuthHandlers = () => {
   );
   const registerAccountRequestStatus = useShallowSelector(
     uiSelector.getProp(authActionTypes.USER_AUTH_REGISTER_ACCOUNT),
+  );
+  const loginRequestStatus = useShallowSelector(
+    uiSelector.getProp(authActionTypes.USER_AUTH_LOGIN),
   );
 
   useEffect(() => {
@@ -101,6 +116,15 @@ export const useAuthHandlers = () => {
       }));
     }
   }, [dispatch, registerAccountRequestStatus]);
+  useEffect(() => {
+    if (loginRequestStatus === RequestStatus.REQUEST) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.LoginPending]: true,
+        },
+      }));
+    }
+  }, [dispatch, loginRequestStatus]);
 
   useEffect(() => {
     if (resetPasswordRequestStatus === RequestStatus.SUCCESS ||
@@ -120,10 +144,17 @@ export const useAuthHandlers = () => {
       dispatch(closeModal(Modals.SignUpPending));
     }
   }, [dispatch, registerAccountRequestStatus]);
+  useEffect(() => {
+    if (loginRequestStatus === RequestStatus.SUCCESS ||
+      loginRequestStatus === RequestStatus.ERROR) {
+      dispatch(closeModal(Modals.LoginPending));
+    }
+  }, [dispatch, loginRequestStatus]);
 
   return {
     handlePasswordResetByEmail,
     handlePasswordReset,
     handleSignUp,
+    handleLogin,
   };
 };

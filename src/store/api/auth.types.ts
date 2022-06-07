@@ -22,3 +22,8 @@ export interface IRegisterAccount {
   message: string;
   signature: string;
 }
+
+export interface ILogin {
+  email: string;
+  password: string;
+}

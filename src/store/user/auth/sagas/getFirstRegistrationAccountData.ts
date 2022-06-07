@@ -11,7 +11,7 @@ import { AxiosResponse } from 'axios';
 import { logout } from '../actions';
 import actionTypes from '../actionTypes';
 
-function* getFirstRegistrationAccountDataSaga({
+export function* getFirstRegistrationAccountDataSaga({
   type,
 }: ReturnType<typeof logout>) {
   try {

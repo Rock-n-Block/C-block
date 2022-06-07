@@ -38,7 +38,7 @@ export interface Props {
   mode: 'login' | 'signup';
   setIsModalOpen?: (isOpen: boolean) => void;
   onClose?: () => void;
-  onLogin?: () => void;
+  onLogin?: (data: Pick<ILoginFormValues, 'email' | 'password'>) => void;
   onSignUp?: (data: Pick<ISignUpFormValues, 'email' | 'password' |'confirmPassword'>) => void;
 }
 
@@ -63,17 +63,17 @@ export const LoginModal: VFC<Props> = ({
 
   const formikRef = useRef<FormikProps<ISignUpFormValues | ILoginFormValues>>();
 
-  const handleLogin = useCallback(() => {
+  const handleLogin = useCallback((data: Pick<ILoginFormValues, 'email' | 'password'>) => {
     if (onLogin) {
-      onLogin();
+      onLogin(data);
     }
-  }, []);
+  }, [onLogin]);
 
   const handleSignUp = useCallback((data: Pick<ISignUpFormValues, 'email' | 'password' |'confirmPassword'>) => {
     if (onSignUp) {
       onSignUp(data);
     }
-  }, []);
+  }, [onSignUp]);
 
   const handleClickShowPassword = (fieldKey: keyof ISignUpFormValues | keyof ILoginFormValues) => () => {
     const currentValue = formikRef.current.values[fieldKey];
@@ -305,7 +305,10 @@ export const LoginModal: VFC<Props> = ({
               values,
               { resetForm }: FormikHelpers<ILoginFormValues>,
             ) => {
-              handleLogin();
+              handleLogin({
+                email: values.email,
+                password: values.password,
+              });
               resetForm();
             }}
           >

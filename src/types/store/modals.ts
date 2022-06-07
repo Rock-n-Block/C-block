@@ -6,6 +6,7 @@ export enum Modals {
   SignUp = 'SignUp',
   SignUpPending = 'SignUpPending',
   Login = 'Login',
+  LoginPending = 'LoginPending',
 
   FullscreenLoader = 'FullscreenLoader',
   SendTxPending = 'SendTxPending',
