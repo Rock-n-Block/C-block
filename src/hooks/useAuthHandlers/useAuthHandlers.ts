@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { resetPassword, confirmResetPassword } from 'store/user/auth/actions';
+import { resetPassword, confirmResetPassword, registerAccount } from 'store/user/auth/actions';
 import authActionTypes from 'store/user/auth/actionTypes';
 import uiSelector from 'store/ui/selectors';
 import { closeModal, setActiveModal } from 'store/modals/reducer';
@@ -12,6 +12,7 @@ import useShallowSelector from 'hooks/useShallowSelector';
 import { Modals, RequestStatus } from 'types';
 import { routes } from 'appConstants';
 import { setNotification } from 'utils';
+import { useWeb3Provider } from 'hooks/walletService';
 
 export const useAuthHandlers = () => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export const useAuthHandlers = () => {
     if (firstPath !== firstRoutePath || secondPath !== secondRoutePath) {
       setNotification({
         type: 'error',
-        message: 'Error occured while resetting password. Check if link that sent to email is valid',
+        message: 'Error occurred while resetting password. Check if link that sent to email is valid',
       });
       return;
     }
@@ -42,12 +43,35 @@ export const useAuthHandlers = () => {
       }),
     );
   }, [dispatch, location.pathname]);
+  const { getDefaultProvider } = useWeb3Provider();
+  const handleSignUp = useCallback(
+    ({
+      email,
+      password, confirmPassword,
+    }: {
+      email: string;
+      password: string;
+      confirmPassword: string;
+    }) => {
+      dispatch(
+        registerAccount({
+          provider: getDefaultProvider(),
+          email,
+          password1: password,
+          password2: confirmPassword,
+        }),
+      );
+    }, [dispatch, getDefaultProvider],
+  );
 
   const resetPasswordRequestStatus = useShallowSelector(
     uiSelector.getProp(authActionTypes.USER_AUTH_RESET_PASSWORD),
   );
   const confirmResetPasswordRequestStatus = useShallowSelector(
     uiSelector.getProp(authActionTypes.USER_AUTH_CONFIRM_RESET_PASSWORD),
+  );
+  const registerAccountRequestStatus = useShallowSelector(
+    uiSelector.getProp(authActionTypes.USER_AUTH_REGISTER_ACCOUNT),
   );
 
   useEffect(() => {
@@ -68,6 +92,15 @@ export const useAuthHandlers = () => {
       }));
     }
   }, [dispatch, confirmResetPasswordRequestStatus]);
+  useEffect(() => {
+    if (registerAccountRequestStatus === RequestStatus.REQUEST) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.SignUpPending]: true,
+        },
+      }));
+    }
+  }, [dispatch, registerAccountRequestStatus]);
 
   useEffect(() => {
     if (resetPasswordRequestStatus === RequestStatus.SUCCESS ||
@@ -81,9 +114,16 @@ export const useAuthHandlers = () => {
       dispatch(closeModal(Modals.PasswordResetPending));
     }
   }, [dispatch, confirmResetPasswordRequestStatus]);
+  useEffect(() => {
+    if (registerAccountRequestStatus === RequestStatus.SUCCESS ||
+      registerAccountRequestStatus === RequestStatus.ERROR) {
+      dispatch(closeModal(Modals.SignUpPending));
+    }
+  }, [dispatch, registerAccountRequestStatus]);
 
   return {
     handlePasswordResetByEmail,
     handlePasswordReset,
+    handleSignUp,
   };
 };

@@ -40,7 +40,7 @@ function* confirmResetPasswordSaga({
     console.log(err);
     setNotification({
       type: 'error',
-      message: 'Error occured while resetting password. Check if link that sent to email is valid',
+      message: 'Error occurred while resetting password. Check if link that sent to email is valid',
     });
     yield put(apiActions.error(type, err));
   }

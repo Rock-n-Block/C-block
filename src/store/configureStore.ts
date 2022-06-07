@@ -24,6 +24,7 @@ import setUpActionTypes from './myContracts/setUpModal/actionTypes';
 import confirmActiveStatusModalActionTypes from './myContracts/confirmActiveStatusModal/actionTypes';
 import burnTokenModalActionTypes from './myContracts/burnTokenModal/actionTypes';
 import mintTokenModalActionTypes from './myContracts/mintTokenModal/actionTypes';
+import authActionTypes from './user/auth/actionTypes';
 import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -35,7 +36,7 @@ const userPersistConfig: {
 } = {
   key: 'user',
   storage,
-  whitelist: ['address', 'wallet', 'isLight', 'isMainnet'],
+  whitelist: ['address', 'wallet', 'isLight', 'isMainnet', 'authorizationToken'],
 };
 
 const contractFormsPersistConfig: {
@@ -99,6 +100,8 @@ const store = configureStore({
 
           burnTokenModalActionTypes.BURN_TOKEN_MODAL_BURN,
           mintTokenModalActionTypes.MINT_TOKEN_MODAL_MINT,
+
+          authActionTypes.USER_AUTH_REGISTER_ACCOUNT,
         ],
       },
     },

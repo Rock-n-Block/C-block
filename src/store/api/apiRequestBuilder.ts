@@ -16,6 +16,8 @@ import {
   IConfirmResetPassword,
   IResetPassword,
   IResetPasswordReturnType,
+  IGetMetamaskMessageReturnType,
+  IRegisterAccount,
 } from './auth.types';
 
 const client: AxiosInstance = axios.create({
@@ -30,6 +32,19 @@ export default async function ajax<T>(
 }
 
 export const authApi = {
+  getMetamaskMessage() {
+    return ajax<IGetMetamaskMessageReturnType>({
+      method: 'get',
+      url: URL.accounts.getMetamaskMessage,
+    });
+  },
+  registerAccount(data: IRegisterAccount) {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.registerAccount,
+      data,
+    });
+  },
   resetPassword(data: IResetPassword) {
     return ajax<IResetPasswordReturnType>({
       method: 'post',

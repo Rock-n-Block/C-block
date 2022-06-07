@@ -4,7 +4,8 @@ import { Box, Button, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { AddressButton } from 'components';
-import { useBreakpoints, WindowFormat } from 'hooks';
+import { useBreakpoints, useShallowSelector, WindowFormat } from 'hooks';
+import userSelectors from 'store/user/selectors';
 import { LogOutIcon } from 'theme/icons';
 
 import { useStyles } from './ConnectButton.styles';
@@ -17,7 +18,9 @@ export interface ConnectButtonProps {
 
 export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, className }) => {
   const classes = useStyles();
-  const isWalletConnected = address !== '';
+  const { authorizationToken } = useShallowSelector(
+    userSelectors.getUser,
+  );
   const windowFormat = useBreakpoints({
     desktop: WindowFormat.desktop,
     mobile: WindowFormat.mobile,
@@ -27,7 +30,7 @@ export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, c
 
   return (
     <Box className={clsx(classes.root, className)}>
-      {isWalletConnected ? (
+      {authorizationToken ? (
         <Box className={classes.connectButtonWrapper}>
           <AddressButton
             className={classes.addressButton}

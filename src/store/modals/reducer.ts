@@ -8,17 +8,18 @@ export const initialState: ModalsState = {
   open: false,
   modals: {
     Init: false,
+    SendTxPending: false,
+    SendTxRejected: false,
+    SendTxSuccess: false,
     FullscreenLoader: false,
-    Login: false,
+
     PasswordReset: false,
     PasswordResetPending: false,
     PasswordResetByEmail: false,
     PasswordResetByEmailPending: false,
-
-    SendTxPending: false,
-    SendTxRejected: false,
-    SendTxSuccess: false,
     SignUp: false,
+    SignUpPending: false,
+    Login: false,
   },
 };
 

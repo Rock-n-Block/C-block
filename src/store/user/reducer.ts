@@ -6,6 +6,7 @@ const initialState: UserState = {
   wallet: WalletProviders.init,
   isLight: false,
   isMainnet: true,
+  authorizationToken: '',
 };
 
 export const userReducer = createSlice({

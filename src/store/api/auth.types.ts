@@ -12,3 +12,13 @@ export interface IConfirmResetPassword {
   uid: string;
   token: string;
 }
+
+export type IGetMetamaskMessageReturnType = string;
+export interface IRegisterAccount {
+  email: string;
+  password1: string;
+  password2: string;
+  owner_address: string;
+  message: string;
+  signature: string;
+}

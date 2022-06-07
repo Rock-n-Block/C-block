@@ -3,6 +3,7 @@ import { createAction } from '@reduxjs/toolkit';
 import {
   TResetPasswordAction,
   TConfirmResetPasswordAction,
+  TRegisterAccountAction,
 } from 'types';
 
 import actionTypes from './actionTypes';
@@ -13,8 +14,12 @@ export const resetPassword = createAction<TResetPasswordAction>(
 export const confirmResetPassword = createAction<TConfirmResetPasswordAction>(
   actionTypes.USER_AUTH_CONFIRM_RESET_PASSWORD,
 );
+export const registerAccount = createAction<TRegisterAccountAction>(
+  actionTypes.USER_AUTH_REGISTER_ACCOUNT,
+);
 
 export default {
   resetPassword,
   confirmResetPassword,
+  registerAccount,
 };

@@ -4,6 +4,7 @@ export enum Modals {
   PasswordReset = 'PasswordReset',
   PasswordResetPending = 'PasswordResetPending',
   SignUp = 'SignUp',
+  SignUpPending = 'SignUpPending',
   Login = 'Login',
 
   FullscreenLoader = 'FullscreenLoader',

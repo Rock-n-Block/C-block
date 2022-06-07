@@ -11,7 +11,7 @@ import { Logo, Breadcrumbs } from 'components';
 import { Menu } from 'theme/icons';
 import userSelector from 'store/user/selectors';
 import { setActiveModal } from 'store/modals/reducer';
-import { useShallowSelector, useNavigation } from 'hooks';
+import { useShallowSelector, useNavigation, useConnectDropdownModal } from 'hooks';
 import { Modals } from 'types';
 import { ConnectButton } from './components/ConnectButton';
 import { NetTag } from './components/NetTag';
@@ -26,7 +26,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
   const classes = useStyles();
 
   const {
-    address, isLight, isMainnet,
+    address: userWalletAddress, isLight, isMainnet, authorizationToken,
   } = useShallowSelector(userSelector.getUser);
 
   const [paths, title, icon] = useNavigation();
@@ -35,13 +35,21 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
 
   const dispatch = useDispatch();
 
+  const {
+    connectDropdownModal,
+    openConnectDropdownModal,
+  } = useConnectDropdownModal();
   const handleModal = useCallback(() => {
-    dispatch(setActiveModal({
-      modals: {
-        [Modals.Login]: true,
-      },
-    }));
-  }, [dispatch]);
+    if (!authorizationToken) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.Login]: true,
+        },
+      }));
+    } else {
+      openConnectDropdownModal();
+    }
+  }, [authorizationToken, dispatch, openConnectDropdownModal]);
 
   return (
     <Container className={clsx(classes.root, className)}>
@@ -58,7 +66,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <ConnectButton
             handleModal={handleModal}
-            address={address}
+            address={userWalletAddress}
           />
         </Grid>
       </Grid>
@@ -77,6 +85,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
           {isBreadcrumbsVisible && <NetTag className={classes.chainTag} isTestnet={!isMainnet} />}
         </Grid>
       </Grid>
+      {connectDropdownModal}
     </Container>
   );
 };

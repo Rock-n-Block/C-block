@@ -30,10 +30,14 @@ export const AuthModalsContainer: FC = () => {
   const isSignUpOpen = useShallowSelector(
     modalsSelector.selectModalState(Modals.SignUp),
   );
+  const isSignUpPending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.SignUpPending),
+  );
 
   const {
     handlePasswordResetByEmail,
     handlePasswordReset,
+    handleSignUp,
   } = useAuthHandlers();
   const dispatch = useDispatch();
   const handleClosePasswordResetByEmailModal = useCallback(() => {
@@ -69,8 +73,21 @@ export const AuthModalsContainer: FC = () => {
         onClose={handleClosePasswordResetModal}
       />
       <LoadingModal open={isPasswordResetPending} text="Setting new password" />
-      <LoginModal open={isLoginOpen} mode="login" onClose={handleCloseLoginModal} />
-      <LoginModal open={isSignUpOpen} mode="signup" onClose={handleCloseSignUpModal} />
+      <LoginModal
+        open={isLoginOpen}
+        mode="login"
+        // onLogin={handleLogin}
+        onSignUp={handleSignUp}
+        onClose={handleCloseLoginModal}
+      />
+      <LoginModal
+        open={isSignUpOpen}
+        mode="signup"
+        // onLogin={handleLogin}
+        onSignUp={handleSignUp}
+        onClose={handleCloseSignUpModal}
+      />
+      <LoadingModal open={isSignUpPending} text="Signing up" />
     </>
   );
 };

@@ -38,7 +38,8 @@ export interface Props {
   mode: 'login' | 'signup';
   setIsModalOpen?: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: () => void;
+  onLogin?: () => void;
+  onSignUp?: (data: Pick<ISignUpFormValues, 'email' | 'password' |'confirmPassword'>) => void;
 }
 
 export const LoginModal: VFC<Props> = ({
@@ -46,7 +47,8 @@ export const LoginModal: VFC<Props> = ({
   mode,
   setIsModalOpen,
   onClose,
-  onAccept,
+  onLogin,
+  onSignUp,
 }) => {
   const closeModal = useCallback(() => {
     if (onClose) {
@@ -57,15 +59,21 @@ export const LoginModal: VFC<Props> = ({
     }
   }, [onClose, setIsModalOpen]);
 
-  const handleAccept = useCallback(() => {
-    if (onAccept) {
-      onAccept();
-    }
-  }, [onAccept]);
-
   const { address: userWalletAddress, isLight } = useShallowSelector(userSelector.getUser);
 
   const formikRef = useRef<FormikProps<ISignUpFormValues | ILoginFormValues>>();
+
+  const handleLogin = useCallback(() => {
+    if (onLogin) {
+      onLogin();
+    }
+  }, []);
+
+  const handleSignUp = useCallback((data: Pick<ISignUpFormValues, 'email' | 'password' |'confirmPassword'>) => {
+    if (onSignUp) {
+      onSignUp(data);
+    }
+  }, []);
 
   const handleClickShowPassword = (fieldKey: keyof ISignUpFormValues | keyof ILoginFormValues) => () => {
     const currentValue = formikRef.current.values[fieldKey];
@@ -143,10 +151,14 @@ export const LoginModal: VFC<Props> = ({
             validateOnMount
             validationSchema={signUpValidationSchema}
             onSubmit={(
-              // values,
+              values,
               // { resetForm }: FormikHelpers<ISignUpFormValues>,
             ) => {
-              handleAccept();
+              handleSignUp({
+                email: values.email,
+                password: values.password,
+                confirmPassword: values.confirmPassword,
+              });
               // resetForm();
             }}
           >
@@ -274,7 +286,7 @@ export const LoginModal: VFC<Props> = ({
                       color="primary"
                       variant="contained"
                       fullWidth
-                      disabled={!isValid}
+                      disabled={!isValid || !userWalletAddress}
                     >
                       Create account
                     </Button>
@@ -293,7 +305,7 @@ export const LoginModal: VFC<Props> = ({
               values,
               { resetForm }: FormikHelpers<ILoginFormValues>,
             ) => {
-              handleAccept();
+              handleLogin();
               resetForm();
             }}
           >

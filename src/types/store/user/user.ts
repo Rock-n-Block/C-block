@@ -5,4 +5,5 @@ export type UserState = {
   wallet: WalletProviders;
   isLight: boolean;
   isMainnet: boolean;
+  authorizationToken: string;
 };
