@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { CreateContract } from 'pages/CreateContract';
+import { CreateContract } from 'pages';
 import { setActiveModal } from 'store/modals/reducer';
 import { Modals } from 'types';
 

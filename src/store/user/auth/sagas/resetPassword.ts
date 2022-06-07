@@ -3,12 +3,12 @@ import {
   put,
   takeLatest,
 } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
 import { AxiosResponse } from 'axios';
 
 import apiActions from 'store/ui/actions';
 import { authApi } from 'store/api/apiRequestBuilder';
 import { IResetPasswordReturnType } from 'store/api/auth.types';
+import { setNotification } from 'utils';
 import { resetPassword } from '../actions';
 import actionTypes from '../actionTypes';
 
@@ -31,7 +31,10 @@ function* resetPasswordSaga({
         email,
       },
     );
-    toast.info(detail);
+    setNotification({
+      type: 'info',
+      message: detail,
+    });
 
     yield put(apiActions.success(type));
   } catch (err) {

@@ -2,16 +2,19 @@ import React, {
   FC, useEffect,
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 
-import { CreateContract } from 'pages/CreateContract';
+import { CreateContract } from 'pages';
 import { setActiveModal } from 'store/modals/reducer';
 import { Modals } from 'types';
+import { setNotification } from 'utils';
 
 export const ConfirmEmail: FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    toast.success('Email confirmed, you can log in');
+    setNotification({
+      type: 'success',
+      message: 'Email confirmed, you can log in',
+    });
     dispatch(
       setActiveModal({
         modals: {

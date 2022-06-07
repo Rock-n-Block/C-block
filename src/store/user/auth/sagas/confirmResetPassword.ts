@@ -7,7 +7,7 @@ import { AxiosResponse } from 'axios';
 
 import apiActions from 'store/ui/actions';
 import { authApi } from 'store/api/apiRequestBuilder';
-import { toast } from 'react-toastify';
+import { setNotification } from 'utils';
 import { confirmResetPassword } from '../actions';
 import actionTypes from '../actionTypes';
 
@@ -38,9 +38,10 @@ function* confirmResetPasswordSaga({
     yield put(apiActions.success(type));
   } catch (err) {
     console.log(err);
-    toast.error(
-      'Error occured while resetting password. Check if link that sent to email is valid',
-    );
+    setNotification({
+      type: 'error',
+      message: 'Error occured while resetting password. Check if link that sent to email is valid',
+    });
     yield put(apiActions.error(type, err));
   }
 }

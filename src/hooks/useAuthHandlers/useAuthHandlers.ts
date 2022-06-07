@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import { resetPassword, confirmResetPassword } from 'store/user/auth/actions';
 import authActionTypes from 'store/user/auth/actionTypes';
@@ -12,6 +11,7 @@ import useShallowSelector from 'hooks/useShallowSelector';
 
 import { Modals, RequestStatus } from 'types';
 import { routes } from 'appConstants';
+import { setNotification } from 'utils';
 
 export const useAuthHandlers = () => {
   const dispatch = useDispatch();
@@ -28,9 +28,10 @@ export const useAuthHandlers = () => {
     const [, firstPath, secondPath, uid, token] = location.pathname.split('/');
     const [, firstRoutePath, secondRoutePath] = routes['password/reset/:uid/:token'].root.split('/');
     if (firstPath !== firstRoutePath || secondPath !== secondRoutePath) {
-      toast.error(
-        'Error occured while resetting password. Check if link that sent to email is valid',
-      );
+      setNotification({
+        type: 'error',
+        message: 'Error occured while resetting password. Check if link that sent to email is valid',
+      });
       return;
     }
     dispatch(
