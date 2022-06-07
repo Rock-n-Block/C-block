@@ -57,7 +57,7 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
     () => (
       <Box className={classes.title}>
         <Typography
-          className={clsx(isLight ? '' : 'acidGreen gradient')}
+          className={clsx(isLight ? '' : 'acidGreen gradient', classes.titleText)}
           align="left"
           variant="h2"
         >
@@ -65,7 +65,7 @@ export const PasswordResetByEmailModal: VFC<Props> = ({
         </Typography>
       </Box>
     ),
-    [classes.title, isLight],
+    [classes.title, classes.titleText, isLight],
   );
 
   return (

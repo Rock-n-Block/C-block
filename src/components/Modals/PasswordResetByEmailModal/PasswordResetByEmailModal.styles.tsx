@@ -16,6 +16,9 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     flexDirection: 'column',
     maxWidth: 290,
   },
+  titleText: {
+    textTransform: 'none',
+  },
   buttonsContainer: {
     ...flexHelper('flex-start', 'center'),
   },
