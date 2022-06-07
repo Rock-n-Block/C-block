@@ -143,6 +143,46 @@ export const contractFormReducer = createSlice({
     clearAllForms: (state) => ({
       ...state,
       ...initialState,
+      crowdsaleContract: {
+        ...initialState.crowdsaleContract,
+        additional: {
+          ...initialState.crowdsaleContract.additional,
+          contractCreationPrice: state.crowdsaleContract.additional.contractCreationPrice,
+          minCreationPrice: state.crowdsaleContract.additional.minCreationPrice,
+        },
+      },
+      lostKeyContract: {
+        ...initialState.lostKeyContract,
+        additional: {
+          ...initialState.lostKeyContract.additional,
+          contractCreationPrice: state.lostKeyContract.additional.contractCreationPrice,
+          minCreationPrice: state.lostKeyContract.additional.minCreationPrice,
+        },
+      },
+      tokenContract: {
+        ...initialState.tokenContract,
+        additional: {
+          ...initialState.tokenContract.additional,
+          contractCreationPrice: state.tokenContract.additional.contractCreationPrice,
+          minCreationPrice: state.tokenContract.additional.minCreationPrice,
+        },
+      },
+      weddingContract: {
+        ...initialState.weddingContract,
+        additional: {
+          ...initialState.weddingContract.additional,
+          contractCreationPrice: state.weddingContract.additional.contractCreationPrice,
+          minCreationPrice: state.weddingContract.additional.minCreationPrice,
+        },
+      },
+      willContract: {
+        ...initialState.willContract,
+        additional: {
+          ...initialState.willContract.additional,
+          contractCreationPrice: state.willContract.additional.contractCreationPrice,
+          minCreationPrice: state.willContract.additional.minCreationPrice,
+        },
+      },
     }),
 
     setTokenContractForm: (state, action: PayloadAction<TokenContract>) => ({
