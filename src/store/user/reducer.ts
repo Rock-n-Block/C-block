@@ -7,12 +7,18 @@ const initialState: UserState = {
   isLight: false,
   isMainnet: true,
   authorizationToken: '',
+  initEmail: '',
+  initUserAddress: '',
 };
 
 export const userReducer = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUser: (state, action: PayloadAction<Partial<UserState>>) => ({
+      ...state,
+      ...action.payload,
+    }),
     toggleTestnet: (state) => ({
       ...state,
       isMainnet: !state.isMainnet,
@@ -37,7 +43,11 @@ export const userReducer = createSlice({
 });
 
 export const {
-  connectWalletState, disconnectWalletState, toggleTheme, toggleTestnet,
+  setUser,
+  connectWalletState,
+  disconnectWalletState,
+  toggleTheme,
+  toggleTestnet,
 } = userReducer.actions;
 
 export default userReducer.reducer;

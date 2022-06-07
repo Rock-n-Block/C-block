@@ -16,5 +16,6 @@ export default {
     logout: 'accounts/logout/',
     resetPassword: 'accounts/password/reset/',
     confirmResetPassword: 'accounts/password/reset/confirm/',
+    getFirstRegistrationAccountData: 'accounts/user/',
   },
 };

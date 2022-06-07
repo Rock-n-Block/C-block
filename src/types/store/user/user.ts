@@ -6,4 +6,6 @@ export type UserState = {
   isLight: boolean;
   isMainnet: boolean;
   authorizationToken: string;
+  initEmail: string;
+  initUserAddress: string;
 };

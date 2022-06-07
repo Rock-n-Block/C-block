@@ -65,6 +65,12 @@ export const authApi = {
       data,
     });
   },
+  getFirstRegistrationAccountData() {
+    return ajax({
+      method: 'get',
+      url: URL.accounts.getFirstRegistrationAccountData,
+    });
+  },
 };
 
 export const baseApi = {
