@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { PRIVACY_SUPPORT_EMAIL, routes } from 'appConstants';
 import {
-  FileTextIcon, PlusCircleIcon, SettingGearIcon, UsdIcon, AtIcon,
+  FileTextIcon, PlusCircleIcon, SettingGearIcon, UsdIcon, AtIcon, PersonIcon,
 } from 'theme/icons';
 import { BaseSVGIconProps } from 'theme/icons/components/BaseSVGIcon';
 
-type TNavigationTabsLabels = 'Create Contract' | 'My contracts' | 'Earn' | 'Custom development' | 'Support';
+type TNavigationTabsLabels = 'Admin panel' | 'Create Contract' | 'My contracts' | 'Earn' | 'Custom development' | 'Support';
 
 interface INavigationTab {
   Icon: FC<Partial<BaseSVGIconProps>>;
@@ -15,6 +15,11 @@ interface INavigationTab {
 }
 
 export const navigationTabs: INavigationTab[] = [
+  {
+    Icon: PersonIcon,
+    label: 'Admin panel',
+    link: routes['admin-panel'].root,
+  },
   {
     Icon: PlusCircleIcon,
     label: 'Create Contract',

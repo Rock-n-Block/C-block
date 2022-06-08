@@ -14,6 +14,7 @@ export const WILL_CONTRACT = 'will-contract' as const;
 const PREVIEW_CONTRACT = 'preview-contract';
 const MY_CONTRACTS = 'my-contracts';
 const CUSTOM_DEVELOPMENT = 'custom-development';
+const ADMIN_PANEL = 'admin-panel';
 const EARN_PATH = 'earn';
 const TERMS = 'terms';
 const PRIVACY = 'privacy';
@@ -112,6 +113,12 @@ const customDevelopmentRoute = {
   icon: null,
 };
 
+const adminPanelRoute = {
+  root: `/${ADMIN_PANEL}`,
+  title: 'Admin panel',
+  icon: null,
+};
+
 const termsRoute = {
   root: `/${TERMS}`,
   title: 'Terms of service',
@@ -136,6 +143,7 @@ export const routes = {
   [MY_CONTRACTS]: myContractsRoute,
   [EARN_PATH]: earnRoute,
   [CUSTOM_DEVELOPMENT]: customDevelopmentRoute,
+  [ADMIN_PANEL]: adminPanelRoute,
   [TERMS]: termsRoute,
   [PRIVACY]: privacyRoute,
 };

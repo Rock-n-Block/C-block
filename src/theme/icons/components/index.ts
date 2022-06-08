@@ -18,6 +18,7 @@ export * from './ChevronIcon';
 export * from './Menu';
 export * from './SunIcon';
 export * from './ErrorIcon';
+export * from './SuccessContainedIcon';
 export * from './SuccessIcon';
 export * from './WarningIcon';
 export * from './InfoIcon';

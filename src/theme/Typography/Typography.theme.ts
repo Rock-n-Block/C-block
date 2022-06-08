@@ -61,7 +61,6 @@ export const getTypographyOptions = ({ color = COLOR_BLACK }): TypographyOptions
       fontWeight: FontWeights.fontWeightSemiBold,
       lineHeight: '30px',
       letterSpacing: '0px',
-      textTransform: 'capitalize',
 
       '&.acidGreen': {
         background: COLOR_AKZ,

@@ -8,6 +8,7 @@ import { routes } from 'appConstants';
 import {
   CreateContract,
   CustomDevelopment,
+  AdminPanel,
   MyContracts,
   TokenContract,
   TokenContractPreview,
@@ -114,6 +115,11 @@ const RoutesContainer: FC = () => {
             <Route
               path={routes['custom-development'].root}
               element={<CustomDevelopment />}
+            />
+
+            <Route
+              path={routes['admin-panel'].root}
+              element={<AdminPanel />}
             />
 
             <Route

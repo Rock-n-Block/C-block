@@ -1,5 +1,6 @@
 export * from './CreateContract';
 export * from './CustomDevelopment';
+export * from './AdminPanel';
 export * from './MyContracts';
 export * from './TokenContract';
 export * from './TokenContractPreview';

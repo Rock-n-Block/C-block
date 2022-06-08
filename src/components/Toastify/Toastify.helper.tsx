@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  ErrorIcon, InfoIcon, SuccessIcon, WarningIcon,
+  ErrorIcon, InfoIcon, SuccessContainedIcon, WarningIcon,
 } from 'theme/icons';
 
 export const toastifyHelper = {
-  success: <SuccessIcon />,
+  success: <SuccessContainedIcon />,
   warning: <WarningIcon />,
   info: <InfoIcon />,
   error: <ErrorIcon />,
