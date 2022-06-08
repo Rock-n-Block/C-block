@@ -2,8 +2,8 @@ import axios, {
   AxiosRequestConfig, AxiosInstance, AxiosResponse,
 } from 'axios';
 import { URL } from 'appConstants';
-import configureStore from '../configureStore';
-import userSelectors from '../user/selectors';
+// import configureStore from '../configureStore';
+// import userSelectors from '../user/selectors';
 import {
   ICreateWillContractData,
   ICreateCrowdsaleContractData,
@@ -28,17 +28,6 @@ import {
 const client: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
 });
-
-const getAuthHeaders = () => {
-  const storeState = configureStore.store.getState();
-  const { authorizationToken } = userSelectors.getUser(storeState);
-  if (authorizationToken) {
-    return {
-      Authorization: `Basic ${authorizationToken}`,
-    };
-  }
-  return {};
-};
 
 export default async function ajax<T>(
   requestConfig: AxiosRequestConfig,
@@ -66,13 +55,14 @@ export const authApi = {
       method: 'post',
       url: URL.accounts.login,
       data,
+      withCredentials: true,
     });
   },
   logout() {
     return ajax({
       method: 'post',
       url: URL.accounts.logout,
-      headers: getAuthHeaders(),
+      withCredentials: true,
     });
   },
   resetPassword(data: IResetPassword) {
@@ -93,7 +83,7 @@ export const authApi = {
     return ajax({
       method: 'get',
       url: URL.accounts.getFirstRegistrationAccountData,
-      headers: getAuthHeaders(),
+      withCredentials: true,
     });
   },
 };
