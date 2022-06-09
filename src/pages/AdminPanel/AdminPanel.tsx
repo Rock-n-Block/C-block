@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, Container, Grid, Typography,
+  Button, Container, Grid, Typography,
 } from '@material-ui/core';
 import { SuccessIcon } from 'theme/icons';
 import { ChangePriceCard } from 'components/ChangePriceCard';
@@ -18,7 +18,7 @@ export const AdminPanel = () => {
   return (
     <Container>
       <Grid container>
-        <Grid item xs={12} sm={12} md={7} lg={7} xl={7}>
+        <Grid item xs={12} sm={12} md={9} lg={7} xl={7}>
           <CheckBox className={classes.checkBox} name="Allow to deloy" value label="Allow users to deploy contracts to mainnet" onClick={() => {}} />
           <Typography variant="h3" className={classes.addressLabel}>Manage payments` receiving address</Typography>
           <EditableField
@@ -30,8 +30,10 @@ export const AdminPanel = () => {
           />
           <Typography variant="h3" className={classes.contractsLabel}>Set prices for contracts creation</Typography>
         </Grid>
-        <Box className={classes.tabsContainer}>
-          {contractsMock.map((title) => (
+      </Grid>
+      <Grid container>
+        {contractsMock.map((title) => (
+          <Grid item xs={12} sm={4} md={4} lg={2} xl={2}>
             <Button
               className={clsx(classes.tabButton, {
                 [classes.tabButtonNotActive]: title !== selectedContractType,
@@ -42,10 +44,10 @@ export const AdminPanel = () => {
             >
               {title}
             </Button>
-          ))}
-        </Box>
+          </Grid>
+        ))}
       </Grid>
-      <Grid container>
+      <Grid container className={classes.cardsContainer}>
         <Grid
           item
           xs={12}

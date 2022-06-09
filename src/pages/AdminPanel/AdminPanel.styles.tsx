@@ -22,17 +22,15 @@ export const useStyle = makeStyles((theme: Theme) => createStyles({
   icon: {
     marginLeft: theme.spacing(3),
   },
-  tabsContainer: {
-    display: 'inline-block',
-    padding: theme.spacing(1.25),
+  cardsContainer: {
+    marginTop: theme.spacing(3.875),
   },
   tabButton: {
     height: 44,
-    width: 158,
+    width: '100%',
     fontSize: '20px !important',
     lineHeight: '32px !important',
     fontWeight: FontWeights.fontWeightMedium,
-    marginBottom: theme.spacing(3.125),
     '&:not(:last-child)': {
       marginRight: theme.spacing(3),
     },

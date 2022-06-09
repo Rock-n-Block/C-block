@@ -11,6 +11,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   textField: {
     marginRight: theme.spacing(3),
+    '& input': { textOverflow: 'ellipsis' },
   },
   button: {
     background: theme.palette.type === 'dark' ? `${COLOR_BLACK_2} !important` : `${COLOR_GREY_3} !important`,

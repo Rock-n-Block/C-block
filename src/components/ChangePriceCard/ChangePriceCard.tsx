@@ -21,6 +21,7 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
       <Typography className={classes.header} variant="body1">{title}</Typography>
       <Typography variant="body2" className={classes.fieldLabel}>Current price</Typography>
       <EditableField
+        className={classes.field}
         value={price}
         icon={<Typography className={classes.currency}>Celo</Typography>}
         disabled={!isChangeMode}
