@@ -54,6 +54,10 @@ function* loginSaga({
         message: 'Authentication succeeded',
       });
     } else {
+      setNotification({
+        type: 'error',
+        message: 'Couldn\'t log in. Check if you\'re using the same wallet address that was specified on sign up',
+      });
       throw new Error('Login: /accounts/user/');
     }
 
