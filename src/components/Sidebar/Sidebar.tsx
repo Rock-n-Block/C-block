@@ -1,4 +1,4 @@
-import React, { useMemo, VFC } from 'react';
+import React, { VFC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Box, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
@@ -20,8 +20,8 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const { isLight, address } = useShallowSelector(userSelector.getUser);
-  const isWalletConnected = useMemo(() => !!address, [address]);
+  const { isLight } = useShallowSelector(userSelector.getUser);
+  const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
   return (
     <Box className={clsx(classes.root, className)}>
       <Box className={classes.contentWrapper}>
@@ -38,7 +38,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
         {navigationTabs.map(({
           Icon, label, link, isExternal,
         }) => {
-          if (label === 'My contracts' && !isWalletConnected) return null;
+          if (label === 'My contracts' && !isAuthenticated) return null;
           return (
             <SidebarTab
               key={link}

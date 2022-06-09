@@ -15,6 +15,7 @@ import { disconnectWalletState } from 'store/user/reducer';
 import userSelectors from 'store/user/selectors';
 import { clearAllForms } from 'store/contractForms/reducer';
 import authActions from 'store/user/auth/actions';
+import { setNotification } from 'utils';
 import { connectDropdownModalData } from './ConnectDropdownModal.helpers';
 import { useStyles } from './ConnectDropdownModal.styles';
 
@@ -31,10 +32,9 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const { authorizationToken } = useShallowSelector(
-    userSelectors.getUser,
+  const isAuthenticated = useShallowSelector(
+    userSelectors.selectIsAuthenticated,
   );
-  const isConnected = authorizationToken !== '';
 
   const { connect } = useWalletConnectorContext();
   const disconnect = useCallback(async () => {
@@ -42,6 +42,10 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
     dispatch(disconnectWalletState());
     dispatch(authActions.logout());
     dispatch(clearAllForms());
+    setNotification({
+      type: 'success',
+      message: 'Successfully logged out.',
+    });
   }, [dispatch, onClose]);
 
   const handleConnect = useCallback((walletProvider: WalletProviders) => {
@@ -52,8 +56,8 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
   const classes = useStyles();
 
   return (
-    <Modal open={open} onClose={onClose} title={isConnected ? ' ' : 'Connect Wallet'} className={className}>
-      {isConnected ? (
+    <Modal open={open} onClose={onClose} title={isAuthenticated ? ' ' : 'Connect Wallet'} className={className}>
+      {isAuthenticated ? (
         <Box className={classes.disconnectBox}>
           <Typography variant="h3" className={classes.disconnectTitle}>
             Disable your wallet?

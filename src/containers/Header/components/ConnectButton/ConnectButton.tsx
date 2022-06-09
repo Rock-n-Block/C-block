@@ -18,8 +18,8 @@ export interface ConnectButtonProps {
 
 export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, className }) => {
   const classes = useStyles();
-  const { authorizationToken } = useShallowSelector(
-    userSelectors.getUser,
+  const isAuthenticated = useShallowSelector(
+    userSelectors.selectIsAuthenticated,
   );
   const windowFormat = useBreakpoints({
     desktop: WindowFormat.desktop,
@@ -30,7 +30,7 @@ export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, c
 
   return (
     <Box className={clsx(classes.root, className)}>
-      {authorizationToken ? (
+      {isAuthenticated ? (
         <Box className={classes.connectButtonWrapper}>
           <AddressButton
             className={classes.addressButton}

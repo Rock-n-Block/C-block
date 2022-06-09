@@ -26,8 +26,9 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
   const classes = useStyles();
 
   const {
-    address: userWalletAddress, isLight, isMainnet, authorizationToken,
+    address: userWalletAddress, isLight, isMainnet,
   } = useShallowSelector(userSelector.getUser);
+  const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
 
   const [paths, title, icon] = useNavigation();
 
@@ -40,7 +41,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
     openConnectDropdownModal,
   } = useConnectDropdownModal();
   const handleModal = useCallback(() => {
-    if (!authorizationToken) {
+    if (!isAuthenticated) {
       dispatch(setActiveModal({
         modals: {
           [Modals.Login]: true,
@@ -49,7 +50,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
     } else {
       openConnectDropdownModal();
     }
-  }, [authorizationToken, dispatch, openConnectDropdownModal]);
+  }, [isAuthenticated, dispatch, openConnectDropdownModal]);
 
   return (
     <Container className={clsx(classes.root, className)}>

@@ -6,7 +6,6 @@ import {
 
 import apiActions from 'store/ui/actions';
 import { authApi } from 'store/api/apiRequestBuilder';
-import { setNotification } from 'utils';
 import { setUser } from 'store/user/reducer';
 import { logout } from '../actions';
 import actionTypes from '../actionTypes';
@@ -17,18 +16,9 @@ function* logoutSaga({
   try {
     yield put(apiActions.request(type));
 
-    const {
-      data: {
-        detail,
-      },
-    } = yield call(
+    yield call(
       authApi.logout,
     );
-
-    setNotification({
-      type: 'success',
-      message: detail,
-    });
 
     yield put(apiActions.success(type));
   } catch (err) {
@@ -37,7 +27,9 @@ function* logoutSaga({
   } finally {
     yield put(
       setUser({
-        authorizationToken: '',
+        email: '',
+        registrationEmail: '',
+        registrationWalletAddress: '',
       }),
     );
   }

@@ -15,6 +15,10 @@ export type TRegisterAccountAction = TProvider & {
   password2: string;
 };
 
+export type TLogoutAction = {
+  showErrorNotification: boolean;
+};
+
 export type TLoginAction = {
   email: string;
   password: string;

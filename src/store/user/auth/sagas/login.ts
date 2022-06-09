@@ -4,17 +4,15 @@ import {
   select,
   takeLatest,
 } from 'redux-saga/effects';
-import { AxiosResponse } from 'axios';
 
 import apiActions from 'store/ui/actions';
 import { authApi } from 'store/api/apiRequestBuilder';
 import { setNotification } from 'utils';
-import { UserState } from 'types';
 import userSelector from 'store/user/selectors';
 import { setUser } from 'store/user/reducer';
-import { login, logout } from '../actions';
+import { login } from '../actions';
 import actionTypes from '../actionTypes';
-import { getFirstRegistrationAccountDataSaga } from './getFirstRegistrationAccountData';
+import { getRegistrationAccountDataSaga } from './getRegistrationAccountData';
 
 function* loginSaga({
   type,
@@ -26,7 +24,7 @@ function* loginSaga({
   try {
     yield put(apiActions.request(type));
 
-    const loginResponse: AxiosResponse = yield call(
+    yield call(
       authApi.login,
       {
         email,
@@ -34,47 +32,41 @@ function* loginSaga({
       },
     );
 
-    if (loginResponse.status < 200 || loginResponse.status >= 300) {
-      throw new Error('Backend thrown response with status code not equal to 2xx');
-    }
-
-    yield put(
-      setUser({
-        authorizationToken: loginResponse.data?.key,
-      }),
-    );
+    yield put(setUser({
+      email,
+    }));
 
     yield call(
-      getFirstRegistrationAccountDataSaga,
+      getRegistrationAccountDataSaga,
       {
         type: '',
-        payload: undefined,
+        payload: {
+          showErrorNotification: true,
+        },
       },
     );
 
-    const { address: userWalletAddress, initEmail, initUserAddress }: UserState = yield select(
-      userSelector.getUser,
-    );
+    const isAuthenticated: string = yield select(userSelector.selectIsAuthenticated);
 
-    if (email.toLowerCase() === initEmail.toLowerCase() &&
-      (userWalletAddress.toLowerCase() !== initUserAddress.toLowerCase())
-    ) {
+    if (isAuthenticated) {
       setNotification({
-        type: 'error',
-        message: 'Connected wallet address is different to the one chosen on sign up',
+        type: 'success',
+        message: 'Authentication succeeded',
       });
-      yield put(logout());
-      throw new Error('First registration account wallet address must stay the same');
+    } else {
+      throw new Error('Login: /accounts/user/');
     }
 
     yield put(apiActions.success(type));
   } catch (err) {
-    const axiosRequestError = Object.values(err?.response?.data).join('; ');
+    const axiosRequestError = err.response ? Object.values(err?.response?.data).join('; ') : '';
     console.log(err, err?.response, axiosRequestError);
-    setNotification({
-      type: 'error',
-      message: `Error occurred while logging in: ${axiosRequestError}`,
-    });
+    if (axiosRequestError) {
+      setNotification({
+        type: 'error',
+        message: `Error occurred while logging in: ${axiosRequestError}`,
+      });
+    }
     yield put(apiActions.error(type, err));
   }
 }

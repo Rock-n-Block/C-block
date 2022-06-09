@@ -3,11 +3,12 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import {
-  resetPassword, confirmResetPassword, registerAccount, login,
+  resetPassword, confirmResetPassword, registerAccount, login, checkAuthentication,
 } from 'store/user/auth/actions';
 import authActionTypes from 'store/user/auth/actionTypes';
 import uiSelector from 'store/ui/selectors';
 import { closeModal, setActiveModal } from 'store/modals/reducer';
+import apiActions from 'store/ui/actions';
 
 import useShallowSelector from 'hooks/useShallowSelector';
 
@@ -150,6 +151,24 @@ export const useAuthHandlers = () => {
       dispatch(closeModal(Modals.LoginPending));
     }
   }, [dispatch, loginRequestStatus]);
+  useEffect(() => {
+    if (loginRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.Login]: false,
+        },
+      }));
+      dispatch(
+        apiActions.reset(authActionTypes.USER_AUTH_LOGIN),
+      );
+    }
+  }, [dispatch, loginRequestStatus]);
+
+  useEffect(() => {
+    dispatch(
+      checkAuthentication(),
+    );
+  }, [dispatch]);
 
   return {
     handlePasswordResetByEmail,

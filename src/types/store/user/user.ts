@@ -5,7 +5,7 @@ export type UserState = {
   wallet: WalletProviders;
   isLight: boolean;
   isMainnet: boolean;
-  authorizationToken: string;
-  initEmail: string;
-  initUserAddress: string;
+  email: string;
+  registrationEmail: string;
+  registrationWalletAddress: string;
 };

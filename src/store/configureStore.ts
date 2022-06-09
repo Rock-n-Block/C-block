@@ -36,7 +36,7 @@ const userPersistConfig: {
 } = {
   key: 'user',
   storage,
-  whitelist: ['address', 'wallet', 'isLight', 'isMainnet', 'authorizationToken'],
+  whitelist: ['address', 'wallet', 'isLight', 'isMainnet', 'registrationEmail', 'registrationWalletAddress'],
 };
 
 const contractFormsPersistConfig: {

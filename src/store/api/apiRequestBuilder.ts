@@ -79,10 +79,10 @@ export const authApi = {
       data,
     });
   },
-  getFirstRegistrationAccountData() {
+  getRegistrationAccountData() {
     return ajax({
       method: 'get',
-      url: URL.accounts.getFirstRegistrationAccountData,
+      url: URL.accounts.getRegistrationAccountData,
       withCredentials: true,
     });
   },
