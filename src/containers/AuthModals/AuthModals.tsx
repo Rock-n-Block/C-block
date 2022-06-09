@@ -8,7 +8,7 @@ import { Modals } from 'types';
 import { PasswordResetByEmailModal } from 'components/Modals/PasswordResetByEmailModal';
 import { PasswordResetModal } from 'components/Modals/PasswordResetModal';
 import { LoginModal } from 'components/Modals/LoginModal';
-import { closeAllModals, closeModal } from 'store/modals/reducer';
+import { closeAllModals, closeModal, setActiveModal } from 'store/modals/reducer';
 import { LoadingModal } from 'components/Modals';
 
 export const AuthModalsContainer: FC = () => {
@@ -45,7 +45,12 @@ export const AuthModalsContainer: FC = () => {
   } = useAuthHandlers();
   const dispatch = useDispatch();
   const handleClosePasswordResetByEmailModal = useCallback(() => {
-    dispatch(closeModal(Modals.PasswordResetByEmail));
+    dispatch(setActiveModal({
+      modals: {
+        [Modals.Login]: true,
+        [Modals.PasswordResetByEmail]: false,
+      },
+    }));
   }, [dispatch]);
   const handleClosePasswordResetModal = useCallback(() => {
     dispatch(closeModal(Modals.PasswordReset));

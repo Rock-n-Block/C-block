@@ -89,6 +89,7 @@ export const LoginModal: VFC<Props> = ({
     dispatch(setActiveModal({
       modals: {
         [Modals.PasswordResetByEmail]: true,
+        [Modals.Login]: false,
       },
     }));
   };
