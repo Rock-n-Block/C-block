@@ -5,7 +5,10 @@ export type UserState = {
   wallet: WalletProviders;
   isLight: boolean;
   isMainnet: boolean;
+
   email: string;
   registrationEmail: string;
   registrationWalletAddress: string;
+
+  isAdmin: boolean;
 };

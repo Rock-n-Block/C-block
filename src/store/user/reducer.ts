@@ -10,6 +10,8 @@ const initialState: UserState = {
   email: '',
   registrationEmail: '',
   registrationWalletAddress: '',
+
+  isAdmin: false,
 };
 
 export const userReducer = createSlice({

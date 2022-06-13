@@ -9,6 +9,7 @@ export * from './burnTokenModal';
 export * from './mintTokenModal';
 export * from './earn';
 export * from './confirmActiveStatusModal';
+export * from './admin';
 
 export * from './actions';
 export * from './erc20.actions';

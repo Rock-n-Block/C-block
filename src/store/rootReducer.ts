@@ -4,6 +4,7 @@ import contractForms from './contractForms/reducer';
 import myContracts from './myContracts/reducer';
 import earn from './earn/reducer';
 import modals from './modals/reducer';
+import admin from './admin/reducer';
 
 export default {
   ui,
@@ -12,4 +13,5 @@ export default {
   myContracts,
   earn,
   modals,
+  admin,
 };

@@ -25,6 +25,7 @@ import confirmActiveStatusModalActionTypes from './myContracts/confirmActiveStat
 import burnTokenModalActionTypes from './myContracts/burnTokenModal/actionTypes';
 import mintTokenModalActionTypes from './myContracts/mintTokenModal/actionTypes';
 import authActionTypes from './user/auth/actionTypes';
+import adminActionTypes from './admin/actionTypes';
 import { initWalletConnectStore } from './configureWalletConnectStore';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -102,6 +103,8 @@ const store = configureStore({
           mintTokenModalActionTypes.MINT_TOKEN_MODAL_MINT,
 
           authActionTypes.USER_AUTH_REGISTER_ACCOUNT,
+
+          adminActionTypes.ADMIN_CHECK_IS_ADMIN,
         ],
       },
     },
