@@ -14,6 +14,7 @@ import {
   crowdsaleNonSoftCappableNonBonusableAbi,
   weddingFactoryAbi,
   lastWillFactoryAbi,
+  controllerAbi,
 } from './abi';
 
 export const chains: {
@@ -198,6 +199,17 @@ export const contracts: IContracts = {
       testnet: {
         address: '0x6584C8feB93c8d7B79C0403E042822f81538557b',
         abi: weddingFactoryAbi,
+      },
+    },
+    // all the contracts controller (to setPrice, changeManagementAddress etc.)
+    controller: {
+      mainnet: {
+        address: '',
+        abi: controllerAbi,
+      },
+      testnet: {
+        address: '0x6450A6a3800b09da0e195aAc71FA061277CFcfCd',
+        abi: controllerAbi,
       },
     },
   },

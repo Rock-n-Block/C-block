@@ -18,6 +18,7 @@ import {
   tokenNonMintableNonFreezableAbi,
   weddingAbi,
   weddingFactoryAbi,
+  controllerAbi,
 } from 'config/abi';
 import {
   TDeployCrowdsaleContractCreationMethodNames,
@@ -45,6 +46,7 @@ import { Wedding } from 'types/abi/wedding';
 import { WeddingFactory } from 'types/abi/weddingFactory';
 import { LastWillFactory } from 'types/abi/lastWillFactory';
 import { Erc20BurnableMintablePausableFreezableToken } from 'types/abi/erc20BurnableMintablePausableFreezableToken';
+import { Controller } from 'types/abi/controller';
 
 enum ContractFactorySettings {
   Non = 'Non',
@@ -152,6 +154,12 @@ const contractsGetter = {
       weddingFactoryAbi,
       contractAddress,
     ) as unknown as WeddingFactory;
+  },
+  getControllerContract(provider: Web3, contractAddress: string) {
+    return new provider.eth.Contract(
+      controllerAbi,
+      contractAddress,
+    ) as unknown as Controller;
   },
 };
 

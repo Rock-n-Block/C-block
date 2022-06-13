@@ -20,6 +20,7 @@ import lostKeyFactory from './lostKeyFactory.json';
 import lostKey from './lostKey.json'; // Instance of LostKeyFactory
 
 import lastWillFactory from './lastWillFactory.json';
+import controller from './controller.json';
 
 export const bep20Abi = bep20 as AbiItem[];
 export const erc20BurnableMintablePausableFreezableTokenAbi = erc20BurnableMintablePausableFreezableToken as AbiItem[]; // Common instance of TokenFactory
@@ -43,3 +44,5 @@ export const lostKeyFactoryAbi = lostKeyFactory as AbiItem[];
 export const lostKeyAbi = lostKey as AbiItem[];
 
 export const lastWillFactoryAbi = lastWillFactory as AbiItem[];
+
+export const controllerAbi = controller as AbiItem[];

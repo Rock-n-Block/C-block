@@ -17,6 +17,7 @@ export enum ContractsNames {
   crowdsaleNonSoftCappableNonBonusable = 'crowdsaleNonSoftCappableNonBonusable',
   weddingFactory = 'weddingFactory',
   lastWillFactory = 'lastWillFactory',
+  controller = 'controller',
 }
 export type TContractsNames = keyof typeof ContractsNames;
 
