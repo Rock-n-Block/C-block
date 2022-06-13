@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button, Container, Grid, Typography,
 } from '@material-ui/core';
+
+import userSelectors from 'store/user/selectors';
+import { useShallowSelector } from 'hooks';
+
 import { SuccessIcon } from 'theme/icons';
-import { ChangePriceCard } from 'components/ChangePriceCard';
-import clsx from 'clsx';
-import { CheckBox } from 'components';
-import { EditableField } from 'components/EditableField';
+import { routes } from 'appConstants';
+
+import { setNotification } from 'utils';
 import { contractsMock } from './AdminPanel.helpers';
 import { useStyle } from './AdminPanel.styles';
 
 export const AdminPanel = () => {
+
+  const { isAdmin } = useShallowSelector(
+    userSelectors.getUser,
+  );
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate(routes.root);
+      setNotification({
+        type: 'error',
+        message: 'You have insufficient permissions to see this page',
+      });
+    }
+    // NOTE: make sure that deps has only isAdmin, due to [isAdmin, navigate] causes to run this effect twice
+  }, [isAdmin]);
+
   const classes = useStyle();
   const [selectedContractType, setSelectedContractType] = useState(contractsMock[0]);
   const [isChangeMode, setIsChangeMode] = useState(false);

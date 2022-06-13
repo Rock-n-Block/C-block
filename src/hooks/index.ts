@@ -9,3 +9,4 @@ export * from './useScrollTop';
 export * from './useParticleNetwork';
 export * from './useBreakpoints';
 export * from './useAuthHandlers';
+export * from './useAdminPanel';

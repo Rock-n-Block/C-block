@@ -12,7 +12,6 @@ import { setUser } from 'store/user/reducer';
 import { contractsHelper } from 'utils';
 import { checkIsAdmin } from '../actions';
 import actionTypes from '../actionTypes';
-// import { getRegistrationAccountDataSaga } from './getRegistrationAccountData';
 
 function* checkIsAdminSaga({
   type,
