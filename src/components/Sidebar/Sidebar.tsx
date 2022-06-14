@@ -20,7 +20,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const { isLight } = useShallowSelector(userSelector.getUser);
+  const { isLight, isAdmin } = useShallowSelector(userSelector.getUser);
   const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
   return (
     <Box className={clsx(classes.root, className)}>
@@ -38,6 +38,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
         {navigationTabs.map(({
           Icon, label, link, isExternal,
         }) => {
+          if (label === 'Admin panel' && (!isAuthenticated || !isAdmin)) return null;
           if (label === 'My contracts' && !isAuthenticated) return null;
           return (
             <SidebarTab
