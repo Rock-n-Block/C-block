@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import Web3 from 'web3';
 import {
   Button, Container, Grid, Typography,
 } from '@material-ui/core';
@@ -7,20 +8,27 @@ import clsx from 'clsx';
 
 import userSelectors from 'store/user/selectors';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { useShallowSelector } from 'hooks';
+import adminActions from 'store/admin/actions';
+import adminSelector from 'store/admin/selectors';
+
+import { useShallowSelector, useWeb3Provider } from 'hooks';
 
 import { ChangePriceCard, CheckBox, EditableField } from 'components';
 import { SuccessIcon } from 'theme/icons';
 import { routes } from 'appConstants';
 
-import { contractsHelper, getTokenAmountDisplay, setNotification } from 'utils';
+import {
+  contractsHelper, getTokenAmountDisplay, setNotification,
+} from 'utils';
 import { FactoryContracts } from 'types/utils/contractsHelper';
 import { contractsMock, getContracts } from './AdminPanel.helpers';
 import { useStyle } from './AdminPanel.styles';
 
 export const AdminPanel = () => {
+  const dispatch = useDispatch();
+  const { getDefaultProvider } = useWeb3Provider();
   const [isAllowedDeployToMainnet, setIsAllowedDeployToMainnet] = useState(false);
-  const [isChangeMode, setIsChangeMode] = useState(false);
+  const [isPaymentsReceiverFieldEdit, setIsPaymentsReceiverFieldEdit] = useState(false);
   const [selectedContractType, setSelectedContractType] = useState<FactoryContracts>(
     contractsMock[0],
   );
@@ -29,15 +37,46 @@ export const AdminPanel = () => {
     setIsAllowedDeployToMainnet((prevState) => !prevState);
   };
 
-  const handleChangePaymentsReceiverAddress = (fieldValue: string | number, isDisabled: boolean) => {
-    console.log(fieldValue, isDisabled);
-    setIsChangeMode(!isChangeMode);
-  };
-
+  const { paymentsReceiverAddress: defaultPaymentsReceiverAddress } = useShallowSelector(
+    adminSelector.selectState,
+  );
+  const [paymentsReceiverAddress, setPaymentsReceiverAddress] = useState(
+    defaultPaymentsReceiverAddress,
+  );
   const { isAdmin, isMainnet } = useShallowSelector(
     userSelectors.getUser,
   );
-  const navigate = useNavigate();
+  const celoDecimals = useMemo(
+    () => contractsHelper.getChainNativeCurrency(isMainnet).decimals,
+    [isMainnet],
+  );
+  const handleChangePaymentsReceiverAddress = (fieldValue: string | number) => {
+    setPaymentsReceiverAddress(fieldValue.toString());
+  };
+  const handleSavePaymentsReceiverAddress = (fieldValue: string | number) => {
+    setIsPaymentsReceiverFieldEdit(!isPaymentsReceiverFieldEdit);
+
+    // trigger only if saved & not allowed to edit
+    if (isPaymentsReceiverFieldEdit) {
+      const isValidEthAddress = Web3.utils.isAddress(fieldValue.toString());
+
+      if (!isValidEthAddress) {
+        setNotification({
+          type: 'error',
+          message: 'Incorrect payments receiver address format',
+        });
+        return;
+      }
+
+      dispatch(
+        adminActions.setPaymentsReceiver({
+          provider: getDefaultProvider(),
+          paymentsReceiverAddress: fieldValue.toString(),
+        }),
+      );
+    }
+  };
+
   useEffect(() => {
     if (!isAdmin) {
       navigate(routes.root);
@@ -50,10 +89,6 @@ export const AdminPanel = () => {
   }, [isAdmin]);
 
   const contractForms = useShallowSelector(contractFormsSelector.getContractForms);
-  const celoDecimals = useMemo(
-    () => contractsHelper.getChainNativeCurrency(isMainnet).decimals,
-    [isMainnet],
-  );
 
   const classes = useStyle();
 
@@ -74,9 +109,10 @@ export const AdminPanel = () => {
           <EditableField
             className={classes.fieldContainer}
             icon={<SuccessIcon className={classes.icon} />}
-            defaultValue="0x3a9A34d723f080a4f0B2fA72fc9F497028dA6414"
-            disabled={!isChangeMode}
-            onClick={handleChangePaymentsReceiverAddress}
+            value={paymentsReceiverAddress}
+            disabled={!isPaymentsReceiverFieldEdit}
+            onClick={handleSavePaymentsReceiverAddress}
+            onChange={handleChangePaymentsReceiverAddress}
           />
           <Typography variant="h3" className={classes.contractsLabel}>
             Set prices for contracts creation
@@ -116,6 +152,7 @@ export const AdminPanel = () => {
                 <ChangePriceCard
                   title={contractDisplayName}
                   price={celoPrice}
+                  onClick={(...args) => console.log(args)}
                 />
               </Grid>
             );

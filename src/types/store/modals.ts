@@ -8,6 +8,10 @@ export enum Modals {
   Login = 'Login',
   LoginPending = 'LoginPending',
 
+  AdminChangePaymentsReceiverPending = 'AdminChangePaymentsReceiverPending',
+  AdminChangePaymentsReceiverSuccess = 'AdminChangePaymentsReceiverSuccess',
+  AdminChangePaymentsReceiverError = 'AdminChangePaymentsReceiverError',
+
   FullscreenLoader = 'FullscreenLoader',
   SendTxPending = 'SendTxPending',
   SendTxRejected = 'SendTxRejected',

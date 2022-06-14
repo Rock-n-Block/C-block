@@ -105,6 +105,7 @@ const store = configureStore({
           authActionTypes.USER_AUTH_REGISTER_ACCOUNT,
 
           adminActionTypes.ADMIN_CHECK_IS_ADMIN,
+          adminActionTypes.ADMIN_SET_PAYMENTS_RECEIVER,
         ],
       },
     },
