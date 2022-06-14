@@ -4,5 +4,5 @@ import { ChangePriceCardProps } from './ChangePriceCard';
 
 export const changePriceCardPropsMocked: ChangePriceCardProps = {
   title: 'Title',
-  price: 100,
+  price: '100',
 };
