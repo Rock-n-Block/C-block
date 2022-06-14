@@ -20,7 +20,8 @@ import { routes } from 'appConstants';
 import {
   contractsHelper, getTokenAmountDisplay, setNotification,
 } from 'utils';
-import { FactoryContracts } from 'types/utils/contractsHelper';
+import { FactoryContracts, TDeployContractCreationMethodNames } from 'types/utils/contractsHelper';
+import { getContractsMinCreationPrice } from 'store/contractForms/actions';
 import { contractsMock, getContracts } from './AdminPanel.helpers';
 import { useStyle } from './AdminPanel.styles';
 
