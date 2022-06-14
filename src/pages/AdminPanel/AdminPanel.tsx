@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Web3 from 'web3';
+import { useNavigate } from 'react-router-dom';
 import {
   Button, Container, Grid, Typography,
 } from '@material-ui/core';
@@ -100,6 +101,8 @@ export const AdminPanel = () => {
       defaultPaymentsReceiverAddress,
     );
   }, [defaultPaymentsReceiverAddress]);
+
+  const navigate = useNavigate();
   useEffect(() => {
     if (!isAdmin) {
       navigate(routes.root);
