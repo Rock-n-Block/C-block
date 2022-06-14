@@ -96,7 +96,7 @@ export const contracts: IContracts = {
         abi: tokenMintableFreezableAbi,
       },
       testnet: {
-        address: '0x5A3A9c31151A5A125F6baBaDc1e997017cAC1eeC',
+        address: '0x840714c57F93Fca2446Cc9DD8d70B330E3f000bc',
         abi: tokenMintableFreezableAbi,
       },
     },
@@ -106,7 +106,7 @@ export const contracts: IContracts = {
         abi: tokenMintableNonFreezableAbi,
       },
       testnet: {
-        address: '0x9B8797085E0c916E25a860Ad3015F6A8a5ff5f37',
+        address: '0xc3512594F9a7Ad8f2E1e7AE3804Eff84607785CD',
         abi: tokenMintableNonFreezableAbi,
       },
     },
@@ -116,7 +116,7 @@ export const contracts: IContracts = {
         abi: tokenNonMintableFreezableAbi,
       },
       testnet: {
-        address: '0x9D61A75467BF17ea3947cc52fCdF5285e8A202f3',
+        address: '0xC81E2dC3C79805e05C0bC8140F0f6a915e3bb9A6',
         abi: tokenNonMintableFreezableAbi,
       },
     },
@@ -126,7 +126,7 @@ export const contracts: IContracts = {
         abi: tokenNonMintableNonFreezableAbi,
       },
       testnet: {
-        address: '0x568EE75009950B15e9e91a9A99DedF749f3AcBBf',
+        address: '0x25649F2373B8bCB055Fe59763240D9912EC9a61e',
         abi: tokenNonMintableNonFreezableAbi,
       },
     },
@@ -136,7 +136,7 @@ export const contracts: IContracts = {
         abi: lostKeyFactoryAbi,
       },
       testnet: {
-        address: '0x62f89dE5B145f2A8f0b08Ecea7ae8A41C52efBe3',
+        address: '0xc48d25f459f186702bCf02ed63e731Be2C12A630',
         abi: lostKeyFactoryAbi,
       },
     },
@@ -146,7 +146,7 @@ export const contracts: IContracts = {
         abi: lastWillFactoryAbi,
       },
       testnet: {
-        address: '0x7727c1D5Ad9794bB923d399862DA3fCf47270aCE',
+        address: '0x91D8b4a77799e22b462a7c1316C3eeb706576209',
         abi: lastWillFactoryAbi,
       },
     },
@@ -157,7 +157,7 @@ export const contracts: IContracts = {
         abi: crowdsaleSoftCappableBonusableAbi,
       },
       testnet: {
-        address: '0x7C5d7986259354a80bB83c101754587Bfc3bBCAc',
+        address: '0x44C84450bAb67a6271Edba1bB1CA39b401206183',
         abi: crowdsaleSoftCappableBonusableAbi,
       },
     },
@@ -167,7 +167,7 @@ export const contracts: IContracts = {
         abi: crowdsaleSoftCappableNonBonusableAbi,
       },
       testnet: {
-        address: '0x9d1D9c4E4F622708210Ce4C7de7b76d6fC087733',
+        address: '0xD6Aa8E51C98b8e6880fa0F61FF1b0739461C635B',
         abi: crowdsaleSoftCappableNonBonusableAbi,
       },
     },
@@ -177,7 +177,7 @@ export const contracts: IContracts = {
         abi: crowdsaleNonSoftCappableBonusableAbi,
       },
       testnet: {
-        address: '0x4f96423a3aB01F821c98E9a6D72ca6fB6c9ED49D',
+        address: '0x9fbCF14999e58DdeC5824C9F3148683E89Ef7347',
         abi: crowdsaleNonSoftCappableBonusableAbi,
       },
     },
@@ -187,7 +187,7 @@ export const contracts: IContracts = {
         abi: crowdsaleNonSoftCappableNonBonusableAbi,
       },
       testnet: {
-        address: '0x8129A40EA8fA34C342b04BE1a9Ba379148F99D7F',
+        address: '0x5D6A133E65A70f436b2E01147722007171C83D9B',
         abi: crowdsaleNonSoftCappableNonBonusableAbi,
       },
     },
@@ -197,7 +197,7 @@ export const contracts: IContracts = {
         abi: weddingFactoryAbi,
       },
       testnet: {
-        address: '0x6584C8feB93c8d7B79C0403E042822f81538557b',
+        address: '0xFcb123A7c2F22f7e605889Fa68bd1d5F40eD59E1',
         abi: weddingFactoryAbi,
       },
     },

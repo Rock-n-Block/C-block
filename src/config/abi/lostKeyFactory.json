@@ -3,7 +3,16 @@
     "type": "constructor",
     "stateMutability": "nonpayable",
     "inputs": [
-      { "type": "address", "name": "_native", "internalType": "address" }
+      {
+        "type": "address",
+        "name": "_native",
+        "internalType": "contract IERC20"
+      },
+      {
+        "type": "address",
+        "name": "_controller",
+        "internalType": "contract IController"
+      }
     ]
   },
   {
@@ -20,23 +29,13 @@
     "anonymous": false
   },
   {
-    "type": "event",
-    "name": "OwnershipTransferred",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "previousOwner",
-        "internalType": "address",
-        "indexed": true
-      },
-      {
-        "type": "address",
-        "name": "newOwner",
-        "internalType": "address",
-        "indexed": true
-      }
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      { "type": "address", "name": "", "internalType": "contract IController" }
     ],
-    "anonymous": false
+    "name": "CONTROLLER",
+    "inputs": []
   },
   {
     "type": "function",
@@ -74,22 +73,6 @@
   },
   {
     "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "getToken",
-    "inputs": [
-      { "type": "address", "name": "_token", "internalType": "address" }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
-    "name": "owner",
-    "inputs": []
-  },
-  {
-    "type": "function",
     "stateMutability": "view",
     "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
     "name": "price",
@@ -99,26 +82,10 @@
     "type": "function",
     "stateMutability": "nonpayable",
     "outputs": [],
-    "name": "renounceOwnership",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
     "name": "setPrice",
     "inputs": [
       { "type": "address", "name": "_token", "internalType": "address" },
       { "type": "uint256", "name": "_price", "internalType": "uint256" }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "transferOwnership",
-    "inputs": [
-      { "type": "address", "name": "newOwner", "internalType": "address" }
     ]
   }
 ]

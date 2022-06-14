@@ -29,12 +29,6 @@ export type NewContract = ContractEventLog<{
   1: string;
   2: string;
 }>;
-export type OwnershipTransferred = ContractEventLog<{
-  previousOwner: string;
-  newOwner: string;
-  0: string;
-  1: string;
-}>;
 
 export interface WeddingFactory extends BaseContract {
   constructor(
@@ -44,6 +38,8 @@ export interface WeddingFactory extends BaseContract {
   ): WeddingFactory;
   clone(): WeddingFactory;
   methods: {
+    CONTROLLER(): NonPayableTransactionObject<string>;
+
     deployWedding(
       tokenToPay: string,
       _firstPartner: string,
@@ -53,32 +49,18 @@ export interface WeddingFactory extends BaseContract {
       _percentageToProposingWhenDisputed: number | string | BN
     ): NonPayableTransactionObject<void>;
 
-    getToken(_token: string): NonPayableTransactionObject<void>;
-
-    owner(): NonPayableTransactionObject<string>;
-
     price(arg0: string): NonPayableTransactionObject<string>;
-
-    renounceOwnership(): NonPayableTransactionObject<void>;
 
     setPrice(
       _token: string,
       _price: number | string | BN
     ): NonPayableTransactionObject<void>;
-
-    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
   };
   events: {
     NewContract(cb?: Callback<NewContract>): EventEmitter;
     NewContract(
       options?: EventOptions,
       cb?: Callback<NewContract>
-    ): EventEmitter;
-
-    OwnershipTransferred(cb?: Callback<OwnershipTransferred>): EventEmitter;
-    OwnershipTransferred(
-      options?: EventOptions,
-      cb?: Callback<OwnershipTransferred>
     ): EventEmitter;
 
     allEvents(options?: EventOptions, cb?: Callback<EventLog>): EventEmitter;
@@ -89,12 +71,5 @@ export interface WeddingFactory extends BaseContract {
     event: "NewContract",
     options: EventOptions,
     cb: Callback<NewContract>
-  ): void;
-
-  once(event: "OwnershipTransferred", cb: Callback<OwnershipTransferred>): void;
-  once(
-    event: "OwnershipTransferred",
-    options: EventOptions,
-    cb: Callback<OwnershipTransferred>
   ): void;
 }
