@@ -11,3 +11,6 @@ export type TAdminSetPriceAction = TProvider & {
   price: string;
 };
 export type TAdminGetPaymentsReceiverAction = TProvider;
+export type TSetIsMainnetDisabledAction = {
+  isMainnetDisabled: boolean;
+};

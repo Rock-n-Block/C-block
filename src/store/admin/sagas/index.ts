@@ -5,6 +5,7 @@ import setPaymentsReceiverSaga from './setPaymentsReceiver';
 import setPriceSaga from './setPrice';
 import getPaymentsReceiverSaga from './getPaymentsReceiver';
 import getIsMainnetDisabledSaga from './getIsMainnetDisabled';
+import setIsMainnetDisabledSaga from './setIsMainnetDisabled';
 
 export default function* adminSaga() {
   yield fork(checkIsAdminSaga);
@@ -12,4 +13,5 @@ export default function* adminSaga() {
   yield fork(setPriceSaga);
   yield fork(getPaymentsReceiverSaga);
   yield fork(getIsMainnetDisabledSaga);
+  yield fork(setIsMainnetDisabledSaga);
 }

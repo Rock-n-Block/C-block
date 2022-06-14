@@ -10,6 +10,7 @@ export default {
 
   getRates: 'rates/',
   getIsMainnetDisabled: 'network_mode/',
+  setIsMainnetDisabled: 'network_mode/update',
 
   accounts: {
     getMetamaskMessage: 'accounts/get_metamask_message/',

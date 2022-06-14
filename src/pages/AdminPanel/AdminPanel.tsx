@@ -36,7 +36,14 @@ export const AdminPanel = () => {
   );
 
   const handleIsAllowedDeployToMainnet = () => {
-    setIsAllowedDeployToMainnet((prevState) => !prevState);
+    setIsAllowedDeployToMainnet((prevState) => {
+      dispatch(
+        adminActions.setIsMainnetDisabled({
+          isMainnetDisabled: prevState,
+        }),
+      );
+      return !prevState;
+    });
   };
 
   const { paymentsReceiverAddress: defaultPaymentsReceiverAddress } = useShallowSelector(

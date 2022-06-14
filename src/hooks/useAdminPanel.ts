@@ -8,6 +8,7 @@ import apiActions from 'store/ui/actions';
 import adminActionTypes from 'store/admin/actionTypes';
 import { Modals, RequestStatus } from 'types';
 import { closeModal, setActiveModal } from 'store/modals/reducer';
+import { setNotification } from 'utils';
 import useShallowSelector from './useShallowSelector';
 import { useWeb3Provider } from './walletService';
 
@@ -42,6 +43,9 @@ export const useAdminPanel = () => {
   );
   const setPriceRequestStatus = useShallowSelector(
     uiSelector.getProp(adminActionTypes.ADMIN_SET_PRICE),
+  );
+  const setIsMainnetDisabledRequestStatus = useShallowSelector(
+    uiSelector.getProp(adminActionTypes.ADMIN_SET_IS_MAINNET_DISABLED),
   );
 
   // Requests
@@ -83,6 +87,14 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, setPriceRequestStatus]);
+  useEffect(() => {
+    if (setIsMainnetDisabledRequestStatus === RequestStatus.SUCCESS) {
+      setNotification({
+        type: 'success',
+        message: 'Successfully switched deploy contracts to mainnet settings',
+      });
+    }
+  }, [dispatch, setIsMainnetDisabledRequestStatus]);
 
   // Errors
   useEffect(() => {
@@ -103,6 +115,14 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, setPriceRequestStatus]);
+  useEffect(() => {
+    if (setIsMainnetDisabledRequestStatus === RequestStatus.ERROR) {
+      setNotification({
+        type: 'error',
+        message: 'Error occurred while switching deploy contracts to mainnet settings',
+      });
+    }
+  }, [dispatch, setIsMainnetDisabledRequestStatus]);
 
   // Reset
   useEffect(() => {
@@ -118,4 +138,10 @@ export const useAdminPanel = () => {
       dispatch(closeModal(Modals.AdminChangePricePending));
     }
   }, [dispatch, setPriceRequestStatus]);
+  useEffect(() => {
+    if (setIsMainnetDisabledRequestStatus === RequestStatus.ERROR ||
+      setIsMainnetDisabledRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(apiActions.reset(adminActionTypes.ADMIN_SET_IS_MAINNET_DISABLED));
+    }
+  }, [dispatch, setIsMainnetDisabledRequestStatus]);
 };
