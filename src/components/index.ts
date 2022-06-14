@@ -26,3 +26,5 @@ export * from './ConnectDropdownModal';
 export * from './SectionsBar';
 export * from './BurnTokenModal';
 export * from './MintTokenModal';
+export * from './ChangePriceCard';
+export * from './EditableField';

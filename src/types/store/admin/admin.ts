@@ -1,4 +1,4 @@
 export type AdminState = {
   isMainnetDisabled: boolean;
-  managementAddress: string;
+  paymentsReceiverAddress: string;
 };

@@ -7,7 +7,7 @@ import { useStyles } from './ChangePriceCard.styles';
 
 export interface ChangePriceCardProps {
   title: string;
-  price: number;
+  price: string;
   className?: string;
 }
 
@@ -22,7 +22,7 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
       <Typography variant="body2" className={classes.fieldLabel}>Current price</Typography>
       <EditableField
         className={classes.field}
-        value={price}
+        defaultValue={price}
         icon={<Typography className={classes.currency}>Celo</Typography>}
         disabled={!isChangeMode}
         onClick={() => setIsChangeMode(!isChangeMode)}

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
-  ChangeEvent, ReactElement, useState, VFC,
+  ReactElement, useState, VFC,
 } from 'react';
 
 import {
@@ -14,18 +13,24 @@ import { useStyles } from './EditableField.styles';
 export interface EditableFieldProps {
   className?: string;
   icon?: ReactElement;
-  value: string|number
+  defaultValue: string | number
   disabled: boolean;
-  onClick: (e: string | ChangeEvent<any>) => void;
+  onClick: (fieldValue: string | number, isDisabled: boolean) => void;
 }
 
 export const EditableField: VFC<EditableFieldProps> = ({
-  className, icon, value, disabled, onClick,
+  className, icon, defaultValue, disabled, onClick,
 }) => {
   const classes = useStyles();
-  const [fieldValue, setFieldValue] = useState(value);
+  const [fieldValue, setFieldValue] = useState(defaultValue);
   const handleChange = (event) => {
     setFieldValue(event.target.value);
+  };
+
+  const handleEditOrSaveClick = () => {
+    if (onClick) {
+      onClick(fieldValue, disabled);
+    }
   };
 
   return (
@@ -43,14 +48,16 @@ export const EditableField: VFC<EditableFieldProps> = ({
         <IconButton
           color="primary"
           className={classes.button}
-          onClick={onClick}
-        ><Edit />
+          onClick={handleEditOrSaveClick}
+        >
+          <Edit />
         </IconButton>
       ) : (
         <Button
           variant="contained"
-          onClick={onClick}
-        >Save
+          onClick={handleEditOrSaveClick}
+        >
+          Save
         </Button>
       )}
     </Box>

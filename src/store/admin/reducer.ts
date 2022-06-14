@@ -3,7 +3,7 @@ import { AdminState } from 'types';
 
 const initialState: AdminState = {
   isMainnetDisabled: false,
-  managementAddress: '',
+  paymentsReceiverAddress: '',
 };
 
 export const adminReducer = createSlice({
@@ -18,9 +18,9 @@ export const adminReducer = createSlice({
       ...state,
       isMainnetDisabled: action.payload,
     }),
-    setManagementAddress: (state, action: PayloadAction<string>) => ({
+    setPaymentsReceiverAddress: (state, action: PayloadAction<string>) => ({
       ...state,
-      managementAddress: action.payload,
+      paymentsReceiverAddress: action.payload,
     }),
   },
 });
@@ -28,7 +28,7 @@ export const adminReducer = createSlice({
 export const {
   setState,
   setIsMainnetDisabled,
-  setManagementAddress,
+  setPaymentsReceiverAddress,
 } = adminReducer.actions;
 
 export default adminReducer.reducer;
