@@ -22,7 +22,7 @@ import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
 import { IWillContract } from 'types';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useAuthConnectWallet, useShallowSelector } from 'hooks';
 import {
   willContractDynamicFormInitialData,
   setWillContractForm,
@@ -57,9 +57,7 @@ export const WillContract: FC = () => {
   const navigate = useNavigate();
   const willContract = useShallowSelector(contractFormsSelector.getWillContract);
 
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
+  const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
 
   const { address: userAddress } = useShallowSelector(userSelector.getUser);
 
@@ -78,8 +76,8 @@ export const WillContract: FC = () => {
         initialValues={willContract}
         validationSchema={validationSchema}
         onSubmit={(values: IWillContract, formikHelpers) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
+          if (!isAuthenticated) {
+            handleConnect();
             return;
           }
 
@@ -454,7 +452,7 @@ export const WillContract: FC = () => {
                 disabled={!isValid}
                 variant="outlined"
               >
-                Create
+                {!isAuthenticated ? 'Log in' : 'Create'}
               </Button>
 
               <Button

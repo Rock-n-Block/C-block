@@ -20,7 +20,7 @@ import { RemovableContractsFormBlock } from 'components';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { ICrowdsaleContract } from 'types';
-import { useConnectDropdownModal, useWeb3Provider, useShallowSelector } from 'hooks';
+import { useWeb3Provider, useShallowSelector, useAuthConnectWallet } from 'hooks';
 import {
   crowdsaleContractDynamicFormInitialData,
   setCrowdsaleContractForm,
@@ -48,9 +48,8 @@ export const CrowdsaleContract: FC = () => {
   const navigate = useNavigate();
   const { getDefaultProvider } = useWeb3Provider();
   const { crowdsaleContract } = useShallowSelector(contractFormsSelector.getContractForms);
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
+  const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
+
   return (
     <Container>
       <Formik
@@ -59,8 +58,8 @@ export const CrowdsaleContract: FC = () => {
         initialValues={crowdsaleContract}
         validationSchema={validationSchema}
         onSubmit={(values: ICrowdsaleContract) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
+          if (!isAuthenticated) {
+            handleConnect();
             return;
           }
           dispatch(setCrowdsaleContractForm(values));
@@ -437,7 +436,7 @@ export const CrowdsaleContract: FC = () => {
                 disabled={!isValid}
                 variant="outlined"
               >
-                Create
+                {!isAuthenticated ? 'Log in' : 'Create'}
               </Button>
               <Button
                 className={classes.resetButton}

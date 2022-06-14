@@ -21,7 +21,7 @@ import clsx from 'clsx';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelector from 'store/user/selectors';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useAuthConnectWallet, useShallowSelector } from 'hooks';
 import {
   lostKeyContractDynamicFormInitialData,
   setLostKeyContractForm,
@@ -57,9 +57,7 @@ export const LostKeyContract: FC = () => {
   const lostKeyContract = useShallowSelector(
     contractFormsSelector.getLostKeyContract,
   );
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
+  const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
   const { address: userAddress } = useShallowSelector(userSelector.getUser);
 
   useEffect(() => {
@@ -77,8 +75,8 @@ export const LostKeyContract: FC = () => {
         initialValues={lostKeyContract}
         validationSchema={validationSchema}
         onSubmit={(values, formikHelpers) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
+          if (!isAuthenticated) {
+            handleConnect();
             return;
           }
           const sum = values.reservesConfigs.reduce((acc, { percents }) => acc + +percents, 0);
@@ -455,7 +453,7 @@ export const LostKeyContract: FC = () => {
                 disabled={!isValid}
                 variant="outlined"
               >
-                Create
+                {!isAuthenticated ? 'Log in' : 'Create'}
               </Button>
 
               <Button

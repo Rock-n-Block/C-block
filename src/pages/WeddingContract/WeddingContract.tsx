@@ -17,8 +17,9 @@ import {
   FieldProps,
 } from 'formik';
 import clsx from 'clsx';
+
 import { CloseIcon } from 'theme/icons';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useAuthConnectWallet, useShallowSelector } from 'hooks';
 import { routes } from 'appConstants';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { setWeddingContractForm } from 'store/contractForms/reducer';
@@ -35,9 +36,7 @@ export const WeddingContract = () => {
     weddingContract,
   } = useShallowSelector(contractFormsSelector.getContractForms);
 
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
+  const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
 
   const [
     partnerOneSliderValue, setPartnerOneSliderValue,
@@ -68,8 +67,8 @@ export const WeddingContract = () => {
         onSubmit={(
           values,
         ) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
+          if (!isAuthenticated) {
+            handleConnect();
             return;
           }
           dispatch(setWeddingContractForm({
@@ -196,7 +195,7 @@ export const WeddingContract = () => {
                 variant="outlined"
                 className={classes.submitButton}
               >
-                Create
+                {!isAuthenticated ? 'Log in' : 'Create'}
               </Button>
               <Button
                 size="large"

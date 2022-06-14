@@ -1,8 +1,7 @@
 import React, {
-  useCallback, useMemo,
+  useMemo,
   VFC,
 } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   Container, Typography, Box, IconButton, Grid,
 } from '@material-ui/core';
@@ -10,9 +9,7 @@ import clsx from 'clsx';
 import { Logo, Breadcrumbs } from 'components';
 import { Menu } from 'theme/icons';
 import userSelector from 'store/user/selectors';
-import { setActiveModal } from 'store/modals/reducer';
-import { useShallowSelector, useNavigation, useConnectDropdownModal } from 'hooks';
-import { Modals } from 'types';
+import { useShallowSelector, useNavigation, useAuthConnectWallet } from 'hooks';
 import { ConnectButton } from './components/ConnectButton';
 import { NetTag } from './components/NetTag';
 import { useStyles } from './Header.styles';
@@ -28,29 +25,11 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
   const {
     address: userWalletAddress, isLight, isMainnet,
   } = useShallowSelector(userSelector.getUser);
-  const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
 
   const [paths, title, icon] = useNavigation();
-
   const isBreadcrumbsVisible = useMemo(() => paths.length > 1, [paths.length]);
 
-  const dispatch = useDispatch();
-
-  const {
-    connectDropdownModal,
-    openConnectDropdownModal,
-  } = useConnectDropdownModal();
-  const handleModal = useCallback(() => {
-    if (!isAuthenticated) {
-      dispatch(setActiveModal({
-        modals: {
-          [Modals.Login]: true,
-        },
-      }));
-    } else {
-      openConnectDropdownModal();
-    }
-  }, [isAuthenticated, dispatch, openConnectDropdownModal]);
+  const { connectDropdownModal, handleConnect } = useAuthConnectWallet();
 
   return (
     <Container className={clsx(classes.root, className)}>
@@ -66,7 +45,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <ConnectButton
-            handleModal={handleModal}
+            handleModal={handleConnect}
             address={userWalletAddress}
           />
         </Grid>

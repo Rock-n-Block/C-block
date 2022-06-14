@@ -24,7 +24,7 @@ import clsx from 'clsx';
 import { CloseCircleIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
-import { useConnectDropdownModal, useShallowSelector } from 'hooks';
+import { useAuthConnectWallet, useShallowSelector } from 'hooks';
 import {
   deleteTokenContractForm,
   dynamicFormDataTemplate,
@@ -53,9 +53,7 @@ export const TokenContract = memo(() => {
 
   const { tokenContract } = useShallowSelector(contractFormsSelector.getContractForms);
 
-  const {
-    isWalletConnected, connectDropdownModal, openConnectDropdownModal,
-  } = useConnectDropdownModal();
+  const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
 
   return (
     <Container>
@@ -67,8 +65,8 @@ export const TokenContract = memo(() => {
         onSubmit={(
           values,
         ) => {
-          if (!isWalletConnected) {
-            openConnectDropdownModal();
+          if (!isAuthenticated) {
+            handleConnect();
             return;
           }
           dispatch(setTokenContractForm(values));
@@ -295,7 +293,7 @@ export const TokenContract = memo(() => {
                 variant="outlined"
                 className={classes.submitButton}
               >
-                Create
+                {!isAuthenticated ? 'Log in' : 'Create'}
               </Button>
               <Button
                 size="large"
