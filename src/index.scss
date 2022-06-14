@@ -100,6 +100,13 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 0 !important;
     width: fit-content !important;
     height: fit-content !important;
+
+    &--top-right {
+      @media only screen and (max-width: 480px) {
+        top: 1em;
+        left: unset;
+      }
+    }
   }
 
   &__toast-body {
@@ -121,6 +128,11 @@ input[type=number]::-webkit-outer-spin-button {
   overflow: visible;
   background: transparent !important;
   border-radius: 12px !important;
+
+  &:not(:last-child) {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
 
   &>svg {
     position: absolute;
