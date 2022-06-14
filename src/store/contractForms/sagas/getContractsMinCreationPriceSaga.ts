@@ -59,6 +59,11 @@ export function* getContractsMinCreationPriceSaga({
           [1, 1, 0],
           [1, 1, 1],
         ];
+
+        // tokenNonMintableNonFreezable 0/1
+        // tokenNonMintableFreezable 0/1
+        // tokenMintableNonFreezable 0/1
+        // tokenMintableFreezable 0/1
         // eslint-disable-next-line arrow-body-style
         return allVariations.map(([futureMinting, freezable, burnable]) => {
           return {
@@ -83,6 +88,10 @@ export function* getContractsMinCreationPriceSaga({
           [1, 1, 0],
           [1, 1, 1],
         ];
+        // crowdsaleNonSoftCappableNonBonusable 0/1
+        // crowdsaleNonSoftCappableBonusable 0/1
+        // crowdsaleSoftCappableNonBonusable 0/1
+        // crowdsaleSoftCappableBonusable 0/1
         // eslint-disable-next-line arrow-body-style
         return allVariations.map(([isSoftcappable, isBonusable, isDatesChangeable]) => {
           return {
@@ -140,6 +149,16 @@ export function* getContractsMinCreationPriceSaga({
 
     const awaitedPriceCalls: PromiseSettledResult<string>[][] = yield all(pricesCalls);
 
+    // save fetched creation prices for each contract
+    const allVariantsCreationPrices = awaitedPriceCalls.map(
+      (settledPriceCalls) => settledPriceCalls.map(
+        (result) => {
+          if (result.status === 'fulfilled') return result.value;
+          return '';
+        },
+      ),
+    );
+
     const minCreationPrices = awaitedPriceCalls.map((settledPriceCalls) => {
       const filteredPrices = settledPriceCalls
         .filter(({ status }) => status === 'fulfilled')
@@ -151,6 +170,13 @@ export function* getContractsMinCreationPriceSaga({
     const contractForms: ContractFormsState = yield select(
       contractFormsSelector.getContractForms,
     );
+    const [
+      tokenAllVariantsCreationPrices,
+      lostkeyAllVariantsCreationPrices,
+      willAllVariantsCreationPrices,
+      crowdsaleAllVariantsCreationPrices,
+      weddingAllVariantsCreationPrices,
+    ] = allVariantsCreationPrices;
     const [
       tokenMinCreationPrice,
       lostkeyMinCreationPrice,
@@ -170,6 +196,7 @@ export function* getContractsMinCreationPriceSaga({
         ...contractForms.tokenContract,
         additional: {
           ...contractForms.tokenContract.additional,
+          allVariantsCreationPrices: tokenAllVariantsCreationPrices,
           minCreationPrice: {
             celo: tokenMinCreationPrice,
             usd: new BigNumber(tokenMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
@@ -180,6 +207,7 @@ export function* getContractsMinCreationPriceSaga({
         ...contractForms.crowdsaleContract,
         additional: {
           ...contractForms.crowdsaleContract.additional,
+          allVariantsCreationPrices: crowdsaleAllVariantsCreationPrices,
           minCreationPrice: {
             celo: crowdsaleMinCreationPrice,
             usd: new BigNumber(crowdsaleMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
@@ -190,6 +218,7 @@ export function* getContractsMinCreationPriceSaga({
         ...contractForms.lostKeyContract,
         additional: {
           ...contractForms.lostKeyContract.additional,
+          allVariantsCreationPrices: lostkeyAllVariantsCreationPrices,
           minCreationPrice: {
             celo: lostkeyMinCreationPrice,
             usd: new BigNumber(lostkeyMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
@@ -200,6 +229,7 @@ export function* getContractsMinCreationPriceSaga({
         ...contractForms.willContract,
         additional: {
           ...contractForms.willContract.additional,
+          allVariantsCreationPrices: willAllVariantsCreationPrices,
           minCreationPrice: {
             celo: willMinCreationPrice,
             usd: new BigNumber(willMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
@@ -210,6 +240,7 @@ export function* getContractsMinCreationPriceSaga({
         ...contractForms.weddingContract,
         additional: {
           ...contractForms.weddingContract.additional,
+          allVariantsCreationPrices: weddingAllVariantsCreationPrices,
           minCreationPrice: {
             celo: weddingMinCreationPrice,
             usd: new BigNumber(weddingMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),

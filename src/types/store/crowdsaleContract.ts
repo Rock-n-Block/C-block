@@ -8,6 +8,7 @@ export interface ICrowdsaleContractDynamicForm {
 interface ICrowdsaleAdditionalField extends ContractAdditionalField {
   additional: {
     contractCreationPrice: string;
+    allVariantsCreationPrices: string[];
     minCreationPrice: {
       usd: string;
       celo: string;

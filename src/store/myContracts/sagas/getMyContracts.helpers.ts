@@ -29,7 +29,7 @@ const transformCreationDataToTokenContract = (
   methodName: TDeployTokenContractCreationMethodNames,
   params: TFunctionParams['params'],
   backendData: IGetContractsTokenContractWithCreatedAtField,
-) => {
+): TokenContract => {
   const contractSettings = contractsHelper.getTokenFactoryCreationParamsByDeployMethodName(
     methodName,
   );
@@ -67,7 +67,7 @@ const transformCreationDataToTokenContract = (
       };
     }) as TokenContract['tokens'];
 
-  const ret: TokenContract = {
+  return {
     tokenName: backendData.name,
     tokenOwner,
     tokenSymbol,
@@ -78,13 +78,13 @@ const transformCreationDataToTokenContract = (
     tokens,
     additional: {
       contractCreationPrice: '',
+      allVariantsCreationPrices: [],
       minCreationPrice: {
         usd: '',
         celo: '',
       },
     },
   };
-  return ret;
 };
 
 const transformCreationDataToCrowdsaleContract = async (
@@ -92,7 +92,7 @@ const transformCreationDataToCrowdsaleContract = async (
   params: TFunctionParams['params'],
   backendData: IGetContractsCrowdsaleContractWithCreatedAtField,
   web3: Web3,
-) => {
+): Promise<ICrowdsaleContract> => {
   const contractSettings = contractsHelper.getCrowdsaleFactoryCreationParamsByDeployMethodName(
     methodName,
   );
@@ -135,7 +135,7 @@ const transformCreationDataToCrowdsaleContract = async (
       rate: getTokenAmountDisplay(rates[index], +rateDecimals),
     })) as ICrowdsaleContract['tokens'];
 
-  const ret: ICrowdsaleContract = {
+  return {
     contractName: backendData.name,
     tokenAddress,
     crowdsaleOwner: crowdsaleOwnerAddress,
@@ -154,6 +154,7 @@ const transformCreationDataToCrowdsaleContract = async (
     tokens,
     additional: {
       contractCreationPrice: '',
+      allVariantsCreationPrices: [],
       minCreationPrice: {
         usd: '',
         celo: '',
@@ -164,7 +165,6 @@ const transformCreationDataToCrowdsaleContract = async (
       ],
     },
   };
-  return ret;
 };
 
 export const getContractCreationData = (
@@ -198,7 +198,7 @@ export const getContractCreationData = (
           percents: percents[index],
           reserveAddress: reserveAddresses[index],
         })) as ILostKeyContract['reservesConfigs'] | IWillContract['reservesConfigs'];
-      const ret: ILostKeyContract | IWillContract = {
+      return {
         contractName: backendLastWillData.name,
         managementAddress: tx.from,
         ownerEmail: backendLastWillData.owner_mail,
@@ -211,13 +211,13 @@ export const getContractCreationData = (
         rewardAmount: getTokenAmountDisplay(rewardAmount, +celoDecimals),
         additional: {
           contractCreationPrice: '',
+          allVariantsCreationPrices: [],
           minCreationPrice: {
             usd: '',
             celo: '',
           },
         },
-      };
-      return ret;
+      } as ILostKeyContract | IWillContract;
     }
     case 'deployLostKey': {
       const {
@@ -238,7 +238,7 @@ export const getContractCreationData = (
           percents: percents[index],
           reserveAddress: reserveAddresses[index],
         })) as ILostKeyContract['reservesConfigs'] | IWillContract['reservesConfigs'];
-      const ret: ILostKeyContract | IWillContract = {
+      return {
         contractName: backendLostKeyData.name,
         managementAddress: tx.from,
         ownerEmail: backendLostKeyData.owner_mail,
@@ -251,13 +251,13 @@ export const getContractCreationData = (
         rewardAmount: getTokenAmountDisplay(rewardAmount, +celoDecimals),
         additional: {
           contractCreationPrice: '',
+          allVariantsCreationPrices: [],
           minCreationPrice: {
             usd: '',
             celo: '',
           },
         },
-      };
-      return ret;
+      } as ILostKeyContract | IWillContract;
     }
     case 'deployWedding': {
       const {
@@ -271,7 +271,7 @@ export const getContractCreationData = (
       const [
         partnerOneEmail, partnerTwoEmail,
       ] = Object.keys(backendWeddingData.mails) as [string, string];
-      const ret: IWeddingContract = {
+      return {
         contractName: backendData.name,
         partnerOneAddress,
         partnerTwoAddress,
@@ -287,13 +287,13 @@ export const getContractCreationData = (
         ).toString(),
         additional: {
           contractCreationPrice: '',
+          allVariantsCreationPrices: [],
           minCreationPrice: {
             usd: '',
             celo: '',
           },
         },
-      };
-      return ret;
+      } as IWeddingContract;
     }
     // Token
     case 'deployERC20PausableToken': {

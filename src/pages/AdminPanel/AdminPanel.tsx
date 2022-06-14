@@ -6,14 +6,16 @@ import {
 import clsx from 'clsx';
 
 import userSelectors from 'store/user/selectors';
+import contractFormsSelector from 'store/contractForms/selectors';
 import { useShallowSelector } from 'hooks';
 
 import { ChangePriceCard, CheckBox, EditableField } from 'components';
 import { SuccessIcon } from 'theme/icons';
 import { routes } from 'appConstants';
 
-import { setNotification } from 'utils';
-import { contractsMock } from './AdminPanel.helpers';
+import { contractsHelper, getTokenAmountDisplay, setNotification } from 'utils';
+import { FactoryContracts } from 'types/utils/contractsHelper';
+import { contractsMock, getContracts } from './AdminPanel.helpers';
 import { useStyle } from './AdminPanel.styles';
 
 export const AdminPanel = () => {
@@ -46,6 +48,12 @@ export const AdminPanel = () => {
     }
     // NOTE: make sure that deps has only isAdmin, due to [isAdmin, navigate] causes to run this effect twice
   }, [isAdmin]);
+
+  const contractForms = useShallowSelector(contractFormsSelector.getContractForms);
+  const celoDecimals = useMemo(
+    () => contractsHelper.getChainNativeCurrency(isMainnet).decimals,
+    [isMainnet],
+  );
 
   const classes = useStyle();
 
@@ -92,17 +100,27 @@ export const AdminPanel = () => {
         ))}
       </Grid>
       <Grid container className={classes.cardsContainer}>
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={6}
-          lg={6}
-          xl={6}
-          // key={}
-        >
-          <ChangePriceCard title="Crowdsale DatesChangeable Non-Softcappable Non-Bonusable" price={18.762} />
-        </Grid>
+        {
+          getContracts(selectedContractType, contractForms).map(({ contractDeployName, contractDisplayName, price = '' }) => {
+            const celoPrice = getTokenAmountDisplay(price, celoDecimals);
+            return (
+              <Grid
+                key={contractDeployName}
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                lg={6}
+                xl={6}
+              >
+                <ChangePriceCard
+                  title={contractDisplayName}
+                  price={celoPrice}
+                />
+              </Grid>
+            );
+          })
+        }
       </Grid>
     </Container>
   );

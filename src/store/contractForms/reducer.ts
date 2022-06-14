@@ -42,6 +42,7 @@ export const willContractDynamicFormInitialData: IWillContractDynamicForm = {
 const contractAdditionalFieldsInitialData: ContractAdditionalField = {
   additional: {
     contractCreationPrice: '',
+    allVariantsCreationPrices: [],
     minCreationPrice: {
       usd: '',
       celo: '',
@@ -80,6 +81,7 @@ const crowdsaleContractInitialState: ICrowdsaleContract = {
 
   additional: {
     contractCreationPrice: '',
+    allVariantsCreationPrices: [],
     minCreationPrice: {
       usd: '',
       celo: '',
@@ -148,6 +150,7 @@ export const contractFormReducer = createSlice({
         additional: {
           ...initialState.crowdsaleContract.additional,
           contractCreationPrice: state.crowdsaleContract.additional.contractCreationPrice,
+          allVariantsCreationPrices: state.crowdsaleContract.additional.allVariantsCreationPrices,
           minCreationPrice: state.crowdsaleContract.additional.minCreationPrice,
         },
       },
@@ -156,6 +159,7 @@ export const contractFormReducer = createSlice({
         additional: {
           ...initialState.lostKeyContract.additional,
           contractCreationPrice: state.lostKeyContract.additional.contractCreationPrice,
+          allVariantsCreationPrices: state.lostKeyContract.additional.allVariantsCreationPrices,
           minCreationPrice: state.lostKeyContract.additional.minCreationPrice,
         },
       },
@@ -164,6 +168,7 @@ export const contractFormReducer = createSlice({
         additional: {
           ...initialState.tokenContract.additional,
           contractCreationPrice: state.tokenContract.additional.contractCreationPrice,
+          allVariantsCreationPrices: state.tokenContract.additional.allVariantsCreationPrices,
           minCreationPrice: state.tokenContract.additional.minCreationPrice,
         },
       },
@@ -172,6 +177,7 @@ export const contractFormReducer = createSlice({
         additional: {
           ...initialState.weddingContract.additional,
           contractCreationPrice: state.weddingContract.additional.contractCreationPrice,
+          allVariantsCreationPrices: state.weddingContract.additional.allVariantsCreationPrices,
           minCreationPrice: state.weddingContract.additional.minCreationPrice,
         },
       },
@@ -180,6 +186,7 @@ export const contractFormReducer = createSlice({
         additional: {
           ...initialState.willContract.additional,
           contractCreationPrice: state.willContract.additional.contractCreationPrice,
+          allVariantsCreationPrices: state.willContract.additional.allVariantsCreationPrices,
           minCreationPrice: state.willContract.additional.minCreationPrice,
         },
       },
