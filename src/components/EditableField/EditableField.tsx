@@ -1,5 +1,5 @@
 import React, {
-  ReactElement, useState, VFC,
+  ReactElement, VFC,
 } from 'react';
 
 import {
@@ -13,30 +13,32 @@ import { useStyles } from './EditableField.styles';
 export interface EditableFieldProps {
   className?: string;
   icon?: ReactElement;
-  defaultValue: string | number
+  value: string | number;
   disabled: boolean;
   onClick: (fieldValue: string | number, isDisabled: boolean) => void;
+  onChange: (fieldValue: string | number) => void;
 }
 
 export const EditableField: VFC<EditableFieldProps> = ({
-  className, icon, defaultValue, disabled, onClick,
+  className, icon, value, disabled, onClick, onChange,
 }) => {
   const classes = useStyles();
-  const [fieldValue, setFieldValue] = useState(defaultValue);
   const handleChange = (event) => {
-    setFieldValue(event.target.value);
+    if (onChange) {
+      onChange(event.target.value);
+    }
   };
 
   const handleEditOrSaveClick = () => {
     if (onClick) {
-      onClick(fieldValue, disabled);
+      onClick(value, disabled);
     }
   };
 
   return (
     <Box className={clsx(classes.root, className)}>
       <TextField
-        value={fieldValue}
+        value={value}
         disabled={disabled}
         className={classes.textField}
         InputProps={{
