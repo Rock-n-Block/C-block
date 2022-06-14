@@ -5,7 +5,7 @@ const initialState: UserState = {
   address: '',
   wallet: WalletProviders.init,
   isLight: false,
-  isMainnet: true,
+  isMainnet: false,
 
   email: '',
   registrationEmail: '',

@@ -17,14 +17,16 @@ import {
   setNotification,
 } from 'utils';
 import contractFormsSelector from 'store/contractForms/selectors';
+import adminSelector from 'store/admin/selectors';
 import { getContractsMinCreationPrice } from 'store/contractForms/actions';
 import { ContractFormsState } from 'types';
 import { createContractHelpers } from './CreateContract.helpers';
 import { useStyles } from './CreateContract.styles';
 
 export const CreateContract = () => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
+  const { isMainnetDisabled } = useShallowSelector(
+    adminSelector.selectState,
+  );
 
   const contractForms: ContractFormsState = useShallowSelector(
     contractFormsSelector.getContractForms,
@@ -66,7 +68,9 @@ export const CreateContract = () => {
     ],
   );
 
+  const dispatch = useDispatch();
   const handleTestnetChange = useCallback(() => {
+    if (isMainnetDisabled) return;
     dispatch(toggleTestnet());
     setNotification({
       type: 'info',
@@ -74,7 +78,7 @@ export const CreateContract = () => {
         !isMainnet ? 'Celo Mainnet' : 'Alfahores Testnet'
       } in your wallet`,
     });
-  }, [dispatch, isMainnet]);
+  }, [dispatch, isMainnetDisabled, isMainnet]);
 
   useEffect(() => {
     dispatch(
@@ -84,13 +88,19 @@ export const CreateContract = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
+  const classes = useStyles();
+
   return (
     <Container>
       <Grid container>
         <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
           <Box className={classes.testnetSwitcher}>
             <Typography>Test net</Typography>
-            <Switch checked={!isMainnet} onClick={handleTestnetChange} />
+            <Switch
+              checked={!isMainnet}
+              disabled={isMainnetDisabled}
+              onClick={handleTestnetChange}
+            />
           </Box>
         </Grid>
       </Grid>
