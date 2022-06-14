@@ -10,6 +10,7 @@ import { LoadingModal } from 'components/Modals';
 import { CompleteModal } from 'components';
 
 export const AdminModalsContainer: FC = () => {
+  // Change payments receiver
   const isAdminChangePaymentsReceiverPending = useShallowSelector(
     modalsSelector.selectModalState(Modals.AdminChangePaymentsReceiverPending),
   );
@@ -19,6 +20,16 @@ export const AdminModalsContainer: FC = () => {
   const isAdminChangePaymentsReceiverError = useShallowSelector(
     modalsSelector.selectModalState(Modals.AdminChangePaymentsReceiverError),
   );
+  // Change price
+  const isAdminChangePricePending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.AdminChangePricePending),
+  );
+  const isAdminChangePriceSuccess = useShallowSelector(
+    modalsSelector.selectModalState(Modals.AdminChangePriceSuccess),
+  );
+  const isAdminChangePriceError = useShallowSelector(
+    modalsSelector.selectModalState(Modals.AdminChangePriceError),
+  );
 
   const dispatch = useDispatch();
   const handleCloseAdminChangePaymentsReceiverSuccessModal = useCallback(() => {
@@ -26,6 +37,12 @@ export const AdminModalsContainer: FC = () => {
   }, [dispatch]);
   const handleCloseAdminChangePaymentsReceiverErrorModal = useCallback(() => {
     dispatch(closeModal(Modals.AdminChangePaymentsReceiverError));
+  }, [dispatch]);
+  const handleCloseAdminChangePriceSuccessModal = useCallback(() => {
+    dispatch(closeModal(Modals.AdminChangePriceSuccess));
+  }, [dispatch]);
+  const handleCloseAdminChangePriceErrorModal = useCallback(() => {
+    dispatch(closeModal(Modals.AdminChangePriceError));
   }, [dispatch]);
 
   const location = useLocation();
@@ -48,6 +65,20 @@ export const AdminModalsContainer: FC = () => {
         result={false}
         errorText="Error occurred while saving payments` receiving address"
         onClose={handleCloseAdminChangePaymentsReceiverErrorModal}
+      />
+
+      <LoadingModal open={isAdminChangePricePending} text="Change Price" />
+      <CompleteModal
+        open={isAdminChangePriceSuccess}
+        result
+        successText="Price was successfully changed."
+        onClose={handleCloseAdminChangePriceSuccessModal}
+      />
+      <CompleteModal
+        open={isAdminChangePriceError}
+        result={false}
+        errorText="Error occurred while saving price"
+        onClose={handleCloseAdminChangePriceErrorModal}
       />
     </>
   );

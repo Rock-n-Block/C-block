@@ -11,6 +11,9 @@ export enum Modals {
   AdminChangePaymentsReceiverPending = 'AdminChangePaymentsReceiverPending',
   AdminChangePaymentsReceiverSuccess = 'AdminChangePaymentsReceiverSuccess',
   AdminChangePaymentsReceiverError = 'AdminChangePaymentsReceiverError',
+  AdminChangePricePending = 'AdminChangePricePending',
+  AdminChangePriceSuccess = 'AdminChangePriceSuccess',
+  AdminChangePriceError = 'AdminChangePriceError',
 
   FullscreenLoader = 'FullscreenLoader',
   SendTxPending = 'SendTxPending',

@@ -28,7 +28,11 @@ export const useAdminPanel = () => {
   const setPaymentsReceiverRequestStatus = useShallowSelector(
     uiSelector.getProp(adminActionTypes.ADMIN_SET_PAYMENTS_RECEIVER),
   );
+  const setPriceRequestStatus = useShallowSelector(
+    uiSelector.getProp(adminActionTypes.ADMIN_SET_PRICE),
+  );
 
+  // Requests
   useEffect(() => {
     if (setPaymentsReceiverRequestStatus === RequestStatus.REQUEST) {
       dispatch(setActiveModal({
@@ -38,7 +42,17 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, setPaymentsReceiverRequestStatus]);
+  useEffect(() => {
+    if (setPriceRequestStatus === RequestStatus.REQUEST) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.AdminChangePricePending]: true,
+        },
+      }));
+    }
+  }, [dispatch, setPriceRequestStatus]);
 
+  // Success
   useEffect(() => {
     if (setPaymentsReceiverRequestStatus === RequestStatus.SUCCESS) {
       dispatch(setActiveModal({
@@ -48,7 +62,17 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, setPaymentsReceiverRequestStatus]);
+  useEffect(() => {
+    if (setPriceRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.AdminChangePriceSuccess]: true,
+        },
+      }));
+    }
+  }, [dispatch, setPriceRequestStatus]);
 
+  // Errors
   useEffect(() => {
     if (setPaymentsReceiverRequestStatus === RequestStatus.ERROR) {
       dispatch(setActiveModal({
@@ -58,11 +82,28 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, setPaymentsReceiverRequestStatus]);
+  useEffect(() => {
+    if (setPriceRequestStatus === RequestStatus.ERROR) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.AdminChangePriceError]: true,
+        },
+      }));
+    }
+  }, [dispatch, setPriceRequestStatus]);
 
+  // Reset
   useEffect(() => {
     if (setPaymentsReceiverRequestStatus === RequestStatus.ERROR || setPaymentsReceiverRequestStatus === RequestStatus.SUCCESS) {
       dispatch(apiActions.reset(adminActionTypes.ADMIN_SET_PAYMENTS_RECEIVER));
       dispatch(closeModal(Modals.AdminChangePaymentsReceiverPending));
     }
   }, [dispatch, setPaymentsReceiverRequestStatus]);
+  useEffect(() => {
+    if (setPriceRequestStatus === RequestStatus.ERROR ||
+      setPriceRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(apiActions.reset(adminActionTypes.ADMIN_SET_PRICE));
+      dispatch(closeModal(Modals.AdminChangePricePending));
+    }
+  }, [dispatch, setPriceRequestStatus]);
 };

@@ -21,9 +21,13 @@ export const initialState: ModalsState = {
     SignUpPending: false,
     Login: false,
     LoginPending: false,
+
     AdminChangePaymentsReceiverPending: false,
     AdminChangePaymentsReceiverSuccess: false,
     AdminChangePaymentsReceiverError: false,
+    AdminChangePricePending: false,
+    AdminChangePriceSuccess: false,
+    AdminChangePriceError: false,
   },
 };
 
