@@ -10,3 +10,4 @@ export type TAdminSetPriceAction = TProvider & {
   deployContractName: TDeployContractCreationMethodNames;
   price: string;
 };
+export type TAdminGetPaymentsReceiverAction = TProvider;

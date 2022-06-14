@@ -107,6 +107,7 @@ const store = configureStore({
           adminActionTypes.ADMIN_CHECK_IS_ADMIN,
           adminActionTypes.ADMIN_SET_PAYMENTS_RECEIVER,
           adminActionTypes.ADMIN_SET_PRICE,
+          adminActionTypes.ADMIN_GET_PAYMENTS_RECEIVER,
         ],
       },
     },

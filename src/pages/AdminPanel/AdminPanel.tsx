@@ -65,6 +65,7 @@ export const AdminPanel = () => {
           type: 'error',
           message: 'Incorrect payments receiver address format',
         });
+        setPaymentsReceiverAddress(defaultPaymentsReceiverAddress);
         return;
       }
 
@@ -77,6 +78,27 @@ export const AdminPanel = () => {
     }
   };
 
+  const handleSavePrice = (deployContractName: TDeployContractCreationMethodNames) => (
+    fieldValue: string | number,
+    isEditMode: boolean,
+  ) => {
+    // trigger only if saved & not allowed to edit
+    if (isEditMode) return;
+    dispatch(
+      adminActions.setPrice({
+        provider: getDefaultProvider(),
+        contractType: selectedContractType,
+        deployContractName,
+        price: fieldValue.toString(),
+      }),
+    );
+  };
+
+  useEffect(() => {
+    setPaymentsReceiverAddress(
+      defaultPaymentsReceiverAddress,
+    );
+  }, [defaultPaymentsReceiverAddress]);
   useEffect(() => {
     if (!isAdmin) {
       navigate(routes.root);
@@ -88,8 +110,15 @@ export const AdminPanel = () => {
     // NOTE: make sure that deps has only isAdmin, due to [isAdmin, navigate] causes to run this effect twice
   }, [isAdmin]);
 
-  const contractForms = useShallowSelector(contractFormsSelector.getContractForms);
+  useEffect(() => {
+    dispatch(
+      getContractsMinCreationPrice({
+        provider: getDefaultProvider(),
+      }),
+    );
+  }, [dispatch, getDefaultProvider]);
 
+  const contractForms = useShallowSelector(contractFormsSelector.getContractForms);
   const classes = useStyle();
 
   return (
@@ -137,7 +166,9 @@ export const AdminPanel = () => {
       </Grid>
       <Grid container className={classes.cardsContainer}>
         {
-          getContracts(selectedContractType, contractForms).map(({ contractDeployName, contractDisplayName, price = '' }) => {
+          getContracts(selectedContractType, contractForms).map(({
+            contractDeployName, contractDisplayName, price = '',
+          }) => {
             const celoPrice = getTokenAmountDisplay(price, celoDecimals);
             return (
               <Grid
@@ -152,7 +183,7 @@ export const AdminPanel = () => {
                 <ChangePriceCard
                   title={contractDisplayName}
                   price={celoPrice}
-                  onClick={(...args) => console.log(args)}
+                  onClick={handleSavePrice(contractDeployName)}
                 />
               </Grid>
             );
