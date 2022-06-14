@@ -4,9 +4,12 @@ import { EditableFieldProps } from './EditableField';
 
 export const editableFieldPropsMocked: EditableFieldProps = {
   icon: <SuccessIcon />,
-  defaultValue: 'value',
+  value: 'value',
   disabled: true,
   onClick(): void {
+    throw new Error('Function not implemented.');
+  },
+  onChange(): void {
     throw new Error('Function not implemented.');
   },
 };
