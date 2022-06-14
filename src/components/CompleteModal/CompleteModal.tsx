@@ -15,10 +15,11 @@ export interface CompleteModalProps {
   onClose?: () => void;
   result?: boolean;
   successText?: string;
+  errorText?: string;
 }
 
 export const CompleteModal: VFC<CompleteModalProps> = ({
-  open, onClose, result, successText = COMPLETE_MODAL_DEFAULT_SUCCESS_TEXT,
+  open, onClose, result, successText = COMPLETE_MODAL_DEFAULT_SUCCESS_TEXT, errorText,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -39,17 +40,26 @@ export const CompleteModal: VFC<CompleteModalProps> = ({
     () => (
       <>
         <ErrorBigIcon />
-        <Typography className={clsx(classes.desc, 'l')} variant="body1">
-          {' '}
-          Transaction error !
-        </Typography>
-        <Typography className={clsx(classes.desc, 'l')} variant="body1">
-          {' '}
-          Please come back later
-        </Typography>
+        {
+          errorText ? (
+            <Typography className={clsx(classes.desc, 'l')} variant="body1">
+              {errorText}
+            </Typography>
+          ) : (
+            <>
+              <Typography className={clsx(classes.desc, 'l')} variant="body1">
+                Transaction error!
+              </Typography>
+              <Typography className={clsx(classes.desc, 'l')} variant="body1">
+                Please come back later
+              </Typography>
+            </>
+          )
+        }
+
       </>
     ),
-    [classes.desc],
+    [classes.desc, errorText],
   );
 
   const closeModal = useCallback(() => {
