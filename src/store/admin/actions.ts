@@ -21,10 +21,14 @@ export const setPrice = createAction<TAdminSetPriceAction>(
 export const getPaymentsReceiver = createAction<TAdminGetPaymentsReceiverAction>(
   actionTypes.ADMIN_GET_PAYMENTS_RECEIVER,
 );
+export const getIsMainnetDisabled = createAction(
+  actionTypes.ADMIN_GET_IS_MAINNET_DISABLED,
+);
 
 export default {
   checkIsAdmin,
   setPaymentsReceiver,
   setPrice,
   getPaymentsReceiver,
+  getIsMainnetDisabled,
 };

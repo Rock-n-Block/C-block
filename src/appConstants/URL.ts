@@ -9,6 +9,7 @@ export default {
   getFinishedLostKeyContracts: 'lostkey_finished/',
 
   getRates: 'rates/',
+  getIsMainnetDisabled: 'network_mode/',
 
   accounts: {
     getMetamaskMessage: 'accounts/get_metamask_message/',

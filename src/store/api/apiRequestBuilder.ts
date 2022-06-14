@@ -15,6 +15,7 @@ import {
   IGetFinishedWillContractsReturnType,
   IGetFinishedLostKeyContractsReturnType,
   TGetRatesReturnType,
+  TGetIsMainnetDisabledReturnType,
 } from './apiRequestBuilder.types';
 import {
   IConfirmResetPassword,
@@ -150,6 +151,13 @@ export const baseApi = {
     return ajax<TGetRatesReturnType>({
       method: 'GET',
       url: URL.getRates,
+    });
+  },
+
+  getIsMainnetDisabled() {
+    return ajax<TGetIsMainnetDisabledReturnType>({
+      method: 'GET',
+      url: URL.getIsMainnetDisabled,
     });
   },
 };

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { checkIsAdmin, getPaymentsReceiver } from 'store/admin/actions';
+import { checkIsAdmin, getPaymentsReceiver, getIsMainnetDisabled } from 'store/admin/actions';
 import userSelectors from 'store/user/selectors';
 import uiSelector from 'store/ui/selectors';
 import apiActions from 'store/ui/actions';
@@ -31,6 +31,11 @@ export const useAdminPanel = () => {
       }),
     );
   }, [dispatch, getDefaultProvider]);
+  useEffect(() => {
+    dispatch(
+      getIsMainnetDisabled(),
+    );
+  }, [dispatch]);
 
   const setPaymentsReceiverRequestStatus = useShallowSelector(
     uiSelector.getProp(adminActionTypes.ADMIN_SET_PAYMENTS_RECEIVER),
