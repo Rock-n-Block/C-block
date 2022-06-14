@@ -6,6 +6,7 @@ import userSelectors from 'store/user/selectors';
 import uiSelector from 'store/ui/selectors';
 import apiActions from 'store/ui/actions';
 import adminActionTypes from 'store/admin/actionTypes';
+import adminSelectors from 'store/admin/selectors';
 import { Modals, RequestStatus } from 'types';
 import { closeModal, setActiveModal } from 'store/modals/reducer';
 import { setNotification } from 'utils';
@@ -15,6 +16,9 @@ import { useWeb3Provider } from './walletService';
 export const useAdminPanel = () => {
   const { address } = useShallowSelector(
     userSelectors.getUser,
+  );
+  const { isMainnetDisabled } = useShallowSelector(
+    adminSelectors.selectState,
   );
   const dispatch = useDispatch();
   const { getDefaultProvider } = useWeb3Provider();
@@ -91,10 +95,10 @@ export const useAdminPanel = () => {
     if (setIsMainnetDisabledRequestStatus === RequestStatus.SUCCESS) {
       setNotification({
         type: 'success',
-        message: 'Successfully switched deploy contracts to mainnet settings',
+        message: isMainnetDisabled ? 'Success! Now users are not allowed to deploy contracts to mainnet' : 'Success! Now users can deploy contracts to mainnet',
       });
     }
-  }, [dispatch, setIsMainnetDisabledRequestStatus]);
+  }, [dispatch, isMainnetDisabled, setIsMainnetDisabledRequestStatus]);
 
   // Errors
   useEffect(() => {
