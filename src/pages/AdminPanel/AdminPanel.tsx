@@ -10,11 +10,15 @@ import clsx from 'clsx';
 import userSelectors from 'store/user/selectors';
 import contractFormsSelector from 'store/contractForms/selectors';
 import adminActions from 'store/admin/actions';
+import adminActionTypes from 'store/admin/actionTypes';
 import adminSelector from 'store/admin/selectors';
+import uiSelectors from 'store/ui/selectors';
 
 import { useShallowSelector, useWeb3Provider } from 'hooks';
 
-import { ChangePriceCard, CheckBox, EditableField } from 'components';
+import {
+  ChangePriceCard, CheckBox, EditableField,
+} from 'components';
 import { SuccessIcon } from 'theme/icons';
 import { routes } from 'appConstants';
 
@@ -23,6 +27,8 @@ import {
 } from 'utils';
 import { FactoryContracts, TDeployContractCreationMethodNames } from 'types/utils/contractsHelper';
 import { getContractsMinCreationPrice } from 'store/contractForms/actions';
+import { Modals, RequestStatus } from 'types';
+import { setActiveModal } from 'store/modals/reducer';
 import { contractsMock, getContracts } from './AdminPanel.helpers';
 import { useStyle } from './AdminPanel.styles';
 
@@ -109,18 +115,6 @@ export const AdminPanel = () => {
     );
   }, [defaultPaymentsReceiverAddress]);
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!isAdmin) {
-      navigate(routes.root);
-      setNotification({
-        type: 'error',
-        message: 'You have insufficient permissions to see this page',
-      });
-    }
-    // NOTE: make sure that deps has only isAdmin, due to [isAdmin, navigate] causes to run this effect twice
-  }, [isAdmin]);
-
   useEffect(() => {
     dispatch(
       getContractsMinCreationPrice({
@@ -129,8 +123,46 @@ export const AdminPanel = () => {
     );
   }, [dispatch, getDefaultProvider]);
 
+  const adminCheckIsAdminRequestStatus = useShallowSelector(
+    uiSelectors.getProp(adminActionTypes.ADMIN_CHECK_IS_ADMIN),
+  );
+
+  useEffect(() => {
+    dispatch(setActiveModal({
+      activeModal: Modals.FullscreenLoader,
+      open: true,
+    }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (adminCheckIsAdminRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(setActiveModal({
+        activeModal: Modals.Init,
+        open: false,
+      }));
+    }
+  }, [adminCheckIsAdminRequestStatus, dispatch]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (adminCheckIsAdminRequestStatus !== RequestStatus.SUCCESS &&
+      adminCheckIsAdminRequestStatus !== RequestStatus.ERROR) return;
+    if (!isAdmin) {
+      navigate(routes.root);
+      setNotification({
+        type: 'error',
+        message: 'You have insufficient permissions to see this page',
+      });
+    }
+    // NOTE: make sure that deps has only [isAdmin, adminCheckIsAdminRequestStatus], due to [isAdmin, navigate] causes to run this effect twice
+  }, [adminCheckIsAdminRequestStatus, isAdmin]);
+
   const contractForms = useShallowSelector(contractFormsSelector.getContractForms);
   const classes = useStyle();
+
+  if (adminCheckIsAdminRequestStatus === RequestStatus.REQUEST) {
+    return null;
+  }
 
   return (
     <Container>
