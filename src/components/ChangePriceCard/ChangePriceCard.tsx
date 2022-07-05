@@ -2,6 +2,8 @@ import React, { useMemo, useState, VFC } from 'react';
 
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
+import BigNumber from 'bignumber.js';
+
 import { EditableField } from 'components/EditableField';
 import { contractsHelper, validateOnlyNumbers } from 'utils';
 import { useShallowSelector } from 'hooks';
@@ -23,6 +25,13 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
   const [isChangeMode, setIsChangeMode] = useState(false);
   const handleClick = (newFieldValue: string | number, isDisabled: boolean) => {
     setIsChangeMode(isDisabled);
+
+    if (new BigNumber(newFieldValue).isEqualTo(price)) return;
+    if (!newFieldValue) {
+      setFieldValue(price);
+      return;
+    }
+
     if (onClick) {
       onClick(newFieldValue, isDisabled);
     }
