@@ -19,8 +19,8 @@ export const useStyle = makeStyles((theme: Theme) => createStyles({
   fieldContainer: {
     marginBottom: theme.spacing(6.25),
   },
-  icon: {
-    marginLeft: theme.spacing(3),
+  fieldContainerLargeIconPadding: {
+    marginRight: theme.spacing(3),
   },
   cardsContainer: {
     marginTop: theme.spacing(3.875),

@@ -28,6 +28,7 @@ import {
   TDeployTokenContractCreationMethodNames,
   TDeployWeddingContractCreationMethodNames,
   TDeployWillContractCreationMethodNames,
+  Tokens,
 } from 'types/utils/contractsHelper';
 import { getCeloConfigMetamask, contracts } from 'config';
 
@@ -372,5 +373,13 @@ export const contractsHelper = {
         return accumulator;
       }, {} as IMethodNameSignatureMap);
     return { methodNameSignatureMap, signatureMethodNameMap };
+  },
+
+  getTokensDecimals(tokens: Tokens, isMainnet: boolean) {
+    const mapTokensToDecimals = {
+      celo: getChainNativeCurrency(isMainnet).decimals,
+      cusd: 18,
+    };
+    return mapTokensToDecimals[tokens];
   },
 };

@@ -22,6 +22,7 @@ function* setPriceSaga({
     contractType,
     deployContractName,
     price,
+    tokenName,
   },
 }: ReturnType<typeof setPrice>) {
   try {
@@ -101,10 +102,10 @@ function* setPriceSaga({
       factoryContractData.address,
     );
 
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
+    const tokenAddress = contractsHelper.getContractData(tokenName as ContractsNames, isMainnet).address;
 
     yield call(
-      contract.methods.setPrice(celoAddress, priceArg).send,
+      contract.methods.setPrice(tokenAddress, priceArg).send,
       {
         from: userWalletAddress,
       },

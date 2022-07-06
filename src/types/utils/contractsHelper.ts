@@ -27,3 +27,5 @@ export type TDeployContractCreationMethodNames =
   | TDeployWeddingContractCreationMethodNames;
 
 export type FactoryContracts = 'Tokens' | 'Crowdsales' | 'Lost Key' | 'Last Will' | 'Wedding';
+
+export type Tokens = 'celo' | 'cusd';

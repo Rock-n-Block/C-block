@@ -1,17 +1,19 @@
 import React, {
+  ChangeEvent,
   ReactElement, VFC,
 } from 'react';
 
 import {
-  Box, Button, IconButton, TextField,
+  Box, Button, IconButton, StandardTextFieldProps, TextField,
 } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { Edit } from 'theme/icons';
 import { useStyles } from './EditableField.styles';
 
-export interface EditableFieldProps {
+export interface EditableFieldProps extends Pick<StandardTextFieldProps, 'InputProps'> {
   className?: string;
+  otherClasses?: Partial<{ textField?: string }>;
   icon?: ReactElement;
   value: string | number;
   disabled: boolean;
@@ -20,10 +22,10 @@ export interface EditableFieldProps {
 }
 
 export const EditableField: VFC<EditableFieldProps> = ({
-  className, icon, value, disabled, onClick, onChange,
+  className, value, disabled, InputProps, onClick, onChange, otherClasses,
 }) => {
   const classes = useStyles();
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (onChange) {
       onChange(event.target.value);
     }
@@ -40,10 +42,8 @@ export const EditableField: VFC<EditableFieldProps> = ({
       <TextField
         value={value}
         disabled={disabled}
-        className={classes.textField}
-        InputProps={{
-          endAdornment: icon,
-        }}
+        className={clsx(classes.textField, otherClasses?.textField)}
+        InputProps={InputProps}
         onChange={handleChange}
       />
       {disabled ? (

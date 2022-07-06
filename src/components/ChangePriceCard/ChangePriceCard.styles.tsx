@@ -3,7 +3,6 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import {
   COLOR_ACID_GREEN, COLOR_BLACK_1, COLOR_BLACK_4,
 } from 'theme/colors';
-import { FontWeights } from 'theme/Typography';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -24,19 +23,21 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
   header: {
     marginBottom: theme.spacing(3.625),
   },
-  currency: {
-    color: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_BLACK_1,
-    fontWeight: FontWeights.fontWeightRegular,
-    letterSpacing: '-0.5px',
-    textTransform: 'uppercase',
-    marginRight: theme.spacing(1),
+  fieldsContainer: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
   fieldLabel: {
     color: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_BLACK_1,
     marginBottom: theme.spacing(1),
   },
   field: {
-    '& input': { padding: theme.spacing(1.5) },
-    '& > ': { '&:first-child': { height: theme.spacing(6), width: '45%' } },
+    '& input': { padding: theme.spacing(1.5, 2, 1.5, 0.675) },
+    '& > ': {
+      '&:first-child': {
+        height: theme.spacing(6),
+      },
+    },
   },
 }));

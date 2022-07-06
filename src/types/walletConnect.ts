@@ -6,6 +6,7 @@ export type TChainType = 'mainnet' | 'testnet';
 
 export enum ContractsNames {
   celo = 'celo',
+  cusd = 'cusd',
   tokenMintableFreezable = 'tokenMintableFreezable',
   tokenMintableNonFreezable = 'tokenMintableNonFreezable',
   tokenNonMintableFreezable = 'tokenNonMintableFreezable',

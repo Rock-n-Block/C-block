@@ -90,6 +90,16 @@ export const contracts: IContracts = {
         abi: bep20Abi,
       },
     },
+    cusd: {
+      mainnet: {
+        address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+        abi: bep20Abi,
+      },
+      testnet: {
+        address: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
+        abi: bep20Abi,
+      },
+    },
     tokenMintableFreezable: {
       mainnet: {
         address: '',

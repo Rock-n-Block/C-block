@@ -25,7 +25,7 @@ import { routes } from 'appConstants';
 import {
   contractsHelper, getTokenAmountDisplay, setNotification,
 } from 'utils';
-import { FactoryContracts, TDeployContractCreationMethodNames } from 'types/utils/contractsHelper';
+import { FactoryContracts, TDeployContractCreationMethodNames, Tokens } from 'types/utils/contractsHelper';
 import { getContractsMinCreationPrice } from 'store/contractForms/actions';
 import { Modals, RequestStatus } from 'types';
 import { setActiveModal } from 'store/modals/reducer';
@@ -93,9 +93,12 @@ export const AdminPanel = () => {
     }
   };
 
-  const handleSavePrice = (deployContractName: TDeployContractCreationMethodNames) => (
+  const handleSavePrice = (
+    deployContractName: TDeployContractCreationMethodNames,
+  ) => (
     fieldValue: string | number,
     isEditMode: boolean,
+    tokenName: Tokens,
   ) => {
     // trigger only if saved & not allowed to edit
     if (isEditMode) return;
@@ -105,6 +108,7 @@ export const AdminPanel = () => {
         contractType: selectedContractType,
         deployContractName,
         price: fieldValue.toString(),
+        tokenName,
       }),
     );
   };
@@ -180,7 +184,12 @@ export const AdminPanel = () => {
           </Typography>
           <EditableField
             className={classes.fieldContainer}
-            icon={<SuccessIcon className={classes.icon} />}
+            otherClasses={{
+              textField: classes.fieldContainerLargeIconPadding,
+            }}
+            InputProps={{
+              endAdornment: <SuccessIcon />,
+            }}
             value={paymentsReceiverAddress}
             disabled={!isPaymentsReceiverFieldEdit}
             onClick={handleSavePaymentsReceiverAddress}
@@ -225,7 +234,7 @@ export const AdminPanel = () => {
               >
                 <ChangePriceCard
                   title={contractDisplayName}
-                  price={celoPrice}
+                  prices={prices}
                   onClick={handleSavePrice(contractDeployName)}
                 />
               </Grid>
