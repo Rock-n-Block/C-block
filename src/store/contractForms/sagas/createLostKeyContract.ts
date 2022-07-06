@@ -15,8 +15,12 @@ import { baseApi } from 'store/api/apiRequestBuilder';
 import { approveSaga } from 'store/erc20/sagas/approveSaga';
 import erc20ActionTypes from 'store/erc20/actionTypes';
 import { IMailsMap } from 'store/api/apiRequestBuilder.types';
+import { Tokens } from 'types/utils/contractsHelper';
+import { IconType } from 'components/Preview/Preview.helpers';
 import actionTypes from '../actionTypes';
 import { createLostKeyContract } from '../actions';
+
+const contractType: IconType = 'lostkey';
 
 function* createLostKeyContractSaga({
   type,
@@ -32,8 +36,6 @@ function* createLostKeyContractSaga({
       userSelector.getUser,
     );
 
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
-
     const { address: lostKeyFactoryAddress } = contractsHelper.getContractData(
       ContractsNames.lostKeyFactory,
       isMainnet,
@@ -43,25 +45,29 @@ function* createLostKeyContractSaga({
       provider,
       lostKeyFactoryAddress,
     );
-
-    const celoTokenContract = contractsHelper.getBep20Contract(provider, celoAddress);
-
-    const celoDecimals: string = yield call(
-      celoTokenContract.methods.decimals().call,
+    const selectedBuyTokenName: Tokens = yield select(
+      contractFormsSelector.selectBuyTokenName(contractType),
+    );
+    const selectedBuyTokenAddress = contractsHelper.getContractData(
+      selectedBuyTokenName as ContractsNames, isMainnet,
+    ).address;
+    const selectedBuyTokenContract = contractsHelper.getBep20Contract(provider, selectedBuyTokenAddress);
+    const selectedBuyTokenDecimals: string = yield call(
+      selectedBuyTokenContract.methods.decimals().call,
     );
 
     const allowance = yield call(
-      celoTokenContract.methods.allowance(
+      selectedBuyTokenContract.methods.allowance(
         myAddress,
         lostKeyFactoryAddress,
       ).call,
     );
 
     const price: string = yield call(
-      lostKeyFactoryContract.methods.price(celoAddress).call,
+      lostKeyFactoryContract.methods.price(selectedBuyTokenAddress).call,
     );
     const { rewardAmount } = lostKeyContract;
-    const rewardAmountSerilialized = getTokenAmount(rewardAmount, +celoDecimals, false);
+    const rewardAmountSerilialized = getTokenAmount(rewardAmount, +selectedBuyTokenDecimals, false);
 
     const totalAmountToBeApproved = new BigNumber(price)
       .multipliedBy(2)
@@ -75,7 +81,7 @@ function* createLostKeyContractSaga({
           provider,
           spender: lostKeyFactoryAddress,
           amount: totalAmountToBeApproved,
-          tokenAddress: celoAddress,
+          tokenAddress: selectedBuyTokenAddress,
         },
       });
     }
@@ -94,7 +100,7 @@ function* createLostKeyContractSaga({
 
     const { transactionHash }: TransactionReceipt = yield call(
       lostKeyFactoryContract.methods.deployLostKey(
-        celoAddress,
+        selectedBuyTokenAddress,
         reserveAddresses,
         sharesPercents,
         pingIntervalAsSeconds,

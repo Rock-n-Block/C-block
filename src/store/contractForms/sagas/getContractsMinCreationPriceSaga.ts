@@ -1,11 +1,9 @@
 import {
   all,
-  call,
   put,
   select,
   takeLatest,
 } from '@redux-saga/core/effects';
-import { AxiosResponse } from 'axios';
 import BigNumber from 'bignumber.js';
 
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -16,8 +14,6 @@ import {
 } from 'types';
 import { contractsHelper } from 'utils';
 import { IconType } from 'components/Preview/Preview.helpers';
-import { baseApi } from 'store/api/apiRequestBuilder';
-import { TGetRatesReturnType } from 'store/api/apiRequestBuilder.types';
 import { getContractsMinCreationPrice } from '../actions';
 import actionTypes from '../actionTypes';
 import {
@@ -191,7 +187,6 @@ export function* getContractsMinCreationPriceSaga({
       crowdsaleAllVariantsCreationPrices,
       weddingAllVariantsCreationPrices,
     ] = allVariantsCreationPrices;
-    console.log('QQQ', allVariantsCreationPrices);
     const [
       tokenMinCreationPrice,
       lostkeyMinCreationPrice,
@@ -199,16 +194,6 @@ export function* getContractsMinCreationPriceSaga({
       crowdsaleMinCreationPrice,
       weddingMinCreationPrice,
     ] = minCreationPrices;
-
-    console.log('TEST2', tokenMinCreationPrice, tokenAllVariantsCreationPrices);
-
-    const {
-      data: [{
-        // TODO: разобраться что тут не так и куда кидать данные из эндпоинта
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        rate: celoAsUsd,
-      }],
-    }: AxiosResponse<TGetRatesReturnType> = yield call(baseApi.getRates);
 
     yield put(setAllContractForms({
       tokenContract: {

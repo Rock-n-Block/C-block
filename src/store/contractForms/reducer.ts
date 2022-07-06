@@ -47,6 +47,7 @@ const contractAdditionalFieldsInitialData: ContractAdditionalField = {
       cusd: '',
       celo: '',
     },
+    selectedBuyToken: 'celo',
   },
 };
 
@@ -86,6 +87,7 @@ const crowdsaleContractInitialState: ICrowdsaleContract = {
       cusd: '',
       celo: '',
     },
+    selectedBuyToken: 'celo',
     paymentTokensSymbols: [], // to be fetched after user successfully fills contract fields
     tokenToSaleSymbol: '', // to be fetched after user successfully fills contract fields
   },

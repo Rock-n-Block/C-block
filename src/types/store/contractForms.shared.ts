@@ -1,3 +1,5 @@
+import { Tokens } from 'types/utils/contractsHelper';
+
 export type ContractAdditionalField = {
   additional: {
     contractCreationPrice: string;
@@ -6,5 +8,6 @@ export type ContractAdditionalField = {
       cusd: string;
       celo: string;
     };
+    selectedBuyToken: Tokens;
   };
 };

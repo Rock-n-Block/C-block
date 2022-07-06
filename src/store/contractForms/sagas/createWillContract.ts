@@ -15,8 +15,12 @@ import { baseApi } from 'store/api/apiRequestBuilder';
 import { approveSaga } from 'store/erc20/sagas/approveSaga';
 import erc20ActionTypes from 'store/erc20/actionTypes';
 import { IMailsMap } from 'store/api/apiRequestBuilder.types';
+import { Tokens } from 'types/utils/contractsHelper';
+import { IconType } from 'components/Preview/Preview.helpers';
 import actionTypes from '../actionTypes';
 import { createWillContract } from '../actions';
+
+const contractType: IconType = 'will';
 
 function* createWillContractSaga({
   type,
@@ -28,8 +32,6 @@ function* createWillContractSaga({
     const willContract: IWillContract = yield select(contractFormsSelector.getWillContract);
     const { isMainnet, address: myAddress }: UserState = yield select(userSelector.getUser);
 
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
-
     const { address: lastWillFactoryAddress } = contractsHelper.getContractData(
       ContractsNames.lastWillFactory,
       isMainnet,
@@ -40,27 +42,30 @@ function* createWillContractSaga({
       lastWillFactoryAddress,
     );
 
-    const celoTokenContract = contractsHelper.getBep20Contract(
-      provider,
-      celoAddress,
+    const selectedBuyTokenName: Tokens = yield select(
+      contractFormsSelector.selectBuyTokenName(contractType),
     );
+    const selectedBuyTokenAddress = contractsHelper.getContractData(
+      selectedBuyTokenName as ContractsNames, isMainnet,
+    ).address;
+    const selectedBuyTokenContract = contractsHelper.getBep20Contract(provider, selectedBuyTokenAddress);
 
-    const celoDecimals: string = yield call(
-      celoTokenContract.methods.decimals().call,
+    const selectedBuyTokenDecimals: string = yield call(
+      selectedBuyTokenContract.methods.decimals().call,
     );
 
     const allowance = yield call(
-      celoTokenContract.methods.allowance(
+      selectedBuyTokenContract.methods.allowance(
         myAddress,
         lastWillFactoryAddress,
       ).call,
     );
 
     const price: string = yield call(
-      lastWillFactoryContract.methods.price(celoAddress).call,
+      lastWillFactoryContract.methods.price(selectedBuyTokenAddress).call,
     );
     const { rewardAmount } = willContract;
-    const rewardAmountSerilialized = getTokenAmount(rewardAmount, +celoDecimals, false);
+    const rewardAmountSerilialized = getTokenAmount(rewardAmount, +selectedBuyTokenDecimals, false);
 
     const totalAmountToBeApproved = new BigNumber(price)
       .multipliedBy(2)
@@ -74,7 +79,7 @@ function* createWillContractSaga({
           provider,
           spender: lastWillFactoryAddress,
           amount: totalAmountToBeApproved,
-          tokenAddress: celoAddress,
+          tokenAddress: selectedBuyTokenAddress,
         },
       });
     }
@@ -94,7 +99,7 @@ function* createWillContractSaga({
 
     const { transactionHash }: TransactionReceipt = yield call(
       lastWillFactoryContract.methods.deployLastWill(
-        celoAddress,
+        selectedBuyTokenAddress,
         reserveAddresses,
         sharesPercents,
         pingIntervalAsSeconds,

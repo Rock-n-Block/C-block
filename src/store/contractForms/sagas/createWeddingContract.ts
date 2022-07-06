@@ -15,9 +15,13 @@ import { baseApi } from 'store/api/apiRequestBuilder';
 import { approveSaga } from 'store/erc20/sagas/approveSaga';
 import erc20ActionTypes from 'store/erc20/actionTypes';
 import { IMailsMap } from 'store/api/apiRequestBuilder.types';
+import { Tokens } from 'types/utils/contractsHelper';
+import { IconType } from 'components/Preview/Preview.helpers';
 import actionTypes from '../actionTypes';
 import { createWeddingContract } from '../actions';
 import { getContractCreationPriceSaga } from './getContractCreationPriceSaga';
+
+const contractType: IconType = 'weddingRing';
 
 function* createWeddingContractSaga({
   type,
@@ -33,8 +37,6 @@ function* createWeddingContractSaga({
       userSelector.getUser,
     );
 
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
-
     const { address: weddingFactoryAddress } = contractsHelper.getContractData(
       ContractsNames.weddingFactory,
       isMainnet,
@@ -45,13 +47,19 @@ function* createWeddingContractSaga({
       weddingFactoryAddress,
     );
 
-    const celoTokenContract = contractsHelper.getBep20Contract(
+    const selectedBuyTokenName: Tokens = yield select(
+      contractFormsSelector.selectBuyTokenName(contractType),
+    );
+    const selectedBuyTokenAddress = contractsHelper.getContractData(
+      selectedBuyTokenName as ContractsNames, isMainnet,
+    ).address;
+    const selectedBuyTokenContract = contractsHelper.getBep20Contract(
       provider,
-      celoAddress,
+      selectedBuyTokenAddress,
     );
 
     const allowance = yield call(
-      celoTokenContract.methods.allowance(
+      selectedBuyTokenContract.methods.allowance(
         myAddress,
         weddingFactoryAddress,
       ).call,
@@ -61,7 +69,7 @@ function* createWeddingContractSaga({
       type: actionTypes.GET_CONTRACT_CREATION_PRICE,
       payload: {
         provider,
-        contractType: 'weddingRing',
+        contractType,
       },
     });
 
@@ -76,7 +84,7 @@ function* createWeddingContractSaga({
           provider,
           spender: weddingFactoryAddress,
           amount: totalAmountToBeApproved,
-          tokenAddress: celoAddress,
+          tokenAddress: selectedBuyTokenAddress,
         },
       });
     }
@@ -91,10 +99,9 @@ function* createWeddingContractSaga({
 
     const partnersAddresses: [string, string] = [partnerOneAddress, partnerTwoAddress];
 
-    // as unknown as LostKey
     const { transactionHash }: TransactionReceipt = yield call(
       weddingFactoryContract.methods.deployWedding(
-        celoAddress,
+        selectedBuyTokenAddress,
         ...partnersAddresses,
         convertIntervalAsSeconds(daysForWithdrawalApproval, 'Day'),
         convertIntervalAsSeconds(daysForDivorceApproval, 'Day'),

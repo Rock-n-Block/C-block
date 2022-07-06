@@ -14,9 +14,13 @@ import {
 import { baseApi } from 'store/api/apiRequestBuilder';
 import erc20ActionTypes from 'store/erc20/actionTypes';
 import { approveSaga } from 'store/erc20/sagas/approveSaga';
+import { Tokens } from 'types/utils/contractsHelper';
+import { IconType } from 'components/Preview/Preview.helpers';
 import actionTypes from '../actionTypes';
 import { createTokenContract } from '../actions';
 import { getContractCreationPriceSaga } from './getContractCreationPriceSaga';
+
+const contractType: IconType = 'token';
 
 function* createTokenContractSaga({
   type,
@@ -31,8 +35,6 @@ function* createTokenContractSaga({
     const { isMainnet, address: myAddress }: UserState = yield select(
       userSelector.getUser,
     );
-
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
     const {
       futureMinting,
@@ -52,13 +54,20 @@ function* createTokenContractSaga({
       tokenFactoryContractData.address,
     );
 
-    const celoTokenContract = contractsHelper.getBep20Contract(
+    const selectedBuyTokenName: Tokens = yield select(
+      contractFormsSelector.selectBuyTokenName(contractType),
+    );
+    const selectedBuyTokenAddress = contractsHelper.getContractData(
+      selectedBuyTokenName as ContractsNames, isMainnet,
+    ).address;
+
+    const selectedBuyTokenContract = contractsHelper.getBep20Contract(
       provider,
-      celoAddress,
+      selectedBuyTokenAddress,
     );
 
     const allowance = yield call(
-      celoTokenContract.methods.allowance(
+      selectedBuyTokenContract.methods.allowance(
         myAddress,
         tokenFactoryContractData.address,
       ).call,
@@ -68,7 +77,7 @@ function* createTokenContractSaga({
       type: actionTypes.GET_CONTRACT_CREATION_PRICE,
       payload: {
         provider,
-        contractType: 'token',
+        contractType,
       },
     });
     const totalAmountToBeApproved = new BigNumber(price)
@@ -82,7 +91,7 @@ function* createTokenContractSaga({
           provider,
           spender: tokenFactoryContractData.address,
           amount: +price * 2,
-          tokenAddress: celoAddress,
+          tokenAddress: selectedBuyTokenAddress,
         },
       });
     }
@@ -112,7 +121,7 @@ function* createTokenContractSaga({
 
     const { tokenOwner, tokenName, tokenSymbol } = tokenContract;
     const contractMethodArgs: (string | string[] | number[])[] = [
-      [celoAddress, tokenOwner],
+      [selectedBuyTokenAddress, tokenOwner],
       tokenName,
       tokenSymbol,
       decimals,

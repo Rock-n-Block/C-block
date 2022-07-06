@@ -83,6 +83,7 @@ const transformCreationDataToTokenContract = (
         cusd: '',
         celo: '',
       },
+      selectedBuyToken: 'celo',
     },
   };
 };
@@ -159,6 +160,7 @@ const transformCreationDataToCrowdsaleContract = async (
         cusd: '',
         celo: '',
       },
+      selectedBuyToken: 'celo',
       tokenToSaleSymbol: '',
       paymentTokensSymbols: [
         '',

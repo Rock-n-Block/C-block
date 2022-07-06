@@ -23,8 +23,9 @@ export const useStyles = makeStyles((theme: Theme) => {
       border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
       background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_3,
       borderRadius: theme.spacing(1.5),
-      padding: `${theme.spacing(1)}px ${theme.spacing(2.5)}px`,
+      padding: `${theme.spacing(0.675)}px ${theme.spacing(0)}px`,
       margin: `${theme.spacing(2)}px 0px ${theme.spacing(4)}px 0px`,
+      width: 'unset',
       minWidth: 500,
       [theme.breakpoints.down('xs')]: {
         minWidth: 'unset',
@@ -39,7 +40,7 @@ export const useStyles = makeStyles((theme: Theme) => {
       },
     },
     paymentInfoIcon: {
-      ...flexHelper(),
+      ...flexHelper('flex-start'),
       '& > *': {
         '&:first-child': {
           marginRight: theme.spacing(1.5),
@@ -52,9 +53,14 @@ export const useStyles = makeStyles((theme: Theme) => {
     payButton: {
       marginRight: theme.spacing(3),
     },
-    cancelButton: {
-
-    },
+    cancelButton: {},
     button: {},
+    selectBuyToken: {
+      maxHeight: `${theme.spacing(4)}px`,
+    },
+    selectMenuBuyToken: {
+      padding: theme.spacing(1, 2),
+      borderRadius: '26px !important',
+    },
   });
 });

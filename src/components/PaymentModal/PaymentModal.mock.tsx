@@ -8,5 +8,6 @@ export const paymentModalPropsMocked: PaymentModalProps = {
   onAccept(): void {
     throw new Error('Function not implemented.');
   },
+  selectedBuyToken: 'celo',
   paymentAmount: '32423.4354',
 };

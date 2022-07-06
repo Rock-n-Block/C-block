@@ -1,5 +1,5 @@
 import React, {
-  FC, useState, useCallback, useMemo, useEffect,
+  FC, useState, useCallback, useMemo, useEffect, ChangeEvent,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -12,6 +12,7 @@ import {
   Link,
 } from '@material-ui/core';
 import clsx from 'clsx';
+import BigNumber from 'bignumber.js';
 
 import {
   Copyable,
@@ -24,9 +25,17 @@ import userSelector from 'store/user/selectors';
 import uiSelector from 'store/ui/selectors';
 import apiActions from 'store/ui/actions';
 import { RequestStatus } from 'types';
+import {
+  setWeddingContractForm,
+  setLostKeyContractForm,
+  setWillContractForm,
+  setCrowdsaleContractForm,
+  setTokenContractForm,
+} from 'store/contractForms/reducer';
 import { getContractCreationPrice } from 'store/contractForms/actions';
 import { constructExplorerUrl, contractsHelper, getTokenAmountDisplay } from 'utils';
 import { COMPLETE_MODAL_CONTRACT_CREATION_SUCCESS_TEXT } from 'appConstants';
+import { Tokens } from 'types/utils/contractsHelper';
 import { FullscreenLoader } from '../FullscreenLoader';
 import { CompleteModal } from '../CompleteModal';
 import { DisclaimerModal } from '../DisclaimerModal';
@@ -67,6 +76,7 @@ export const Preview: FC<PreviewProps> = ({
     open: false,
     result: false,
   });
+  const selectedBuyToken = useShallowSelector(contractFormsSelector.selectBuyTokenName(type));
 
   const openDisclaimerModal = useCallback(() => {
     setDisclaimerOpen(true);
@@ -98,6 +108,78 @@ export const Preview: FC<PreviewProps> = ({
     await launchAction();
     closePaymentModal();
   }, [closePaymentModal, launchAction]);
+
+  const contractForms = useShallowSelector(
+    contractFormsSelector.getContractForms,
+  );
+
+  const handleBuyTokenChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      switch (type) {
+        case 'token': {
+          dispatch(setTokenContractForm({
+            ...contractForms.tokenContract,
+            additional: {
+              ...contractForms.tokenContract.additional,
+              selectedBuyToken: event.target.value as Tokens,
+            },
+          }));
+          break;
+        }
+        case 'lostkey': {
+          dispatch(setLostKeyContractForm({
+            ...contractForms.lostKeyContract,
+            additional: {
+              ...contractForms.lostKeyContract.additional,
+              selectedBuyToken: event.target.value as Tokens,
+            },
+          }));
+          break;
+        }
+        case 'will': {
+          dispatch(setWillContractForm({
+            ...contractForms.willContract,
+            additional: {
+              ...contractForms.willContract.additional,
+              selectedBuyToken: event.target.value as Tokens,
+            },
+          }));
+          break;
+        }
+        case 'crowdsale': {
+          dispatch(setCrowdsaleContractForm({
+            ...contractForms.crowdsaleContract,
+            additional: {
+              ...contractForms.crowdsaleContract.additional,
+              selectedBuyToken: event.target.value as Tokens,
+            },
+          }));
+          break;
+        }
+        case 'weddingRing': {
+          dispatch(setWeddingContractForm({
+            ...contractForms.weddingContract,
+            additional: {
+              ...contractForms.weddingContract.additional,
+              selectedBuyToken: event.target.value as Tokens,
+            },
+          }));
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+
+      dispatch(
+        getContractCreationPrice({
+          provider: getDefaultProvider(),
+          contractType: type,
+        }),
+      );
+    },
+    [contractForms.crowdsaleContract, contractForms.lostKeyContract, contractForms.tokenContract, contractForms.weddingContract, contractForms.willContract, dispatch, getDefaultProvider, type],
+  );
 
   const contractActionType = useMemo(() => {
     switch (type) {
@@ -135,13 +217,8 @@ export const Preview: FC<PreviewProps> = ({
     dispatch(apiActions.reset(contractActionType));
   }, [contractActionType, dispatch, resultModalState]);
 
-  const contractForms = useShallowSelector(
-    contractFormsSelector.getContractForms,
-  );
-  const celoDecimals = useMemo(
-    () => contractsHelper.getChainNativeCurrency(isMainnet).decimals,
-    [isMainnet],
-  );
+  const celoDecimals = useMemo(() => contractsHelper.getTokensDecimals('celo', isMainnet), [isMainnet]);
+  const cusdDecimals = useMemo(() => contractsHelper.getTokensDecimals('cusd', isMainnet), [isMainnet]);
   const paymentModalAmount = useMemo(() => {
     let ret: string;
     switch (type) {
@@ -168,15 +245,19 @@ export const Preview: FC<PreviewProps> = ({
       default:
         break;
     }
-    return getTokenAmountDisplay(ret, celoDecimals);
+    return new BigNumber(
+      getTokenAmountDisplay(ret, selectedBuyToken === 'celo' ? celoDecimals : cusdDecimals),
+    ).toFixed(3);
   }, [
     celoDecimals,
+    cusdDecimals,
     contractForms.lostKeyContract.additional.contractCreationPrice,
     contractForms.tokenContract.additional.contractCreationPrice,
     contractForms.willContract.additional.contractCreationPrice,
     contractForms.crowdsaleContract.additional.contractCreationPrice,
     contractForms.weddingContract.additional.contractCreationPrice,
     type,
+    selectedBuyToken,
   ]);
   const contractExplorerUrl = useMemo(() => constructExplorerUrl(address, isMainnet), [address, isMainnet]);
 
@@ -305,9 +386,11 @@ export const Preview: FC<PreviewProps> = ({
       />
       <PaymentModal
         open={isPaymentOpen}
-        onClose={closePaymentModal}
-        onAccept={onPay}
+        selectedBuyToken={selectedBuyToken}
         paymentAmount={paymentModalAmount}
+        onAccept={onPay}
+        onChange={handleBuyTokenChange}
+        onClose={closePaymentModal}
       />
       {isLoader && <FullscreenLoader />}
       <CompleteModal

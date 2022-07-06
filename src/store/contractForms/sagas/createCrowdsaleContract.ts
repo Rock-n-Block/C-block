@@ -15,9 +15,13 @@ import {
 import { baseApi } from 'store/api/apiRequestBuilder';
 import { approveSaga } from 'store/erc20/sagas/approveSaga';
 import erc20ActionTypes from 'store/erc20/actionTypes';
+import { Tokens } from 'types/utils/contractsHelper';
+import { IconType } from 'components/Preview/Preview.helpers';
 import actionTypes from '../actionTypes';
 import { createCrowdsaleContract } from '../actions';
 import { getContractCreationPriceSaga } from './getContractCreationPriceSaga';
+
+const contractType: IconType = 'crowdsale';
 
 function* createCrowdsaleContractSaga({
   type,
@@ -29,11 +33,10 @@ function* createCrowdsaleContractSaga({
     const crowdsaleContract: ICrowdsaleContract = yield select(
       contractFormsSelector.getCrowdsaleContract,
     );
+
     const { isMainnet, address: myAddress }: UserState = yield select(
       userSelector.getUser,
     );
-
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
 
     const {
       softcapTokens,
@@ -54,10 +57,16 @@ function* createCrowdsaleContractSaga({
       crowdsaleFactoryContractData.address,
     );
 
-    const celoTokenContract = contractsHelper.getBep20Contract(provider, celoAddress);
+    const selectedBuyTokenName: Tokens = yield select(
+      contractFormsSelector.selectBuyTokenName(contractType),
+    );
+    const selectedBuyTokenAddress = contractsHelper.getContractData(
+      selectedBuyTokenName as ContractsNames, isMainnet,
+    ).address;
+    const selectedBuyTokenContract = contractsHelper.getBep20Contract(provider, selectedBuyTokenAddress);
 
     const allowance = yield call(
-      celoTokenContract.methods.allowance(
+      selectedBuyTokenContract.methods.allowance(
         myAddress,
         crowdsaleFactoryContractData.address,
       ).call,
@@ -67,7 +76,7 @@ function* createCrowdsaleContractSaga({
       type: actionTypes.GET_CONTRACT_CREATION_PRICE,
       payload: {
         provider,
-        contractType: 'crowdsale',
+        contractType,
       },
     });
 
@@ -82,7 +91,7 @@ function* createCrowdsaleContractSaga({
           provider,
           spender: crowdsaleFactoryContractData.address,
           amount: totalAmountToBeApproved,
-          tokenAddress: celoAddress,
+          tokenAddress: selectedBuyTokenAddress,
         },
       });
     }
@@ -115,7 +124,7 @@ function* createCrowdsaleContractSaga({
     );
 
     const contractMethodArgs: (string | string[] | number)[] = [
-      [celoAddress, crowdsaleOwnerAddress],
+      [selectedBuyTokenAddress, crowdsaleOwnerAddress],
       tokenAddress,
       tokenDecimals,
       convertIntervalAsSeconds(saleDurationAsDays, 'Day').toString(),

@@ -7,6 +7,7 @@ import userSelector from 'store/user/selectors';
 import apiActions from 'store/ui/actions';
 import { ContractFormsState, ContractsNames, UserState } from 'types';
 import { contractsHelper } from 'utils';
+import { Tokens } from 'types/utils/contractsHelper';
 import { getContractCreationPrice } from '../actions';
 import actionTypes from '../actionTypes';
 import {
@@ -32,6 +33,9 @@ export function* getContractCreationPriceSaga({
     );
     const { isMainnet }: UserState = yield select(
       userSelector.getUser,
+    );
+    const tokenName: Tokens = yield select(
+      contractFormsSelector.selectBuyTokenName(contractType),
     );
 
     let contractName: ContractsNames;
@@ -86,10 +90,12 @@ export function* getContractCreationPriceSaga({
       factoryContractData.address,
     );
 
-    const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
+    const tokenAddress = contractsHelper.getContractData(
+      tokenName as ContractsNames, isMainnet,
+    ).address;
 
     const contractCreationPrice: string = yield call(
-      contract.methods.price(celoAddress, ...priceMethodArgs).call,
+      contract.methods.price(tokenAddress, ...priceMethodArgs).call,
     );
 
     switch (contractType) {
