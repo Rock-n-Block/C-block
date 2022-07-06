@@ -12,6 +12,7 @@ import contractFormsSelector from 'store/contractForms/selectors';
 import { ContractFormsState, ContractsNames, UserState } from 'types';
 import { TDeployCrowdsaleContractCreationMethodNames, TDeployTokenContractCreationMethodNames } from 'types/utils/contractsHelper';
 import { contractsHelper, getTokenAmount } from 'utils';
+import { getContractsMinCreationPriceSaga } from 'store/contractForms/sagas/getContractsMinCreationPriceSaga';
 import { setPrice } from '../actions';
 import actionTypes from '../actionTypes';
 
@@ -27,6 +28,16 @@ function* setPriceSaga({
 }: ReturnType<typeof setPrice>) {
   try {
     yield put(apiActions.request(type));
+
+    yield call(
+      getContractsMinCreationPriceSaga,
+      {
+        type: '',
+        payload: {
+          provider,
+        },
+      },
+    );
 
     const contractForms: ContractFormsState = yield select(
       contractFormsSelector.getContractForms,
