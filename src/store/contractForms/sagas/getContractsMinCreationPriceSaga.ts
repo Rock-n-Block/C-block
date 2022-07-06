@@ -20,6 +20,103 @@ import {
   setAllContractForms,
 } from '../reducer';
 
+const contractTypes: IconType[] = [
+  'token',
+  'lostkey',
+  'will',
+  'crowdsale',
+  'weddingRing',
+];
+
+// eslint-disable-next-line consistent-return, array-callback-return
+const generatePriceCallsForAllContractsVariants = () => contractTypes.map((contractType) => {
+  if (contractType === 'token') {
+    // 8 - is a count of all variations of token contracts (futureMinting, freezable, burnable)
+    const allVariations = [
+      [0, 0, 0],
+      [0, 0, 1],
+      [0, 1, 0],
+      [0, 1, 1],
+      [1, 0, 0],
+      [1, 0, 1],
+      [1, 1, 0],
+      [1, 1, 1],
+    ];
+
+    // tokenNonMintableNonFreezable 0/1
+    // tokenNonMintableFreezable 0/1
+    // tokenMintableNonFreezable 0/1
+    // tokenMintableFreezable 0/1
+    // eslint-disable-next-line arrow-body-style
+    return allVariations.map(([futureMinting, freezable, burnable]) => {
+      return {
+        contractName: contractsHelper.getTokenFactoryContractName(
+          !!futureMinting, !!freezable,
+        ) as ContractsNames,
+        priceMethodArgs: [burnable],
+      };
+    });
+  }
+
+  if (contractType === 'crowdsale') {
+    // 8 - is a count of all variations of crowdsale contracts
+    // [ isSoftcappable, isBonusable, isDatesChangeable ]
+    const allVariations = [
+      [0, 0, 0],
+      [0, 0, 1],
+      [0, 1, 0],
+      [0, 1, 1],
+      [1, 0, 0],
+      [1, 0, 1],
+      [1, 1, 0],
+      [1, 1, 1],
+    ];
+      // crowdsaleNonSoftCappableNonBonusable 0/1
+      // crowdsaleNonSoftCappableBonusable 0/1
+      // crowdsaleSoftCappableNonBonusable 0/1
+      // crowdsaleSoftCappableBonusable 0/1
+      // eslint-disable-next-line arrow-body-style
+    return allVariations.map(([isSoftcappable, isBonusable, isDatesChangeable]) => {
+      return {
+        contractName: contractsHelper.getCrowdsaleFactoryContractName(
+          !!isSoftcappable, !!isBonusable,
+        ) as ContractsNames,
+        priceMethodArgs: [isDatesChangeable],
+      };
+    });
+  }
+
+  if (contractType === 'lostkey') {
+    return [
+      {
+        contractName: ContractsNames.lostKeyFactory,
+        priceMethodArgs: [],
+      },
+    ];
+  }
+
+  if (contractType === 'will') {
+    return [
+      {
+        contractName: ContractsNames.lastWillFactory,
+        priceMethodArgs: [],
+      },
+    ];
+  }
+
+  if (contractType === 'weddingRing') {
+    return [
+      {
+        contractName: ContractsNames.weddingFactory,
+        priceMethodArgs: [],
+      },
+    ];
+  }
+});
+
+/**
+ * Retrieve min contract creation price & allVariantsCreationPrices (price for each contract).
+ */
 export function* getContractsMinCreationPriceSaga({
   type,
   payload: {
@@ -33,99 +130,8 @@ export function* getContractsMinCreationPriceSaga({
       userSelector.getUser,
     );
 
-    const contractTypes: IconType[] = [
-      'token',
-      'lostkey',
-      'will',
-      'crowdsale',
-      'weddingRing',
-    ];
-
     // eslint-disable-next-line consistent-return, array-callback-return
-    const pricesCalls = contractTypes.map((contractType) => {
-      if (contractType === 'token') {
-        // 8 - is a count of all variations of token contracts (futureMinting, freezable, burnable)
-        const allVariations = [
-          [0, 0, 0],
-          [0, 0, 1],
-          [0, 1, 0],
-          [0, 1, 1],
-          [1, 0, 0],
-          [1, 0, 1],
-          [1, 1, 0],
-          [1, 1, 1],
-        ];
-
-        // tokenNonMintableNonFreezable 0/1
-        // tokenNonMintableFreezable 0/1
-        // tokenMintableNonFreezable 0/1
-        // tokenMintableFreezable 0/1
-        // eslint-disable-next-line arrow-body-style
-        return allVariations.map(([futureMinting, freezable, burnable]) => {
-          return {
-            contractName: contractsHelper.getTokenFactoryContractName(
-              !!futureMinting, !!freezable,
-            ) as ContractsNames,
-            priceMethodArgs: [burnable],
-          };
-        });
-      }
-
-      if (contractType === 'crowdsale') {
-        // 8 - is a count of all variations of crowdsale contracts
-        // [ isSoftcappable, isBonusable, isDatesChangeable ]
-        const allVariations = [
-          [0, 0, 0],
-          [0, 0, 1],
-          [0, 1, 0],
-          [0, 1, 1],
-          [1, 0, 0],
-          [1, 0, 1],
-          [1, 1, 0],
-          [1, 1, 1],
-        ];
-        // crowdsaleNonSoftCappableNonBonusable 0/1
-        // crowdsaleNonSoftCappableBonusable 0/1
-        // crowdsaleSoftCappableNonBonusable 0/1
-        // crowdsaleSoftCappableBonusable 0/1
-        // eslint-disable-next-line arrow-body-style
-        return allVariations.map(([isSoftcappable, isBonusable, isDatesChangeable]) => {
-          return {
-            contractName: contractsHelper.getCrowdsaleFactoryContractName(
-              !!isSoftcappable, !!isBonusable,
-            ) as ContractsNames,
-            priceMethodArgs: [isDatesChangeable],
-          };
-        });
-      }
-
-      if (contractType === 'lostkey') {
-        return [
-          {
-            contractName: ContractsNames.lostKeyFactory,
-            priceMethodArgs: [],
-          },
-        ];
-      }
-
-      if (contractType === 'will') {
-        return [
-          {
-            contractName: ContractsNames.lastWillFactory,
-            priceMethodArgs: [],
-          },
-        ];
-      }
-
-      if (contractType === 'weddingRing') {
-        return [
-          {
-            contractName: ContractsNames.weddingFactory,
-            priceMethodArgs: [],
-          },
-        ];
-      }
-    }).map((calls) => Promise.allSettled(
+    const pricesCalls = generatePriceCallsForAllContractsVariants().map((calls) => Promise.allSettled(
       calls.map(({ contractName, priceMethodArgs }) => {
         const factoryContractData = contractsHelper.getContractData(
           contractName,
