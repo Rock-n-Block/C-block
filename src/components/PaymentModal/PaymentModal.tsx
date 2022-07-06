@@ -63,13 +63,13 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
         </Grid>
       </Grid>
       <Grid className={classes.paymentInfo} container>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <Box className={classes.paymentInfoIcon}>
             <FileTextIcon />
             <Typography variant="body1">Create contract</Typography>
           </Box>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <Typography variant="body1">{paymentAmount}</Typography>
         </Grid>
         <Grid item xs={3}>
