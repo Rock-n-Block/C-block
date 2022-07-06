@@ -102,7 +102,7 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
             onClick={handleClick('celo')}
             onChange={handleChange('celo')}
           />
-          <Typography variant="body2" className={classes.fieldLabel}>${celoAsUsdPrice}</Typography>
+          <Typography variant="body2" className={clsx(classes.fieldLabel, classes.fieldLabelFooter)}>${celoAsUsdPrice}</Typography>
         </Grid>
         <Grid
           item

@@ -32,6 +32,10 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     color: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_BLACK_1,
     marginBottom: theme.spacing(1),
   },
+  fieldLabelFooter: {
+    paddingTop: theme.spacing(0.675),
+    fontSize: '12px',
+  },
   field: {
     '& input': { padding: theme.spacing(1.5, 2, 1.5, 0.675) },
     '& > ': {
