@@ -1,9 +1,9 @@
 export type ContractAdditionalField = {
   additional: {
     contractCreationPrice: string;
-    allVariantsCreationPrices: string[];
+    allVariantsCreationPrices: string[][];
     minCreationPrice: {
-      usd: string;
+      cusd: string;
       celo: string;
     };
   };

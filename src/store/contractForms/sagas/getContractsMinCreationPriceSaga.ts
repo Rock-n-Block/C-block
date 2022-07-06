@@ -141,20 +141,24 @@ export function* getContractsMinCreationPriceSaga({
         );
 
         const celoAddress = contractsHelper.getContractData(ContractsNames.celo, isMainnet).address;
+        const cusdAddress = contractsHelper.getContractData(ContractsNames.cusd, isMainnet).address;
 
-        const contractCreationPrice: Promise<string> = contract.methods.price(celoAddress, ...priceMethodArgs).call();
-        return contractCreationPrice;
+        const contractCreationPrices = Promise.all([
+          contract.methods.price(celoAddress, ...priceMethodArgs).call(),
+          contract.methods.price(cusdAddress, ...priceMethodArgs).call(),
+        ] as Promise<string>[]);
+        return contractCreationPrices;
       }),
     ));
 
-    const awaitedPriceCalls: PromiseSettledResult<string>[][] = yield all(pricesCalls);
+    const awaitedPriceCalls: PromiseSettledResult<string[]>[][] = yield all(pricesCalls);
 
     // save fetched creation prices for each contract
     const allVariantsCreationPrices = awaitedPriceCalls.map(
       (settledPriceCalls) => settledPriceCalls.map(
         (result) => {
           if (result.status === 'fulfilled') return result.value;
-          return '';
+          return [];
         },
       ),
     );
@@ -163,7 +167,17 @@ export function* getContractsMinCreationPriceSaga({
       const filteredPrices = settledPriceCalls
         .filter(({ status }) => status === 'fulfilled')
         .map((item) => item.status === 'fulfilled' && item.value);
-      const minCreationPrice = BigNumber.min(...filteredPrices).toFixed();
+      const celoFilteredPrices = [];
+      const cusdFilteredPrices = [];
+      filteredPrices.forEach(([celoPrice, cusdPrice]) => {
+        celoFilteredPrices.push(celoPrice);
+        cusdFilteredPrices.push(cusdPrice);
+      });
+      const minCreationPrice = {
+        celo: BigNumber.min(...celoFilteredPrices).toFixed(),
+        cusd: BigNumber.min(...cusdFilteredPrices).toFixed(),
+      };
+
       return minCreationPrice;
     });
 
@@ -177,6 +191,7 @@ export function* getContractsMinCreationPriceSaga({
       crowdsaleAllVariantsCreationPrices,
       weddingAllVariantsCreationPrices,
     ] = allVariantsCreationPrices;
+    console.log('QQQ', allVariantsCreationPrices);
     const [
       tokenMinCreationPrice,
       lostkeyMinCreationPrice,
@@ -185,8 +200,12 @@ export function* getContractsMinCreationPriceSaga({
       weddingMinCreationPrice,
     ] = minCreationPrices;
 
+    console.log('TEST2', tokenMinCreationPrice, tokenAllVariantsCreationPrices);
+
     const {
       data: [{
+        // TODO: разобраться что тут не так и куда кидать данные из эндпоинта
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         rate: celoAsUsd,
       }],
     }: AxiosResponse<TGetRatesReturnType> = yield call(baseApi.getRates);
@@ -198,8 +217,7 @@ export function* getContractsMinCreationPriceSaga({
           ...contractForms.tokenContract.additional,
           allVariantsCreationPrices: tokenAllVariantsCreationPrices,
           minCreationPrice: {
-            celo: tokenMinCreationPrice,
-            usd: new BigNumber(tokenMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
+            ...tokenMinCreationPrice,
           },
         },
       },
@@ -209,8 +227,7 @@ export function* getContractsMinCreationPriceSaga({
           ...contractForms.crowdsaleContract.additional,
           allVariantsCreationPrices: crowdsaleAllVariantsCreationPrices,
           minCreationPrice: {
-            celo: crowdsaleMinCreationPrice,
-            usd: new BigNumber(crowdsaleMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
+            ...crowdsaleMinCreationPrice,
           },
         },
       },
@@ -220,8 +237,7 @@ export function* getContractsMinCreationPriceSaga({
           ...contractForms.lostKeyContract.additional,
           allVariantsCreationPrices: lostkeyAllVariantsCreationPrices,
           minCreationPrice: {
-            celo: lostkeyMinCreationPrice,
-            usd: new BigNumber(lostkeyMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
+            ...lostkeyMinCreationPrice,
           },
         },
       },
@@ -231,8 +247,7 @@ export function* getContractsMinCreationPriceSaga({
           ...contractForms.willContract.additional,
           allVariantsCreationPrices: willAllVariantsCreationPrices,
           minCreationPrice: {
-            celo: willMinCreationPrice,
-            usd: new BigNumber(willMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
+            ...willMinCreationPrice,
           },
         },
       },
@@ -242,8 +257,7 @@ export function* getContractsMinCreationPriceSaga({
           ...contractForms.weddingContract.additional,
           allVariantsCreationPrices: weddingAllVariantsCreationPrices,
           minCreationPrice: {
-            celo: weddingMinCreationPrice,
-            usd: new BigNumber(weddingMinCreationPrice).multipliedBy(celoAsUsd).toFixed(),
+            ...weddingMinCreationPrice,
           },
         },
       },

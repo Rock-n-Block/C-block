@@ -44,7 +44,7 @@ const contractAdditionalFieldsInitialData: ContractAdditionalField = {
     contractCreationPrice: '',
     allVariantsCreationPrices: [],
     minCreationPrice: {
-      usd: '',
+      cusd: '',
       celo: '',
     },
   },
@@ -83,7 +83,7 @@ const crowdsaleContractInitialState: ICrowdsaleContract = {
     contractCreationPrice: '',
     allVariantsCreationPrices: [],
     minCreationPrice: {
-      usd: '',
+      cusd: '',
       celo: '',
     },
     paymentTokensSymbols: [], // to be fetched after user successfully fills contract fields

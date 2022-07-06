@@ -32,10 +32,8 @@ export const CreateContract = () => {
     contractFormsSelector.getContractForms,
   );
   const { isMainnet } = useShallowSelector(userSelector.getUser);
-  const celoDecimals = useMemo(
-    () => contractsHelper.getChainNativeCurrency(isMainnet).decimals,
-    [isMainnet],
-  );
+  const celoDecimals = useMemo(() => contractsHelper.getTokensDecimals('celo', isMainnet), [isMainnet]);
+  const cusdDecimals = useMemo(() => contractsHelper.getTokensDecimals('cusd', isMainnet), [isMainnet]);
   const { getDefaultProvider } = useWeb3Provider();
 
   const minCreationPrices = useMemo(
@@ -50,16 +48,17 @@ export const CreateContract = () => {
         getTokenAmountDisplay(unformattedPrice.celo, celoDecimals),
       ).toFixed(3);
       const usd = new BigNumber(
-        getTokenAmountDisplay(unformattedPrice.usd, celoDecimals),
+        getTokenAmountDisplay(unformattedPrice.cusd, cusdDecimals),
       ).toFixed(2);
       return {
         celo: formatNumber(+celo, ['en-US']),
-        usd: formatNumber(+usd, ['en-US']),
+        cusd: formatNumber(+usd, ['en-US']),
         isFixPrice: index > 1,
       };
     }),
     [
       celoDecimals,
+      cusdDecimals,
       contractForms.crowdsaleContract.additional.minCreationPrice,
       contractForms.lostKeyContract.additional.minCreationPrice,
       contractForms.tokenContract.additional.minCreationPrice,

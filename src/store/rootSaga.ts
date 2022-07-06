@@ -5,6 +5,7 @@ import myContractsSaga from 'store/myContracts/sagas';
 import earnSaga from 'store/earn/sagas';
 import userSaga from 'store/user/sagas';
 import adminSaga from 'store/admin/sagas';
+import ratesSaga from 'store/rates/sagas';
 
 export default function* rootSaga() {
   yield fork(createContractsSaga);
@@ -13,4 +14,5 @@ export default function* rootSaga() {
   yield fork(earnSaga);
   yield fork(userSaga);
   yield fork(adminSaga);
+  yield fork(ratesSaga);
 }

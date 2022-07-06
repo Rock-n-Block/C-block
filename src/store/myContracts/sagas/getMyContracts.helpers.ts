@@ -80,7 +80,7 @@ const transformCreationDataToTokenContract = (
       contractCreationPrice: '',
       allVariantsCreationPrices: [],
       minCreationPrice: {
-        usd: '',
+        cusd: '',
         celo: '',
       },
     },
@@ -156,7 +156,7 @@ const transformCreationDataToCrowdsaleContract = async (
       contractCreationPrice: '',
       allVariantsCreationPrices: [],
       minCreationPrice: {
-        usd: '',
+        cusd: '',
         celo: '',
       },
       tokenToSaleSymbol: '',
@@ -213,7 +213,7 @@ export const getContractCreationData = (
           contractCreationPrice: '',
           allVariantsCreationPrices: [],
           minCreationPrice: {
-            usd: '',
+            cusd: '',
             celo: '',
           },
         },
@@ -253,7 +253,7 @@ export const getContractCreationData = (
           contractCreationPrice: '',
           allVariantsCreationPrices: [],
           minCreationPrice: {
-            usd: '',
+            cusd: '',
             celo: '',
           },
         },
@@ -289,7 +289,7 @@ export const getContractCreationData = (
           contractCreationPrice: '',
           allVariantsCreationPrices: [],
           minCreationPrice: {
-            usd: '',
+            cusd: '',
             celo: '',
           },
         },

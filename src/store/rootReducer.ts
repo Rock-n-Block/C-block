@@ -5,6 +5,7 @@ import myContracts from './myContracts/reducer';
 import earn from './earn/reducer';
 import modals from './modals/reducer';
 import admin from './admin/reducer';
+import rates from './rates/reducer';
 
 export default {
   ui,
@@ -14,4 +15,5 @@ export default {
   earn,
   modals,
   admin,
+  rates,
 };

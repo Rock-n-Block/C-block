@@ -3,10 +3,7 @@ import React, { ReactElement, VFC } from 'react';
 import { Box, IconButton, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { celoIcon } from 'assets/img';
-import {
-  UsdIcon,
-} from 'theme/icons';
+import { celoIcon, cUsdTokenIcon } from 'assets/img';
 import { useStyles } from './ContractCard.styles';
 
 export interface ContractCardProps {
@@ -15,7 +12,7 @@ export interface ContractCardProps {
   text?: string;
   minCreationPrice?: {
     celo: string;
-    usd: string;
+    cusd: string;
     isFixPrice: boolean;
   };
   className?: string;
@@ -35,13 +32,25 @@ export const ContractCard: VFC<ContractCardProps> = ({
         {text}
       </Box>
       <Box className={classes.chip}>
-        <img className={classes.celoIcon} src={celoIcon} alt="celo token" height="24" width="24" />
+        <img
+          className={classes.celoIcon}
+          src={celoIcon}
+          alt="celo token"
+          height="24"
+          width="24"
+        />
         {
           !minCreationPrice.isFixPrice && <Typography className={classes.chipHelperText}>from</Typography>
         }
-        <Typography className={classes.chipAmount}>{minCreationPrice.celo} /</Typography>
-        <UsdIcon className={classes.usdIcon} />
-        <Typography className={classes.chipAmount}>{minCreationPrice.usd}</Typography>
+        <Typography className={classes.chipAmount}>{minCreationPrice.celo}</Typography>
+        <img
+          className={classes.celoIcon}
+          src={cUsdTokenIcon}
+          alt="cusd token"
+          height="24"
+          width="24"
+        />
+        <Typography className={classes.chipAmount}>{minCreationPrice.cusd}</Typography>
       </Box>
     </Box>
   );

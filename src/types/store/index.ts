@@ -10,6 +10,7 @@ export * from './mintTokenModal';
 export * from './earn';
 export * from './confirmActiveStatusModal';
 export * from './admin';
+export * from './rates';
 
 export * from './actions';
 export * from './erc20.actions';
