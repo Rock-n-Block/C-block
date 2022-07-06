@@ -134,6 +134,18 @@ export const useAuthHandlers = () => {
     }
   }, [dispatch, resetPasswordRequestStatus]);
   useEffect(() => {
+    if (resetPasswordRequestStatus === RequestStatus.SUCCESS) {
+      setTimeout(() => {
+        dispatch(setActiveModal({
+          modals: {
+            [Modals.Login]: true,
+            [Modals.PasswordResetByEmail]: false,
+          },
+        }));
+      }, 1000);
+    }
+  }, [dispatch, resetPasswordRequestStatus]);
+  useEffect(() => {
     if (confirmResetPasswordRequestStatus === RequestStatus.SUCCESS ||
       confirmResetPasswordRequestStatus === RequestStatus.ERROR) {
       dispatch(closeModal(Modals.PasswordResetPending));
