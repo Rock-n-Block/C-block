@@ -83,11 +83,11 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
       <Grid className={classes.fieldsContainer} container>
         <Grid
           item
-          xs={8}
-          sm={6}
-          md={6}
-          lg={5}
-          xl={4}
+          xs={12}
+          sm={10}
+          md={12}
+          lg={6}
+          xl={6}
         >
           <EditableField
             className={classes.field}
@@ -113,11 +113,11 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
         </Grid>
         <Grid
           item
-          xs={8}
-          sm={6}
-          md={6}
-          lg={5}
-          xl={4}
+          xs={12}
+          sm={10}
+          md={12}
+          lg={6}
+          xl={6}
         >
           <EditableField
             className={classes.field}
