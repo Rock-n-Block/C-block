@@ -6,7 +6,6 @@ import {
   Button, Container, Grid, Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import BigNumber from 'bignumber.js';
 
 import userSelectors from 'store/user/selectors';
 import contractFormsSelector from 'store/contractForms/selectors';
@@ -244,7 +243,6 @@ export const AdminPanel = () => {
               celo: celoPrice,
               cusd: cusdPrice,
             };
-            const celoAsUsdPrice = new BigNumber(celoPrice).multipliedBy(rates['celo']).toFixed(2);
             return (
               <Grid
                 key={contractDeployName}
@@ -258,7 +256,7 @@ export const AdminPanel = () => {
                 <ChangePriceCard
                   title={contractDisplayName}
                   prices={prices}
-                  celoAsUsdPrice={celoAsUsdPrice}
+                  usdPerCelo={rates['celo']}
                   onClick={handleSavePrice(contractDeployName)}
                 />
               </Grid>

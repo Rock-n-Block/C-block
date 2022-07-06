@@ -16,13 +16,13 @@ import { useStyles } from './ChangePriceCard.styles';
 export interface ChangePriceCardProps {
   title: string;
   prices: Record<Tokens, string>;
-  celoAsUsdPrice: string;
+  usdPerCelo: string; // 1 CELO = X USD
   onClick?: (fieldValue: string | number, isDisabled: boolean, tokenName: Tokens) => void;
   className?: string;
 }
 
 export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
-  title, className, prices, celoAsUsdPrice, onClick,
+  title, className, prices, usdPerCelo, onClick,
 }) => {
   const classes = useStyles();
   const [state, setState] = useState({
@@ -74,6 +74,8 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
     }
   };
 
+  const celoAsUsdPrice = new BigNumber(state.celo.fieldValue || '0').multipliedBy(usdPerCelo).toFixed(2);
+
   return (
     <Box className={clsx(classes.root, className)}>
       <Typography className={classes.header} variant="body1">{title}</Typography>
@@ -102,7 +104,12 @@ export const ChangePriceCard: VFC<ChangePriceCardProps> = ({
             onClick={handleClick('celo')}
             onChange={handleChange('celo')}
           />
-          <Typography variant="body2" className={clsx(classes.fieldLabel, classes.fieldLabelFooter)}>${celoAsUsdPrice}</Typography>
+          <Typography
+            variant="body2"
+            className={clsx(classes.fieldLabel, classes.fieldLabelFooter)}
+          >
+            ${celoAsUsdPrice}
+          </Typography>
         </Grid>
         <Grid
           item

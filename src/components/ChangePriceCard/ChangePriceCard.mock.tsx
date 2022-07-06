@@ -8,5 +8,5 @@ export const changePriceCardPropsMocked: ChangePriceCardProps = {
     cusd: '100',
     celo: '23',
   },
-  celoAsUsdPrice: '0.94',
+  usdPerCelo: '0.94',
 };
