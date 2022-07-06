@@ -32,6 +32,9 @@ export const ContractCard: VFC<ContractCardProps> = ({
         {text}
       </Box>
       <Box className={classes.chip}>
+        {
+          !minCreationPrice.isFixPrice && <Typography className={classes.chipHelperText}>from</Typography>
+        }
         <img
           className={classes.celoIcon}
           src={celoIcon}
@@ -39,9 +42,6 @@ export const ContractCard: VFC<ContractCardProps> = ({
           height="24"
           width="24"
         />
-        {
-          !minCreationPrice.isFixPrice && <Typography className={classes.chipHelperText}>from</Typography>
-        }
         <Typography className={classes.chipAmount}>{minCreationPrice.celo}</Typography>
         <img
           className={classes.celoIcon}

@@ -76,7 +76,7 @@ export const useStyles = makeStyles((theme: Theme) => createStyles({
     lineHeight: '20px',
     letterSpacing: '-0.5px',
     '&:not(:last-child)': {
-      marginRight: theme.spacing(0.625),
+      marginRight: theme.spacing(1),
     },
   },
 }));
