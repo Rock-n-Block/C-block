@@ -16,6 +16,7 @@ export * from './Earn';
 
 export * from './Terms';
 export * from './Privacy';
+export * from './Profile';
 
 export * from './ResetPassword';
 export * from './ConfirmEmail';
