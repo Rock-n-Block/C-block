@@ -1,62 +1,58 @@
-import React, { VFC } from 'react';
+import React, { useMemo, VFC } from 'react';
 
-import { Box, Button, IconButton } from '@material-ui/core';
+import {
+  Box, Button,
+  TextField,
+} from '@material-ui/core';
 import clsx from 'clsx';
 
-import { AddressButton } from 'components';
-import { useBreakpoints, useShallowSelector, WindowFormat } from 'hooks';
+import {
+  useShallowSelector,
+} from 'hooks';
 import userSelectors from 'store/user/selectors';
-import { LogOutIcon } from 'theme/icons';
 
+import { UserNameBox } from 'components';
 import { useStyles } from './ConnectButton.styles';
 
 export interface ConnectButtonProps {
-  address: string;
   handleModal: () => void;
   className?: string;
 }
 
-export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, className }) => {
+export const ConnectButton: VFC<ConnectButtonProps> = ({ handleModal, className }) => {
   const classes = useStyles();
   const isAuthenticated = useShallowSelector(
     userSelectors.selectIsAuthenticated,
   );
-  const windowFormat = useBreakpoints({
-    desktop: WindowFormat.desktop,
-    mobile: WindowFormat.mobile,
-    tablet: WindowFormat.tablet,
-    wideDesktop: WindowFormat.wideDesktop,
-  });
+
+  const hasUserImage = useMemo(() => Math.random() > 0.5, []);
+  const userImage = hasUserImage ? 'https://avatars.mds.yandex.net/get-verba/1540742/2a0000017fb1a555a52eb01b8ddb17bac37f/realty_main' : '';
 
   return (
     <Box className={clsx(classes.root, className)}>
       {isAuthenticated ? (
         <Box className={classes.connectButtonWrapper}>
-          <AddressButton
-            className={classes.addressButton}
+          <TextField
+            className={classes.profileContainer}
+            value="Text filled"
+            variant="outlined"
+            select
+            fullWidth
+            SelectProps={{
+              MenuProps: {
+                style: {
+                  pointerEvents: 'none',
+                  opacity: 0,
+                },
+              },
+              renderValue: () => (
+                <UserNameBox name="" imageUrl={userImage} hasDefaultRole={hasUserImage} />
+              ),
+            }}
             onClick={handleModal}
-            address={address}
-          />
-          {
-            windowFormat === WindowFormat.mobile ? (
-              <IconButton
-                className={classes.signOutIconButton}
-                color="primary"
-                onClick={handleModal}
-              >
-                <LogOutIcon />
-              </IconButton>
-            ) : (
-              <Button
-                variant="outlined"
-                size="medium"
-                className={clsx(classes.connectButton, classes.signOutButton)}
-                onClick={handleModal}
-              >
-                Sign out
-              </Button>
-            )
-          }
+          >
+            <Box style={{ display: 'none' }}>&nbsp;</Box>
+          </TextField>
         </Box>
       ) : (
         <Box className={classes.connectButtonWrapper}>

@@ -46,5 +46,11 @@ export const useStyles = makeStyles((theme: Theme) => {
     connectButtonWrapper: {
       ...flexHelper('flex-end'),
     },
+    profileContainer: {
+      maxWidth: 'unset',
+      [formatMedia.BREAKPOINT_TABLET]: {
+        maxWidth: 228,
+      },
+    },
   });
 });

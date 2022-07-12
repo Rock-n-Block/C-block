@@ -1,9 +1,23 @@
 import { makeStyles } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
-import { COLOR_ACID_GREEN, COLOR_BLACK_3 } from 'theme/colors';
+import {
+  COLOR_ACID_GREEN, COLOR_BLACK_3, COLOR_BLACK_4,
+} from 'theme/colors';
+import { FontWeights } from 'theme/Typography';
 import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
+  addressBtn: {
+    marginBottom: theme.spacing(5.675),
+  },
+  btnItem: {
+    color: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_ACID_GREEN,
+    fontWeight: FontWeights.fontWeightSemiBold,
+    lineHeight: '24px',
+    '&:not(:last-child)': {
+      marginBottom: theme.spacing(1),
+    },
+  },
   connectBtn: {
     display: 'flex',
     alignItems: 'center',

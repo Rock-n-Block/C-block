@@ -1,5 +1,5 @@
 import React, {
-  useCallback, VFC,
+  useCallback, useMemo, useState, VFC,
 } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -7,7 +7,7 @@ import { Typography, Box, Button } from '@material-ui/core';
 
 import { useWalletConnectorContext } from 'services';
 import { WalletProviders } from 'types';
-import { Modal } from 'components';
+import { AddressButton, Modal, UserNameBox } from 'components';
 import {
   useShallowSelector,
 } from 'hooks';
@@ -16,6 +16,8 @@ import userSelectors from 'store/user/selectors';
 import { clearAllForms } from 'store/contractForms/reducer';
 import authActions from 'store/user/auth/actions';
 import { setNotification } from 'utils';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import { routes } from 'appConstants';
 import { connectDropdownModalData } from './ConnectDropdownModal.helpers';
 import { useStyles } from './ConnectDropdownModal.styles';
 
@@ -27,18 +29,20 @@ export interface ConnectDropdownModalProps {
 }
 
 export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   address, open, onClose, className,
 }) => {
   const dispatch = useDispatch();
 
-  const isAuthenticated = useShallowSelector(
-    userSelectors.selectIsAuthenticated,
-  );
+  const [isConfirmDisconnect, setIsConfirmDisconnect] = useState(false);
+
+  const handleCloseModal = useCallback(() => {
+    setIsConfirmDisconnect(false);
+    onClose();
+  }, [onClose]);
 
   const { connect } = useWalletConnectorContext();
   const disconnect = useCallback(async () => {
-    onClose();
+    handleCloseModal();
     dispatch(disconnectWalletState());
     dispatch(authActions.logout());
     dispatch(clearAllForms());
@@ -46,25 +50,60 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
       type: 'success',
       message: 'Successfully logged out.',
     });
-  }, [dispatch, onClose]);
+  }, [dispatch, handleCloseModal]);
 
   const handleConnect = useCallback((walletProvider: WalletProviders) => {
-    onClose();
+    handleCloseModal();
     connect(walletProvider);
-  }, [onClose]);
+  }, [handleCloseModal]);
+
+  const isAuthenticated = useShallowSelector(
+    userSelectors.selectIsAuthenticated,
+  );
 
   const classes = useStyles();
 
+  const confirmDisconnectJsx = useMemo(() => (
+    <Box className={classes.disconnectBox}>
+      <Typography variant="h3" className={classes.disconnectTitle}>
+        Disable your wallet?
+      </Typography>
+      <Button variant="outlined" size="large" onClick={disconnect}>Disconnect</Button>
+    </Box>
+  ), [classes.disconnectBox, classes.disconnectTitle, disconnect]);
+
   return (
-    <Modal open={open} onClose={onClose} title={isAuthenticated ? ' ' : 'Connect Wallet'} className={className}>
-      {isAuthenticated ? (
-        <Box className={classes.disconnectBox}>
-          <Typography variant="h3" className={classes.disconnectTitle}>
-            Disable your wallet?
-          </Typography>
-          <Button variant="outlined" size="large" onClick={disconnect}>Disconnect</Button>
-        </Box>
-      ) : (
+    <Modal
+      open={open}
+      onClose={handleCloseModal}
+      title={isAuthenticated ? (
+        <UserNameBox name="" imageUrl="" hasDefaultRole />
+      ) : 'Connect Wallet'}
+      className={className}
+    >
+      {isAuthenticated && isConfirmDisconnect && confirmDisconnectJsx}
+      {isAuthenticated && !isConfirmDisconnect && (
+      <>
+        <AddressButton className={classes.addressBtn} address={address} onClick={() => {}} />
+        <Button
+          className={classes.btnItem}
+          variant="outlined"
+          size="medium"
+          href={routes.profile.root}
+        >
+          <PersonOutlineIcon /> Profile
+        </Button>
+        <Button
+          className={classes.btnItem}
+          variant="outlined"
+          size="medium"
+          onClick={() => setIsConfirmDisconnect(true)}
+        >
+          Log out
+        </Button>
+      </>
+      )}
+      {!isAuthenticated && (
         <>
           {connectDropdownModalData.map(({ label, connectorWallet, walletIcon }) => (
             <Box

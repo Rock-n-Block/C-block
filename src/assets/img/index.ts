@@ -5,3 +5,4 @@ export { default as metamaskIcon } from './metamask.svg';
 export { default as walletConnectIcon } from './walletConnect.svg';
 export { default as GreenGlobImg } from './greenGlob.svg';
 export * from './tokens';
+export { default as UserNoImageImg } from './user-no-image.png';

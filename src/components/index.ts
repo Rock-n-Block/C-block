@@ -28,3 +28,4 @@ export * from './BurnTokenModal';
 export * from './MintTokenModal';
 export * from './ChangePriceCard';
 export * from './EditableField';
+export * from './UserNameBox';
