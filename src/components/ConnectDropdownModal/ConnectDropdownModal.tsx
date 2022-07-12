@@ -15,8 +15,8 @@ import { disconnectWalletState } from 'store/user/reducer';
 import userSelectors from 'store/user/selectors';
 import { clearAllForms } from 'store/contractForms/reducer';
 import authActions from 'store/user/auth/actions';
+import { PersonIcon } from 'theme/icons';
 import { setNotification } from 'utils';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import { routes } from 'appConstants';
 import { connectDropdownModalData } from './ConnectDropdownModal.helpers';
 import { useStyles } from './ConnectDropdownModal.styles';
@@ -91,7 +91,7 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
           size="medium"
           href={routes.profile.root}
         >
-          <PersonOutlineIcon /> Profile
+          <PersonIcon /> Profile
         </Button>
         <Button
           className={classes.btnItem}
