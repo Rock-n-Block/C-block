@@ -23,7 +23,7 @@ import {
 } from 'formik';
 import clsx from 'clsx';
 
-import { CloseCircleIcon, PlusIcon } from 'theme/icons';
+import { CloseCircleIcon, ImageIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
 import { useAuthConnectWallet, useShallowSelector } from 'hooks';
@@ -47,7 +47,6 @@ import {
 import { useStyles } from './Profile.styles';
 
 export const Profile = memo(() => {
-  const classes = useStyles();
   const dispatch = useDispatch();
 
   // const handleClearTokenState = useCallback(() => {
@@ -62,6 +61,9 @@ export const Profile = memo(() => {
       },
     }));
   };
+
+  const hasUploadedLogoImage = Date.now() % 2 === 0;
+  const classes = useStyles({ hasUploadedLogoImage });
 
   // const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
   // sm={6}
@@ -429,7 +431,14 @@ export const Profile = memo(() => {
                       // onChange={onFileReadyToBeUploaded}
                       // {...props}
                     />
-                    <img src="https://avatars.mds.yandex.net/get-verba/1540742/2a0000017fb1a555a52eb01b8ddb17bac37f/realty_main" alt="logo" />
+                    {
+                      hasUploadedLogoImage ? (
+                        <img src="https://avatars.mds.yandex.net/get-verba/1540742/2a0000017fb1a555a52eb01b8ddb17bac37f/realty_main" alt="logo" />
+                      ) : (
+                        <ImageIcon />
+                      )
+                    }
+
                   </Box>
                   <Button
                     // className={classes.textButton}

@@ -6,14 +6,10 @@ import {
   COLOR_BLACK_3, COLOR_GREY_2, COLOR_GREY_3, COLOR_GREY_6,
 } from 'theme/colors';
 import { getFormatMedia } from 'theme/utils';
+import { flexHelper } from 'utils';
 
-export const useStyles = makeStyles((theme: Theme) => {
+export const useStyles = makeStyles<Theme, { hasUploadedLogoImage: boolean }>((theme: Theme) => {
   const formatMedia = getFormatMedia(theme);
-  // const unsetOrder = {
-  //   [theme.breakpoints.down('sm')]: {
-  //     order: 'unset',
-  //   },
-  // };
   return createStyles({
     form: {
       width: '90%',
@@ -70,12 +66,20 @@ export const useStyles = makeStyles((theme: Theme) => {
     },
     imageUploaderContainer: {
       position: 'relative',
+      ...flexHelper(),
+      transform: 'scale(1) rotate(0deg)',
       width: 160,
       height: 160,
-      outline: 'dashed',
+      outlineStyle: ({ hasUploadedLogoImage }) => (hasUploadedLogoImage ? 'solid' : 'dashed'),
       outlineWidth: 2,
       outlineColor: COLOR_ACID_GREEN,
       borderRadius: '50%',
+      background: COLOR_BLACK_3,
+      transition: theme.transitions.create('transform'),
+
+      '&:active': {
+        transform: 'scale(0.95)',
+      },
 
       '& img': {
         width: 160,
@@ -100,50 +104,14 @@ export const useStyles = makeStyles((theme: Theme) => {
       position: 'absolute',
       top: '44%',
       left: 26,
-      // transform: 'translateY(-50%)',
-      // width: 90,
       height: 24,
       background: 'transparent',
     },
     selectRoot: {
-      // padding: '0 0 0 16px',
       padding: 0,
       '&:focus': {
         background: 'transparent',
       },
     },
-
-    // helperText: {
-    //   marginTop: theme.spacing(4),
-    // },
-
-    // address: {
-    //   order: 1,
-    //   ...unsetOrder,
-    // },
-
-    // name: {
-    //   order: 3,
-    //   ...unsetOrder,
-    // },
-
-    // amount: {
-    //   order: 5,
-    //   ...unsetOrder,
-    // },
-
-    // isFrozen: {
-    //   order: 2,
-    //   ...unsetOrder,
-    // },
-
-    // frozenUntilDate: {
-    //   order: 4,
-    //   ...unsetOrder,
-    // },
-
-    // newCount: {
-    //   color: theme.palette.type === 'dark' ? COLOR_GREY_1 : COLOR_BLACK_1,
-    // },
   });
 });
