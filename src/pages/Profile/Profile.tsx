@@ -154,6 +154,20 @@ export const Profile = memo(() => {
                       )
                     }
                   />
+                  <Button
+                    style={{
+                      marginTop: 4,
+                    }}
+                    variant="text"
+                  >
+                    <Typography
+                      className={classes.link}
+                      variant="body2"
+                      align="center"
+                    >
+                      Change password
+                    </Typography>
+                  </Button>
                 </Grid>
 
                 <Grid

@@ -77,7 +77,7 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
       open={open}
       onClose={handleCloseModal}
       title={isAuthenticated ? (
-        <UserNameBox name="" imageUrl="" hasDefaultRole />
+        <UserNameBox name="" address={address} imageUrl="" hasDefaultRole />
       ) : 'Connect Wallet'}
       className={className}
     >

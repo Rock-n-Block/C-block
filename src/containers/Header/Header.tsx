@@ -23,7 +23,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
   const classes = useStyles();
 
   const {
-    isLight, isMainnet,
+    address: userWalletAddress, isLight, isMainnet,
   } = useShallowSelector(userSelector.getUser);
 
   const [paths, title, icon] = useNavigation();
@@ -46,6 +46,7 @@ export const Header: VFC<HeaderProps> = ({ openSidebar, className }) => {
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <ConnectButton
             handleModal={handleConnect}
+            address={userWalletAddress}
           />
         </Grid>
       </Grid>

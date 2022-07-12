@@ -15,11 +15,12 @@ import { UserNameBox } from 'components';
 import { useStyles } from './ConnectButton.styles';
 
 export interface ConnectButtonProps {
+  address: string;
   handleModal: () => void;
   className?: string;
 }
 
-export const ConnectButton: VFC<ConnectButtonProps> = ({ handleModal, className }) => {
+export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, className }) => {
   const classes = useStyles();
   const isAuthenticated = useShallowSelector(
     userSelectors.selectIsAuthenticated,
@@ -47,7 +48,7 @@ export const ConnectButton: VFC<ConnectButtonProps> = ({ handleModal, className 
                 },
               },
               renderValue: () => (
-                <UserNameBox name="" imageUrl={userImage} hasDefaultRole={hasUserImage} />
+                <UserNameBox name="" address={address} imageUrl={userImage} hasDefaultRole={hasUserImage} />
               ),
             }}
             onClick={handleModal}
