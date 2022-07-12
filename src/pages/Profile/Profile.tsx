@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-array-index-key */
 import React, {
-  Fragment, memo, useCallback,
+  ChangeEvent,
+  Fragment, memo, useCallback, useEffect, useRef, useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -62,8 +63,28 @@ export const Profile = memo(() => {
     }));
   };
 
-  const hasUploadedLogoImage = Date.now() % 2 === 0;
-  const classes = useStyles({ hasUploadedLogoImage });
+  const fileInputRef = useRef<HTMLInputElement>();
+  const [fileUrl, setFileUrl] = useState('');
+  const dropAreaRef = useRef<HTMLElement>();
+  const onFileUpload = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | DragEvent,
+  ) => {
+    // @ts-expect-error wrong type for Input type='file'
+    const [newFile]: [File] = e.target.files;
+    setFileUrl(URL.createObjectURL(newFile));
+  };
+
+  useEffect(() => {
+    const dropArea = dropAreaRef.current;
+    if (dropArea) {
+      dropArea.addEventListener('drop', onFileUpload, false);
+    }
+    return () => {
+      dropArea.removeEventListener('drop', onFileUpload, false);
+    };
+  }, []);
+
+  const classes = useStyles({ hasUploadedLogoImage: !!fileUrl });
 
   // const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
   // sm={6}
@@ -421,19 +442,22 @@ export const Profile = memo(() => {
               </Grid>
               <Box className={classes.imageUploader}>
                 <Box className={classes.imageUploaderWrapper}>
-                  <Box className={classes.imageUploaderContainer}>
+                  {/* @ts-expect-error Mui4 mis-typing @see https://github.com/mui/material-ui/issues/17010 */}
+                  <Box ref={dropAreaRef} className={classes.imageUploaderContainer}>
                     <input
+                      ref={fileInputRef}
                       className={classes.nativeFileInput}
                       type="file"
+                      accept="image/*"
                       // inputProps={{
                       //   accept: fileExtensions,
                       // }}
-                      // onChange={onFileReadyToBeUploaded}
+                      onChange={onFileUpload}
                       // {...props}
                     />
                     {
-                      hasUploadedLogoImage ? (
-                        <img src="https://avatars.mds.yandex.net/get-verba/1540742/2a0000017fb1a555a52eb01b8ddb17bac37f/realty_main" alt="logo" />
+                      fileUrl ? (
+                        <img src={fileUrl} alt="preview avatar" />
                       ) : (
                         <ImageIcon />
                       )
@@ -443,6 +467,9 @@ export const Profile = memo(() => {
                   <Button
                     // className={classes.textButton}
                     variant="text"
+                    onClick={() => {
+                      fileInputRef?.current?.click();
+                    }}
                   >
                     <Typography
                       className={classes.link}
