@@ -18,18 +18,18 @@ import {
   initFormValues,
   validationSchema,
   IFormValues,
-} from './PasswordResetModal.helpers';
-import { useStyles } from './PasswordResetModal.styles';
+} from './PasswordChangeModal.helpers';
+import { useStyles } from './PasswordChangeModal.styles';
 
-export interface PasswordResetModalProps {
+export interface PasswordChangeModalProps {
   className?: string;
   open?: boolean;
   setIsModalOpen?: (isOpen: boolean) => void;
   onClose?: () => void;
-  onAccept?: (password: IFormValues['password']) => void;
+  onAccept?: (oldPassword: IFormValues['oldPassword'], newPassword: IFormValues['password']) => void;
 }
 
-export const PasswordResetModal: VFC<PasswordResetModalProps> = ({
+export const PasswordChangeModal: VFC<PasswordChangeModalProps> = ({
   open,
   setIsModalOpen,
   onClose,
@@ -46,9 +46,9 @@ export const PasswordResetModal: VFC<PasswordResetModalProps> = ({
     }
   }, [onClose, setIsModalOpen]);
 
-  const handleAccept = useCallback((password: IFormValues['password']) => {
+  const handleAccept = useCallback<PasswordChangeModalProps['onAccept']>((oldPassword, newPassword) => {
     if (onAccept) {
-      onAccept(password);
+      onAccept(oldPassword, newPassword);
     }
   }, [onAccept]);
 
@@ -95,7 +95,7 @@ export const PasswordResetModal: VFC<PasswordResetModalProps> = ({
           values,
           { resetForm }: FormikHelpers<IFormValues>,
         ) => {
-          handleAccept(values.password);
+          handleAccept(values.oldPassword, values.password);
           resetForm();
         }}
       >
@@ -105,6 +105,41 @@ export const PasswordResetModal: VFC<PasswordResetModalProps> = ({
         }) => {
           return (
             <Form translate={undefined}>
+              <Box className={classes.inputContainer}>
+                <Field
+                  key="oldPassword"
+                  id="oldPassword"
+                  name="oldPassword"
+                  render={
+                      ({ form: { isSubmitting } }: FieldProps) => (
+                        <TextField
+                          type={values.showOldPassword ? 'text' : 'password'}
+                          name="oldPassword"
+                          label="Old password"
+                          InputProps={{
+                            endAdornment: (
+                              <IconButton
+                                className={classes.showPasswordBtn}
+                                color="secondary"
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword('showOldPassword')}
+                                onMouseDown={handleMouseDownPassword}
+                              >
+                                {values.showOldPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            ),
+                          }}
+                          disabled={isSubmitting}
+                          value={values.oldPassword}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          helperText={(errors.oldPassword && touched.oldPassword) && errors.oldPassword}
+                          error={errors.oldPassword && touched.oldPassword}
+                        />
+                      )
+                    }
+                />
+              </Box>
               <Box className={classes.inputContainer}>
                 <Field
                   key="password"

@@ -36,6 +36,8 @@ import {
 // import { RemovableContractsFormBlock } from 'components';
 import { routes } from 'appConstants';
 // import { isEqual } from 'lodash';
+import { setActiveModal } from 'store/modals/reducer';
+import { Modals } from 'types';
 import {
   tokenContractFormConfigStart,
   validationSchema,
@@ -53,6 +55,13 @@ export const Profile = memo(() => {
   // }, [dispatch]);
 
   const { tokenContract } = useShallowSelector(contractFormsSelector.getContractForms);
+  const handleChangePassword = () => {
+    dispatch(setActiveModal({
+      modals: {
+        [Modals.PasswordChange]: true,
+      },
+    }));
+  };
 
   // const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
   // sm={6}
@@ -159,6 +168,7 @@ export const Profile = memo(() => {
                       marginTop: 4,
                     }}
                     variant="text"
+                    onClick={handleChangePassword}
                   >
                     <Typography
                       className={classes.link}

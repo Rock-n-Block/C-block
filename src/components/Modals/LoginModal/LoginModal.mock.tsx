@@ -1,6 +1,6 @@
-import { Props } from './LoginModal';
+import { LoginModalProps } from './LoginModal';
 
-export const mockedProps: Props = {
+export const mockedProps: LoginModalProps = {
   open: true,
   mode: 'login',
   onClose(): void {

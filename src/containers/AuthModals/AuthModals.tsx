@@ -7,6 +7,7 @@ import { useAuthHandlers, useShallowSelector } from 'hooks';
 import { Modals } from 'types';
 import { PasswordResetByEmailModal } from 'components/Modals/PasswordResetByEmailModal';
 import { PasswordResetModal } from 'components/Modals/PasswordResetModal';
+import { PasswordChangeModal } from 'components/Modals/PasswordChangeModal';
 import { LoginModal } from 'components/Modals/LoginModal';
 import { closeAllModals, closeModal, setActiveModal } from 'store/modals/reducer';
 import { LoadingModal } from 'components/Modals';
@@ -24,6 +25,12 @@ export const AuthModalsContainer: FC = () => {
   const isPasswordResetPending = useShallowSelector(
     modalsSelector.selectModalState(Modals.PasswordResetPending),
   );
+  const isPasswordChangeOpen = useShallowSelector(
+    modalsSelector.selectModalState(Modals.PasswordChange),
+  );
+  const isPasswordChangePending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.PasswordChangePending),
+  );
   const isLoginOpen = useShallowSelector(
     modalsSelector.selectModalState(Modals.Login),
   );
@@ -40,6 +47,7 @@ export const AuthModalsContainer: FC = () => {
   const {
     handlePasswordResetByEmail,
     handlePasswordReset,
+    handlePasswordChange,
     handleSignUp,
     handleLogin,
   } = useAuthHandlers();
@@ -54,6 +62,9 @@ export const AuthModalsContainer: FC = () => {
   }, [dispatch]);
   const handleClosePasswordResetModal = useCallback(() => {
     dispatch(closeModal(Modals.PasswordReset));
+  }, [dispatch]);
+  const handleClosePasswordChangeModal = useCallback(() => {
+    dispatch(closeModal(Modals.PasswordChange));
   }, [dispatch]);
   const handleCloseLoginModal = useCallback(() => {
     dispatch(closeModal(Modals.Login));
@@ -82,6 +93,12 @@ export const AuthModalsContainer: FC = () => {
         onClose={handleClosePasswordResetModal}
       />
       <LoadingModal open={isPasswordResetPending} text="Setting new password" />
+      <PasswordChangeModal
+        open={isPasswordChangeOpen}
+        onAccept={handlePasswordChange}
+        onClose={handleClosePasswordChangeModal}
+      />
+      <LoadingModal open={isPasswordChangePending} text="Setting new password" />
       <LoginModal
         open={isLoginOpen}
         mode="login"

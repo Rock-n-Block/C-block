@@ -19,6 +19,7 @@ import {
 import {
   IConfirmResetPassword,
   IResetPassword,
+  IChangePassword,
   IResetPasswordReturnType,
   IGetMetamaskMessageReturnType,
   IRegisterAccount,
@@ -77,6 +78,14 @@ export const authApi = {
       method: 'post',
       url: URL.accounts.confirmResetPassword,
       data,
+    });
+  },
+  changePassword(data: IChangePassword) {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.changePassword,
+      data,
+      withCredentials: true,
     });
   },
   getRegistrationAccountData() {

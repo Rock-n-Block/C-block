@@ -1,6 +1,6 @@
-import { Props } from './PasswordResetByEmailModal';
+import { PasswordResetByEmailModalProps } from './PasswordResetByEmailModal';
 
-export const mockedProps: Props = {
+export const mockedProps: PasswordResetByEmailModalProps = {
   open: true,
   onClose(): void {
     throw new Error('Function not implemented.');

@@ -13,6 +13,12 @@ export interface IConfirmResetPassword {
   token: string;
 }
 
+export interface IChangePassword {
+  old_password: string;
+  new_password1: string;
+  new_password2: string;
+}
+
 export type IGetMetamaskMessageReturnType = string;
 export interface IRegisterAccount {
   email: string;

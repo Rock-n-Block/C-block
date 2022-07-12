@@ -20,7 +20,7 @@ import {
 } from './PasswordResetByEmailModal.helpers';
 import { useStyles } from './PasswordResetByEmailModal.styles';
 
-export interface Props {
+export interface PasswordResetByEmailModalProps {
   className?: string;
   open?: boolean;
   setIsModalOpen?: (isOpen: boolean) => void;
@@ -28,7 +28,7 @@ export interface Props {
   onSubmit?: (email: IFormValues['email']) => void;
 }
 
-export const PasswordResetByEmailModal: VFC<Props> = ({
+export const PasswordResetByEmailModal: VFC<PasswordResetByEmailModalProps> = ({
   open,
   setIsModalOpen,
   onClose,

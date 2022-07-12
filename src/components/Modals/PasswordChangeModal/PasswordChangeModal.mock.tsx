@@ -1,6 +1,6 @@
-import { PasswordResetModalProps } from './PasswordResetModal';
+import { PasswordChangeModalProps } from './PasswordChangeModal';
 
-export const mockedProps: PasswordResetModalProps = {
+export const mockedProps: PasswordChangeModalProps = {
   open: true,
   onClose(): void {
     throw new Error('Function not implemented.');

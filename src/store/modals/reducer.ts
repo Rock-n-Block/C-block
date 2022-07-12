@@ -17,6 +17,8 @@ export const initialState: ModalsState = {
     PasswordResetPending: false,
     PasswordResetByEmail: false,
     PasswordResetByEmailPending: false,
+    PasswordChange: false,
+    PasswordChangePending: false,
     SignUp: false,
     SignUpPending: false,
     Login: false,

@@ -3,6 +3,8 @@ export enum Modals {
   PasswordResetByEmailPending = 'PasswordResetByEmailPending',
   PasswordReset = 'PasswordReset',
   PasswordResetPending = 'PasswordResetPending',
+  PasswordChange = 'PasswordChange',
+  PasswordChangePending = 'PasswordChangePending',
   SignUp = 'SignUp',
   SignUpPending = 'SignUpPending',
   Login = 'Login',

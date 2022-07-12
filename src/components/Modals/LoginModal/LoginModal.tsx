@@ -32,7 +32,7 @@ import {
 } from './ LoginModal.helpers';
 import { useStyles } from './LoginModal.styles';
 
-export interface Props {
+export interface LoginModalProps {
   className?: string;
   open?: boolean;
   mode: 'login' | 'signup';
@@ -42,7 +42,7 @@ export interface Props {
   onSignUp?: (data: Pick<ISignUpFormValues, 'email' | 'password' |'confirmPassword'>) => void;
 }
 
-export const LoginModal: VFC<Props> = ({
+export const LoginModal: VFC<LoginModalProps> = ({
   open,
   mode,
   setIsModalOpen,

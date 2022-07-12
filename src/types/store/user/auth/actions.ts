@@ -9,6 +9,10 @@ export type TConfirmResetPasswordAction = {
   uid: string;
   token: string;
 };
+export type TChangePasswordAction = {
+  oldPassword: string;
+  password: string;
+};
 export type TRegisterAccountAction = TProvider & {
   email: string;
   password1: string;

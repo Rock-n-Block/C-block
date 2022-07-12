@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import {
-  resetPassword, confirmResetPassword, registerAccount, login, checkAuthentication,
+  resetPassword, confirmResetPassword, changePassword, registerAccount, login, checkAuthentication,
 } from 'store/user/auth/actions';
 import authActionTypes from 'store/user/auth/actionTypes';
 import uiSelector from 'store/ui/selectors';
@@ -46,6 +46,16 @@ export const useAuthHandlers = () => {
       }),
     );
   }, [dispatch, location.pathname]);
+
+  const handlePasswordChange = useCallback((oldPassword: string, password: string) => {
+    dispatch(
+      changePassword({
+        oldPassword,
+        password,
+      }),
+    );
+  }, [dispatch]);
+
   const { getDefaultProvider } = useWeb3Provider();
   const handleSignUp = useCallback(
     ({
@@ -83,6 +93,9 @@ export const useAuthHandlers = () => {
   const confirmResetPasswordRequestStatus = useShallowSelector(
     uiSelector.getProp(authActionTypes.USER_AUTH_CONFIRM_RESET_PASSWORD),
   );
+  const changePasswordRequestStatus = useShallowSelector(
+    uiSelector.getProp(authActionTypes.USER_AUTH_CHANGE_PASSWORD),
+  );
   const registerAccountRequestStatus = useShallowSelector(
     uiSelector.getProp(authActionTypes.USER_AUTH_REGISTER_ACCOUNT),
   );
@@ -90,6 +103,7 @@ export const useAuthHandlers = () => {
     uiSelector.getProp(authActionTypes.USER_AUTH_LOGIN),
   );
 
+  // Handle modals pending state
   useEffect(() => {
     if (resetPasswordRequestStatus === RequestStatus.REQUEST) {
       dispatch(setActiveModal({
@@ -109,6 +123,15 @@ export const useAuthHandlers = () => {
     }
   }, [dispatch, confirmResetPasswordRequestStatus]);
   useEffect(() => {
+    if (changePasswordRequestStatus === RequestStatus.REQUEST) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.PasswordChangePending]: true,
+        },
+      }));
+    }
+  }, [dispatch, changePasswordRequestStatus]);
+  useEffect(() => {
     if (registerAccountRequestStatus === RequestStatus.REQUEST) {
       dispatch(setActiveModal({
         modals: {
@@ -127,6 +150,7 @@ export const useAuthHandlers = () => {
     }
   }, [dispatch, loginRequestStatus]);
 
+  // Handle modals' result state
   useEffect(() => {
     if (resetPasswordRequestStatus === RequestStatus.SUCCESS ||
       resetPasswordRequestStatus === RequestStatus.ERROR) {
@@ -167,6 +191,21 @@ export const useAuthHandlers = () => {
     }
   }, [dispatch, confirmResetPasswordRequestStatus]);
   useEffect(() => {
+    if (changePasswordRequestStatus === RequestStatus.SUCCESS ||
+      changePasswordRequestStatus === RequestStatus.ERROR) {
+      dispatch(closeModal(Modals.PasswordChangePending));
+    }
+  }, [dispatch, changePasswordRequestStatus]);
+  useEffect(() => {
+    if (changePasswordRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.PasswordChange]: false,
+        },
+      }));
+    }
+  }, [dispatch, changePasswordRequestStatus]);
+  useEffect(() => {
     if (registerAccountRequestStatus === RequestStatus.SUCCESS ||
       registerAccountRequestStatus === RequestStatus.ERROR) {
       dispatch(closeModal(Modals.SignUpPending));
@@ -200,6 +239,7 @@ export const useAuthHandlers = () => {
   return {
     handlePasswordResetByEmail,
     handlePasswordReset,
+    handlePasswordChange,
     handleSignUp,
     handleLogin,
   };
