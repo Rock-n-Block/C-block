@@ -504,17 +504,6 @@ export const Profile = memo(() => {
               >
                 Save
               </Button>
-              <Button
-                size="large"
-                type="reset"
-                color="secondary"
-                variant="outlined"
-                className={classes.resetButton}
-                // onClick={handleClearTokenState}
-                // disabled={isEqual(values, initialState.tokenContract)}
-              >
-                Cancel
-              </Button>
             </Box>
           </Form>
         )}
