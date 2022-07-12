@@ -39,6 +39,7 @@ export const ConnectButton: VFC<ConnectButtonProps> = ({ handleModal, className 
             select
             fullWidth
             SelectProps={{
+              open: false,
               MenuProps: {
                 style: {
                   pointerEvents: 'none',
