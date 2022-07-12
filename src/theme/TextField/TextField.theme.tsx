@@ -25,6 +25,7 @@ export const getMuiInputBase = (theme: Theme): Overrides['MuiInputBase'] => ({
   input: {
     borderRadius: theme.spacing(1.5),
     '&:-webkit-autofill': {
+      boxShadow: '0 0 0 1000px transparent inset !important',
       transitionDelay: '9999s',
       transitionProperty: 'background-color, color',
     },
