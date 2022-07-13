@@ -14,6 +14,8 @@ export type UserProfile = {
   building: string;
   zipcode: string;
   avatarUrl: string;
+
+  isCompletedProfile: boolean;
 };
 
 export type UserState = {

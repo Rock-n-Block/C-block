@@ -1,3 +1,5 @@
+import { TNullable } from 'types';
+
 export interface IResetPassword {
   email: string;
 }
@@ -33,3 +35,18 @@ export interface ILogin {
   email: string;
   password: string;
 }
+
+export type TGetUserDataReturnType = {
+  email: string;
+  owner_address: string;
+  avatar: TNullable<string>;
+  city: TNullable<string>;
+  company: TNullable<string>;
+  country: string;
+  is_completed_profile: boolean;
+  name: TNullable<string>;
+  office: TNullable<string>;
+  phone_number: TNullable<string>;
+  street: TNullable<string>;
+  zipcode: TNullable<string>;
+};

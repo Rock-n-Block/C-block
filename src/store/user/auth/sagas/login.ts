@@ -12,7 +12,7 @@ import userSelector from 'store/user/selectors';
 import { setUser } from 'store/user/reducer';
 import { login } from '../actions';
 import actionTypes from '../actionTypes';
-import { getRegistrationAccountDataSaga } from './getRegistrationAccountData';
+import { getUserDataSaga } from './getUserData';
 
 function* loginSaga({
   type,
@@ -37,7 +37,7 @@ function* loginSaga({
     }));
 
     yield call(
-      getRegistrationAccountDataSaga,
+      getUserDataSaga,
       {
         type: '',
         payload: {

@@ -88,10 +88,10 @@ export const authApi = {
       withCredentials: true,
     });
   },
-  getRegistrationAccountData() {
+  getUserData() {
     return ajax({
       method: 'get',
-      url: URL.accounts.getRegistrationAccountData,
+      url: URL.accounts.getUserData,
       withCredentials: true,
     });
   },

@@ -9,7 +9,7 @@ import apiActions from 'store/ui/actions';
 import userSelector from 'store/user/selectors';
 import { checkAuthentication, logout } from '../actions';
 import actionTypes from '../actionTypes';
-import { getRegistrationAccountDataSaga } from './getRegistrationAccountData';
+import { getUserDataSaga } from './getUserData';
 
 function* checkAuthenticationSaga({
   type,
@@ -18,7 +18,7 @@ function* checkAuthenticationSaga({
     yield put(apiActions.request(type));
 
     yield call(
-      getRegistrationAccountDataSaga,
+      getUserDataSaga,
       {
         type: '',
         payload: {

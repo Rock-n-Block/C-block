@@ -24,6 +24,8 @@ const initialState: UserState = {
     building: '',
     zipcode: '',
     avatarUrl: '',
+
+    isCompletedProfile: false,
   },
 
   permissions: {
