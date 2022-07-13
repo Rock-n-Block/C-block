@@ -28,5 +28,9 @@ export type UserState = {
 
   profile: UserProfile;
 
-  isAdmin: boolean;
+  permissions: {
+    setFeeReceiver: boolean;
+    setPrice: boolean;
+    superAdmin: boolean;
+  };
 };

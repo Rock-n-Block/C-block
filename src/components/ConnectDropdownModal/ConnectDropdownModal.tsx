@@ -14,7 +14,7 @@ import { AddressButton, Modal, UserNameBox } from 'components';
 import {
   useShallowSelector,
 } from 'hooks';
-import { disconnectWalletState } from 'store/user/reducer';
+import * as userReducer from 'store/user/reducer';
 import userSelectors from 'store/user/selectors';
 import { clearAllForms } from 'store/contractForms/reducer';
 import authActions from 'store/user/auth/actions';
@@ -46,7 +46,8 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
   const { connect } = useWalletConnectorContext();
   const disconnect = useCallback(async () => {
     handleCloseModal();
-    dispatch(disconnectWalletState());
+    dispatch(userReducer.disconnectWalletState());
+    dispatch(userReducer.resetState());
     dispatch(authActions.logout());
     dispatch(clearAllForms());
     setNotification({
@@ -60,6 +61,8 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
     connect(walletProvider);
   }, [handleCloseModal]);
 
+  const { userName, avatarUrl } = useShallowSelector(userSelectors.selectProfile);
+  const isAdmin = useShallowSelector(userSelectors.selectIsAdmin);
   const isAuthenticated = useShallowSelector(
     userSelectors.selectIsAuthenticated,
   );
@@ -80,7 +83,7 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
       open={open}
       onClose={handleCloseModal}
       title={isAuthenticated ? (
-        <UserNameBox name="" address={address} imageUrl="" hasDefaultRole />
+        <UserNameBox name={userName} address={address} imageUrl={avatarUrl} isExtended={isAdmin} />
       ) : 'Connect Wallet'}
       className={className}
     >

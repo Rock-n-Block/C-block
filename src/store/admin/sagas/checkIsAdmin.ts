@@ -1,4 +1,5 @@
 import {
+  all,
   call,
   put,
   select,
@@ -8,7 +9,7 @@ import {
 import apiActions from 'store/ui/actions';
 import userSelector from 'store/user/selectors';
 import { ContractsNames, UserState } from 'types';
-import { setUser } from 'store/user/reducer';
+import { setPermissions } from 'store/user/reducer';
 import { contractsHelper } from 'utils';
 import { checkIsAdmin } from '../actions';
 import actionTypes from '../actionTypes';
@@ -24,23 +25,27 @@ function* checkIsAdminSaga({
 
     const { address: userWalletAddress, isMainnet }: UserState = yield select(userSelector.getUser);
 
-    if (!userWalletAddress) {
-      yield put(
-        setUser({
-          isAdmin: false,
-        }),
-      );
-    } else {
+    if (userWalletAddress) {
       const controllerAddress = contractsHelper.getContractData(ContractsNames.controller, isMainnet).address;
       const contract = contractsHelper.getControllerContract(provider, controllerAddress);
 
-      const DEFAULT_ADMIN_ROLE: string = yield call(contract.methods.DEFAULT_ADMIN_ROLE().call);
-      const isAdmin: boolean = yield call(
-        contract.methods.hasRole(DEFAULT_ADMIN_ROLE, userWalletAddress).call,
+      const [
+        canSetFeeReceiver,
+        canSetPrice,
+        ownerAddress,
+      ]: [boolean, boolean, string] = yield all(
+        [
+          call(contract.methods.canSetFeeReceiver(userWalletAddress).call),
+          call(contract.methods.canSetPrice(userWalletAddress).call),
+          call(contract.methods.owner().call),
+        ],
       );
+
       yield put(
-        setUser({
-          isAdmin,
+        setPermissions({
+          setFeeReceiver: canSetFeeReceiver,
+          setPrice: canSetPrice,
+          superAdmin: userWalletAddress.toLowerCase() === ownerAddress.toLowerCase(),
         }),
       );
     }

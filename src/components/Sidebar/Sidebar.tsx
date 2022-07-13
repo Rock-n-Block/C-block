@@ -20,8 +20,10 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const { isLight, isAdmin } = useShallowSelector(userSelector.getUser);
+  const { isLight } = useShallowSelector(userSelector.getUser);
+  const isAdmin = useShallowSelector(userSelector.selectIsAdmin);
   const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
+
   return (
     <Box className={clsx(classes.root, className)}>
       <Box className={classes.contentWrapper}>

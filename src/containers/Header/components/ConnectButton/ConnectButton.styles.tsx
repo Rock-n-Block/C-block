@@ -52,5 +52,8 @@ export const useStyles = makeStyles((theme: Theme) => {
         maxWidth: 228,
       },
     },
+    profileContainerSelectRoot: {
+      background: 'none !important',
+    },
   });
 });

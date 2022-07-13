@@ -1,4 +1,4 @@
-import React, { useMemo, VFC } from 'react';
+import React, { VFC } from 'react';
 
 import {
   Box, Button,
@@ -22,12 +22,9 @@ export interface ConnectButtonProps {
 
 export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, className }) => {
   const classes = useStyles();
-  const isAuthenticated = useShallowSelector(
-    userSelectors.selectIsAuthenticated,
-  );
-
-  const hasUserImage = useMemo(() => Math.random() > 0.5, []);
-  const userImage = hasUserImage ? 'https://avatars.mds.yandex.net/get-verba/1540742/2a0000017fb1a555a52eb01b8ddb17bac37f/realty_main' : '';
+  const { userName, avatarUrl } = useShallowSelector(userSelectors.selectProfile);
+  const isAdmin = useShallowSelector(userSelectors.selectIsAdmin);
+  const isAuthenticated = useShallowSelector(userSelectors.selectIsAuthenticated);
 
   return (
     <Box className={clsx(classes.root, className)}>
@@ -41,6 +38,9 @@ export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, c
             fullWidth
             SelectProps={{
               open: false,
+              classes: {
+                root: classes.profileContainerSelectRoot,
+              },
               MenuProps: {
                 style: {
                   pointerEvents: 'none',
@@ -48,7 +48,7 @@ export const ConnectButton: VFC<ConnectButtonProps> = ({ address, handleModal, c
                 },
               },
               renderValue: () => (
-                <UserNameBox name="" address={address} imageUrl={userImage} hasDefaultRole={hasUserImage} />
+                <UserNameBox name={userName} address={address} imageUrl={avatarUrl} isExtended={isAdmin} />
               ),
             }}
             onClick={handleModal}

@@ -60,9 +60,10 @@ export const AdminPanel = () => {
   const [paymentsReceiverAddress, setPaymentsReceiverAddress] = useState(
     defaultPaymentsReceiverAddress,
   );
-  const { isAdmin, isMainnet } = useShallowSelector(
+  const { isMainnet } = useShallowSelector(
     userSelectors.getUser,
   );
+  const isAdmin = useShallowSelector(userSelectors.selectIsAdmin);
   const celoDecimals = useMemo(
     () => contractsHelper.getTokensDecimals('celo', isMainnet),
     [isMainnet],

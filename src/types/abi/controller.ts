@@ -21,29 +21,23 @@ export interface EventOptions {
   topics?: string[];
 }
 
-export type RoleAdminChanged = ContractEventLog<{
-  role: string;
-  previousAdminRole: string;
-  newAdminRole: string;
-  0: string;
-  1: string;
-  2: string;
+export type CanSetFeeReceiverEdited = ContractEventLog<{
+  account: string[];
+  _canSetFeeReceiver: boolean[];
+  0: string[];
+  1: boolean[];
 }>;
-export type RoleGranted = ContractEventLog<{
-  role: string;
-  account: string;
-  sender: string;
-  0: string;
-  1: string;
-  2: string;
+export type CanSetPriceEdited = ContractEventLog<{
+  account: string[];
+  _canSetPrice: boolean[];
+  0: string[];
+  1: boolean[];
 }>;
-export type RoleRevoked = ContractEventLog<{
-  role: string;
-  account: string;
-  sender: string;
+export type OwnershipTransferred = ContractEventLog<{
+  previousOwner: string;
+  newOwner: string;
   0: string;
   1: string;
-  2: string;
 }>;
 
 export interface Controller extends BaseContract {
@@ -54,80 +48,75 @@ export interface Controller extends BaseContract {
   ): Controller;
   clone(): Controller;
   methods: {
-    DEFAULT_ADMIN_ROLE(): NonPayableTransactionObject<string>;
+    canSetFeeReceiver(arg0: string): NonPayableTransactionObject<boolean>;
 
-    canSetPrice(account: string): NonPayableTransactionObject<boolean>;
+    canSetPrice(arg0: string): NonPayableTransactionObject<boolean>;
+
+    editCanSetFeeReceiver(
+      account: string[],
+      _canSetFeeReceiver: boolean[]
+    ): NonPayableTransactionObject<void>;
+
+    editCanSetPrice(
+      account: string[],
+      _canSetPrice: boolean[]
+    ): NonPayableTransactionObject<void>;
 
     feeReceiver(): NonPayableTransactionObject<string>;
 
-    getRoleAdmin(role: string | number[]): NonPayableTransactionObject<string>;
+    owner(): NonPayableTransactionObject<string>;
 
-    grantRole(
-      role: string | number[],
-      account: string
-    ): NonPayableTransactionObject<void>;
-
-    hasRole(
-      role: string | number[],
-      account: string
-    ): NonPayableTransactionObject<boolean>;
-
-    renounceRole(
-      role: string | number[],
-      account: string
-    ): NonPayableTransactionObject<void>;
-
-    revokeRole(
-      role: string | number[],
-      account: string
-    ): NonPayableTransactionObject<void>;
+    renounceOwnership(): NonPayableTransactionObject<void>;
 
     setFeeReceiver(_feeReceiver: string): NonPayableTransactionObject<void>;
 
-    supportsInterface(
-      interfaceId: string | number[]
-    ): NonPayableTransactionObject<boolean>;
+    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
   };
   events: {
-    RoleAdminChanged(cb?: Callback<RoleAdminChanged>): EventEmitter;
-    RoleAdminChanged(
+    CanSetFeeReceiverEdited(
+      cb?: Callback<CanSetFeeReceiverEdited>
+    ): EventEmitter;
+    CanSetFeeReceiverEdited(
       options?: EventOptions,
-      cb?: Callback<RoleAdminChanged>
+      cb?: Callback<CanSetFeeReceiverEdited>
     ): EventEmitter;
 
-    RoleGranted(cb?: Callback<RoleGranted>): EventEmitter;
-    RoleGranted(
+    CanSetPriceEdited(cb?: Callback<CanSetPriceEdited>): EventEmitter;
+    CanSetPriceEdited(
       options?: EventOptions,
-      cb?: Callback<RoleGranted>
+      cb?: Callback<CanSetPriceEdited>
     ): EventEmitter;
 
-    RoleRevoked(cb?: Callback<RoleRevoked>): EventEmitter;
-    RoleRevoked(
+    OwnershipTransferred(cb?: Callback<OwnershipTransferred>): EventEmitter;
+    OwnershipTransferred(
       options?: EventOptions,
-      cb?: Callback<RoleRevoked>
+      cb?: Callback<OwnershipTransferred>
     ): EventEmitter;
 
     allEvents(options?: EventOptions, cb?: Callback<EventLog>): EventEmitter;
   };
 
-  once(event: "RoleAdminChanged", cb: Callback<RoleAdminChanged>): void;
   once(
-    event: "RoleAdminChanged",
+    event: "CanSetFeeReceiverEdited",
+    cb: Callback<CanSetFeeReceiverEdited>
+  ): void;
+  once(
+    event: "CanSetFeeReceiverEdited",
     options: EventOptions,
-    cb: Callback<RoleAdminChanged>
+    cb: Callback<CanSetFeeReceiverEdited>
   ): void;
 
-  once(event: "RoleGranted", cb: Callback<RoleGranted>): void;
+  once(event: "CanSetPriceEdited", cb: Callback<CanSetPriceEdited>): void;
   once(
-    event: "RoleGranted",
+    event: "CanSetPriceEdited",
     options: EventOptions,
-    cb: Callback<RoleGranted>
+    cb: Callback<CanSetPriceEdited>
   ): void;
 
-  once(event: "RoleRevoked", cb: Callback<RoleRevoked>): void;
+  once(event: "OwnershipTransferred", cb: Callback<OwnershipTransferred>): void;
   once(
-    event: "RoleRevoked",
+    event: "OwnershipTransferred",
     options: EventOptions,
-    cb: Callback<RoleRevoked>
+    cb: Callback<OwnershipTransferred>
   ): void;
 }
