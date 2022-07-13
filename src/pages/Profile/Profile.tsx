@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/no-array-index-key */
 import React, {
   ChangeEvent,
-  Fragment, memo, useCallback, useEffect, useRef, useState,
+  memo, useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -21,42 +20,34 @@ import {
   Form,
   Field,
   FieldProps,
+  FormikProps,
 } from 'formik';
 import clsx from 'clsx';
 
 import { CloseCircleIcon, ImageIcon, PlusIcon } from 'theme/icons';
-import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelectors from 'store/user/selectors';
 import { useAuthConnectWallet, useShallowSelector } from 'hooks';
-import {
-  deleteTokenContractForm,
-  dynamicFormDataTemplate,
-  initialState,
-  setTokenContractForm,
-} from 'store/contractForms/reducer';
 import { Copyable } from 'components';
 import { routes } from 'appConstants';
-// import { isEqual } from 'lodash';
 import { setActiveModal } from 'store/modals/reducer';
-import { Modals } from 'types';
+import { Modals, UserProfile } from 'types';
+import { setNotification } from 'utils';
 import {
-  tokenContractFormConfigStart,
   validationSchema,
-  // dynamicFormDataConfig,
-  tokenContractFormConfigEnd,
+  TInitialValues,
 } from './Profile.helpers';
 import { useStyles } from './Profile.styles';
 
 export const Profile = memo(() => {
   const dispatch = useDispatch();
 
-  // const handleClearTokenState = useCallback(() => {
-  //   dispatch(deleteTokenContractForm());
-  // }, [dispatch]);
+  const formikRef = useRef<FormikProps<TInitialValues>>();
 
-  const { tokenContract } = useShallowSelector(contractFormsSelector.getContractForms);
-  const { address: userWalletAddress } = useShallowSelector(userSelectors.getUser);
+  const isAuthenticated = useShallowSelector(userSelectors.selectIsAuthenticated);
+  const { address: userWalletAddress, email, profile } = useShallowSelector(userSelectors.getUser);
+
+  const initialValues = useMemo(() => (profile), [profile]);
   const handleChangePassword = () => {
     dispatch(setActiveModal({
       modals: {
@@ -66,14 +57,13 @@ export const Profile = memo(() => {
   };
 
   const fileInputRef = useRef<HTMLInputElement>();
-  const [fileUrl, setFileUrl] = useState('');
   const dropAreaRef = useRef<HTMLElement>();
   const onFileUpload = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | DragEvent,
   ) => {
     // @ts-expect-error wrong type for Input type='file'
     const [newFile]: [File] = e.target.files;
-    setFileUrl(URL.createObjectURL(newFile));
+    formikRef.current.setFieldValue('avatarUrl', URL.createObjectURL(newFile));
   };
 
   useEffect(() => {
@@ -86,24 +76,38 @@ export const Profile = memo(() => {
     };
   }, []);
 
-  const classes = useStyles({ hasUploadedLogoImage: !!fileUrl });
+  useEffect(() => {
 
-  // const { isAuthenticated, connectDropdownModal, handleConnect } = useAuthConnectWallet();
-  // sm={6}
-  // md={6}
-  // lg={6}
-  // xl={6}
+  }, []);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(routes.root);
+      setNotification({
+        type: 'error',
+        message: 'You must log in to see profile page',
+      });
+    }
+    // NOTE: make sure that deps has only [isAuthenticated], due to having `navigate` as dep causes to run this effect twice
+  }, [isAuthenticated]);
+
+  const classes = useStyles({ hasUploadedLogoImage: !!formikRef.current?.values.avatarUrl });
+
   return (
     <Container>
       <Formik
+        innerRef={formikRef}
         enableReinitialize
         validateOnMount
-        initialValues={tokenContract}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(
           values,
+          formikHelpers,
         ) => {
-          dispatch(setTokenContractForm(values));
+          // @ts-ignore
+          dispatch(updateProfile(values));
         }}
       >
         {({
@@ -149,21 +153,14 @@ export const Profile = memo(() => {
                   item
                   xs={12}
                 >
-                  <Field
+                  <TextField
+                    label="Email"
                     name="email"
-                    render={
-                      ({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          label="Email"
-                          name="email"
-                          disabled={isSubmitting}
-                          onChange={handleChange}
-                          value={values['email']}
-                          onBlur={handleBlur}
-                          error={errors['email'] && touched['email']}
-                        />
-                      )
-                    }
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    disabled
+                    value={email}
                   />
                 </Grid>
 
@@ -171,27 +168,21 @@ export const Profile = memo(() => {
                   item
                   xs={12}
                 >
-                  <Field
+                  <TextField
+                    label="Password"
                     name="password"
-                    render={
-                      ({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          label="Password"
-                          name="password"
-                          type="password"
-                          disabled={isSubmitting}
-                          onChange={handleChange}
-                          value={values['password']}
-                          onBlur={handleBlur}
-                          error={errors['password'] && touched['password']}
-                        />
-                      )
-                    }
+                    type="password"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    disabled
+                    value="***********"
                   />
                   <Button
-                    style={{
-                      marginTop: 4,
-                    }}
+                    className={classes.changePasswordBtn}
                     variant="text"
                     onClick={handleChangePassword}
                   >
@@ -218,6 +209,7 @@ export const Profile = memo(() => {
                         <Copyable className={classes.copyableIcon} valueToCopy={userWalletAddress} withIcon />
                       ),
                     }}
+                    disabled
                     value={userWalletAddress}
                   />
                 </Grid>
@@ -252,55 +244,58 @@ export const Profile = memo(() => {
                   }}
                 >
                   <Field
-                    name="telephone"
+                    name="telephone.body"
+                    render={
+                      ({ form: { isSubmitting } }: FieldProps) => {
+                        console.log('TEST', values, errors, touched);
+                        return (
+                          <TextField
+                            label="Tel"
+                            name="telephone.body"
+                            type="tel"
+                            placeholder="(000) 000 00–00"
+                            InputProps={{
+                              style: {
+                                paddingLeft: 80,
+                              },
+                            }}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            disabled={isSubmitting}
+                            onChange={handleChange}
+                            value={values.telephone?.body}
+                            onBlur={handleBlur}
+                            error={errors.telephone?.body && touched.telephone?.body}
+                          />
+                        );
+                      }
+                    }
+                  />
+                  <Field
+                    name="telephone.countryCode"
                     render={
                       ({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          // style={{
-                          // }}
-                          label="Tel"
-                          name="telephone"
-                          type="tel"
-                          placeholder="(000) 000 00–00"
-                          InputProps={{
-                            style: {
-                              paddingLeft: 80,
-                            },
+                        <Select
+                          className={classes.select}
+                          variant="filled"
+                          disableUnderline
+                          classes={{
+                            root: classes.selectRoot,
                           }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          // InputProps={{
-                          //   startAdornment: (
-                          //     <Select style={{
-                          //       height: 40,
-                          //     }}
-                          //     >
-                          //       <MenuItem value="+9714">+9714</MenuItem>
-                          //       <MenuItem value="+7">+7</MenuItem>
-                          //     </Select>
-                          //   ),
-                          // }}
+                          name="telephone.countryCode"
                           disabled={isSubmitting}
                           onChange={handleChange}
-                          value={values['telephone']}
+                          value={values.telephone?.countryCode}
                           onBlur={handleBlur}
-                          error={errors['telephone'] && touched['telephone']}
-                        />
+                          error={errors.telephone?.countryCode && touched.telephone?.countryCode}
+                        >
+                          <MenuItem value="+9714">+9714</MenuItem>
+                          <MenuItem value="+7">+7</MenuItem>
+                        </Select>
                       )
                     }
                   />
-                  <Select
-                    className={classes.select}
-                    variant="filled"
-                    disableUnderline
-                    classes={{
-                      root: classes.selectRoot,
-                    }}
-                  >
-                    <MenuItem value="+9714">+9714</MenuItem>
-                    <MenuItem value="+7">+7</MenuItem>
-                  </Select>
                 </Grid>
 
                 <Grid
@@ -320,7 +315,10 @@ export const Profile = memo(() => {
                           value={values['country']}
                           onBlur={handleBlur}
                           error={errors['country'] && touched['country']}
-                        />
+                        >
+                          <MenuItem value="CN">CN | China</MenuItem>
+                          <MenuItem value="RU">RU | Russia</MenuItem>
+                        </TextField>
                       )
                     }
                   />
@@ -446,15 +444,11 @@ export const Profile = memo(() => {
                       className={classes.nativeFileInput}
                       type="file"
                       accept="image/*"
-                      // inputProps={{
-                      //   accept: fileExtensions,
-                      // }}
                       onChange={onFileUpload}
-                      // {...props}
                     />
                     {
-                      fileUrl ? (
-                        <img src={fileUrl} alt="preview avatar" />
+                      values.avatarUrl ? (
+                        <img src={values.avatarUrl} alt="preview avatar" />
                       ) : (
                         <ImageIcon />
                       )
@@ -462,10 +456,10 @@ export const Profile = memo(() => {
 
                   </Box>
                   <Button
-                    // className={classes.textButton}
+                    className={classes.uploadLogoImageBtn}
                     variant="text"
                     onClick={() => {
-                      fileInputRef?.current?.click();
+                      fileInputRef.current?.click();
                     }}
                   >
                     <Typography
@@ -477,10 +471,7 @@ export const Profile = memo(() => {
                     </Typography>
                   </Button>
                   <Typography
-                    style={{
-                      maxWidth: 151,
-                      whiteSpace: 'break-spaces',
-                    }}
+                    className={classes.imageUploaderDescription}
                     variant="body2"
                     align="center"
                   >
@@ -490,7 +481,7 @@ export const Profile = memo(() => {
 
               </Box>
             </Box>
-            <Box className={classes.tokenContractFormSection}>
+            <Box className={classes.buttonsGroup}>
               <Button
                 size="large"
                 type="submit"

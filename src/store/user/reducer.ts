@@ -10,6 +10,21 @@ const initialState: UserState = {
   email: '',
   registrationEmail: '',
   registrationWalletAddress: '',
+  profile: {
+    userName: '',
+    company: '',
+    telephone: {
+      countryCode: '',
+      body: '',
+    },
+    country: '',
+    city: '',
+    street: '',
+    office: '',
+    building: '',
+    zipcode: '',
+    avatarUrl: '',
+  },
 
   isAdmin: false,
 };

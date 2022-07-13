@@ -31,15 +31,8 @@ export const useStyles = makeStyles<Theme, { hasUploadedLogoImage: boolean }>((t
         marginRight: 94,
       },
     },
-    tokenContractFormSection: {
-      padding: `${theme.spacing(5)}px 0px`,
-    },
-    submitButton: {
-      width: '150px !important',
-      marginRight: theme.spacing(2.5),
-    },
-    resetButton: {
-      width: '150px !important',
+    changePasswordBtn: {
+      marginTop: 4,
     },
 
     imageUploader: {
@@ -97,6 +90,25 @@ export const useStyles = makeStyles<Theme, { hasUploadedLogoImage: boolean }>((t
       borderRadius: 'inherit',
       cursor: 'pointer',
     },
+    uploadLogoImageBtn: {
+      marginTop: 8,
+    },
+    imageUploaderDescription: {
+      maxWidth: 151,
+      whiteSpace: 'break-spaces',
+    },
+
+    buttonsGroup: {
+      padding: theme.spacing(5, 0),
+    },
+    submitButton: {
+      width: '150px !important',
+      marginRight: theme.spacing(2.5),
+    },
+    resetButton: {
+      width: '150px !important',
+    },
+
     link: {
       textDecoration: 'underline',
       color: theme.palette.type === 'dark' ? COLOR_ACID_GREEN : COLOR_GREY_6,

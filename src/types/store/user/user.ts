@@ -1,5 +1,21 @@
 import { WalletProviders } from '../../walletConnect';
 
+export type UserProfile = {
+  userName: string;
+  company: string;
+  telephone: {
+    countryCode: string;
+    body: string;
+  };
+  country: string;
+  city: string;
+  street: string;
+  office: string;
+  building: string;
+  zipcode: string;
+  avatarUrl: string;
+};
+
 export type UserState = {
   address: string;
   wallet: WalletProviders;
@@ -9,6 +25,8 @@ export type UserState = {
   email: string;
   registrationEmail: string;
   registrationWalletAddress: string;
+
+  profile: UserProfile;
 
   isAdmin: boolean;
 };

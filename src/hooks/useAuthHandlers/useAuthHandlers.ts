@@ -17,6 +17,12 @@ import { routes } from 'appConstants';
 import { setNotification } from 'utils';
 import { useWeb3Provider } from 'hooks/walletService';
 
+type EmailAndPassword = { email: string; password: string; };
+type HandleSignUpArgs = EmailAndPassword & {
+  confirmPassword: string;
+};
+type HandleLoginArgs = EmailAndPassword;
+
 export const useAuthHandlers = () => {
   const dispatch = useDispatch();
   const handlePasswordResetByEmail = useCallback((email: string) => {
@@ -62,11 +68,7 @@ export const useAuthHandlers = () => {
       email,
       password,
       confirmPassword,
-    }: {
-      email: string;
-      password: string;
-      confirmPassword: string;
-    }) => {
+    }: HandleSignUpArgs) => {
       dispatch(
         registerAccount({
           provider: getDefaultProvider(),
@@ -78,7 +80,7 @@ export const useAuthHandlers = () => {
     }, [dispatch, getDefaultProvider],
   );
 
-  const handleLogin = useCallback(({ email, password }: { email: string; password: string; }) => {
+  const handleLogin = useCallback(({ email, password }: HandleLoginArgs) => {
     dispatch(
       login({
         email,
