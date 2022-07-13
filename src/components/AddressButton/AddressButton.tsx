@@ -8,7 +8,7 @@ import { Copyable } from '../Copyable';
 import { useStyles } from './AddressButton.styles';
 
 export interface AddressButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   address: string;
   className?: string;
 }

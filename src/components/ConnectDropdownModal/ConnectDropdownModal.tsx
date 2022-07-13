@@ -2,8 +2,11 @@ import React, {
   useCallback, useMemo, useState, VFC,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { Typography, Box, Button } from '@material-ui/core';
+import {
+  Typography, Box, Button,
+} from '@material-ui/core';
 
 import { useWalletConnectorContext } from 'services';
 import { WalletProviders } from 'types';
@@ -84,15 +87,22 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
       {isAuthenticated && isConfirmDisconnect && confirmDisconnectJsx}
       {isAuthenticated && !isConfirmDisconnect && (
       <>
-        <AddressButton className={classes.addressBtn} address={address} onClick={() => {}} />
-        <Button
+        <AddressButton className={classes.addressBtn} address={address} />
+        <Link
           className={classes.btnItem}
-          variant="outlined"
-          size="medium"
-          href={routes.profile.root}
+          to={routes.profile.root}
+          onClick={handleCloseModal}
         >
-          <PersonIcon /> Profile
-        </Button>
+          <Button
+            className={classes.btnItem}
+            fullWidth
+            variant="outlined"
+            size="medium"
+          >
+            <PersonIcon /> Profile
+          </Button>
+        </Link>
+
         <Button
           className={classes.btnItem}
           variant="outlined"
