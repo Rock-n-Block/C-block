@@ -27,6 +27,7 @@ import clsx from 'clsx';
 import { CloseCircleIcon, ImageIcon, PlusIcon } from 'theme/icons';
 import { CheckBox } from 'components/CheckBox';
 import contractFormsSelector from 'store/contractForms/selectors';
+import userSelectors from 'store/user/selectors';
 import { useAuthConnectWallet, useShallowSelector } from 'hooks';
 import {
   deleteTokenContractForm,
@@ -34,7 +35,7 @@ import {
   initialState,
   setTokenContractForm,
 } from 'store/contractForms/reducer';
-// import { RemovableContractsFormBlock } from 'components';
+import { Copyable } from 'components';
 import { routes } from 'appConstants';
 // import { isEqual } from 'lodash';
 import { setActiveModal } from 'store/modals/reducer';
@@ -55,6 +56,7 @@ export const Profile = memo(() => {
   // }, [dispatch]);
 
   const { tokenContract } = useShallowSelector(contractFormsSelector.getContractForms);
+  const { address: userWalletAddress } = useShallowSelector(userSelectors.getUser);
   const handleChangePassword = () => {
     dispatch(setActiveModal({
       modals: {
@@ -207,21 +209,16 @@ export const Profile = memo(() => {
                   item
                   xs={12}
                 >
-                  <Field
+                  <TextField
+                    label="Wallet address"
                     name="walletAddress"
-                    render={
-                      ({ form: { isSubmitting } }: FieldProps) => (
-                        <TextField
-                          label="Wallet address"
-                          name="walletAddress"
-                          disabled={isSubmitting}
-                          onChange={handleChange}
-                          value={values['walletAddress']}
-                          onBlur={handleBlur}
-                          error={errors['walletAddress'] && touched['walletAddress']}
-                        />
-                      )
-                    }
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <Copyable className={classes.copyableIcon} valueToCopy={userWalletAddress} withIcon />
+                      ),
+                    }}
+                    value={userWalletAddress}
                   />
                 </Grid>
 

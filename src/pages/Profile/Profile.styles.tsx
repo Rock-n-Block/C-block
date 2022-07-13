@@ -114,5 +114,8 @@ export const useStyles = makeStyles<Theme, { hasUploadedLogoImage: boolean }>((t
         background: 'transparent',
       },
     },
+    copyableIcon: {
+      paddingLeft: theme.spacing(2),
+    },
   });
 });
