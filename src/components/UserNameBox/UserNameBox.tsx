@@ -43,6 +43,14 @@ export const UserNameBox: VFC<UserNameBoxProps> = ({
         alt="user profile"
       />
     </Box>
-    <Typography className="l" variant="body1">{ name || `User ${address.slice(-4)}`}</Typography>
+    <Typography
+      style={{
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+      }}
+      className="l"
+      variant="body1"
+    >{ name || `User ${address.slice(-4)}`}
+    </Typography>
   </Box>
 );
