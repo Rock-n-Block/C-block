@@ -71,6 +71,10 @@ export function* updateProfileSaga({
         isCompletedProfile,
       },
     }));
+    setNotification({
+      type: 'success',
+      message: 'Profile successfully updated',
+    });
     yield put(apiActions.success(type));
   } catch (err) {
     console.log(err, err.response);
