@@ -22,7 +22,9 @@ export const initFormValues: IFormValues = {
 
 export const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required('Required'),
-  password: Yup.string().required('Required'),
+  password: Yup.string().test('unique-values', 'Should not be the same as old password', function uniqueValues(value) {
+    return this.parent.oldPassword !== value;
+  }).required('Required'),
   confirmPassword: Yup.string()
     .test('passwords-match', 'Passwords must match', function valuesMatcher(value) {
       return this.parent.password === value;
