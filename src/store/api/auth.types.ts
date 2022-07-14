@@ -48,6 +48,7 @@ export type TGetUserDataReturnType = {
   office: TNullable<string>;
   phone_number: TNullable<string>;
   street: TNullable<string>;
+  building: TNullable<string>;
   zipcode: TNullable<string>;
 };
 

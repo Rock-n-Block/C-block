@@ -31,6 +31,7 @@ export function* updateProfileSaga({
         name: userName,
         office,
         street,
+        building,
         zipcode,
         is_completed_profile: isCompletedProfile,
       },
@@ -44,6 +45,7 @@ export function* updateProfileSaga({
         office: payload.office,
         phone_number: `+${payload.telephone.countryCode}${payload.telephone.body}`,
         street: payload.street,
+        building: payload.building,
         zipcode: payload.zipcode,
       },
       payload.avatar,
@@ -53,10 +55,10 @@ export function* updateProfileSaga({
       registrationEmail,
       registrationWalletAddress,
       profile: {
-        avatarUrl: avatarUrl || '',
+        avatarUrl: avatarUrl ? `${process.env.REACT_APP_BACKEND_ORIGIN}${avatarUrl}` : '',
         city: city || '',
         company: company || '',
-        building: '', // TODO: ??
+        building: building || '',
         country,
         office: office || '',
         street: street || '',

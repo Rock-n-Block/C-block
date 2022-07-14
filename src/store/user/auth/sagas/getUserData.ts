@@ -34,6 +34,7 @@ export function* getUserDataSaga({
         office,
         phone_number: phoneNumber,
         street,
+        building,
         zipcode,
         is_completed_profile: isCompletedProfile,
       },
@@ -45,10 +46,10 @@ export function* getUserDataSaga({
       registrationEmail,
       registrationWalletAddress,
       profile: {
-        avatarUrl: avatarUrl || '',
+        avatarUrl: avatarUrl ? `${process.env.REACT_APP_BACKEND_ORIGIN}${avatarUrl}` : '',
         city: city || '',
         company: company || '',
-        building: '', // TODO: ??
+        building: building || '',
         country,
         office: office || '',
         street: street || '',
