@@ -45,7 +45,7 @@ export function* updateProfileSaga({
         office: payload.office,
         phone_number: `${payload.telephone.countryCode}${payload.telephone.body}`,
         street: payload.street,
-        zipcode: Number(payload.zipcode),
+        zipcode: payload.zipcode,
       },
       // new File([payload.avatarUrl], 'avatar.png', { type: 'image/png' }),
       payload.avatar,

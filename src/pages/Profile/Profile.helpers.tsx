@@ -12,7 +12,7 @@ export const validationSchema = Yup.object().shape({
   street: Yup.string().max(128).required(),
   office: Yup.string().max(32).required(),
   building: Yup.string().max(128).required(),
-  zipcode: Yup.number().required(),
+  zipcode: Yup.string().max(20).required(),
   avatarUrl: Yup.string().required(),
 });
 
