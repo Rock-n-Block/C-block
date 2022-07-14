@@ -26,7 +26,7 @@ const initialState: UserState = {
     avatarUrl: '',
     avatar: {} as File,
 
-    isCompletedProfile: false,
+    isCompletedProfile: true,
   },
 
   permissions: {
