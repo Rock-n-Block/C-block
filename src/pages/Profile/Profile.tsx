@@ -25,11 +25,14 @@ import {
 import { ImageIcon } from 'theme/icons';
 import userSelectors from 'store/user/selectors';
 import userActions from 'store/user/auth/actions';
+import userActionTypes from 'store/user/auth/actionTypes';
+import uiSelectors from 'store/ui/selectors';
+import apiActions from 'store/ui/actions';
 import { useShallowSelector } from 'hooks';
 import { Copyable } from 'components';
 import { routes } from 'appConstants';
 import { setActiveModal } from 'store/modals/reducer';
-import { Modals } from 'types';
+import { Modals, RequestStatus } from 'types';
 import { setNotification } from 'utils';
 import {
   validationSchema,
@@ -123,6 +126,24 @@ export const Profile = memo(() => {
     // NOTE: make sure that deps has only [isAuthenticated], due to having `navigate` as dep causes to run this effect twice
   }, [isAuthenticated]);
 
+  const updateProfileRequestStatus = useShallowSelector(
+    uiSelectors.getProp(userActionTypes.USER_AUTH_UPDATE_PROFILE),
+  );
+  useEffect(() => {
+    if (updateProfileRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(
+        apiActions.reset(userActionTypes.USER_AUTH_UPDATE_PROFILE),
+      );
+      navigate(routes.root);
+    }
+  }, [dispatch, updateProfileRequestStatus]);
+
+  useEffect(() => {
+    if (updateProfileRequestStatus === RequestStatus.SUCCESS || updateProfileRequestStatus === RequestStatus.ERROR) {
+      formikRef.current.setSubmitting(false);
+    }
+  }, [updateProfileRequestStatus]);
+
   const classes = useStyles({ hasUploadedLogoImage: !!formikRef.current?.values.avatarUrl });
 
   return (
@@ -135,12 +156,8 @@ export const Profile = memo(() => {
         validationSchema={validationSchema}
         onSubmit={(
           values,
-          formikHelpers,
         ) => {
           dispatch(userActions.updateProfile(values));
-          setTimeout(() => {
-            formikHelpers.setSubmitting(false);
-          }, 3000);
         }}
       >
         {({
