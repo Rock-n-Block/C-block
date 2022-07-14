@@ -19,7 +19,7 @@ export const validationSchema = Yup.object().shape({
   office: Yup.string().max(32).required('Required'),
   building: Yup.string().max(128).required('Required'),
   zipcode: Yup.string().max(20).required('Required'),
-  avatarUrl: Yup.string().required('Required'),
+  avatarUrl: Yup.string(),
 });
 
 export type TInitialValues = UserProfile;
