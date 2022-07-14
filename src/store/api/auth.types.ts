@@ -1,4 +1,4 @@
-import { TNullable } from 'types';
+import { CountryCodesRawItem, TNullable } from 'types';
 
 export interface IResetPassword {
   email: string;
@@ -52,3 +52,5 @@ export type TGetUserDataReturnType = {
 };
 
 export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar'>;
+
+export type TGetCountryCodesReturnType = CountryCodesRawItem[];

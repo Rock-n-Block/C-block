@@ -29,6 +29,8 @@ const initialState: UserState = {
     isCompletedProfile: true,
   },
 
+  countryCodes: [],
+
   permissions: {
     setFeeReceiver: false,
     setPrice: false,

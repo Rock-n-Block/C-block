@@ -126,6 +126,9 @@ export const useStyles = makeStyles<Theme, { hasUploadedLogoImage: boolean }>((t
         background: 'transparent',
       },
     },
+    selectMenu: {
+      maxHeight: 500,
+    },
     copyableIcon: {
       paddingLeft: theme.spacing(2),
     },

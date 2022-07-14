@@ -24,15 +24,14 @@ import {
 } from 'formik';
 import clsx from 'clsx';
 
-import { CloseCircleIcon, ImageIcon, PlusIcon } from 'theme/icons';
-import contractFormsSelector from 'store/contractForms/selectors';
+import { ImageIcon } from 'theme/icons';
 import userSelectors from 'store/user/selectors';
 import userActions from 'store/user/auth/actions';
-import { useAuthConnectWallet, useShallowSelector } from 'hooks';
+import { useShallowSelector } from 'hooks';
 import { Copyable } from 'components';
 import { routes } from 'appConstants';
 import { setActiveModal } from 'store/modals/reducer';
-import { Modals, UserProfile } from 'types';
+import { Modals } from 'types';
 import { setNotification } from 'utils';
 import {
   validationSchema,
@@ -46,7 +45,20 @@ export const Profile = memo(() => {
   const formikRef = useRef<FormikProps<TInitialValues>>();
 
   const isAuthenticated = useShallowSelector(userSelectors.selectIsAuthenticated);
-  const { address: userWalletAddress, email, profile } = useShallowSelector(userSelectors.getUser);
+  const {
+    address: userWalletAddress, email, profile, countryCodes,
+  } = useShallowSelector(userSelectors.getUser);
+
+  const phoneCodes = useMemo(() => {
+    const filteredArr = Array.from(new Set(countryCodes.map(({ phoneCode }) => phoneCode).filter((item) => item)));
+    filteredArr.sort((a, b) => a - b);
+    return filteredArr;
+  }, [countryCodes]);
+  const countries = useMemo(() => {
+    const newArray = [...countryCodes];
+    newArray.sort((a, b) => a.countryCode.localeCompare(b.countryCode));
+    return newArray;
+  }, [countryCodes]);
 
   const initialValues = useMemo(() => (profile), [profile]);
   const handleChangePassword = () => {
@@ -79,8 +91,12 @@ export const Profile = memo(() => {
   }, []);
 
   useEffect(() => {
-
-  }, []);
+    if (!countryCodes.length) {
+      dispatch(
+        userActions.getCountryCodes(),
+      );
+    }
+  }, [countryCodes.length, dispatch]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -286,6 +302,9 @@ export const Profile = memo(() => {
                           classes={{
                             root: classes.selectRoot,
                           }}
+                          MenuProps={{
+                            className: classes.selectMenu,
+                          }}
                           name="telephone.countryCode"
                           disabled={isSubmitting}
                           onChange={handleChange}
@@ -293,8 +312,13 @@ export const Profile = memo(() => {
                           onBlur={handleBlur}
                           error={errors.telephone?.countryCode && touched.telephone?.countryCode}
                         >
-                          <MenuItem value="+9714">+9714</MenuItem>
-                          <MenuItem value="+7">+7</MenuItem>
+                          {
+                            phoneCodes.map((phoneCode) => (
+                              <MenuItem key={phoneCode} value={`+${phoneCode}`}>
+                                +{phoneCode}
+                              </MenuItem>
+                            ))
+                          }
                         </Select>
                       )
                     }
@@ -313,14 +337,32 @@ export const Profile = memo(() => {
                           label="Country"
                           name="country"
                           select
+                          SelectProps={{
+                            MenuProps: {
+                              className: classes.selectMenu,
+                            },
+                          }}
                           disabled={isSubmitting}
                           onChange={handleChange}
                           value={values['country']}
                           onBlur={handleBlur}
                           error={errors['country'] && touched['country']}
                         >
-                          <MenuItem value="CN">CN | China</MenuItem>
-                          <MenuItem value="RU">RU | Russia</MenuItem>
+                          {
+                            countries.map(({ countryCode, countryName }) => (
+                              <MenuItem key={countryCode} value={countryCode}>
+                                <img
+                                  style={{ marginRight: 12 }}
+                                  loading="lazy"
+                                  width="20"
+                                  src={`https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png 2x`}
+                                  alt=""
+                                />
+                                {countryCode}, {countryName}
+                              </MenuItem>
+                            ))
+                          }
                         </TextField>
                       )
                     }

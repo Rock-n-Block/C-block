@@ -36,6 +36,9 @@ export const checkAuthentication = createAction(
 export const updateProfile = createAction<TUpdateProfileAction>(
   actionTypes.USER_AUTH_UPDATE_PROFILE,
 );
+export const getCountryCodes = createAction(
+  actionTypes.USER_GET_COUNTRY_CODES,
+);
 
 export default {
   resetPassword,
@@ -46,4 +49,5 @@ export default {
   login,
   checkAuthentication,
   updateProfile,
+  getCountryCodes,
 };

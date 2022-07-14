@@ -21,5 +21,6 @@ export default {
     confirmResetPassword: 'accounts/password/reset/confirm/',
     changePassword: 'accounts/password/change/',
     accountsUser: 'accounts/user/',
+    countryCodes: 'accounts/country_codes/',
   },
 };

@@ -9,6 +9,7 @@ import loginSaga from './login';
 import getUserDataSaga from './getUserData';
 import checkAuthenticationSaga from './checkAuthentication';
 import updateProfileSaga from './updateProfile';
+import getCountryCodesSaga from './getCountryCodes';
 
 export default function* authSaga() {
   yield fork(resetPasswordSaga);
@@ -20,4 +21,5 @@ export default function* authSaga() {
   yield fork(getUserDataSaga);
   yield fork(checkAuthenticationSaga);
   yield fork(updateProfileSaga);
+  yield fork(getCountryCodesSaga);
 }

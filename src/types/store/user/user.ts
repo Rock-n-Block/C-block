@@ -19,6 +19,17 @@ export type UserProfile = {
   isCompletedProfile: boolean;
 };
 
+export type CountryCodesRawItem = {
+  country_code: string;
+  country_name: string;
+  phone_code: number;
+};
+export type CountryCodesItem = {
+  countryCode: string;
+  countryName: string;
+  phoneCode: number;
+};
+
 export type UserState = {
   address: string;
   wallet: WalletProviders;
@@ -30,6 +41,8 @@ export type UserState = {
   registrationWalletAddress: string;
 
   profile: UserProfile;
+
+  countryCodes: CountryCodesItem[];
 
   permissions: {
     setFeeReceiver: boolean;

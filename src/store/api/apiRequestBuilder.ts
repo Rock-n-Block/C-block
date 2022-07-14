@@ -116,6 +116,12 @@ export const authApi = {
       withCredentials: true,
     });
   },
+  getCountryCodes() {
+    return ajax({
+      method: 'get',
+      url: URL.accounts.countryCodes,
+    });
+  },
 };
 
 export const baseApi = {
