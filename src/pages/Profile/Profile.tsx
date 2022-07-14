@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   ChangeEvent,
-  memo, useCallback, useEffect, useMemo, useRef, useState,
+  memo, useEffect, useMemo, useRef,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +21,6 @@ import {
   FieldProps,
   FormikProps,
 } from 'formik';
-import clsx from 'clsx';
 
 import { ImageIcon } from 'theme/icons';
 import userSelectors from 'store/user/selectors';
@@ -59,6 +57,7 @@ export const Profile = memo(() => {
     newArray.sort((a, b) => a.countryCode.localeCompare(b.countryCode));
     return newArray;
   }, [countryCodes]);
+  const phoneCountryLink = useMemo(() => countryCodes.find(({ countryCode }) => countryCode === profile.country), [countryCodes, profile.country]);
 
   const initialValues = useMemo(() => (profile), [profile]);
   const handleChangePassword = () => {
@@ -98,6 +97,20 @@ export const Profile = memo(() => {
     }
   }, [countryCodes.length, dispatch]);
 
+  useEffect(() => {
+    if (!countryCodes.length) return;
+    if (!phoneCountryLink) return;
+    const { phoneCode } = phoneCountryLink;
+    formikRef.current.setFieldValue(
+      'telephone.body',
+      profile.telephone.body.replace(`+${phoneCode}`, ''),
+    );
+    formikRef.current.setFieldValue(
+      'telephone.countryCode',
+      phoneCode,
+    );
+  }, [countryCodes.length, phoneCountryLink, phoneCountryLink?.phoneCode, profile.telephone.body]);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (!isAuthenticated) {
@@ -124,8 +137,10 @@ export const Profile = memo(() => {
           values,
           formikHelpers,
         ) => {
-          console.log(values);
           dispatch(userActions.updateProfile(values));
+          setTimeout(() => {
+            formikHelpers.setSubmitting(false);
+          }, 3000);
         }}
       >
         {({
@@ -135,8 +150,6 @@ export const Profile = memo(() => {
           handleChange,
           handleBlur,
           isValid,
-          setFieldValue,
-          setFieldTouched,
         }) => (
           <Form translate={undefined} className={classes.form}>
             <Box
@@ -314,7 +327,7 @@ export const Profile = memo(() => {
                         >
                           {
                             phoneCodes.map((phoneCode) => (
-                              <MenuItem key={phoneCode} value={`+${phoneCode}`}>
+                              <MenuItem key={phoneCode} value={phoneCode}>
                                 +{phoneCode}
                               </MenuItem>
                             ))
