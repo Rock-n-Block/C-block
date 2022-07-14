@@ -30,7 +30,6 @@ export function* updateProfileSaga({
         country,
         name: userName,
         office,
-        phone_number: phoneNumber,
         street,
         zipcode,
         is_completed_profile: isCompletedProfile,
@@ -43,11 +42,10 @@ export function* updateProfileSaga({
         country: payload.country,
         name: payload.userName,
         office: payload.office,
-        phone_number: `${payload.telephone.countryCode}${payload.telephone.body}`,
+        phone_number: `+${payload.telephone.countryCode}${payload.telephone.body}`,
         street: payload.street,
         zipcode: payload.zipcode,
       },
-      // new File([payload.avatarUrl], 'avatar.png', { type: 'image/png' }),
       payload.avatar,
     );
 
@@ -63,8 +61,8 @@ export function* updateProfileSaga({
         office: office || '',
         street: street || '',
         telephone: {
-          body: phoneNumber || '',
-          countryCode: phoneNumber || '',
+          body: payload.telephone.body || '',
+          countryCode: payload.telephone.countryCode || '',
         },
         userName: userName || '',
         zipcode: zipcode || '',
