@@ -20,6 +20,6 @@ export default {
     resetPassword: 'accounts/password/reset/',
     confirmResetPassword: 'accounts/password/reset/confirm/',
     changePassword: 'accounts/password/change/',
-    getUserData: 'accounts/user/',
+    accountsUser: 'accounts/user/',
   },
 };

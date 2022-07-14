@@ -7,6 +7,7 @@ import {
   TRegisterAccountAction,
   TLogoutAction,
   TLoginAction,
+  TUpdateProfileAction,
 } from 'types';
 
 import actionTypes from './actionTypes';
@@ -32,6 +33,9 @@ export const login = createAction<TLoginAction>(
 export const checkAuthentication = createAction(
   actionTypes.USER_AUTH_CHECK_AUTHENTICATION,
 );
+export const updateProfile = createAction<TUpdateProfileAction>(
+  actionTypes.USER_AUTH_UPDATE_PROFILE,
+);
 
 export default {
   resetPassword,
@@ -41,4 +45,5 @@ export default {
   logout,
   login,
   checkAuthentication,
+  updateProfile,
 };

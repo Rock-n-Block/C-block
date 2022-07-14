@@ -24,6 +24,7 @@ import {
   IGetMetamaskMessageReturnType,
   IRegisterAccount,
   ILogin,
+  IUpdateProfile,
 } from './auth.types';
 
 const client: AxiosInstance = axios.create({
@@ -91,7 +92,27 @@ export const authApi = {
   getUserData() {
     return ajax({
       method: 'get',
-      url: URL.accounts.getUserData,
+      url: URL.accounts.accountsUser,
+      withCredentials: true,
+    });
+  },
+  updateProfile(baseProfileData: IUpdateProfile, avatar: File) {
+    Object.entries(baseProfileData);
+    let data: FormData | IUpdateProfile;
+    if (avatar) {
+      data = new FormData();
+      (data as FormData).set('data', JSON.stringify(baseProfileData));
+      (data as FormData).set('avatar', avatar);
+    } else {
+      data = baseProfileData;
+    }
+    return ajax({
+      method: 'patch',
+      url: URL.accounts.accountsUser,
+      headers: {
+        'Content-Type': avatar ? 'multipart/form-data' : 'application/json',
+      },
+      data,
       withCredentials: true,
     });
   },

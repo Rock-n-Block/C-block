@@ -14,6 +14,7 @@ export type UserProfile = {
   building: string;
   zipcode: string;
   avatarUrl: string;
+  avatar: File;
 
   isCompletedProfile: boolean;
 };

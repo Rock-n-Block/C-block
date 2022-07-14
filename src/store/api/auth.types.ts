@@ -48,5 +48,7 @@ export type TGetUserDataReturnType = {
   office: TNullable<string>;
   phone_number: TNullable<string>;
   street: TNullable<string>;
-  zipcode: TNullable<string>;
+  zipcode: TNullable<number>;
 };
+
+export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar'>;

@@ -8,6 +8,7 @@ import logoutSaga from './logout';
 import loginSaga from './login';
 import getUserDataSaga from './getUserData';
 import checkAuthenticationSaga from './checkAuthentication';
+import updateProfileSaga from './updateProfile';
 
 export default function* authSaga() {
   yield fork(resetPasswordSaga);
@@ -18,4 +19,5 @@ export default function* authSaga() {
   yield fork(logoutSaga);
   yield fork(getUserDataSaga);
   yield fork(checkAuthenticationSaga);
+  yield fork(updateProfileSaga);
 }

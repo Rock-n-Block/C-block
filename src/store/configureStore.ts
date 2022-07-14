@@ -110,6 +110,7 @@ const store = configureStore({
           mintTokenModalActionTypes.MINT_TOKEN_MODAL_MINT,
 
           authActionTypes.USER_AUTH_REGISTER_ACCOUNT,
+          authActionTypes.USER_AUTH_UPDATE_PROFILE,
 
           adminActionTypes.ADMIN_CHECK_IS_ADMIN,
           adminActionTypes.ADMIN_SET_PAYMENTS_RECEIVER,

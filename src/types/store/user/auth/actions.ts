@@ -1,4 +1,5 @@
 import { TProvider } from '../../actions';
+import { UserProfile } from '../user';
 
 export type TResetPasswordAction = {
   email: string;
@@ -27,3 +28,5 @@ export type TLoginAction = {
   email: string;
   password: string;
 };
+
+export type TUpdateProfileAction = UserProfile;

@@ -27,6 +27,7 @@ import clsx from 'clsx';
 import { CloseCircleIcon, ImageIcon, PlusIcon } from 'theme/icons';
 import contractFormsSelector from 'store/contractForms/selectors';
 import userSelectors from 'store/user/selectors';
+import userActions from 'store/user/auth/actions';
 import { useAuthConnectWallet, useShallowSelector } from 'hooks';
 import { Copyable } from 'components';
 import { routes } from 'appConstants';
@@ -64,6 +65,7 @@ export const Profile = memo(() => {
     // @ts-expect-error wrong type for Input type='file'
     const [newFile]: [File] = e.target.files;
     formikRef.current.setFieldValue('avatarUrl', URL.createObjectURL(newFile));
+    formikRef.current.setFieldValue('avatar', newFile);
   };
 
   useEffect(() => {
@@ -106,8 +108,8 @@ export const Profile = memo(() => {
           values,
           formikHelpers,
         ) => {
-          // @ts-ignore
-          dispatch(updateProfile(values));
+          console.log(values);
+          dispatch(userActions.updateProfile(values));
         }}
       >
         {({
@@ -246,8 +248,9 @@ export const Profile = memo(() => {
                   <Field
                     name="telephone.body"
                     render={
+                      // eslint-disable-next-line arrow-body-style
                       ({ form: { isSubmitting } }: FieldProps) => {
-                        console.log('TEST', values, errors, touched);
+                        // console.log('TEST', values, errors, touched);
                         return (
                           <TextField
                             label="Tel"

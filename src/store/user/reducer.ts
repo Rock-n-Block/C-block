@@ -24,6 +24,7 @@ const initialState: UserState = {
     building: '',
     zipcode: '',
     avatarUrl: '',
+    avatar: {} as File,
 
     isCompletedProfile: false,
   },
