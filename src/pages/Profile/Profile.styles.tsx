@@ -31,6 +31,9 @@ export const useStyles = makeStyles<Theme, { hasUploadedLogoImage: boolean }>((t
         marginRight: 94,
       },
     },
+    gridField: {
+      padding: theme.spacing(2, 1.25),
+    },
     changePasswordBtn: {
       marginTop: 4,
     },

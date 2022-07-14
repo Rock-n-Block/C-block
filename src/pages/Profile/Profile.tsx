@@ -160,6 +160,7 @@ export const Profile = memo(() => {
                 container
               >
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -175,12 +176,14 @@ export const Profile = memo(() => {
                           value={values['userName']}
                           onBlur={handleBlur}
                           error={errors['userName'] && touched['userName']}
+                          helperText={(errors['userName'] && touched['userName']) && errors['userName']}
                         />
                       )
                     }
                   />
                 </Grid>
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -196,6 +199,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -228,6 +232,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -246,6 +251,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -261,6 +267,7 @@ export const Profile = memo(() => {
                           value={values['company']}
                           onBlur={handleBlur}
                           error={errors['company'] && touched['company']}
+                          helperText={(errors['company'] && touched['company']) && errors['company']}
                         />
                       )
                     }
@@ -268,6 +275,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                   style={{
@@ -299,6 +307,7 @@ export const Profile = memo(() => {
                             value={values.telephone?.body}
                             onBlur={handleBlur}
                             error={errors.telephone?.body && touched.telephone?.body}
+                            helperText={(errors.telephone?.body && touched.telephone?.body) && errors.telephone?.body}
                           />
                         );
                       }
@@ -339,6 +348,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -383,6 +393,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -398,6 +409,7 @@ export const Profile = memo(() => {
                           value={values['city']}
                           onBlur={handleBlur}
                           error={errors['city'] && touched['city']}
+                          helperText={(errors['city'] && touched['city']) && errors['city']}
                         />
                       )
                     }
@@ -405,6 +417,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={12}
                 >
@@ -420,6 +433,7 @@ export const Profile = memo(() => {
                           value={values['street']}
                           onBlur={handleBlur}
                           error={errors['street'] && touched['street']}
+                          helperText={(errors['street'] && touched['street']) && errors['street']}
                         />
                       )
                     }
@@ -427,6 +441,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={6}
                 >
@@ -449,6 +464,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={6}
                 >
@@ -471,6 +487,7 @@ export const Profile = memo(() => {
                 </Grid>
 
                 <Grid
+                  className={classes.gridField}
                   item
                   xs={6}
                 >

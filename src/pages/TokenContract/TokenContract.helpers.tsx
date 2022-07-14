@@ -57,7 +57,6 @@ export const validationSchema = Yup.object().shape({
         then: Yup.date().min(yesterday).max(maxDate).required(),
       }),
     }),
-  // @ts-expect-error due to Yup.addMethod()
   // ).unique('Token address must be unique', (item) => item.address, (index) => `tokens[${index}].address`),
   ).unique('Wallet name must be unique', (item) => item.name?.trim(), (index) => `tokens[${index}].name`),
 });
