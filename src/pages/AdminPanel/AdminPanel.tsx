@@ -37,26 +37,22 @@ import { useStyle } from './AdminPanel.styles';
 export const AdminPanel = () => {
   const dispatch = useDispatch();
   const { getDefaultProvider } = useWeb3Provider();
-  const [isAllowedDeployToMainnet, setIsAllowedDeployToMainnet] = useState(false);
   const [isPaymentsReceiverFieldEdit, setIsPaymentsReceiverFieldEdit] = useState(false);
   const [selectedContractType, setSelectedContractType] = useState<FactoryContracts>(
     contractsMock[0],
   );
 
-  const handleIsAllowedDeployToMainnet = () => {
-    setIsAllowedDeployToMainnet((prevState) => {
-      dispatch(
-        adminActions.setIsMainnetDisabled({
-          isMainnetDisabled: prevState,
-        }),
-      );
-      return !prevState;
-    });
-  };
-
-  const { paymentsReceiverAddress: defaultPaymentsReceiverAddress } = useShallowSelector(
+  const { paymentsReceiverAddress: defaultPaymentsReceiverAddress, isMainnetDisabled } = useShallowSelector(
     adminSelector.selectState,
   );
+  const handleIsAllowedDeployToMainnet = () => {
+    dispatch(
+      adminActions.setIsMainnetDisabled({
+        isMainnetDisabled: !isMainnetDisabled,
+      }),
+    );
+  };
+
   const [paymentsReceiverAddress, setPaymentsReceiverAddress] = useState(
     defaultPaymentsReceiverAddress,
   );
@@ -188,7 +184,7 @@ export const AdminPanel = () => {
           <CheckBox
             className={classes.checkBox}
             name="Allow users to deploy contracts to mainnet"
-            value={isAllowedDeployToMainnet}
+            value={!isMainnetDisabled}
             label="Allow users to deploy contracts to mainnet"
             onClick={handleIsAllowedDeployToMainnet}
           />
