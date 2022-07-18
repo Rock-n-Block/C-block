@@ -44,9 +44,15 @@ export type UserState = {
 
   countryCodes: CountryCodesItem[];
 
+  isFrozen: boolean;
+
   permissions: {
+    superAdmin: boolean;
+    changeNetworkMode: boolean;
     setFeeReceiver: boolean;
     setPrice: boolean;
-    superAdmin: boolean;
+    contactUsers: boolean;
+    freezeUsers: boolean;
+    viewUsers: boolean;
   };
 };

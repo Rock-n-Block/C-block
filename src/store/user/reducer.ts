@@ -31,10 +31,16 @@ const initialState: UserState = {
 
   countryCodes: [],
 
+  isFrozen: false,
+
   permissions: {
+    superAdmin: false,
+    changeNetworkMode: false,
     setFeeReceiver: false,
     setPrice: false,
-    superAdmin: false,
+    contactUsers: false,
+    freezeUsers: false,
+    viewUsers: false,
   },
 };
 

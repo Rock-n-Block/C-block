@@ -36,7 +36,19 @@ export interface ILogin {
   password: string;
 }
 
+type Permissions = {
+  can_change_network_mode: boolean;
+  can_change_payment_addresses: boolean;
+  can_change_price: boolean;
+  can_contact_users: boolean;
+  can_freeze_users: boolean;
+  can_view_users: boolean;
+  contract_super_admin: boolean;
+};
+
 export type TGetUserDataReturnType = {
+  id: number;
+
   email: string;
   owner_address: string;
   avatar: TNullable<string>;
@@ -50,8 +62,11 @@ export type TGetUserDataReturnType = {
   street: TNullable<string>;
   building: TNullable<string>;
   zipcode: TNullable<string>;
+
+  freezed: boolean;
+  permissions: Permissions;
 };
 
-export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar'>;
+export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar' | 'freezed' | 'id' | 'permissions'>;
 
 export type TGetCountryCodesReturnType = CountryCodesRawItem[];

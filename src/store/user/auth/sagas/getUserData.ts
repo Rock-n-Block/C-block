@@ -37,6 +37,9 @@ export function* getUserDataSaga({
         building,
         zipcode,
         is_completed_profile: isCompletedProfile,
+        freezed: isFrozen,
+        // id,
+        permissions,
       },
     }: AxiosResponse<TGetUserDataReturnType> = yield call(
       authApi.getUserData,
@@ -60,6 +63,16 @@ export function* getUserDataSaga({
         userName: userName || '',
         zipcode: zipcode || '',
         isCompletedProfile,
+      },
+      isFrozen,
+      permissions: {
+        superAdmin: permissions.contract_super_admin,
+        changeNetworkMode: permissions.can_change_network_mode,
+        setFeeReceiver: permissions.can_change_payment_addresses,
+        setPrice: permissions.can_change_price,
+        contactUsers: permissions.can_contact_users,
+        freezeUsers: permissions.can_freeze_users,
+        viewUsers: permissions.can_view_users,
       },
     }));
     yield put(apiActions.success(type));
