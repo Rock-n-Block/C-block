@@ -40,3 +40,4 @@ export * from './FlameIcon';
 export * from './LogOutIcon';
 export * from './CrownIcon';
 export * from './ImageIcon';
+export * from './PeopleIcon';

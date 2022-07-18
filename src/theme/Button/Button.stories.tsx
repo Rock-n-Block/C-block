@@ -32,8 +32,8 @@ export const Default: React.FC = () => (
     <Typography>Base</Typography>
     <Box>
       <Typography>outlined</Typography>
-      <Button variant="outlined" size="large">BUTTON Xl</Button>
-      <Button variant="outlined">BUTTON l</Button>
+      <Button variant="outlined" size="large">BUTTON L</Button>
+      <Button variant="outlined">BUTTON m</Button>
       <Button variant="outlined" size="small">BUTTON s</Button>
     </Box>
     <Box>

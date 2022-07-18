@@ -3,8 +3,15 @@ import { useDispatch } from 'react-redux';
 import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 import {
-  Button, Container, Grid, Typography,
+  Container,
+  Grid,
+  Button,
+  Typography,
+  TextField,
+  Switch,
+  Box,
 } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import clsx from 'clsx';
 
 import userSelectors from 'store/user/selectors';
@@ -20,7 +27,7 @@ import { useShallowSelector, useWeb3Provider } from 'hooks';
 import {
   ChangePriceCard, CheckBox, EditableField,
 } from 'components';
-import { SuccessIcon } from 'theme/icons';
+import { PeopleIcon, SearchIcon, SuccessIcon } from 'theme/icons';
 import { routes } from 'appConstants';
 
 import {
@@ -31,7 +38,10 @@ import { getContractsMinCreationPrice } from 'store/contractForms/actions';
 import { Modals, RequestStatus } from 'types';
 import { setActiveModal } from 'store/modals/reducer';
 import { getRates } from 'store/rates/actions';
-import { contractsMock, getContracts } from './AdminPanel.helpers';
+import { CollapsibleList } from './components/CollapsibleList';
+import {
+  AdminTabs, contractsMock, getContracts, tabs,
+} from './AdminPanel.helpers';
 import { useStyle } from './AdminPanel.styles';
 
 export const AdminPanel = () => {
@@ -41,6 +51,12 @@ export const AdminPanel = () => {
   const [selectedContractType, setSelectedContractType] = useState<FactoryContracts>(
     contractsMock[0],
   );
+  const [selectedTab, setSelectedTab] = useState<AdminTabs>(tabs[0]);
+  const [selectedOnlyAdmins, setSelectedOnlyAdmins] = useState(false);
+
+  const handleAdminsSwitch = () => {
+    setSelectedOnlyAdmins((prevState) => !prevState);
+  };
 
   const { paymentsReceiverAddress: defaultPaymentsReceiverAddress, isMainnetDisabled } = useShallowSelector(
     adminSelector.selectState,
@@ -204,63 +220,121 @@ export const AdminPanel = () => {
             onClick={handleSavePaymentsReceiverAddress}
             onChange={handleChangePaymentsReceiverAddress}
           />
-          <Typography variant="h3" className={classes.contractsLabel}>
-            Set prices for contracts creation
-          </Typography>
+          {
+            selectedTab !== 'Users' && (
+            <Typography variant="h3" className={classes.contractsLabel}>
+              Set prices for contracts creation
+            </Typography>
+            )
+          }
         </Grid>
       </Grid>
-      <Grid container>
-        {contractsMock.map((title) => (
-          <Grid key={title} item xs={12} sm={4} md={4} lg={2} xl={2}>
-            <Button
-              className={clsx(classes.tabButton, {
-                [classes.tabButtonNotActive]: title !== selectedContractType,
-              }, 'border-radius-s')}
-              size="small"
-              variant="contained"
-              onClick={() => setSelectedContractType(title)}
-            >
-              {title}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
-      <Grid container className={classes.cardsContainer}>
+      <Box className={classes.tabsContainer}>
         {
-          getContracts(selectedContractType, contractForms).map(({
-            contractDeployName, contractDisplayName, price = [],
-          }) => {
-            const [
-              rawCeloPrice,
-              rawCusdPrice,
-            ] = price;
-            const celoPrice = getTokenAmountDisplay(rawCeloPrice, celoDecimals);
-            const cusdPrice = getTokenAmountDisplay(rawCusdPrice, cusdDecimals);
-            const prices: Record<Tokens, string> = {
-              celo: celoPrice,
-              cusd: cusdPrice,
-            };
-            return (
-              <Grid
-                key={contractDeployName}
-                item
-                xs={12}
-                sm={12}
-                md={6}
-                lg={6}
-                xl={6}
+          tabs.map((title) => (
+            <Box key={title}>
+              <Button
+                className={clsx(classes.tabButton, {
+                  [classes.tabButtonNotActive]: title !== selectedTab,
+                }, 'border-radius-s')}
+                size="small"
+                variant="contained"
+                onClick={() => {
+                  setSelectedTab(title);
+                  // @ts-expect-error
+                  const isContractType = contractsMock.includes(title);
+                  if (isContractType) {
+                    // @ts-expect-error
+                    setSelectedContractType(title);
+                  }
+                }}
               >
-                <ChangePriceCard
-                  title={contractDisplayName}
-                  prices={prices}
-                  usdPerCelo={rates['celo']}
-                  onClick={handleSavePrice(contractDeployName)}
-                />
-              </Grid>
-            );
-          })
+                {title === 'Users' && <PeopleIcon style={{ marginRight: 8 }} />}
+                {title}
+              </Button>
+            </Box>
+          ))
         }
-      </Grid>
+      </Box>
+
+      {
+        selectedTab === 'Users' ? (
+          <Grid container>
+            <Grid item xs={12} md={8} className={classes.searchContainer}>
+              <TextField
+                id="input-with-icon-textfield"
+                placeholder="Wallet address/email/name"
+            // onChange={(e) => searchHandler(e.target.value)}
+                InputProps={{
+                  startAdornment: <SearchIcon />,
+                }}
+                className={classes.searchContainerField}
+              />
+              <Button
+                size="large"
+                variant="outlined"
+              >
+                Search
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Box className={classes.adminsSwitch}>
+                <Switch name="Admins" checked={selectedOnlyAdmins} onClick={handleAdminsSwitch} />
+                <Typography>Admins</Typography>
+              </Box>
+            </Grid>
+            <Grid item container xs={12} className={classes.collapsibleList}>
+              <CollapsibleList />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Pagination
+                className={classes.pagination}
+                count={10}
+                variant="outlined"
+                shape="rounded"
+              />
+            </Grid>
+          </Grid>
+        ) : (
+          <Grid container className={classes.cardsContainer}>
+            {
+            getContracts(selectedContractType, contractForms).map(({
+              contractDeployName, contractDisplayName, price = [],
+            }) => {
+              const [
+                rawCeloPrice,
+                rawCusdPrice,
+              ] = price;
+              const celoPrice = getTokenAmountDisplay(rawCeloPrice, celoDecimals);
+              const cusdPrice = getTokenAmountDisplay(rawCusdPrice, cusdDecimals);
+              const prices: Record<Tokens, string> = {
+                celo: celoPrice,
+                cusd: cusdPrice,
+              };
+              return (
+                <Grid
+                  key={contractDeployName}
+                  item
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                >
+                  <ChangePriceCard
+                    title={contractDisplayName}
+                    prices={prices}
+                    usdPerCelo={rates['celo']}
+                    onClick={handleSavePrice(contractDeployName)}
+                  />
+                </Grid>
+              );
+            })
+          }
+          </Grid>
+        )
+      }
+
     </Container>
   );
 };

@@ -5,6 +5,7 @@ import { UserNoImageImg } from 'assets';
 import { CrownIcon } from 'theme/icons';
 
 type UserNameBoxProps = {
+  className?: string;
   name: string;
   address?: string;
   imageUrl: string;
@@ -12,12 +13,14 @@ type UserNameBoxProps = {
 };
 
 export const UserNameBox: VFC<UserNameBoxProps> = ({
-  name, address = '', imageUrl, isExtended,
+  className, name, address = '', imageUrl, isExtended,
 }) => (
-  <Box style={{
-    display: 'flex',
-    alignItems: 'center',
-  }}
+  <Box
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+    }}
+    className={className}
   >
     {
         isExtended && <CrownIcon />

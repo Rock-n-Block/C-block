@@ -34,14 +34,14 @@ export const getMuiIconButton = (theme: Theme): Overrides['MuiIconButton'] => ({
     width: 48,
     height: 48,
     '&:hover': {
-      background: `${theme.palette.primary.dark} !important`,
+      background: `${theme.palette.secondary.light} !important`,
     },
     '&:active': {
-      background: COLOR_BLACK,
+      background: theme.palette.secondary.light,
     },
     '&$disabled': {
       opacity: 0.25,
-      backgroundColor: COLOR_BLACK,
+      backgroundColor: theme.palette.secondary.light,
     },
     '& > *': {
       '& > *': {
