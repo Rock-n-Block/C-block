@@ -1,6 +1,7 @@
 import React, {
   FC, useMemo, useState, MouseEvent,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Grid,
   Box,
@@ -20,6 +21,8 @@ import clsx from 'clsx';
 import { UserNameBox, Copyable, CheckBox } from 'components';
 
 import { CrownIcon } from 'theme/icons';
+import { setActiveModal } from 'store/modals/reducer';
+import { Modals } from 'types';
 import { createData, head, rows } from '../AdminPanel.helpers';
 import { useStyles, useRowStyles } from './CollapsibleList.styles';
 
@@ -37,6 +40,16 @@ const contractsCreatedByUser = [
 const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
   const [open, setOpen] = useState(false);
   const hasPermissions = useMemo(() => Object.values(row.permissions).some((item) => item), [row.permissions]);
+  const dispatch = useDispatch();
+  const handleSendEmail = () => {
+    dispatch(
+      setActiveModal({
+        modals: {
+          [Modals.AdminSendEmail]: true,
+        },
+      }),
+    );
+  };
   const classes = useRowStyles({ hasPermissions });
 
   return (
@@ -197,7 +210,7 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
                 </Grid>
               </Hidden>
               <Grid item xs={12} md={5}>
-                <Button variant="outlined" fullWidth>
+                <Button variant="outlined" fullWidth onClick={handleSendEmail}>
                   <Typography variant="button">
                     Send an e-mail to user
                   </Typography>
