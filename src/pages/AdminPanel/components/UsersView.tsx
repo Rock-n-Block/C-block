@@ -10,11 +10,17 @@ import {
   Switch,
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+
 import { SearchIcon } from 'theme/icons';
+import { Permissions } from 'types/store/user';
 import { useStyles } from './UsersView.styles';
 import { CollapsibleList } from './CollapsibleList';
 
-export const UsersView: FC = () => {
+type Props = {
+  permissions: Permissions;
+};
+
+export const UsersView: FC<Props> = ({ permissions }) => {
   const [selectedOnlyAdmins, setSelectedOnlyAdmins] = useState(false);
 
   const handleAdminsSwitch = () => {
@@ -40,12 +46,16 @@ export const UsersView: FC = () => {
           Search
         </Button>
       </Grid>
-      <Grid item xs={12}>
-        <Box className={classes.adminsSwitch}>
-          <Switch name="Admins" checked={selectedOnlyAdmins} onClick={handleAdminsSwitch} />
-          <Typography>Admins</Typography>
-        </Box>
-      </Grid>
+      {
+        permissions.superAdmin && (
+          <Grid item xs={12}>
+            <Box className={classes.adminsSwitch}>
+              <Switch name="Admins" checked={selectedOnlyAdmins} onClick={handleAdminsSwitch} />
+              <Typography>Admins</Typography>
+            </Box>
+          </Grid>
+        )
+      }
       <Grid item container xs={12} className={classes.collapsibleList}>
         <CollapsibleList />
       </Grid>

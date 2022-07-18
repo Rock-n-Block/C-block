@@ -48,7 +48,7 @@ export const AdminPanel = () => {
   const [selectedContractType, setSelectedContractType] = useState<FactoryContracts>(
     contractsMock[0],
   );
-  const [selectedTab, setSelectedTab] = useState<AdminTabs>(tabs[0]);
+  const [selectedTab, setSelectedTab] = useState<AdminTabs>(tabs[1]);
 
   const { paymentsReceiverAddress: defaultPaymentsReceiverAddress, isMainnetDisabled } = useShallowSelector(
     adminSelector.selectState,
@@ -64,7 +64,7 @@ export const AdminPanel = () => {
   const [paymentsReceiverAddress, setPaymentsReceiverAddress] = useState(
     defaultPaymentsReceiverAddress,
   );
-  const { isMainnet } = useShallowSelector(
+  const { isMainnet, permissions } = useShallowSelector(
     userSelectors.getUser,
   );
   const isAdmin = useShallowSelector(userSelectors.selectIsAdmin);
@@ -223,7 +223,8 @@ export const AdminPanel = () => {
       </Grid>
       <Box className={classes.tabsContainer}>
         {
-          tabs.map((title) => (
+          /* Users is only available if user has permission */
+          tabs.filter((title) => title !== 'Users' || permissions.viewUsers).map((title) => (
             <Box key={title}>
               <Button
                 className={clsx(classes.tabButton, {
@@ -251,7 +252,7 @@ export const AdminPanel = () => {
 
       {
         selectedTab === 'Users' ? (
-          <UsersView />
+          <UsersView permissions={permissions} />
         ) : (
           <Grid container className={classes.cardsContainer}>
             {
