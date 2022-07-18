@@ -15,7 +15,8 @@ import { flexHelper } from 'utils';
 
 export const useStyles = makeStyles((theme) => createStyles({
   head: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+    paddingBottom: 0,
     borderBottom: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
   },
   permissionsMenuPaper: {
@@ -76,10 +77,6 @@ export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean }>((them
       background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_2,
       border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3}`,
       borderRadius: theme.spacing(1.5),
-    },
-    head: {
-      marginBottom: theme.spacing(3),
-      borderBottom: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
     },
     collapseCell: {
       padding: theme.spacing(0, 2),
