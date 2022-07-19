@@ -1,5 +1,5 @@
 import React, {
-  FC, useState,
+  FC, useRef, useState, ChangeEvent,
 } from 'react';
 import {
   Grid,
@@ -13,6 +13,8 @@ import { Pagination } from '@material-ui/lab';
 
 import { SearchIcon } from 'theme/icons';
 import { Permissions } from 'types/store/user';
+import adminSelectors from 'store/admin/selectors';
+import { useShallowSelector } from 'hooks';
 import { useStyles } from './UsersView.styles';
 import { CollapsibleList } from './CollapsibleList';
 
@@ -21,19 +23,31 @@ type Props = {
 };
 
 export const UsersView: FC<Props> = ({ permissions }) => {
+  const searchTextRef = useRef<HTMLInputElement>();
+
   const [selectedOnlyAdmins, setSelectedOnlyAdmins] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const handleAdminsSwitch = () => {
     setSelectedOnlyAdmins((prevState) => !prevState);
   };
+
+  const handleSearch = () => {
+    setSearchText(searchTextRef.current.value);
+  };
+
+
+  const rows = useShallowSelector(
+    adminSelectors.selectUsers(searchText, selectedOnlyAdmins),
+  );
   const classes = useStyles();
   return (
     <Grid container>
       <Grid item xs={12} md={8} className={classes.searchContainer}>
         <TextField
+          inputRef={searchTextRef}
           id="input-with-icon-textfield"
           placeholder="Wallet address/email/name"
-      // onChange={(e) => searchHandler(e.target.value)}
           InputProps={{
             startAdornment: <SearchIcon />,
           }}
@@ -42,6 +56,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
         <Button
           size="large"
           variant="outlined"
+          onClick={handleSearch}
         >
           Search
         </Button>
@@ -57,7 +72,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
         )
       }
       <Grid item container xs={12} className={classes.collapsibleList}>
-        <CollapsibleList />
+        <CollapsibleList rows={rows} />
       </Grid>
       <Grid item xs={12} md={6}>
         <Pagination
