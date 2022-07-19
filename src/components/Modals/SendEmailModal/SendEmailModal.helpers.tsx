@@ -3,17 +3,17 @@ import * as Yup from 'yup';
 import { EmailIcon } from 'theme/icons';
 
 export interface IFormValues {
-  emailTo: string;
+  email: string;
   request: string;
 }
 
 export const initFormValues: IFormValues = {
-  emailTo: '',
+  email: '',
   request: '',
 };
 
 export const validationSchema = Yup.object().shape({
-  emailTo: Yup.string()
+  email: Yup.string()
     .email('Invalid email')
     .required('Required'),
   request: Yup.string()
@@ -24,12 +24,13 @@ export const validationSchema = Yup.object().shape({
 
 export const formConfig = [
   {
-    id: 'emailTo',
-    name: 'emailTo',
+    id: 'email',
+    name: 'email',
     renderProps: {
       label: 'To:',
-      InputProps: { endAdornment: <EmailIcon /> },
+      InputProps: { readOnly: true, endAdornment: <EmailIcon /> },
       name: 'email',
+      disabled: true,
     },
   },
   {
@@ -44,28 +45,3 @@ export const formConfig = [
     },
   },
 ];
-
-export const constructEmailSheet = (values: IFormValues) => {
-  const {
-    emailTo, request,
-  } = values;
-  const subject = encodeURIComponent(
-    'C-Block Platform',
-  );
-  const body = encodeURIComponent(
-    `${request}
-`,
-  );
-
-  return `mailto:${emailTo}?subject=${subject}&body=${body}`;
-};
-
-export const sendEmail = (values: IFormValues) => {
-  const link = document.createElement('a');
-  link.style.display = 'none';
-  link.href = constructEmailSheet(values);
-  link.rel = 'noopener noreferrer';
-  link.target = '_blank';
-
-  link.click();
-};

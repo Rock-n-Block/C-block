@@ -7,7 +7,7 @@ import {
   Typography, Button, Box, TextField,
 } from '@material-ui/core';
 import {
-  Field, FieldProps, Form, Formik, FormikProps, FormikHelpers,
+  Field, FieldProps, Form, Formik, FormikProps,
 } from 'formik';
 
 import userSelector from 'store/user/selectors';
@@ -17,7 +17,6 @@ import {
   initFormValues,
   validationSchema,
   IFormValues,
-  sendEmail,
   formConfig,
 } from './SendEmailModal.helpers';
 import { useStyles } from './SendEmailModal.styles';
@@ -26,13 +25,17 @@ export interface SendEmailModalProps {
   className?: string;
   open?: boolean;
   setIsModalOpen?: (isOpen: boolean) => void;
+  emailTo: string;
   onClose?: () => void;
+  onSubmit?: (request: string) => void;
 }
 
 export const SendEmailModal: VFC<SendEmailModalProps> = ({
   open,
   setIsModalOpen,
+  emailTo,
   onClose,
+  onSubmit,
 }) => {
   const classes = useStyles();
 
@@ -63,6 +66,17 @@ export const SendEmailModal: VFC<SendEmailModalProps> = ({
 
   const formikRef = useRef<FormikProps<IFormValues>>();
 
+  const handleSubmit = (request: string) => {
+    if (onSubmit) {
+      onSubmit(request);
+    }
+  };
+
+  const initialValues = useMemo<IFormValues>(() => ({
+    ...initFormValues,
+    email: emailTo,
+  }), [emailTo]);
+
   return (
     <Modal
       className={classes.root}
@@ -72,15 +86,15 @@ export const SendEmailModal: VFC<SendEmailModalProps> = ({
     >
       <Formik
         innerRef={formikRef}
-        initialValues={initFormValues}
+        initialValues={initialValues}
         validateOnMount
         validationSchema={validationSchema}
         onSubmit={(
           values,
-          { resetForm }: FormikHelpers<IFormValues>,
+          formikHelpers,
         ) => {
-          sendEmail(values);
-          resetForm();
+          handleSubmit(values.request);
+          formikHelpers.setSubmitting(false);
         }}
       >
         {({
@@ -89,11 +103,9 @@ export const SendEmailModal: VFC<SendEmailModalProps> = ({
         }) => {
           return (
             <Form translate={undefined}>
-              {formConfig.map(({ id, name, renderProps }) => (
-                <Box className={classes.inputContainer}>
+              {formConfig.map(({ name, renderProps }) => (
+                <Box key={name} className={classes.inputContainer}>
                   <Field
-                    key={name}
-                    id={id}
                     name={name}
                     render={
                     ({ form: { isSubmitting } }: FieldProps) => (
@@ -129,6 +141,7 @@ export const SendEmailModal: VFC<SendEmailModalProps> = ({
                   type="reset"
                   color="primary"
                   variant="outlined"
+                  onClick={closeModal}
                 >
                   Cancel
                 </Button>

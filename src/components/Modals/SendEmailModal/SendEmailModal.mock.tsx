@@ -6,4 +6,5 @@ export const mockedProps: SendEmailModalProps = {
     throw new Error('Function not implemented.');
   },
   setIsModalOpen() {},
+  emailTo: 'testmail@mail.com',
 };

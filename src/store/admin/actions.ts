@@ -6,6 +6,7 @@ import {
   TAdminSetPriceAction,
   TAdminGetPaymentsReceiverAction,
   TSetIsMainnetDisabledAction,
+  TSendEmailAction,
 } from 'types/store/admin';
 
 import actionTypes from './actionTypes';
@@ -31,6 +32,9 @@ export const setIsMainnetDisabled = createAction<TSetIsMainnetDisabledAction>(
 export const getUsers = createAction(
   actionTypes.ADMIN_GET_USERS,
 );
+export const sendEmail = createAction<TSendEmailAction>(
+  actionTypes.ADMIN_SEND_EMAIL,
+);
 
 export default {
   checkIsAdmin,
@@ -40,4 +44,5 @@ export default {
   getIsMainnetDisabled,
   setIsMainnetDisabled,
   getUsers,
+  sendEmail,
 };

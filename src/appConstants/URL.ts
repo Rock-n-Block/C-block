@@ -25,6 +25,7 @@ export default {
 
     roleSystem: {
       usersList: 'accounts/role_system/users_list/',
+      contactUser: 'accounts/role_system/contact_user/',
     },
   },
 };

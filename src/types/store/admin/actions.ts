@@ -16,3 +16,7 @@ export type TSetIsMainnetDisabledAction = {
   isMainnetDisabled: boolean;
 };
 // export type TGetUsersAction = {};
+export type TSendEmailAction = {
+  userId: number;
+  message: string;
+};

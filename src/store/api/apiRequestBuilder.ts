@@ -26,7 +26,7 @@ import {
   ILogin,
   IUpdateProfile,
 } from './auth.types';
-import { TGetUsersListReturnType } from './roleSystem.types';
+import { TGetUsersListReturnType, IAdminSendEmail } from './roleSystem.types';
 
 const client: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
@@ -130,6 +130,15 @@ export const roleSystemApi = {
     return ajax<TGetUsersListReturnType>({
       method: 'get',
       url: URL.accounts.roleSystem.usersList,
+      withCredentials: true,
+    });
+  },
+  sendEmail(data: IAdminSendEmail) {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.roleSystem.contactUser,
+      data,
+      withCredentials: true,
     });
   },
 };

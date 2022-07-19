@@ -6,7 +6,7 @@ import modalsSelector from 'store/modals/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modals } from 'types';
 import { closeAllModals, closeModal } from 'store/modals/reducer';
-import { LoadingModal, SendEmailModal } from 'components/Modals';
+import { LoadingModal } from 'components/Modals';
 import { CompleteModal } from 'components';
 
 export const AdminModalsContainer: FC = () => {
@@ -30,10 +30,6 @@ export const AdminModalsContainer: FC = () => {
   const isAdminChangePriceError = useShallowSelector(
     modalsSelector.selectModalState(Modals.AdminChangePriceError),
   );
-  // Email
-  const isAdminSendEmailOpen = useShallowSelector(
-    modalsSelector.selectModalState(Modals.AdminSendEmail),
-  );
 
   const dispatch = useDispatch();
   const handleCloseAdminChangePaymentsReceiverSuccessModal = useCallback(() => {
@@ -47,9 +43,6 @@ export const AdminModalsContainer: FC = () => {
   }, [dispatch]);
   const handleCloseAdminChangePriceErrorModal = useCallback(() => {
     dispatch(closeModal(Modals.AdminChangePriceError));
-  }, [dispatch]);
-  const handleCloseAdminSendEmailModal = useCallback(() => {
-    dispatch(closeModal(Modals.AdminSendEmail));
   }, [dispatch]);
 
   const location = useLocation();
@@ -86,11 +79,6 @@ export const AdminModalsContainer: FC = () => {
         result={false}
         errorText="Error occurred while saving price"
         onClose={handleCloseAdminChangePriceErrorModal}
-      />
-
-      <SendEmailModal
-        open={isAdminSendEmailOpen}
-        onClose={handleCloseAdminSendEmailModal}
       />
     </>
   );
