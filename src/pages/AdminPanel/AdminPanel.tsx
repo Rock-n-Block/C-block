@@ -132,6 +132,14 @@ export const AdminPanel = () => {
   }, [defaultPaymentsReceiverAddress]);
 
   useEffect(() => {
+    if (selectedTab === 'Users') {
+      dispatch(
+        adminActions.getUsers(),
+      );
+    }
+  }, [dispatch, selectedTab]);
+
+  useEffect(() => {
     dispatch(
       getContractsMinCreationPrice({
         provider: getDefaultProvider(),

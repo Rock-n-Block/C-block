@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AdminState } from 'types';
+// import { TGetUsersListReturnType } from 'store/api/roleSystem.types';
+import { AdminState, UserView } from 'types';
 
 const initialState: AdminState = {
   isMainnetDisabled: false,
   paymentsReceiverAddress: '',
+  users: [],
 };
 
 export const adminReducer = createSlice({
@@ -22,6 +24,11 @@ export const adminReducer = createSlice({
       ...state,
       paymentsReceiverAddress: action.payload,
     }),
+
+    setUsers: (state, action: PayloadAction<UserView[]>) => ({
+      ...state,
+      users: action.payload,
+    }),
   },
 });
 
@@ -29,6 +36,7 @@ export const {
   setState,
   setIsMainnetDisabled,
   setPaymentsReceiverAddress,
+  setUsers,
 } = adminReducer.actions;
 
 export default adminReducer.reducer;

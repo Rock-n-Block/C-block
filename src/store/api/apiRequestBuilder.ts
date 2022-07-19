@@ -26,6 +26,7 @@ import {
   ILogin,
   IUpdateProfile,
 } from './auth.types';
+import { TGetUsersListReturnType } from './roleSystem.types';
 
 const client: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
@@ -120,6 +121,15 @@ export const authApi = {
     return ajax({
       method: 'get',
       url: URL.accounts.countryCodes,
+    });
+  },
+};
+
+export const roleSystemApi = {
+  getUsersList() {
+    return ajax<TGetUsersListReturnType>({
+      method: 'get',
+      url: URL.accounts.roleSystem.usersList,
     });
   },
 };
