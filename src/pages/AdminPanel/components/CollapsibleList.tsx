@@ -1,5 +1,5 @@
 import React, {
-  FC, useMemo, useState, MouseEvent, useEffect,
+  FC, useMemo, useState, MouseEvent, useEffect, Fragment,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -14,6 +14,8 @@ import {
   MenuItem,
   Hidden,
   Checkbox,
+  CircularProgress,
+  ListSubheader,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -28,26 +30,26 @@ import { CrownIcon } from 'theme/icons';
 import { Permissions } from 'types/store/user';
 import { RequestStatus, UserView } from 'types';
 import { useShallowSelector } from 'hooks';
+import { TGetContracts, IGetContractsReturnType } from 'store/api/apiRequestBuilder.types';
 import { head } from '../AdminPanel.helpers';
 import { useStyles, useRowStyles } from './CollapsibleList.styles';
 
 type RowProps = {
   row: UserView;
   permissions: Permissions;
+  onUserContractsOpen: (event: MouseEvent<HTMLInputElement>) => void;
   onFreezeUser: (event: MouseEvent<HTMLButtonElement>) => void;
   onSendEmailModalOpen: (event: MouseEvent<HTMLButtonElement>) => void;
   onPermissionsOpen: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
-const contractsCreatedByUser = [
-  '0x12321312345454356dsfds',
-  '0x12323131321313131231',
-];
-
 const Row: FC<RowProps> = ({
-  permissions, row, onFreezeUser, onSendEmailModalOpen, onPermissionsOpen,
+  permissions, row, onUserContractsOpen, onFreezeUser, onSendEmailModalOpen, onPermissionsOpen,
 }) => {
   const [open, setOpen] = useState(false);
+  const getUserContractsRequestStatus = useShallowSelector(
+    uiSelector.getProp(`${adminActionTypes.ADMIN_GET_USER_CONTRACTS}_${row.id}`),
+  );
   const hasPermissions = useMemo(
     () => Object.values(row.permissions).some((item) => item),
     [row.permissions],
@@ -160,15 +162,54 @@ const Row: FC<RowProps> = ({
                     Contracts` addresses created by this user
                   </Typography>
                   <TextField
+                    defaultValue=""
                     InputProps={{
                       className: classes.textField,
+                      startAdornment: getUserContractsRequestStatus === RequestStatus.REQUEST ? (
+                        <CircularProgress
+                          className={classes.loader}
+                          color="inherit"
+                          size={24}
+                        />
+                      ) : null,
+                    }}
+                    SelectProps={{
+                      onOpen: onUserContractsOpen,
+                      MenuProps: {
+                        style: {
+                          maxHeight: 300,
+                        },
+                        anchorOrigin: {
+                          vertical: 'bottom',
+                          horizontal: 'left',
+                        },
+                        getContentAnchorEl: null,
+                      },
                     }}
                     select
                   >
                     {
-                      contractsCreatedByUser.map((option) => (
-                        <MenuItem key={option} value={option}>{option}</MenuItem>
-                      ))
+                      Object.entries(row.contracts).reduce((
+                        accumulator,
+                        [contractName, contracts]: [keyof IGetContractsReturnType, TGetContracts[]],
+                      ) => {
+                        if (contracts.length) {
+                          accumulator.push(
+                            <ListSubheader key={contractName}>{contractName}</ListSubheader>,
+                          );
+                        }
+                        contracts.forEach((contract) => {
+                          accumulator.push(
+                            <MenuItem
+                              key={contract.address}
+                              value={contract.address}
+                            >
+                              {contract.address}
+                            </MenuItem>,
+                          );
+                        });
+                        return accumulator;
+                      }, [])
                     }
                   </TextField>
                 </Grid>
@@ -195,29 +236,72 @@ const Row: FC<RowProps> = ({
                 <Typography className={classes.rowText}>{row.zipcode}</Typography>
               </Grid>
               <Hidden only={['md', 'lg', 'xl']}>
-                <Grid item xs={8} sm={6}>
-                  <CheckBox
-                    className={classes.textField}
-                    name="Freeze user"
-                    value={row.isFrozen}
-                    label="Freeze user"
-                    onClick={() => {}}
-                  />
-                </Grid>
+                {
+                  permissions.freezeUsers && (
+                    <Grid item xs={8} sm={6}>
+                      <CheckBox
+                        className={classes.textField}
+                        name="Freeze user"
+                        value={row.isFrozen}
+                        label="Freeze user"
+                        onClick={onFreezeUser}
+                      />
+                    </Grid>
+                  )
+                }
                 <Grid item xs={12}>
                   <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                     Contracts` addresses created by this user
                   </Typography>
                   <TextField
+                    defaultValue=""
                     InputProps={{
                       className: classes.textField,
+                      startAdornment: getUserContractsRequestStatus === RequestStatus.REQUEST ? (
+                        <CircularProgress
+                          className={classes.loader}
+                          color="inherit"
+                          size={24}
+                        />
+                      ) : null,
+                    }}
+                    SelectProps={{
+                      onOpen: onUserContractsOpen,
+                      MenuProps: {
+                        style: {
+                          maxHeight: 300,
+                        },
+                        anchorOrigin: {
+                          vertical: 'bottom',
+                          horizontal: 'left',
+                        },
+                        getContentAnchorEl: null,
+                      },
                     }}
                     select
                   >
                     {
-                      contractsCreatedByUser.map((option) => (
-                        <MenuItem key={option} value={option}>{option}</MenuItem>
-                      ))
+                      Object.entries(row.contracts).reduce((
+                        accumulator,
+                        [contractName, contracts]: [keyof IGetContractsReturnType, TGetContracts[]],
+                      ) => {
+                        if (contracts.length) {
+                          accumulator.push(
+                            <ListSubheader key={contractName}>{contractName}</ListSubheader>,
+                          );
+                        }
+                        contracts.forEach((contract) => {
+                          accumulator.push(
+                            <MenuItem
+                              key={contract.address}
+                              value={contract.address}
+                            >
+                              {contract.address}
+                            </MenuItem>,
+                          );
+                        });
+                        return accumulator;
+                      }, [])
                     }
                   </TextField>
                 </Grid>
@@ -283,6 +367,17 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
   };
 
   const dispatch = useDispatch();
+  const handleUserContractsOpen = (currentUserData: UserView) => (
+    event: MouseEvent<HTMLInputElement>,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dispatch(
+      adminActions.getUserContracts({
+        userId: currentUserData.id,
+      }),
+    );
+  };
   const handleAdminSendEmail = (request: string) => {
     dispatch(adminActions.sendEmail({
       userId: userData.id,
@@ -323,6 +418,7 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
             key={row.id}
             row={row}
             permissions={permissions}
+            onUserContractsOpen={handleUserContractsOpen(row)}
             onFreezeUser={handleFreezeUser(row)}
             onSendEmailModalOpen={handleSendEmailModalOpen(row)}
             onPermissionsOpen={handlePermissionsOpen(row)}

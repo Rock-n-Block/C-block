@@ -126,5 +126,12 @@ export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean }>((them
         fill: ({ hasPermissions }) => (hasPermissions ? COLOR_ACID_GREEN : COLOR_BLACK_4),
       },
     },
+
+    loader: {
+      position: 'absolute',
+      '& svg *': {
+        fill: 'unset !important',
+      },
+    },
   });
 });

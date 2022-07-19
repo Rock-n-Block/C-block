@@ -35,7 +35,7 @@ export const adminReducer = createSlice({
     }>) => {
       const users = [...state.users];
       const userId = users.findIndex(({ id }) => id === action.payload.userId);
-      if (!userId) return state;
+      if (userId === -1) return state;
       const user = users[userId];
       const newUser = merge({}, user, action.payload.user);
       users.splice(userId, 1, newUser);

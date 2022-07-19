@@ -64,6 +64,13 @@ function* getUsersSaga({
           freezeUsers: permissions.can_freeze_users,
           viewUsers: permissions.can_view_users,
         },
+        contracts: {
+          crowdsales: [],
+          lastwills: [],
+          lostkeys: [],
+          tokens: [],
+          weddings: [],
+        },
       }))),
     );
 

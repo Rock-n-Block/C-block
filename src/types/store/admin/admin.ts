@@ -1,3 +1,4 @@
+import { IGetContractsReturnType } from 'store/api/apiRequestBuilder.types';
 import { Permissions } from '../user';
 
 export type UserView = {
@@ -18,6 +19,8 @@ export type UserView = {
   isFrozen: boolean;
   isCompletedProfile: boolean;
   permissions: Permissions;
+
+  contracts: IGetContractsReturnType;
 };
 
 export type AdminState = {

@@ -8,6 +8,7 @@ import {
   TSetIsMainnetDisabledAction,
   TSendEmailAction,
   TSetIsFrozenUserAction,
+  TAdminGetUserContractsAction,
 } from 'types/store/admin';
 
 import actionTypes from './actionTypes';
@@ -39,6 +40,9 @@ export const sendEmail = createAction<TSendEmailAction>(
 export const setIsFrozenUser = createAction<TSetIsFrozenUserAction>(
   actionTypes.ADMIN_SET_IS_FROZEN_USER,
 );
+export const getUserContracts = createAction<TAdminGetUserContractsAction>(
+  actionTypes.ADMIN_GET_USER_CONTRACTS,
+);
 
 export default {
   checkIsAdmin,
@@ -50,4 +54,5 @@ export default {
   getUsers,
   sendEmail,
   setIsFrozenUser,
+  getUserContracts,
 };

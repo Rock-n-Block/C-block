@@ -24,3 +24,6 @@ export type TSetIsFrozenUserAction = {
   userId: number;
   isFrozen: boolean;
 };
+export type TAdminGetUserContractsAction = {
+  userId: number;
+};

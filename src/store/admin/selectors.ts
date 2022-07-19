@@ -2,6 +2,7 @@ import type { State } from 'types';
 
 export default {
   selectState: (state: State) => state.admin,
+  selectUser: (userId: number) => (state: State) => state.admin.users.find(({ id }) => userId === id),
   selectUsers: (searchText: string, selectOnlyAdmins: boolean) => (state: State) => {
     let ret = state.admin.users;
     if (searchText) {
