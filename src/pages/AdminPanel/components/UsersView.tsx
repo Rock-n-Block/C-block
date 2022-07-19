@@ -77,7 +77,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
         )
       }
       <Grid item container xs={12} className={classes.collapsibleList}>
-        <CollapsibleList rows={rows} currentPage={page} maxRows={maxRows} />
+        <CollapsibleList permissions={permissions} rows={rows} currentPage={page} maxRows={maxRows} />
       </Grid>
       <Grid item xs={12} md={6}>
         <Pagination

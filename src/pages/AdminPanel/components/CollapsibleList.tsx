@@ -22,12 +22,14 @@ import { UserNameBox, Copyable, CheckBox } from 'components';
 
 import { CrownIcon } from 'theme/icons';
 import { setActiveModal } from 'store/modals/reducer';
+import { Permissions } from 'types/store/user';
 import { Modals, UserView } from 'types';
+import { head } from '../AdminPanel.helpers';
 import { useStyles, useRowStyles } from './CollapsibleList.styles';
 
-type RowData = ReturnType<typeof createData>;
 type RowProps = {
-  row: RowData;
+  row: UserView;
+  permissions: Permissions;
   onPermissionsOpen: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
@@ -36,9 +38,12 @@ const contractsCreatedByUser = [
   '0x12323131321313131231',
 ];
 
-const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
+const Row: FC<RowProps> = ({ permissions, row, onPermissionsOpen }) => {
   const [open, setOpen] = useState(false);
-  const hasPermissions = useMemo(() => Object.values(row.permissions).some((item) => item), [row.permissions]);
+  const hasPermissions = useMemo(
+    () => Object.values(row.permissions).some((item) => item),
+    [row.permissions],
+  );
   const dispatch = useDispatch();
   const handleSendEmail = () => {
     dispatch(
@@ -64,8 +69,8 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
       <Grid item xs={4} sm={5} md={2}>
         <UserNameBox
           className={classes.userNameBox}
-          name={row.person.name}
-          imageUrl={row.person.avatarUrl}
+          name={row.userName}
+          imageUrl={row.avatarUrl}
           isExtended={false}
         />
       </Grid>
@@ -78,35 +83,44 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
               className: classes.textField,
               readOnly: true,
               endAdornment: (
-                <Copyable className={classes.copyableIcon} valueToCopy={row.walletAddress} withIcon />
+                <Copyable className={classes.copyableIcon} valueToCopy={row.ownerAddress} withIcon />
               ),
             }}
             disabled
-            value={row.walletAddress}
+            value={row.ownerAddress}
           />
         </Grid>
       </Hidden>
       <Grid item xs={3} sm={2} md={4} className={classes.actionCol}>
         <Box>
           <Hidden only={['xs', 'sm']}>
-            <CheckBox
-              className={classes.textField}
-              name="Freeze user"
-              value={row.isFrozen}
-              label="Freeze user"
-              onClick={() => {}}
-            />
+            {
+              permissions.freezeUsers && (
+                <CheckBox
+                  className={classes.textField}
+                  name="Freeze user"
+                  value={row.isFrozen}
+                  label="Freeze user"
+                  onClick={() => {}}
+                />
+              )
+            }
           </Hidden>
-          <IconButton
-            className={classes.permissionsIconBtn}
-            aria-label="set permissions"
-            aria-haspopup="true"
-            color="primary"
-            size="small"
-            onClick={onPermissionsOpen}
-          >
-            <CrownIcon />
-          </IconButton>
+          {
+            permissions.superAdmin && (
+              <IconButton
+                className={classes.permissionsIconBtn}
+                aria-label="set permissions"
+                aria-haspopup="true"
+                color="primary"
+                size="small"
+                onClick={onPermissionsOpen}
+              >
+                <CrownIcon />
+              </IconButton>
+            )
+          }
+
         </Box>
 
         <IconButton
@@ -128,19 +142,19 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Registration time
                 </Typography>
-                <Typography className={classes.rowText}>12.01.2022 / 12:22</Typography>
+                <Typography className={classes.rowText}>???????</Typography>
               </Grid>
               <Grid item xs={6} md={2}>
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Tel
                 </Typography>
-                <Typography className={classes.rowText}>+9 (890) 998-21-21</Typography>
+                <Typography className={classes.rowText}>{row.phoneNumber}</Typography>
               </Grid>
               <Grid item xs={6} md={2}>
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Company
                 </Typography>
-                <Typography className={classes.rowText}>Atlantic inc.Monucen</Typography>
+                <Typography className={classes.rowText}>{row.company}</Typography>
               </Grid>
               <Hidden only={['xs', 'sm']}>
                 <Grid item sm={5}>
@@ -166,19 +180,21 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Country
                 </Typography>
-                <Typography className={classes.rowText}>OAE, Dubai</Typography>
+                <Typography className={classes.rowText}>{row.country}</Typography>
               </Grid>
               <Grid item xs={6} md={2}>
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Address
                 </Typography>
-                <Typography className={classes.rowText}>Behind Bin Sougat Cent...</Typography>
+                <Typography className={classes.rowText}>
+                  {`${row.city} ${row.street} ${row.office} ${row.building}`}
+                </Typography>
               </Grid>
               <Grid item xs={6} md={2}>
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Zipcode
                 </Typography>
-                <Typography className={classes.rowText}>23049210</Typography>
+                <Typography className={classes.rowText}>{row.zipcode}</Typography>
               </Grid>
               <Hidden only={['md', 'lg', 'xl']}>
                 <Grid item xs={8} sm={6}>
@@ -208,13 +224,17 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
                   </TextField>
                 </Grid>
               </Hidden>
-              <Grid item xs={12} md={5}>
-                <Button variant="outlined" fullWidth onClick={handleSendEmail}>
-                  <Typography variant="button">
-                    Send an e-mail to user
-                  </Typography>
-                </Button>
-              </Grid>
+              {
+                permissions.contactUsers && (
+                  <Grid item xs={12} md={5}>
+                    <Button variant="outlined" fullWidth onClick={handleSendEmail}>
+                      <Typography variant="button">
+                        Send an e-mail to user
+                      </Typography>
+                    </Button>
+                  </Grid>
+                )
+              }
             </Grid>
           </Box>
         </Collapse>
@@ -234,9 +254,9 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
   rows, permissions, currentPage, maxRows = 5,
 }) => {
   const [permissionsMenuEl, setPermissionMenuEl] = useState<null | HTMLElement>(null);
-  const [currentPermissions, setCurrentPermissions] = useState<null | RowData>(null);
+  const [currentPermissions, setCurrentPermissions] = useState<null | UserView>(null);
 
-  const handlePermissionsOpen = (currentUserData: RowData) => (
+  const handlePermissionsOpen = (currentUserData: UserView) => (
     event: MouseEvent<HTMLButtonElement>,
   ) => {
     setPermissionMenuEl(event.currentTarget);
@@ -288,27 +308,27 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
             {
               currentPermissions &&
               [{
-                isChecked: currentPermissions.permissions.canViewUsers,
+                isChecked: currentPermissions.permissions.viewUsers,
                 name: 'View users database',
               },
               {
-                isChecked: currentPermissions.permissions.canFreezeUsers,
+                isChecked: currentPermissions.permissions.freezeUsers,
                 name: 'Freeze users',
               },
               {
-                isChecked: currentPermissions.permissions.canContactUsers,
+                isChecked: currentPermissions.permissions.contactUsers,
                 name: 'Contact users',
               },
               {
-                isChecked: false,
+                isChecked: currentPermissions.permissions.setPrice,
                 name: 'Change prices',
               },
               {
-                isChecked: false,
+                isChecked: currentPermissions.permissions.changeNetworkMode,
                 name: 'Disable Mainnet toggle',
               },
               {
-                isChecked: true,
+                isChecked: currentPermissions.permissions.setFeeReceiver,
                 name: 'Change payment address',
               },
               ].map(({ isChecked, name }) => (
