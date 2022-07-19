@@ -22,8 +22,7 @@ import { UserNameBox, Copyable, CheckBox } from 'components';
 
 import { CrownIcon } from 'theme/icons';
 import { setActiveModal } from 'store/modals/reducer';
-import { Modals } from 'types';
-import { createData, head, rows } from '../AdminPanel.helpers';
+import { Modals, UserView } from 'types';
 import { useStyles, useRowStyles } from './CollapsibleList.styles';
 
 type RowData = ReturnType<typeof createData>;
@@ -224,7 +223,16 @@ const Row: FC<RowProps> = ({ row, onPermissionsOpen }) => {
   );
 };
 
-export const CollapsibleList = () => {
+type CollapsibleListProps = {
+  permissions: Permissions;
+  rows: UserView[];
+  currentPage: number;
+  maxRows?: number;
+};
+
+export const CollapsibleList: FC<CollapsibleListProps> = ({
+  rows, permissions, currentPage, maxRows = 5,
+}) => {
   const [permissionsMenuEl, setPermissionMenuEl] = useState<null | HTMLElement>(null);
   const [currentPermissions, setCurrentPermissions] = useState<null | RowData>(null);
 
@@ -242,13 +250,18 @@ export const CollapsibleList = () => {
       <Hidden only={['xs', 'sm']}>
         <Grid item container xs={12} className={classes.head}>
           {
-          head.map(({ name, props }) => <Grid key={name} item {...props}>{name}</Grid>)
-        }
+            head.map(({ name, props }) => <Grid key={name} item {...props}>{name}</Grid>)
+          }
         </Grid>
       </Hidden>
 
-      {rows.map((row) => (
-        <Row key={row.email} row={row} onPermissionsOpen={handlePermissionsOpen(row)} />
+      {rows.slice((currentPage - 1) * maxRows, currentPage * maxRows).map((row) => (
+        <Row
+          key={row.id}
+          row={row}
+          permissions={permissions}
+          onPermissionsOpen={handlePermissionsOpen(row)}
+        />
       ))}
       <Menu
         PaperProps={{

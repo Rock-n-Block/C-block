@@ -15,6 +15,7 @@ import { SearchIcon } from 'theme/icons';
 import { Permissions } from 'types/store/user';
 import adminSelectors from 'store/admin/selectors';
 import { useShallowSelector } from 'hooks';
+import { maxRows } from '../AdminPanel.helpers';
 import { useStyles } from './UsersView.styles';
 import { CollapsibleList } from './CollapsibleList';
 
@@ -27,6 +28,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
 
   const [selectedOnlyAdmins, setSelectedOnlyAdmins] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [page, setPage] = useState(1);
 
   const handleAdminsSwitch = () => {
     setSelectedOnlyAdmins((prevState) => !prevState);
@@ -36,6 +38,9 @@ export const UsersView: FC<Props> = ({ permissions }) => {
     setSearchText(searchTextRef.current.value);
   };
 
+  const handlePageChange = (event: ChangeEvent<unknown>, page: number) => {
+    setPage(page);
+  };
 
   const rows = useShallowSelector(
     adminSelectors.selectUsers(searchText, selectedOnlyAdmins),
@@ -72,14 +77,15 @@ export const UsersView: FC<Props> = ({ permissions }) => {
         )
       }
       <Grid item container xs={12} className={classes.collapsibleList}>
-        <CollapsibleList rows={rows} />
+        <CollapsibleList rows={rows} currentPage={page} maxRows={maxRows} />
       </Grid>
       <Grid item xs={12} md={6}>
         <Pagination
           className={classes.pagination}
-          count={10}
+          count={Math.ceil(rows.length / maxRows)}
           variant="outlined"
           shape="rounded"
+          onChange={handlePageChange}
         />
       </Grid>
     </Grid>
