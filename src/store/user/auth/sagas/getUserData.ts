@@ -24,6 +24,7 @@ export function* getUserDataSaga({
 
     const {
       data: {
+        date_joined: registrationDate,
         email: registrationEmail,
         owner_address: registrationWalletAddress,
         avatar: avatarUrl,
@@ -46,6 +47,7 @@ export function* getUserDataSaga({
     );
 
     yield put(setUser({
+      registrationDate,
       registrationEmail,
       registrationWalletAddress,
       profile: {

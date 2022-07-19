@@ -49,6 +49,7 @@ type Permissions = {
 export type TGetUserDataReturnType = {
   id: number;
 
+  date_joined: string;
   email: string;
   owner_address: string;
   avatar: TNullable<string>;
@@ -67,6 +68,6 @@ export type TGetUserDataReturnType = {
   permissions: Permissions;
 };
 
-export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar' | 'freezed' | 'id' | 'permissions'>;
+export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar' | 'freezed' | 'id' | 'permissions' | 'date_joined'>;
 
 export type TGetCountryCodesReturnType = CountryCodesRawItem[];

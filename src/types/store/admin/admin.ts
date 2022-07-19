@@ -5,6 +5,7 @@ export type UserView = {
   id: number;
   email: string;
   ownerAddress: string;
+  registrationDate: string;
 
   userName: string;
   company: string;

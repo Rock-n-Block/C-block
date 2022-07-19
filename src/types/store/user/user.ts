@@ -46,6 +46,7 @@ export type UserState = {
   isLight: boolean;
   isMainnet: boolean;
 
+  registrationDate: string;
   email: string;
   registrationEmail: string;
   registrationWalletAddress: string;

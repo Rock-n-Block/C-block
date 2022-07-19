@@ -142,7 +142,11 @@ const Row: FC<RowProps> = ({
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Registration time
                 </Typography>
-                <Typography className={classes.rowText}>???????</Typography>
+                <Typography className={classes.rowText}>
+                  {
+                    new Date(row.registrationDate).toLocaleString()
+                  }
+                </Typography>
               </Grid>
               <Grid item xs={6} md={2}>
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>

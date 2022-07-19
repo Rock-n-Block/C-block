@@ -7,6 +7,7 @@ const initialState: UserState = {
   isLight: false,
   isMainnet: false,
 
+  registrationDate: '',
   email: '',
   registrationEmail: '',
   registrationWalletAddress: '',
