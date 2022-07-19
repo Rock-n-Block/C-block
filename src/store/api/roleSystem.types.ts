@@ -5,3 +5,7 @@ export type IAdminSendEmail = {
   id: number;
   message: string;
 };
+export type ISetIsFrozenUser = {
+  id: number;
+  freezed: boolean;
+};

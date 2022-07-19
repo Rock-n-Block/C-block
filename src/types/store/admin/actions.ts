@@ -20,3 +20,7 @@ export type TSendEmailAction = {
   userId: number;
   message: string;
 };
+export type TSetIsFrozenUserAction = {
+  userId: number;
+  isFrozen: boolean;
+};

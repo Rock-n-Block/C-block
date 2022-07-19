@@ -8,6 +8,7 @@ import getIsMainnetDisabledSaga from './getIsMainnetDisabled';
 import setIsMainnetDisabledSaga from './setIsMainnetDisabled';
 import getUsersSaga from './getUsers';
 import sendEmailSaga from './sendEmail';
+import setIsFrozenUserSaga from './setIsFrozenUser';
 
 export default function* adminSaga() {
   yield fork(checkIsAdminSaga);
@@ -18,4 +19,5 @@ export default function* adminSaga() {
   yield fork(setIsMainnetDisabledSaga);
   yield fork(getUsersSaga);
   yield fork(sendEmailSaga);
+  yield fork(setIsFrozenUserSaga);
 }

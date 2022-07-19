@@ -34,6 +34,7 @@ import { useStyles, useRowStyles } from './CollapsibleList.styles';
 type RowProps = {
   row: UserView;
   permissions: Permissions;
+  onFreezeUser: (event: MouseEvent<HTMLButtonElement>) => void;
   onSendEmailModalOpen: (event: MouseEvent<HTMLButtonElement>) => void;
   onPermissionsOpen: (event: MouseEvent<HTMLButtonElement>) => void;
 };
@@ -44,7 +45,7 @@ const contractsCreatedByUser = [
 ];
 
 const Row: FC<RowProps> = ({
-  permissions, row, onSendEmailModalOpen, onPermissionsOpen,
+  permissions, row, onFreezeUser, onSendEmailModalOpen, onPermissionsOpen,
 }) => {
   const [open, setOpen] = useState(false);
   const hasPermissions = useMemo(
@@ -98,7 +99,7 @@ const Row: FC<RowProps> = ({
                   name="Freeze user"
                   value={row.isFrozen}
                   label="Freeze user"
-                  onClick={() => {}}
+                  onClick={onFreezeUser}
                 />
               )
             }
@@ -289,6 +290,13 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
     }));
   };
 
+  const handleFreezeUser = (currentUserData: UserView) => () => {
+    dispatch(adminActions.setIsFrozenUser({
+      userId: currentUserData.id,
+      isFrozen: !currentUserData.isFrozen,
+    }));
+  };
+
   const adminSendEmailRequestStatus = useShallowSelector(
     uiSelector.getProp(adminActionTypes.ADMIN_SEND_EMAIL),
   );
@@ -315,6 +323,7 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
             key={row.id}
             row={row}
             permissions={permissions}
+            onFreezeUser={handleFreezeUser(row)}
             onSendEmailModalOpen={handleSendEmailModalOpen(row)}
             onPermissionsOpen={handlePermissionsOpen(row)}
           />

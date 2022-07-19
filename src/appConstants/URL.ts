@@ -26,6 +26,7 @@ export default {
     roleSystem: {
       usersList: 'accounts/role_system/users_list/',
       contactUser: 'accounts/role_system/contact_user/',
+      freezeUser: 'accounts/role_system/freeze_user/',
     },
   },
 };
