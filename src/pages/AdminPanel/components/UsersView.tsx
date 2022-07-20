@@ -1,5 +1,5 @@
 import React, {
-  FC, useRef, useState, ChangeEvent,
+  FC, useRef, useState, ChangeEvent, useEffect,
 } from 'react';
 import {
   Grid,
@@ -23,12 +23,14 @@ type Props = {
   permissions: Permissions;
 };
 
+const defaultPage = 1;
+
 export const UsersView: FC<Props> = ({ permissions }) => {
   const searchTextRef = useRef<HTMLInputElement>();
 
   const [selectedOnlyAdmins, setSelectedOnlyAdmins] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(defaultPage);
 
   const handleAdminsSwitch = () => {
     setSelectedOnlyAdmins((prevState) => !prevState);
@@ -45,6 +47,11 @@ export const UsersView: FC<Props> = ({ permissions }) => {
   const rows = useShallowSelector(
     adminSelectors.selectUsers(searchText, selectedOnlyAdmins),
   );
+
+  useEffect(() => {
+    setPage(defaultPage);
+  }, [selectedOnlyAdmins, searchText]);
+
   const classes = useStyles();
   return (
     <Grid container>
@@ -82,6 +89,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
       <Grid item xs={12} md={6}>
         <Pagination
           className={classes.pagination}
+          page={page}
           count={Math.ceil(rows.length / maxRows)}
           variant="outlined"
           shape="rounded"
