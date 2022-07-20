@@ -36,7 +36,7 @@ export interface ILogin {
   password: string;
 }
 
-type Permissions = {
+export type PermissionsBackend = {
   can_change_network_mode: boolean;
   can_change_payment_addresses: boolean;
   can_change_price: boolean;
@@ -65,7 +65,7 @@ export type TGetUserDataReturnType = {
   zipcode: TNullable<string>;
 
   freezed: boolean;
-  permissions: Permissions;
+  permissions: PermissionsBackend;
 };
 
 export type IUpdateProfile = Omit<TGetUserDataReturnType, 'email' | 'owner_address' | 'is_completed_profile' | 'avatar' | 'freezed' | 'id' | 'permissions' | 'date_joined'>;

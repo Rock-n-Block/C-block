@@ -1,4 +1,4 @@
-import { TGetUserDataReturnType } from './auth.types';
+import { TGetUserDataReturnType, PermissionsBackend } from './auth.types';
 
 export type TGetUsersListReturnType = TGetUserDataReturnType[];
 export type IAdminSendEmail = {
@@ -9,3 +9,6 @@ export type ISetIsFrozenUser = {
   id: number;
   freezed: boolean;
 };
+export type IUpdatePermissions = {
+  id: number;
+} & Partial<PermissionsBackend>;

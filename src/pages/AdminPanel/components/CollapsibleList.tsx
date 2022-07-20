@@ -14,7 +14,8 @@ import uiSelector from 'store/ui/selectors';
 
 import { Permissions } from 'types/store/user';
 import { RequestStatus, UserView } from 'types';
-import { useShallowSelector } from 'hooks';
+import { useShallowSelector, useWeb3Provider } from 'hooks';
+import { shallowDifference } from 'utils';
 import { head } from '../AdminPanel.helpers';
 import { useStyles } from './CollapsibleList.styles';
 import { Row } from './Row';
@@ -30,6 +31,8 @@ type CollapsibleListProps = {
 export const CollapsibleList: FC<CollapsibleListProps> = ({
   rows, permissions, currentPage, maxRows = 5,
 }) => {
+  const dispatch = useDispatch();
+  const { getDefaultProvider } = useWeb3Provider();
   const [permissionsMenuEl, setPermissionMenuEl] = useState<null | HTMLElement>(null);
   const [userData, setUserData] = useState<null | UserView>(null);
 
@@ -40,7 +43,17 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
     setUserData(currentUserData);
   };
   const handlePermissionsClose = () => setPermissionMenuEl(null);
-  const handlePermissionsSave = () => {
+  const handlePermissionsSave = (permissions: Permissions) => {
+    const permissionsDiff = shallowDifference(userData.permissions, permissions);
+    if (Object.keys(permissionsDiff).length) {
+      dispatch(
+        adminActions.updatePermissions({
+          provider: getDefaultProvider(),
+          userId: userData.id,
+          permissions: permissionsDiff,
+        }),
+      );
+    }
     handlePermissionsClose();
   };
 
@@ -63,7 +76,6 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
     setUserData(currentUserData);
   };
 
-  const dispatch = useDispatch();
   const handleUserContractsOpen = (currentUserData: UserView) => (
     event: MouseEvent<HTMLInputElement>,
   ) => {

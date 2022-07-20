@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme) => createStyles({
     borderRadius: theme.spacing(1),
   },
   permissionsMenuListRoot: {
-    width: 200,
+    width: 210,
     padding: theme.spacing(2),
   },
   permissionsMenuItemRoot: {
@@ -52,6 +52,7 @@ export const useStyles = makeStyles((theme) => createStyles({
     },
   },
   checkBoxText: {
+    marginLeft: theme.spacing(1),
     fontSize: '14px',
     lineHeight: '24px',
     whiteSpace: 'break-spaces',

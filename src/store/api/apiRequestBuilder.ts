@@ -26,7 +26,9 @@ import {
   ILogin,
   IUpdateProfile,
 } from './auth.types';
-import { TGetUsersListReturnType, IAdminSendEmail, ISetIsFrozenUser } from './roleSystem.types';
+import {
+  TGetUsersListReturnType, IAdminSendEmail, ISetIsFrozenUser, IUpdatePermissions,
+} from './roleSystem.types';
 
 const client: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
@@ -145,6 +147,14 @@ export const roleSystemApi = {
     return ajax({
       method: 'post',
       url: URL.accounts.roleSystem.freezeUser,
+      data,
+      withCredentials: true,
+    });
+  },
+  updatePermissions(data: IUpdatePermissions) {
+    return ajax({
+      method: 'post',
+      url: URL.accounts.roleSystem.updatePermissions,
       data,
       withCredentials: true,
     });

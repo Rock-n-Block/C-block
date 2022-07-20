@@ -54,6 +54,9 @@ export const useAdminPanel = () => {
   const adminSendEmailRequestStatus = useShallowSelector(
     uiSelector.getProp(adminActionTypes.ADMIN_SEND_EMAIL),
   );
+  const adminUpdatePermissionsRequestStatus = useShallowSelector(
+    uiSelector.getProp(adminActionTypes.ADMIN_UPDATE_PERMISSIONS),
+  );
 
   // Requests
   useEffect(() => {
@@ -83,6 +86,15 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, adminSendEmailRequestStatus]);
+  useEffect(() => {
+    if (adminUpdatePermissionsRequestStatus === RequestStatus.REQUEST) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.AdminUpdatePermissionsPending]: true,
+        },
+      }));
+    }
+  }, [dispatch, adminUpdatePermissionsRequestStatus]);
 
   // Success
   useEffect(() => {
@@ -167,4 +179,11 @@ export const useAdminPanel = () => {
       dispatch(closeModal(Modals.AdminSendEmailPending));
     }
   }, [dispatch, adminSendEmailRequestStatus]);
+  useEffect(() => {
+    if (adminUpdatePermissionsRequestStatus === RequestStatus.ERROR ||
+      adminUpdatePermissionsRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(apiActions.reset(adminActionTypes.ADMIN_UPDATE_PERMISSIONS));
+      dispatch(closeModal(Modals.AdminUpdatePermissionsPending));
+    }
+  }, [dispatch, adminUpdatePermissionsRequestStatus]);
 };

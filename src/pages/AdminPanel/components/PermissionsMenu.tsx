@@ -1,5 +1,7 @@
 import React, {
   FC,
+  useEffect,
+  useState,
 } from 'react';
 import {
   Box,
@@ -17,14 +19,84 @@ import { useStyles } from './PermissionsMenu.styles';
 type PermissionsMenuProps = {
   anchorEl?: MenuProps['anchorEl'];
   defaultPermissions: Permissions;
-  onSave?: () => void;
+  onSave?: (permissions: Permissions) => void;
   onClose?: () => void;
 };
+
+type PermissionsItem = { key: keyof Permissions; isChecked: boolean; name: string };
 
 export const PermissionsMenu: FC<PermissionsMenuProps> = ({
   anchorEl, defaultPermissions, onSave, onClose,
 }) => {
+  const [permissions, setPermissions] = useState(defaultPermissions);
+  const permissionsArray: PermissionsItem[] = [
+    {
+      key: 'viewUsers',
+      isChecked: permissions.viewUsers,
+      name: 'View users database',
+    },
+    {
+      key: 'freezeUsers',
+      isChecked: permissions.freezeUsers,
+      name: 'Freeze users',
+    },
+    {
+      key: 'contactUsers',
+      isChecked: permissions.contactUsers,
+      name: 'Contact users',
+    },
+    {
+      key: 'setPrice',
+      isChecked: permissions.setPrice,
+      name: 'Change prices',
+    },
+    {
+      key: 'changeNetworkMode',
+      isChecked: permissions.changeNetworkMode,
+      name: 'Disable Mainnet toggle',
+    },
+    {
+      key: 'setFeeReceiver',
+      isChecked: permissions.setFeeReceiver,
+      name: 'Change payment address',
+    },
+  ];
+  const handleChangeCheckbox = (key: keyof Permissions, isChecked: boolean) => () => {
+    setPermissions((prevState) => ({
+      ...prevState,
+      [key]: isChecked,
+    }));
+  };
+  const handleClose = () => {
+    setPermissions(defaultPermissions);
+    if (onClose) {
+      onClose();
+    }
+  };
+  const handleSave = () => {
+    if (onSave) {
+      onSave(permissions);
+    }
+    setPermissions(defaultPermissions);
+  };
+
+  useEffect(() => {
+    // @see https://stackoverflow.com/questions/54865764/react-usestate-does-not-reload-state-from-props
+    setPermissions(defaultPermissions);
+  }, [defaultPermissions]);
+
+  useEffect(() => {
+    // automatically set viewUsers permission if 'freeze' or 'contact' is enabled
+    if (permissions.freezeUsers || permissions.contactUsers) {
+      setPermissions((prevState) => ({
+        ...prevState,
+        viewUsers: true,
+      }));
+    }
+  }, [permissions.contactUsers, permissions.freezeUsers]);
+
   const classes = useStyles();
+
   return (
     <Menu
       PaperProps={{
@@ -41,7 +113,7 @@ export const PermissionsMenu: FC<PermissionsMenuProps> = ({
       anchorEl={anchorEl}
       keepMounted
       open={Boolean(anchorEl)}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <MenuItem className={classes.permissionsMenuItemRoot}>
         <Box className={classes.permissionsMenuItemContent}>
@@ -49,32 +121,13 @@ export const PermissionsMenu: FC<PermissionsMenuProps> = ({
             Permissions
           </Typography>
           {
-            [{
-              isChecked: defaultPermissions.viewUsers,
-              name: 'View users database',
-            },
-            {
-              isChecked: defaultPermissions.freezeUsers,
-              name: 'Freeze users',
-            },
-            {
-              isChecked: defaultPermissions.contactUsers,
-              name: 'Contact users',
-            },
-            {
-              isChecked: defaultPermissions.setPrice,
-              name: 'Change prices',
-            },
-            {
-              isChecked: defaultPermissions.changeNetworkMode,
-              name: 'Disable Mainnet toggle',
-            },
-            {
-              isChecked: defaultPermissions.setFeeReceiver,
-              name: 'Change payment address',
-            },
-            ].map(({ isChecked, name }) => (
-              <Box key={name} className={classes.permissionsMenuItemCheckbox}>
+            permissionsArray.map(({ key, isChecked, name }) => (
+              <Box
+                key={key}
+                className={classes.permissionsMenuItemCheckbox}
+                component="button"
+                onClick={handleChangeCheckbox(key, !isChecked)}
+              >
                 <Checkbox
                   className={classes.checkbox}
                   checked={isChecked}
@@ -92,7 +145,7 @@ export const PermissionsMenu: FC<PermissionsMenuProps> = ({
               color="secondary"
               variant="outlined"
               fullWidth
-              onClick={onSave}
+              onClick={handleSave}
             >
               SAVE
             </Button>
@@ -100,7 +153,7 @@ export const PermissionsMenu: FC<PermissionsMenuProps> = ({
               color="primary"
               variant="outlined"
               fullWidth
-              onClick={onClose}
+              onClick={handleClose}
             >
               CANCEL
             </Button>

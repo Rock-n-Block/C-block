@@ -1,4 +1,5 @@
 import { FactoryContracts, TDeployContractCreationMethodNames, Tokens } from 'types/utils/contractsHelper';
+import { Permissions } from 'types/store/user';
 import { TProvider } from '../actions';
 
 export type TAdminCheckIsAdminAction = TProvider;
@@ -26,4 +27,8 @@ export type TSetIsFrozenUserAction = {
 };
 export type TAdminGetUserContractsAction = {
   userId: number;
+};
+export type TAdminUpdatePermissionsAction = TProvider & {
+  userId: number;
+  permissions: Partial<Permissions>;
 };

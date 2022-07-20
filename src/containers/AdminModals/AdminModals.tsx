@@ -2,6 +2,8 @@ import React, { FC, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
+import { Typography } from '@material-ui/core';
+
 import modalsSelector from 'store/modals/selectors';
 import { useShallowSelector } from 'hooks';
 import { Modals } from 'types';
@@ -33,6 +35,10 @@ export const AdminModalsContainer: FC = () => {
   // Email
   const isAdminSendEmailPending = useShallowSelector(
     modalsSelector.selectModalState(Modals.AdminSendEmailPending),
+  );
+  // Permissions
+  const isAdminUpdatePermissionsPending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.AdminUpdatePermissionsPending),
   );
 
   const dispatch = useDispatch();
@@ -86,6 +92,17 @@ export const AdminModalsContainer: FC = () => {
       />
 
       <LoadingModal open={isAdminSendEmailPending} text="Sending an e-mail to user" />
+      <LoadingModal
+        open={isAdminUpdatePermissionsPending}
+        text={(
+          <>
+            <Typography variant="h3">Changing permissions</Typography>
+            <Typography variant="body2" align="center">
+              (NOTE: in order to update permissions for &quot;Change payment address&quot; or &quot;Change prices&quot; you need to confirm transactions on your wallet)
+            </Typography>
+          </>
+        )}
+      />
     </>
   );
 };

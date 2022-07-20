@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React, { ReactElement, VFC } from 'react';
 
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
@@ -9,7 +9,7 @@ import { useStyles } from './LoadingModal.styles';
 
 export interface LoadingModalProps {
   open: boolean;
-  text?: string;
+  text?: string | ReactElement;
 }
 
 export const LoadingModal: VFC<LoadingModalProps> = ({
@@ -22,9 +22,13 @@ export const LoadingModal: VFC<LoadingModalProps> = ({
     <Modal open={open} title=" ">
       <Box className={classes.icon}>
         <Loader />
-        <Typography className={clsx(classes.desc)} variant="h3">
-          {text}
-        </Typography>
+        {
+          typeof text === 'object' ? (text) : (
+            <Typography className={clsx(classes.desc)} variant="h3">
+              {text}
+            </Typography>
+          )
+        }
       </Box>
     </Modal>
   );

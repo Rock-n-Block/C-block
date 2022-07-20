@@ -21,8 +21,6 @@ export const RoutesGuard: FC<Props> = ({ children }) => {
   const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
   const profile = useShallowSelector(userSelector.selectProfile);
 
-  console.log('RoutesGuard', location.pathname);
-
   useEffect(() => {
     if (location.pathname === routes.profile.root) return;
     if (!isAuthenticated) return;

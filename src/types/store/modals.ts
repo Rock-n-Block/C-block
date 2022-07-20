@@ -17,6 +17,7 @@ export enum Modals {
   AdminChangePriceSuccess = 'AdminChangePriceSuccess',
   AdminChangePriceError = 'AdminChangePriceError',
   AdminSendEmailPending = 'AdminSendEmailPending',
+  AdminUpdatePermissionsPending = 'AdminUpdatePermissionsPending',
 
   FullscreenLoader = 'FullscreenLoader',
   SendTxPending = 'SendTxPending',

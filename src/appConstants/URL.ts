@@ -27,6 +27,7 @@ export default {
       usersList: 'accounts/role_system/users_list/',
       contactUser: 'accounts/role_system/contact_user/',
       freezeUser: 'accounts/role_system/freeze_user/',
+      updatePermissions: 'accounts/role_system/update_permissions/',
     },
   },
 };
