@@ -30,6 +30,10 @@ export const AdminModalsContainer: FC = () => {
   const isAdminChangePriceError = useShallowSelector(
     modalsSelector.selectModalState(Modals.AdminChangePriceError),
   );
+  // Email
+  const isAdminSendEmailPending = useShallowSelector(
+    modalsSelector.selectModalState(Modals.AdminSendEmailPending),
+  );
 
   const dispatch = useDispatch();
   const handleCloseAdminChangePaymentsReceiverSuccessModal = useCallback(() => {
@@ -80,6 +84,8 @@ export const AdminModalsContainer: FC = () => {
         errorText="Error occurred while saving price"
         onClose={handleCloseAdminChangePriceErrorModal}
       />
+
+      <LoadingModal open={isAdminSendEmailPending} text="Sending an e-mail to user" />
     </>
   );
 };

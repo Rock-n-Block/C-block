@@ -51,6 +51,9 @@ export const useAdminPanel = () => {
   const setIsMainnetDisabledRequestStatus = useShallowSelector(
     uiSelector.getProp(adminActionTypes.ADMIN_SET_IS_MAINNET_DISABLED),
   );
+  const adminSendEmailRequestStatus = useShallowSelector(
+    uiSelector.getProp(adminActionTypes.ADMIN_SEND_EMAIL),
+  );
 
   // Requests
   useEffect(() => {
@@ -71,6 +74,15 @@ export const useAdminPanel = () => {
       }));
     }
   }, [dispatch, setPriceRequestStatus]);
+  useEffect(() => {
+    if (adminSendEmailRequestStatus === RequestStatus.REQUEST) {
+      dispatch(setActiveModal({
+        modals: {
+          [Modals.AdminSendEmailPending]: true,
+        },
+      }));
+    }
+  }, [dispatch, adminSendEmailRequestStatus]);
 
   // Success
   useEffect(() => {
@@ -148,4 +160,11 @@ export const useAdminPanel = () => {
       dispatch(apiActions.reset(adminActionTypes.ADMIN_SET_IS_MAINNET_DISABLED));
     }
   }, [dispatch, setIsMainnetDisabledRequestStatus]);
+  useEffect(() => {
+    if (adminSendEmailRequestStatus === RequestStatus.ERROR ||
+      adminSendEmailRequestStatus === RequestStatus.SUCCESS) {
+      dispatch(apiActions.reset(adminActionTypes.ADMIN_SEND_EMAIL));
+      dispatch(closeModal(Modals.AdminSendEmailPending));
+    }
+  }, [dispatch, adminSendEmailRequestStatus]);
 };
