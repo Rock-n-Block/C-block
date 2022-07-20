@@ -18,6 +18,17 @@ export const useStyles = makeStyles((theme) => createStyles({
     marginBottom: theme.spacing(2),
     paddingBottom: 0,
     borderBottom: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_2}`,
+
+    display: 'flex',
+    padding: theme.spacing(0, 2),
+    alignItems: 'center',
+    '& > :first-child': {
+      width: '100%',
+    },
+
+    '& > :last-child': {
+      width: 48,
+    },
   },
   permissionsMenuPaper: {
     background: theme.palette.type === 'dark' ? COLOR_BLACK_7 : COLOR_GREY_3,
@@ -66,10 +77,12 @@ export const useStyles = makeStyles((theme) => createStyles({
     whiteSpace: 'break-spaces',
   },
 }));
-export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean }>((theme) => {
+
+export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean; isExpanded: boolean }>((theme) => {
   const formatMedia = getFormatMedia(theme);
   return createStyles({
     root: {
+      display: 'flex',
       alignItems: 'center',
       marginBottom: theme.spacing(1),
       padding: 0,
@@ -77,6 +90,19 @@ export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean }>((them
       background: theme.palette.type === 'dark' ? COLOR_BLACK_2 : COLOR_GREY_2,
       border: `1px solid ${theme.palette.type === 'dark' ? COLOR_BLACK_3 : COLOR_GREY_3}`,
       borderRadius: theme.spacing(1.5),
+    },
+    head: {
+      display: 'flex',
+      padding: 0,
+      alignItems: 'center',
+      '& > :first-child': {
+        width: '100%',
+        overflowX: 'auto',
+        '& > :first-child': {
+          padding: 0,
+          alignItems: 'center',
+        },
+      },
     },
     collapseCell: {
       padding: theme.spacing(0, 2),
@@ -90,7 +116,9 @@ export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean }>((them
       color: theme.palette.type === 'dark' ? COLOR_BLACK_4 : COLOR_GREY_5,
     },
     collapseIconBtn: {
-      marginLeft: theme.spacing(2),
+      '& svg': {
+        fill: ({ isExpanded }) => (!isExpanded ? 'currentColor' : COLOR_ACID_GREEN),
+      },
     },
     rowText: {
       fontSize: '14px',
@@ -110,11 +138,8 @@ export const useRowStyles = makeStyles<Theme, { hasPermissions: boolean }>((them
       [formatMedia.BREAKPOINT_DESKTOP]: {
         ...flexHelper('space-between', 'center'),
       },
-      '& > div:first-child': {
-        ...flexHelper('flex-start', 'center'),
-        '& :not(:last-child)': {
-          marginRight: theme.spacing(2),
-        },
+      '& :not(:last-child)': {
+        marginRight: theme.spacing(2),
       },
     },
     textField: {

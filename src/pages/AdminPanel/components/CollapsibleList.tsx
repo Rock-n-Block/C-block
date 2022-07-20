@@ -16,11 +16,16 @@ import {
   Checkbox,
   CircularProgress,
   ListSubheader,
+  Tooltip,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import clsx from 'clsx';
-import { UserNameBox, Copyable, CheckBox } from 'components';
+import {
+  UserNameBox,
+  Copyable,
+  CheckBox,
+} from 'components';
 import { SendEmailModal, SendEmailModalProps } from 'components/Modals';
 import adminActions from 'store/admin/actions';
 import adminActionTypes from 'store/admin/actionTypes';
@@ -54,84 +59,91 @@ const Row: FC<RowProps> = ({
     () => Object.values(row.permissions).some((item) => item),
     [row.permissions],
   );
-  const classes = useRowStyles({ hasPermissions });
+  const classes = useRowStyles({ hasPermissions, isExpanded: open });
 
   return (
     <Grid
       item
       container
       xs={12}
-      style={{
-        alignItems: 'center',
-      }}
       className={classes.root}
     >
-      <Grid item xs={4} sm={5} md={2}>
-        <UserNameBox
-          className={classes.userNameBox}
-          name={row.userName}
-          imageUrl={row.avatarUrl}
-          isExtended={false}
-        />
-      </Grid>
-      <Grid item xs={5} sm={5} md={2}>{row.email}</Grid>
-      <Hidden only={['xs', 'sm']}>
-        <Grid item xs={4}>
-          <TextField
-            name="walletAddress"
-            InputProps={{
-              className: classes.textField,
-              readOnly: true,
-              endAdornment: (
-                <Copyable className={classes.copyableIcon} valueToCopy={row.ownerAddress} withIcon />
-              ),
-            }}
-            disabled
-            value={row.ownerAddress}
-          />
-        </Grid>
-      </Hidden>
-      <Grid item xs={3} sm={2} md={4} className={classes.actionCol}>
+      <Grid item xs={12} className={classes.head}>
         <Box>
-          <Hidden only={['xs', 'sm']}>
-            {
-              permissions.freezeUsers && (
-                <CheckBox
-                  className={classes.textField}
-                  name="Freeze user"
-                  value={row.isFrozen}
-                  label="Freeze user"
-                  onClick={onFreezeUser}
+          <Grid item container xs={12}>
+            <Grid item xs={4} sm={5} md={2}>
+              <UserNameBox
+                className={classes.userNameBox}
+                name={row.userName}
+                imageUrl={row.avatarUrl}
+                isExtended={false}
+              />
+            </Grid>
+            <Grid item xs={5} sm={5} md={3}>
+              <Tooltip title={row.email} arrow interactive>
+                <Typography variant="body2" noWrap>{row.email}</Typography>
+              </Tooltip>
+            </Grid>
+            <Hidden only={['xs', 'sm']}>
+              <Grid item xs={3}>
+                <TextField
+                  name="walletAddress"
+                  InputProps={{
+                    className: classes.textField,
+                    readOnly: true,
+                    endAdornment: (
+                      <Copyable className={classes.copyableIcon} valueToCopy={row.ownerAddress} withIcon />
+                    ),
+                  }}
+                  disabled
+                  value={row.ownerAddress}
                 />
-              )
-            }
-          </Hidden>
-          {
-            permissions.superAdmin && (
-              <IconButton
-                className={classes.permissionsIconBtn}
-                aria-label="set permissions"
-                aria-haspopup="true"
-                color="primary"
-                size="small"
-                onClick={onPermissionsOpen}
-              >
-                <CrownIcon />
-              </IconButton>
-            )
-          }
-
+              </Grid>
+            </Hidden>
+            <Grid item xs={3} sm={2} md={4} className={classes.actionCol}>
+              <Hidden only={['xs', 'sm']}>
+                {
+                  permissions.freezeUsers && (
+                    <CheckBox
+                      className={classes.textField}
+                      name="Freeze user"
+                      value={row.isFrozen}
+                      label="Freeze user"
+                      onClick={onFreezeUser}
+                    />
+                  )
+                }
+              </Hidden>
+              {
+                permissions.superAdmin && (
+                  <IconButton
+                    className={classes.permissionsIconBtn}
+                    aria-label="set permissions"
+                    aria-haspopup="true"
+                    color="primary"
+                    size="small"
+                    onClick={onPermissionsOpen}
+                  >
+                    <CrownIcon />
+                  </IconButton>
+                )
+              }
+            </Grid>
+          </Grid>
         </Box>
-
-        <IconButton
-          className={classes.collapseIconBtn}
-          aria-label="expand row"
-          color="primary"
-          size="small"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
+        <Box>
+          <Grid item xs={12}>
+            <IconButton
+              className={classes.collapseIconBtn}
+              aria-label="expand row"
+              color="primary"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </Grid>
+        </Box>
       </Grid>
 
       <Grid item xs={12} className={classes.collapseCell}>
@@ -410,10 +422,19 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
     <>
       <Grid container>
         <Hidden only={['xs', 'sm']}>
-          <Grid item container xs={12} className={classes.head}>
-            {
-              head.map(({ name, props }) => <Grid key={name} item {...props}>{name}</Grid>)
-            }
+          <Grid item xs={12} className={classes.head}>
+            <Box>
+              <Grid container style={{ width: '100%' }}>
+                {
+                  head.map(({ name, props }) => <Grid key={name} item {...props}>{name}</Grid>)
+                }
+              </Grid>
+            </Box>
+            <Box>
+              <Grid item xs={12}>
+                &nbsp;
+              </Grid>
+            </Box>
           </Grid>
         </Hidden>
 

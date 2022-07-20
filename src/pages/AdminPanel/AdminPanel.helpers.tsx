@@ -48,12 +48,12 @@ export const head: { name: string; props: GridProps }[] = [{
 }, {
   name: 'E-mail',
   props: {
-    xs: 2,
+    xs: 3,
   },
 }, {
   name: 'Wallet address',
   props: {
-    xs: 4,
+    xs: 3,
   },
 }, {
   name: 'Action',
