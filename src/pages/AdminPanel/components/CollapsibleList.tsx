@@ -5,12 +5,7 @@ import { useDispatch } from 'react-redux';
 import {
   Grid,
   Box,
-  Typography,
-  Button,
-  Menu,
-  MenuItem,
   Hidden,
-  Checkbox,
 } from '@material-ui/core';
 import { SendEmailModal, SendEmailModalProps } from 'components/Modals';
 import adminActions from 'store/admin/actions';
@@ -23,6 +18,7 @@ import { useShallowSelector } from 'hooks';
 import { head } from '../AdminPanel.helpers';
 import { useStyles } from './CollapsibleList.styles';
 import { Row } from './Row';
+import { PermissionsMenu } from './PermissionsMenu';
 
 type CollapsibleListProps = {
   permissions: Permissions;
@@ -44,6 +40,9 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
     setUserData(currentUserData);
   };
   const handlePermissionsClose = () => setPermissionMenuEl(null);
+  const handlePermissionsSave = () => {
+    handlePermissionsClose();
+  };
 
   const [sendEmailModalState, setSendEmailModalState] = useState<SendEmailModalProps>({
     open: false,
@@ -55,7 +54,6 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
       open: false,
     }));
   };
-
   const handleSendEmailModalOpen = (currentUserData: UserView) => () => {
     setSendEmailModalState((prevState) => ({
       ...prevState,
@@ -132,88 +130,16 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
             onPermissionsOpen={handlePermissionsOpen(row)}
           />
         ))}
-        <Menu
-          PaperProps={{
-            className: classes.permissionsMenuPaper,
-          }}
-          MenuListProps={{
-            className: classes.permissionsMenuListRoot,
-          }}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          getContentAnchorEl={null}
-          anchorEl={permissionsMenuEl}
-          keepMounted
-          open={Boolean(permissionsMenuEl)}
-          onClose={handlePermissionsClose}
-        >
-          <MenuItem className={classes.permissionsMenuItemRoot}>
-            <Box className={classes.permissionsMenuItemContent}>
-              <Typography className="articleSmallBold" variant="body1">
-                Permissions
-              </Typography>
-              {
-                userData &&
-                [{
-                  isChecked: userData.permissions.viewUsers,
-                  name: 'View users database',
-                },
-                {
-                  isChecked: userData.permissions.freezeUsers,
-                  name: 'Freeze users',
-                },
-                {
-                  isChecked: userData.permissions.contactUsers,
-                  name: 'Contact users',
-                },
-                {
-                  isChecked: userData.permissions.setPrice,
-                  name: 'Change prices',
-                },
-                {
-                  isChecked: userData.permissions.changeNetworkMode,
-                  name: 'Disable Mainnet toggle',
-                },
-                {
-                  isChecked: userData.permissions.setFeeReceiver,
-                  name: 'Change payment address',
-                },
-                ].map(({ isChecked, name }) => (
-                  <Box key={name} className={classes.permissionsMenuItemCheckbox}>
-                    <Checkbox
-                      className={classes.checkbox}
-                      checked={isChecked}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-                    <Typography className={classes.checkBoxText}>
-                      {name}
-                    </Typography>
-                  </Box>
-                ))
-              }
-              <Box className={classes.permissionsMenuItemBtnGroup}>
-                <Button
-                  color="secondary"
-                  variant="outlined"
-                  fullWidth
-                >
-                  SAVE
-                </Button>
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  fullWidth
-                  onClick={handlePermissionsClose}
-                >
-                  CANCEL
-                </Button>
-              </Box>
-            </Box>
-          </MenuItem>
-        </Menu>
+        {
+          userData && (
+            <PermissionsMenu
+              anchorEl={permissionsMenuEl}
+              defaultPermissions={userData.permissions}
+              onSave={handlePermissionsSave}
+              onClose={handlePermissionsClose}
+            />
+          )
+        }
       </Grid>
       <SendEmailModal
         {...sendEmailModalState}
