@@ -1,4 +1,7 @@
-import React, { FC, useMemo } from 'react';
+import React, {
+  FC,
+  useMemo,
+} from 'react';
 import {
   Navigate, Route, Routes, useLocation,
 } from 'react-router-dom';

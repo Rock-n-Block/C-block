@@ -5,3 +5,4 @@ export * from './Modals/Modals';
 export * from './AuthModals/AuthModals';
 export * from './AdminModals/AdminModals';
 export { default as AppRoutes } from './Routes';
+export * from './RoutesGuard';

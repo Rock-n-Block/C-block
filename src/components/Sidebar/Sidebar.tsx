@@ -20,7 +20,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const { isLight } = useShallowSelector(userSelector.getUser);
+  const { isLight, isFrozen } = useShallowSelector(userSelector.getUser);
   const isAdmin = useShallowSelector(userSelector.selectIsAdmin);
   const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
 
@@ -41,6 +41,7 @@ export const Sidebar: VFC<SidebarProps> = ({ closeSidebar, className }) => {
           Icon, label, link, isExternal,
         }) => {
           if (label === 'Admin panel' && (!isAuthenticated || !isAdmin)) return null;
+          if (label === 'Create Contract' && isFrozen) return null;
           if (label === 'My contracts' && !isAuthenticated) return null;
           return (
             <SidebarTab

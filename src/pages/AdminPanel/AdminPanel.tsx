@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Web3 from 'web3';
-import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -25,7 +24,6 @@ import {
   ChangePriceCard, CheckBox, EditableField,
 } from 'components';
 import { PeopleIcon, SuccessIcon } from 'theme/icons';
-import { routes } from 'appConstants';
 
 import {
   contractsHelper, getTokenAmountDisplay, setNotification,
@@ -67,7 +65,6 @@ export const AdminPanel = () => {
   const { isMainnet, permissions } = useShallowSelector(
     userSelectors.getUser,
   );
-  const isAdmin = useShallowSelector(userSelectors.selectIsAdmin);
   const celoDecimals = useMemo(
     () => contractsHelper.getTokensDecimals('celo', isMainnet),
     [isMainnet],
@@ -171,20 +168,6 @@ export const AdminPanel = () => {
       }));
     }
   }, [adminCheckIsAdminRequestStatus, dispatch]);
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (adminCheckIsAdminRequestStatus !== RequestStatus.SUCCESS &&
-      adminCheckIsAdminRequestStatus !== RequestStatus.ERROR) return;
-    if (!isAdmin) {
-      navigate(routes.root);
-      setNotification({
-        type: 'error',
-        message: 'You have insufficient permissions to see this page',
-      });
-    }
-    // NOTE: make sure that deps has only [isAdmin, adminCheckIsAdminRequestStatus], due to [isAdmin, navigate] causes to run this effect twice
-  }, [adminCheckIsAdminRequestStatus, isAdmin]);
 
   const contractForms = useShallowSelector(contractFormsSelector.getContractForms);
   const classes = useStyle();

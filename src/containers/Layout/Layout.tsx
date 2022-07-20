@@ -3,7 +3,7 @@ import { UrlObject } from 'url';
 import React, {
   FC, useCallback, useEffect, useState,
 } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 
 import { GreenGlobImg } from 'assets';
@@ -12,8 +12,6 @@ import { COLOR_BLACK_8, COLOR_GREY_9 } from 'theme/colors';
 import { Sidebar } from 'components/Sidebar';
 import { Header } from 'containers';
 import { useParticleNetwork, useShallowSelector } from 'hooks';
-import { routes } from 'appConstants';
-import { setNotification } from 'utils';
 import { useStyles } from './Layout.styles';
 
 export interface LayoutProps {
@@ -30,7 +28,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    setSidebarOpen(false);
+    if (isSidebarOpen) {
+      setSidebarOpen(false);
+    }
   }, [location.pathname]);
 
   const { isLight } = useShallowSelector(userSelector.getUser);
@@ -38,18 +38,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { particleCanvasRef } = useParticleNetwork({
     background: isLight ? COLOR_GREY_9 : COLOR_BLACK_8,
   });
-
-  const isAuthenticated = useShallowSelector(userSelector.selectIsAuthenticated);
-  const profile = useShallowSelector(userSelector.selectProfile);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    if (!profile.isCompletedProfile) {
-      navigate(routes.profile.root);
-      setNotification({ type: 'info', message: 'You must fill all profile fields in order to complete registration' });
-    }
-  }, [isAuthenticated, location.pathname, profile.isCompletedProfile]);
 
   return (
     <Box className={classes.root}>

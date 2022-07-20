@@ -6,7 +6,12 @@ import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import { BreakpointsProvider } from 'hooks/useBreakpoints';
 import { darkTheme, lightTheme } from 'theme';
 import {
-  Layout, ModalsContainer, AuthModalsContainer, AppRoutes, AdminModalsContainer,
+  Layout,
+  ModalsContainer,
+  AuthModalsContainer,
+  AppRoutes,
+  AdminModalsContainer,
+  RoutesGuard,
 } from 'containers';
 import { useAdminPanel, useShallowSelector } from 'hooks';
 import userSelector from 'store/user/selectors';
@@ -45,9 +50,13 @@ function App() {
           <ModalsContainer />
           <AuthModalsContainer />
           <AdminModalsContainer />
-          <Layout>
-            <AppRoutes />
-          </Layout>
+
+          <RoutesGuard>
+            <Layout>
+              <AppRoutes />
+            </Layout>
+          </RoutesGuard>
+
         </StylesProvider>
       </BreakpointsProvider>
     </ThemeProvider>
