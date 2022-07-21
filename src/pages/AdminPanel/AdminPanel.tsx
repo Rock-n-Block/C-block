@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 
+import userActions from 'store/user/auth/actions';
 import userSelectors from 'store/user/selectors';
 import contractFormsSelector from 'store/contractForms/selectors';
 import adminActions from 'store/admin/actions';
@@ -62,7 +63,7 @@ export const AdminPanel = () => {
   const [paymentsReceiverAddress, setPaymentsReceiverAddress] = useState(
     defaultPaymentsReceiverAddress,
   );
-  const { isMainnet, permissions } = useShallowSelector(
+  const { isMainnet, permissions, countryCodes } = useShallowSelector(
     userSelectors.getUser,
   );
   const celoDecimals = useMemo(
@@ -148,6 +149,14 @@ export const AdminPanel = () => {
       getRates(),
     );
   }, [dispatch]);
+  useEffect(() => {
+    if (!permissions.viewUsers) return;
+    if (!countryCodes.length) {
+      dispatch(
+        userActions.getCountryCodes(),
+      );
+    }
+  }, [countryCodes.length, dispatch, permissions.viewUsers]);
 
   const adminCheckIsAdminRequestStatus = useShallowSelector(
     uiSelectors.getProp(adminActionTypes.ADMIN_CHECK_IS_ADMIN),

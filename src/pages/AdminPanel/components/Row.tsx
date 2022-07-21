@@ -25,6 +25,7 @@ import {
 } from 'components';
 import adminActionTypes from 'store/admin/actionTypes';
 import uiSelector from 'store/ui/selectors';
+import userSelectors from 'store/user/selectors';
 
 import { CrownIcon } from 'theme/icons';
 import { Permissions } from 'types/store/user';
@@ -49,6 +50,18 @@ export const Row: FC<RowProps> = ({
   const getUserContractsRequestStatus = useShallowSelector(
     uiSelector.getProp(`${adminActionTypes.ADMIN_GET_USER_CONTRACTS}_${row.id}`),
   );
+  const { countryCodes } = useShallowSelector(
+    userSelectors.getUser,
+  );
+  const localeData = useMemo(
+    () => countryCodes.find(({ countryCode }) => countryCode === row.country),
+    [countryCodes, row.country],
+  );
+  const rowCountry = useMemo(
+    () => [row.country, localeData?.countryName].filter((item) => item).join(', '),
+    [localeData?.countryName, row.country],
+  );
+
   const hasPermissions = useMemo(
     () => Object.values(row.permissions).some((item) => item),
     [row.permissions],
@@ -229,7 +242,11 @@ export const Row: FC<RowProps> = ({
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
                   Country
                 </Typography>
-                <Typography className={classes.rowText}>{row.country}</Typography>
+                <Typography className={classes.rowText}>
+                  {
+                    rowCountry
+                  }
+                </Typography>
               </Grid>
               <Grid item xs={6} md={2}>
                 <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
