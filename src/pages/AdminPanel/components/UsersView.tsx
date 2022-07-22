@@ -29,7 +29,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
   const searchTextRef = useRef<HTMLInputElement>();
 
   const [selectedOnlyAdmins, setSelectedOnlyAdmins] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState(''); // to store text that changes only when user presses Search button
   const [page, setPage] = useState(defaultPage);
 
   const handleAdminsSwitch = () => {
@@ -38,6 +38,11 @@ export const UsersView: FC<Props> = ({ permissions }) => {
 
   const handleSearch = () => {
     setSearchText(searchTextRef.current.value);
+  };
+  const handleSearchTextChange = () => {
+    if (!searchTextRef.current.value) {
+      setSearchText('');
+    }
   };
 
   const handlePageChange = (event: ChangeEvent<unknown>, page: number) => {
@@ -63,6 +68,7 @@ export const UsersView: FC<Props> = ({ permissions }) => {
           InputProps={{
             startAdornment: <SearchIcon />,
           }}
+          onChange={handleSearchTextChange}
           className={classes.searchContainerField}
         />
         <Button
