@@ -7,9 +7,13 @@ import {
   Box,
   Hidden,
 } from '@material-ui/core';
-import { SendEmailModal, SendEmailModalProps } from 'components/Modals';
+import {
+  SendEmailModal, SendEmailModalProps,
+  UserCreatedContractsModal,
+} from 'components/Modals';
 import adminActions from 'store/admin/actions';
 import adminActionTypes from 'store/admin/actionTypes';
+import adminSelectors from 'store/admin/selectors';
 import uiSelector from 'store/ui/selectors';
 
 import { Permissions } from 'types/store/user';
@@ -34,7 +38,11 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
   const dispatch = useDispatch();
   const { getDefaultProvider } = useWeb3Provider();
   const [permissionsMenuEl, setPermissionMenuEl] = useState<null | HTMLElement>(null);
-  const [userData, setUserData] = useState<null | UserView>(null);
+  const [userData, setUserData] = useState<null | UserView>(null); // local state that de-sync with redux's state
+
+  const currentUser: undefined | UserView = useShallowSelector(
+    adminSelectors.selectUser(userData ? userData.id : -1),
+  );
 
   const handlePermissionsOpen = (currentUserData: UserView) => (
     event: MouseEvent<HTMLButtonElement>,
@@ -76,16 +84,23 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
     setUserData(currentUserData);
   };
 
-  const handleUserContractsOpen = (currentUserData: UserView) => (
-    event: MouseEvent<HTMLInputElement>,
-  ) => {
-    event.preventDefault();
-    event.stopPropagation();
+  // const [userContractsModalState, setUserContractsModalState] = useState<UserCreatedContractsModalProps>({
+  //   contracts: userData.contracts,
+  //   open: false,
+  //   onClose: handleCloseUserContractsModal,
+  // });
+  const [isUserContractsModalOpen, setIsUserContractsModalOpen] = useState(false);
+  const handleCloseUserContractsModal = () => {
+    setIsUserContractsModalOpen(false);
+  };
+  const handleUserContractsModalOpen = (currentUserData: UserView) => () => {
     dispatch(
       adminActions.getUserContracts({
         userId: currentUserData.id,
       }),
     );
+    setUserData(currentUserData);
+    setIsUserContractsModalOpen(true);
   };
   const handleAdminSendEmail = (request: string) => {
     dispatch(adminActions.sendEmail({
@@ -136,7 +151,7 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
             key={row.id}
             row={row}
             permissions={permissions}
-            onUserContractsOpen={handleUserContractsOpen(row)}
+            onUserContractsOpen={handleUserContractsModalOpen(row)}
             onFreezeUser={handleFreezeUser(row)}
             onSendEmailModalOpen={handleSendEmailModalOpen(row)}
             onPermissionsOpen={handlePermissionsOpen(row)}
@@ -157,6 +172,11 @@ export const CollapsibleList: FC<CollapsibleListProps> = ({
         {...sendEmailModalState}
         onClose={handleCloseAdminSendEmailModal}
         onSubmit={handleAdminSendEmail}
+      />
+      <UserCreatedContractsModal
+        open={isUserContractsModalOpen}
+        contracts={currentUser?.contracts}
+        onClose={handleCloseUserContractsModal}
       />
     </>
   );

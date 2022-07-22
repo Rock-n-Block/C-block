@@ -9,10 +9,7 @@ import {
   Typography,
   Button,
   TextField,
-  MenuItem,
   Hidden,
-  CircularProgress,
-  ListSubheader,
   Tooltip,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -23,15 +20,12 @@ import {
   Copyable,
   CheckBox,
 } from 'components';
-import adminActionTypes from 'store/admin/actionTypes';
-import uiSelector from 'store/ui/selectors';
 import userSelectors from 'store/user/selectors';
 
 import { CrownIcon } from 'theme/icons';
 import { Permissions } from 'types/store/user';
-import { RequestStatus, UserView } from 'types';
+import { UserView } from 'types';
 import { useShallowSelector } from 'hooks';
-import { TGetContracts, IGetContractsReturnType } from 'store/api/apiRequestBuilder.types';
 import { useStyles } from './Row.styles';
 
 type RowProps = {
@@ -47,9 +41,6 @@ export const Row: FC<RowProps> = ({
   permissions, row, onUserContractsOpen, onFreezeUser, onSendEmailModalOpen, onPermissionsOpen,
 }) => {
   const [open, setOpen] = useState(false);
-  const getUserContractsRequestStatus = useShallowSelector(
-    uiSelector.getProp(`${adminActionTypes.ADMIN_GET_USER_CONTRACTS}_${row.id}`),
-  );
   const { id: userId, countryCodes } = useShallowSelector(
     userSelectors.getUser,
   );
@@ -61,6 +52,14 @@ export const Row: FC<RowProps> = ({
     () => [row.country, localeData?.countryName].filter((item) => item).join(', '),
     [localeData?.countryName, row.country],
   );
+
+  const userCreatedContractsJsx = useMemo(() => (
+    <Button variant="outlined" fullWidth onClick={onUserContractsOpen}>
+      <Typography variant="button">
+        Contracts` addresses created by this user
+      </Typography>
+    </Button>
+  ), [onUserContractsOpen]);
 
   const hasPermissions = useMemo(
     () => Object.values(row.permissions).some((item) => item),
@@ -182,60 +181,9 @@ export const Row: FC<RowProps> = ({
               </Grid>
               <Hidden only={['xs', 'sm']}>
                 <Grid item sm={5}>
-                  <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
-                    Contracts` addresses created by this user
-                  </Typography>
-                  <TextField
-                    defaultValue=""
-                    InputProps={{
-                      className: classes.textField,
-                      startAdornment: getUserContractsRequestStatus === RequestStatus.REQUEST ? (
-                        <CircularProgress
-                          className={classes.loader}
-                          color="inherit"
-                          size={24}
-                        />
-                      ) : null,
-                    }}
-                    SelectProps={{
-                      onOpen: onUserContractsOpen,
-                      MenuProps: {
-                        style: {
-                          maxHeight: 300,
-                        },
-                        anchorOrigin: {
-                          vertical: 'bottom',
-                          horizontal: 'left',
-                        },
-                        getContentAnchorEl: null,
-                      },
-                    }}
-                    select
-                  >
-                    {
-                      Object.entries(row.contracts).reduce((
-                        accumulator,
-                        [contractName, contracts]: [keyof IGetContractsReturnType, TGetContracts[]],
-                      ) => {
-                        if (contracts.length) {
-                          accumulator.push(
-                            <ListSubheader key={contractName}>{contractName}</ListSubheader>,
-                          );
-                        }
-                        contracts.forEach((contract) => {
-                          accumulator.push(
-                            <MenuItem
-                              key={contract.address}
-                              value={contract.address}
-                            >
-                              {contract.address}
-                            </MenuItem>,
-                          );
-                        });
-                        return accumulator;
-                      }, [])
-                    }
-                  </TextField>
+                  {
+                    userCreatedContractsJsx
+                  }
                 </Grid>
               </Hidden>
 
@@ -278,60 +226,9 @@ export const Row: FC<RowProps> = ({
                   )
                 }
                 <Grid item xs={12}>
-                  <Typography className={clsx(classes.rowText, classes.collapseContentTitle)}>
-                    Contracts` addresses created by this user
-                  </Typography>
-                  <TextField
-                    defaultValue=""
-                    InputProps={{
-                      className: classes.textField,
-                      startAdornment: getUserContractsRequestStatus === RequestStatus.REQUEST ? (
-                        <CircularProgress
-                          className={classes.loader}
-                          color="inherit"
-                          size={24}
-                        />
-                      ) : null,
-                    }}
-                    SelectProps={{
-                      onOpen: onUserContractsOpen,
-                      MenuProps: {
-                        style: {
-                          maxHeight: 300,
-                        },
-                        anchorOrigin: {
-                          vertical: 'bottom',
-                          horizontal: 'left',
-                        },
-                        getContentAnchorEl: null,
-                      },
-                    }}
-                    select
-                  >
-                    {
-                      Object.entries(row.contracts).reduce((
-                        accumulator,
-                        [contractName, contracts]: [keyof IGetContractsReturnType, TGetContracts[]],
-                      ) => {
-                        if (contracts.length) {
-                          accumulator.push(
-                            <ListSubheader key={contractName}>{contractName}</ListSubheader>,
-                          );
-                        }
-                        contracts.forEach((contract) => {
-                          accumulator.push(
-                            <MenuItem
-                              key={contract.address}
-                              value={contract.address}
-                            >
-                              {contract.address}
-                            </MenuItem>,
-                          );
-                        });
-                        return accumulator;
-                      }, [])
-                    }
-                  </TextField>
+                  {
+                    userCreatedContractsJsx
+                  }
                 </Grid>
               </Hidden>
               {
