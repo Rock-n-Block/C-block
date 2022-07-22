@@ -169,15 +169,22 @@ export function* getContractsMinCreationPriceSaga({
       const filteredPrices = settledPriceCalls
         .filter(({ status }) => status === 'fulfilled')
         .map((item) => item.status === 'fulfilled' && item.value);
-      const celoFilteredPrices = [];
-      const cusdFilteredPrices = [];
+      const celoFilteredPrices: string[] = [];
+      const cusdFilteredPrices: string[] = [];
       filteredPrices.forEach(([celoPrice, cusdPrice]) => {
-        celoFilteredPrices.push(celoPrice);
-        cusdFilteredPrices.push(cusdPrice);
+        if (new BigNumber(celoPrice).isGreaterThan(0)) {
+          celoFilteredPrices.push(celoPrice);
+        }
+        if (new BigNumber(cusdPrice).isGreaterThan(0)) {
+          cusdFilteredPrices.push(cusdPrice);
+        }
       });
+      const celoMinCreationPrice = BigNumber.min(...celoFilteredPrices);
+      const cusdMinCreationPrice = BigNumber.min(...cusdFilteredPrices);
+      // if token filteredPrices is empty array, then BigNumber.min(...[]).toFixed() will return 'NaN'
       const minCreationPrice = {
-        celo: BigNumber.min(...celoFilteredPrices).toFixed(),
-        cusd: BigNumber.min(...cusdFilteredPrices).toFixed(),
+        celo: celoMinCreationPrice.isNaN() ? '-' : celoMinCreationPrice.toFixed(),
+        cusd: cusdMinCreationPrice.isNaN() ? '-' : cusdMinCreationPrice.toFixed(),
       };
 
       return minCreationPrice;

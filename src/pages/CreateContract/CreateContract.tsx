@@ -19,7 +19,7 @@ import {
 import contractFormsSelector from 'store/contractForms/selectors';
 import adminSelector from 'store/admin/selectors';
 import { getContractsMinCreationPrice } from 'store/contractForms/actions';
-import { ContractFormsState } from 'types';
+import { ContractFormsState, MinCreationPriceField } from 'types';
 import { createContractHelpers } from './CreateContract.helpers';
 import { useStyles } from './CreateContract.styles';
 
@@ -44,17 +44,26 @@ export const CreateContract = () => {
       contractForms.willContract.additional.minCreationPrice,
       contractForms.weddingContract.additional.minCreationPrice,
     ].map((unformattedPrice, index) => {
-      const celo = new BigNumber(
-        getTokenAmountDisplay(unformattedPrice.celo, celoDecimals),
-      ).toFixed(3);
-      const usd = new BigNumber(
-        getTokenAmountDisplay(unformattedPrice.cusd, cusdDecimals),
-      ).toFixed(2);
-      return {
-        celo: formatNumber(+celo, ['en-US']),
-        cusd: formatNumber(+usd, ['en-US']),
+      const ret: { isFixPrice: boolean } & MinCreationPriceField = {
         isFixPrice: index > 1,
+        ...unformattedPrice,
       };
+
+      if (unformattedPrice.celo !== '-') {
+        const celo = new BigNumber(
+          getTokenAmountDisplay(unformattedPrice.celo, celoDecimals),
+        ).toFixed(3);
+        ret.celo = formatNumber(+celo, ['en-US']);
+      }
+
+      if (unformattedPrice.cusd !== '-') {
+        const cusd = new BigNumber(
+          getTokenAmountDisplay(unformattedPrice.cusd, cusdDecimals),
+        ).toFixed(2);
+        ret.cusd = formatNumber(+cusd, ['en-US']);
+      }
+
+      return ret;
     }),
     [
       celoDecimals,
