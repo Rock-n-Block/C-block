@@ -83,6 +83,10 @@ export const AdminPanel = () => {
 
     // trigger only if saved & not allowed to edit
     if (isPaymentsReceiverFieldEdit) {
+      if (fieldValue.toString().toLowerCase() === defaultPaymentsReceiverAddress.toLowerCase()) {
+        // nothing changed -> return;
+        return;
+      }
       const isValidEthAddress = Web3.utils.isAddress(fieldValue.toString());
 
       if (!isValidEthAddress) {
