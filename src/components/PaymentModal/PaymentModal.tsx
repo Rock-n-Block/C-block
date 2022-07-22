@@ -82,6 +82,13 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
               classes: {
                 selectMenu: classes.selectMenuBuyToken,
               },
+              MenuProps: {
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                },
+                getContentAnchorEl: null,
+              },
             }}
             select
             value={selectedBuyToken}
@@ -103,6 +110,7 @@ export const PaymentModal: VFC<PaymentModalProps> = ({
           variant="outlined"
           className={clsx(classes.payButton, classes.button)}
           onClick={onAccept}
+          disabled={+paymentAmount === 0}
         >
           Pay
         </Button>

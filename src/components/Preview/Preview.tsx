@@ -33,7 +33,9 @@ import {
   setTokenContractForm,
 } from 'store/contractForms/reducer';
 import { getContractCreationPrice } from 'store/contractForms/actions';
-import { constructExplorerUrl, contractsHelper, getTokenAmountDisplay } from 'utils';
+import {
+  constructExplorerUrl, contractsHelper, getTokenAmountDisplay, setNotification,
+} from 'utils';
 import { COMPLETE_MODAL_CONTRACT_CREATION_SUCCESS_TEXT } from 'appConstants';
 import { Tokens } from 'types/utils/contractsHelper';
 import { FullscreenLoader } from '../FullscreenLoader';
@@ -291,6 +293,16 @@ export const Preview: FC<PreviewProps> = ({
       }, 3000);
     }
   }, [closeResultModal, deleteAction, resultModalState.open, resultModalState.result]);
+
+  useEffect(() => {
+    if (!isPaymentOpen) return;
+    if (paymentModalRequestStatus !== RequestStatus.SUCCESS && Number(paymentModalAmount) === 0) {
+      setNotification({
+        type: 'error',
+        message: 'This payment method is currently unavailable (price for create this contract isn\'t set)',
+      });
+    }
+  }, [isPaymentOpen, paymentModalAmount, paymentModalRequestStatus]);
 
   return (
     <Container className={classes.root}>
