@@ -296,7 +296,7 @@ export const Preview: FC<PreviewProps> = ({
 
   useEffect(() => {
     if (!isPaymentOpen) return;
-    if (paymentModalRequestStatus !== RequestStatus.SUCCESS && Number(paymentModalAmount) === 0) {
+    if (paymentModalRequestStatus === RequestStatus.SUCCESS && Number(paymentModalAmount) === 0) {
       setNotification({
         type: 'error',
         message: 'This payment method is currently unavailable (price for create this contract isn\'t set)',
