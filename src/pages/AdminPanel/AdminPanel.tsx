@@ -216,7 +216,7 @@ export const AdminPanel = () => {
                     textField: classes.fieldContainerLargeIconPadding,
                   }}
                   InputProps={{
-                    endAdornment: <SuccessIcon />,
+                    endAdornment: <SuccessIcon style={{ marginLeft: 6 }} />,
                   }}
                   value={paymentsReceiverAddress}
                   disabled={!isPaymentsReceiverFieldEdit}
