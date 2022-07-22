@@ -46,9 +46,8 @@ export const ConnectDropdownModal: VFC<ConnectDropdownModalProps> = ({
   const { connect } = useWalletConnectorContext();
   const disconnect = useCallback(async () => {
     handleCloseModal();
-    dispatch(userReducer.disconnectWalletState());
-    dispatch(userReducer.resetState());
     dispatch(authActions.logout());
+    dispatch(userReducer.disconnectWalletState());
     dispatch(clearAllForms());
     setNotification({
       type: 'success',

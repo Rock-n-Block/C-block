@@ -6,6 +6,7 @@ import {
   resetPassword, confirmResetPassword, changePassword, registerAccount, login, checkAuthentication,
 } from 'store/user/auth/actions';
 import authActionTypes from 'store/user/auth/actionTypes';
+import userSelectors from 'store/user/selectors';
 import uiSelector from 'store/ui/selectors';
 import { closeModal, setActiveModal } from 'store/modals/reducer';
 import apiActions from 'store/ui/actions';
@@ -232,11 +233,14 @@ export const useAuthHandlers = () => {
     }
   }, [dispatch, loginRequestStatus]);
 
+  const isAuthenticated = useShallowSelector(
+    userSelectors.selectIsAuthenticated,
+  );
   useEffect(() => {
     dispatch(
       checkAuthentication(),
     );
-  }, [dispatch]);
+  }, [isAuthenticated, dispatch]);
 
   return {
     handlePasswordResetByEmail,

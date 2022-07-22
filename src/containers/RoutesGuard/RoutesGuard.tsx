@@ -61,6 +61,7 @@ export const RoutesGuard: FC<Props> = ({ children }) => {
     if (location.pathname !== routes['admin-panel'].root) return;
     if (adminCheckIsAdminRequestStatus !== RequestStatus.SUCCESS &&
       adminCheckIsAdminRequestStatus !== RequestStatus.ERROR) return;
+    if (isAuthenticated) return;
     if (isAdmin) return;
     navigate(routes.root);
     setNotification({
@@ -68,7 +69,7 @@ export const RoutesGuard: FC<Props> = ({ children }) => {
       message: 'You have insufficient permissions to see this page',
     });
     // NOTE: make sure that deps has no `nagivate`, due to `navigate` in the deps causes to run this effect twice
-  }, [adminCheckIsAdminRequestStatus, isAdmin, location.pathname]);
+  }, [adminCheckIsAdminRequestStatus, isAdmin, isAuthenticated, location.pathname]);
 
   return children;
 };

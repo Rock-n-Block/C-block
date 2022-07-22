@@ -10,7 +10,7 @@ import { authApi } from 'store/api/apiRequestBuilder';
 import { setNotification } from 'utils';
 import userSelector from 'store/user/selectors';
 import { setUser } from 'store/user/reducer';
-import { login } from '../actions';
+import { login, logout } from '../actions';
 import actionTypes from '../actionTypes';
 import { getUserDataSaga } from './getUserData';
 
@@ -58,6 +58,7 @@ function* loginSaga({
         type: 'error',
         message: 'Couldn\'t log in. Check if you\'re using the same wallet address that was specified on sign up',
       });
+      yield put(logout());
       throw new Error('Login: /accounts/user/');
     }
 

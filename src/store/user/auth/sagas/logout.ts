@@ -6,7 +6,7 @@ import {
 
 import apiActions from 'store/ui/actions';
 import { authApi } from 'store/api/apiRequestBuilder';
-import { setUser } from 'store/user/reducer';
+import * as userReducer from 'store/user/reducer';
 import { logout } from '../actions';
 import actionTypes from '../actionTypes';
 
@@ -26,11 +26,7 @@ function* logoutSaga({
     yield put(apiActions.error(type, err));
   } finally {
     yield put(
-      setUser({
-        email: '',
-        registrationEmail: '',
-        registrationWalletAddress: '',
-      }),
+      userReducer.logout(),
     );
   }
 }
