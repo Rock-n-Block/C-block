@@ -50,7 +50,7 @@ export const Row: FC<RowProps> = ({
   const getUserContractsRequestStatus = useShallowSelector(
     uiSelector.getProp(`${adminActionTypes.ADMIN_GET_USER_CONTRACTS}_${row.id}`),
   );
-  const { countryCodes } = useShallowSelector(
+  const { id: userId, countryCodes } = useShallowSelector(
     userSelectors.getUser,
   );
   const localeData = useMemo(
@@ -130,6 +130,7 @@ export const Row: FC<RowProps> = ({
                     color="primary"
                     size="small"
                     onClick={onPermissionsOpen}
+                    disabled={userId === row.id}
                   >
                     <CrownIcon />
                   </IconButton>

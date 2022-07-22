@@ -41,6 +41,7 @@ export type Permissions = {
 };
 
 export type UserState = {
+  id: number;
   address: string;
   wallet: WalletProviders;
   isLight: boolean;

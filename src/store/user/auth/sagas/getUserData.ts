@@ -39,7 +39,7 @@ export function* getUserDataSaga({
         zipcode,
         is_completed_profile: isCompletedProfile,
         freezed: isFrozen,
-        // id,
+        id,
         permissions,
       },
     }: AxiosResponse<TGetUserDataReturnType> = yield call(
@@ -47,6 +47,7 @@ export function* getUserDataSaga({
     );
 
     yield put(setUser({
+      id,
       registrationDate,
       registrationEmail,
       registrationWalletAddress,

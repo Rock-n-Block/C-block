@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserState, WalletProviders } from 'types';
 
 const initialState: UserState = {
+  id: -1,
   address: '',
   wallet: WalletProviders.init,
   isLight: false,
